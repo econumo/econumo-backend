@@ -1,0 +1,27 @@
+---
+version: '3.5'
+
+services:
+    test:
+        build:
+            context: .
+            dockerfile: ./build/docker/app/Dockerfile
+            target: dev
+        volumes:
+            - ./app:/var/www:cached
+        working_dir: /var/www
+        depends_on:
+            - db
+            - nginx
+        environment:
+            - ENVIRONMENT=test
+            - COMPOSER_MEMORY_LIMIT=-1
+            - PHP_IDE_CONFIG=serverName=${PHP_XDEBUG_SERVER_NAME}_test
+            - PHP_DISPLAY_ERRORS=1
+            - PHP_ERROR_REPORTING=32767
+            - PHP_XDEBUG_REMOTE_HOST=${PHP_XDEBUG_REMOTE_HOST}
+
+    wiremock:
+        build: ./build/docker/wiremock
+        volumes:
+            - ./app/tests/wiremock/:/home/wiremock
