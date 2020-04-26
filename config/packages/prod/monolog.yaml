@@ -1,0 +1,11 @@
+---
+monolog:
+    handlers:
+        main:
+            action_level: info
+        nested:
+            level: error
+        deprecation:
+            level: error
+        http_api_exceptions:
+            level: error

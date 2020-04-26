@@ -19,9 +19,20 @@ services:
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
-    App\Controller\:
-        resource: '../src/Controller'
+    App\UI\Controller\:
+        resource: '../src/UI/Controller'
         tags: ['controller.service_arguments']
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    App\UI\Service\Response\HttpApiExceptionListener:
+        tags:
+            - {name: kernel.event_listener, event: kernel.exception}
+
+    App\Infrastructure\AuthToken\AuthTokenGeneratorInterface:
+        class: App\Infrastructure\AuthToken\JwtAuthTokenGenerator
+        public: true
+
+    JWTTokenAuthenticator:
+        class: Lexik\Bundle\JWTAuthenticationBundle\Security\Guard\JWTTokenAuthenticator
+
