@@ -7,5 +7,7 @@ monolog:
             level: error
         deprecation:
             level: error
+        deprecation_filter:
+            max_level: info
         http_api_exceptions:
             level: error

@@ -8,11 +8,12 @@ use Symfony\Component\Form\FormFactoryInterface;
 
 class Validator implements ValidatorInterface
 {
-    /** @var FormFactoryInterface */
+    /**
+     * @var FormFactoryInterface
+     */
     private $formFactory;
 
     /**
-     * Validator constructor.
      * @param FormFactoryInterface $formFactory
      */
     public function __construct(FormFactoryInterface $formFactory)
@@ -28,5 +29,4 @@ class Validator implements ValidatorInterface
         $form = $this->formFactory->create($formClass, $model)->submit($data);
         RequestFormValidationHelper::validate($form);
     }
-
 }

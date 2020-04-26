@@ -1,9 +1,80 @@
+---
 nelmio_api_doc:
+    models:
+        use_jms: false
+    areas:
+        path_patterns:
+            - ^/api(?!/documentation$)
+            - ^/_/status
     documentation:
         info:
-            title: My App
-            description: This is an awesome app!
+            title: API documentation
+            description: API documentation
             version: 1.0.0
-    areas: # to filter documented areas
-        path_patterns:
-            - ^/api(?!/doc$) # Accepts routes under /api except /api/doc
+        securityDefinitions:
+            Bearer:
+                type: apiKey
+                name: Authorization
+                in: header
+                description: 'Authorization: Bearer {jwt}'
+        security:
+            - Bearer: []
+        definitions:
+            JsonResponseOk:
+                type: object
+                required:
+                    - message
+                    - data
+                properties:
+                    message:
+                        type: string
+                        description: Инф. сообщение
+                    data:
+                        type: object
+            JsonResponseError:
+                type: object
+                required:
+                    - message
+                    - errors
+                properties:
+                    message:
+                        type: string
+                        description: Инф. сообщение
+                    errors:
+                        type: array
+                        description: Список ошибок
+                        items:
+                            type: object
+                            required:
+                                - key
+                                - message
+                                - code
+                            properties:
+                                key:
+                                    type: string
+                                    description: Ключ ошибки
+                                message:
+                                    type: string
+                                    description: Сообщение об ошибке
+                                code:
+                                    type: string
+                                    description: Код ошибки
+
+            JsonResponseException:
+                type: object
+                required:
+                    - message
+                    - exceptionMessage
+                properties:
+                    message:
+                        type: string
+                        description: Текст ошибки
+                    exceptionMessage:
+                        type: string
+                        description: Текст исключения
+                    exceptionType:
+                        type: string
+                        description: Тип исключения
+                    stackTrace:
+                        type: object
+                        description: Stack trace
