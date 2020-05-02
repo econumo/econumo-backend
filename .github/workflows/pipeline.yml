@@ -1,24 +1,52 @@
 name: pipeline
 on: [push]
 jobs:
-    test:
-        name: Test application
+    build:
+        name: Build
         runs-on: ubuntu-latest
         env:
-            DOCKER_IMAGE: ${GITHUB_REPOSITORY}:${GITHUB_RUN_ID}
-            DOCKER_IMAGE_LATEST: ${GITHUB_REPOSITORY}:latest
+            NGINX_DOCKER_IMAGE: ${GITHUB_REPOSITORY}/nginx:${GITHUB_RUN_ID}
+            NGINX_DOCKER_IMAGE_LATEST: ${GITHUB_REPOSITORY}/nginx:latest
+            APP_DOCKER_IMAGE: ${GITHUB_REPOSITORY}/app:${GITHUB_RUN_ID}
+            APP_DOCKER_IMAGE_LATEST: ${GITHUB_REPOSITORY}/app:latest
 
         steps:
             - name: Checkout
               uses: actions/checkout@v1
-            - name: Install Task
-              uses: Arduino/actions/setup-taskfile@master
             - name: Docker login
               run: docker login -u "${DOCKER_LOGIN}" -p "${DOCKER_PASSWORD}" "${DOCKER_REGISTRY}"
               env:
                   DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
                   DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}
                   DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-            - name: Run tests
+            - name: Pull latest NGINX image
               if: success()
-              run: echo 111
+              run: docker pull ${NGINX_DOCKER_IMAGE_LATEST} || true
+            - name: Build NGINX image
+              if: success()
+              run: docker build --cache-from ${NGINX_DOCKER_IMAGE_LATEST} --tag ${NGINX_DOCKER_IMAGE} --tag ${NGINX_DOCKER_IMAGE_LATEST} -f build/docker/nginx/Dockerfile .
+            - name: Push NGINX image
+              if: success()
+              run: docker push ${NGINX_DOCKER_IMAGE} && docker push ${NGINX_DOCKER_IMAGE_LATEST}
+
+#    test:
+#        name: Test
+#        runs-on: ubuntu-latest
+#        env:
+#            DOCKER_IMAGE: ${GITHUB_REPOSITORY}:${GITHUB_RUN_ID}
+#            DOCKER_IMAGE_LATEST: ${GITHUB_REPOSITORY}:latest
+#
+#        steps:
+#            - name: Checkout
+#              uses: actions/checkout@v1
+#            - name: Install Task
+#              uses: Arduino/actions/setup-taskfile@master
+#            - name: Docker login
+#              run: docker login -u "${DOCKER_LOGIN}" -p "${DOCKER_PASSWORD}" "${DOCKER_REGISTRY}"
+#              env:
+#                  DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
+#                  DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}
+#                  DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+#            - name: Run tests
+#              if: success()
+#              run: echo 111
