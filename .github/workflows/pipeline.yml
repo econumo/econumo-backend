@@ -5,10 +5,10 @@ jobs:
         name: Build
         runs-on: ubuntu-latest
         env:
-            NGINX_DOCKER_IMAGE: ${{ secrets.DOCKER_REGISTRY }}/${{ GITHUB_REPOSITORY }}/nginx:${{ GITHUB_RUN_ID }}
-            NGINX_DOCKER_IMAGE_LATEST: ${{ secrets.DOCKER_REGISTRY }}/${{ GITHUB_REPOSITORY }}/nginx:latest
-            APP_DOCKER_IMAGE: ${{ secrets.DOCKER_REGISTRY }}/${{ GITHUB_REPOSITORY }}/app:${{ GITHUB_RUN_ID }}
-            APP_DOCKER_IMAGE_LATEST: ${{ secrets.DOCKER_REGISTRY }}/${{ GITHUB_REPOSITORY }}/app:latest
+            NGINX_DOCKER_IMAGE: ${{ secrets.DOCKER_REGISTRY }}/${{ github.repository }}/nginx:${{ github.run_id }}
+            NGINX_DOCKER_IMAGE_LATEST: ${{ secrets.DOCKER_REGISTRY }}/${{ github.repository }}/nginx:latest
+            APP_DOCKER_IMAGE: ${{ secrets.DOCKER_REGISTRY }}/${{ github.repository }}/app:${{ github.run_id }}
+            APP_DOCKER_IMAGE_LATEST: ${{ secrets.DOCKER_REGISTRY }}/${{ github.repository }}/app:latest
 
         steps:
             - uses: actions/checkout@v1
