@@ -47,7 +47,7 @@ RUN chown www-data:www-data /var/www/ -R
 RUN composer global remove hirak/prestissimo && \
         rm /usr/local/bin/composer && \
         apk del git \
-        docker-php-ext-disable \
-        rm /etc/php.d/xdebug.ini
+        docker-php-ext-disable xdebug \
+        rm /usr/local/etc/php-fpm.d/xdebug.ini
 
 
