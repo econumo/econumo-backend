@@ -28,6 +28,11 @@
         "symfony/yaml": "5.0.*"
     },
     "require-dev": {
+        "codeception/codeception": "^4.1",
+        "codeception/module-asserts": "^1.2",
+        "codeception/module-doctrine2": "^1.0",
+        "codeception/module-rest": "^1.2",
+        "codeception/module-symfony": "^1.1",
         "doctrine/doctrine-fixtures-bundle": "^3.3"
     },
     "config": {
