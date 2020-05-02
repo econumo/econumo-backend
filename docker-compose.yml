@@ -4,43 +4,17 @@ version: '3.5'
 services:
     nginx:
         build: ./build/docker/nginx/
+        restart: always
         ports:
             - ${DOCKER_COMPOSE_PORT_NGINX}:80
-
-    db:
-        build: ./build/docker/postgres/
-        ports:
-            - ${DOCKER_COMPOSE_PORT_DB}:5432
-        volumes:
-            - db-data:/var/lib/postgresql/data
-        environment:
-            - POSTGRES_HOST=db
-            - POSTGRES_PORT=5432
-            - POSTGRES_USER=postgres
-            - POSTGRES_PASSWORD=postgres
-            - POSTGRES_DB=db
+        depends_on:
+            - app
 
     app:
         build:
             context: .
             dockerfile: ./build/docker/app/Dockerfile
-            target: dev
-        ports:
-            - ${DOCKER_COMPOSE_PORT_APP}:80
-        volumes:
-            - .:/var/www:cached
-            - ./var/:/var/www/var:delegated
+        restart: always
         working_dir: /var/www
-        depends_on:
-            - db
-            - nginx
         environment:
-            - ENVIRONMENT=${APP_ENV}
-            - COMPOSER_MEMORY_LIMIT=-1
-            - PHP_DISPLAY_ERRORS=1
-            - PHP_ERROR_REPORTING=32767
-            - PHP_IDE_CONFIG=serverName=${PHP_XDEBUG_SERVER_NAME}
-            - PHP_XDEBUG_REMOTE_HOST=${PHP_XDEBUG_REMOTE_HOST}
-
-volumes:
-    db-data:
+            - ENVIRONMENT=prod

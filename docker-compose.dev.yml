@@ -1,0 +1,41 @@
+---
+version: '3.5'
+
+services:
+    nginx:
+        volumes:
+            - ./public:/var/www/public:cached
+
+    app:
+        build:
+            target: dev
+        depends_on:
+            - db
+        volumes:
+            - .:/var/www:cached
+            - ./var/:/var/www/var:delegated
+#        ports:
+#            - ${DOCKER_COMPOSE_PORT_APP}:9000
+        environment:
+            - ENVIRONMENT=dev
+            - COMPOSER_MEMORY_LIMIT=-1
+            - PHP_DISPLAY_ERRORS=1
+            - PHP_ERROR_REPORTING=32767
+            - PHP_IDE_CONFIG=serverName=${DOCKER_COMPOSE_XDEBUG_SERVER_NAME}
+            - PHP_XDEBUG_REMOTE_HOST=${DOCKER_COMPOSE_XDEBUG_REMOTE_HOST}
+
+    db:
+        build: ./build/docker/postgres/
+        ports:
+            - ${DOCKER_COMPOSE_PORT_DB}:5432
+        volumes:
+            - db-data:/var/lib/postgresql/data
+        environment:
+            - POSTGRES_HOST=db
+            - POSTGRES_PORT=5432
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+            - POSTGRES_DB=db
+
+volumes:
+    db-data:

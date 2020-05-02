@@ -5,6 +5,10 @@ ENV PHP_ERROR_REPORTING 22527
 
 WORKDIR /var/www/
 
+RUN echo ${APP_PORT}
+RUN sed -i "s/127.0.0.1:9000/0.0.0.0:9000/g" /usr/local/etc/php-fpm.d/www.conf
+RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
+
 # custom ini
 COPY build/docker/app/configs /
 
@@ -25,6 +29,8 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 && composer global require hirak/prestissimo --no-plugins --no-scripts
 
 FROM dev as prod
+
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
 COPY composer.json composer.lock symfony.lock /var/www/
 
