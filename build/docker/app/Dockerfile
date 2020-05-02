@@ -5,7 +5,6 @@ ENV PHP_ERROR_REPORTING 22527
 
 WORKDIR /var/www/
 
-RUN echo ${APP_PORT}
 RUN sed -i "s/127.0.0.1:9000/0.0.0.0:9000/g" /usr/local/etc/php-fpm.d/www.conf
 RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 
@@ -28,26 +27,25 @@ RUN apk --update add git postgresql-dev \
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
 && composer global require hirak/prestissimo --no-plugins --no-scripts
 
+
 FROM dev as prod
 
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
-COPY composer.json composer.lock symfony.lock /var/www/
-
-RUN composer install --no-scripts --prefer-dist --no-autoloader
-
 COPY . /var/www
 
 # Finish composer
-RUN composer install
+RUN composer install --no-dev --prefer-dist --no-scripts --optimize-autoloader
 
 RUN chown www-data:www-data /var/www/ -R
 
 # cleanup
 RUN composer global remove hirak/prestissimo \
+    && composer clear-cache \
     && rm /usr/local/bin/composer \
     && apk del git \
-    && docker-php-ext-disable xdebug \
+    && pecl uninstall xdebug \
+    && rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
     && rm /usr/local/etc/php-fpm.d/xdebug.ini
 
 

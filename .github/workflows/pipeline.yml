@@ -1,5 +1,9 @@
 name: pipeline
-on: [push]
+on:
+    push:
+        branches:
+            - master
+
 jobs:
     build:
         name: Build
@@ -11,27 +15,27 @@ jobs:
             APP_DOCKER_IMAGE_LATEST: ${{ secrets.DOCKER_REGISTRY }}/${{ github.repository }}/app:latest
 
         steps:
-            - uses: actions/checkout@v1
-            - name: Docker login
-              run: docker login -u "${DOCKER_LOGIN}" -p "${DOCKER_PASSWORD}" "${DOCKER_REGISTRY}"
-              env:
-                  DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
-                  DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}
-                  DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-            - name: Build NGINX image
-              if: success()
-              run: |
-                docker pull ${NGINX_DOCKER_IMAGE_LATEST} || true
-                docker build --cache-from ${NGINX_DOCKER_IMAGE_LATEST} --tag ${NGINX_DOCKER_IMAGE} --tag ${NGINX_DOCKER_IMAGE_LATEST} -f build/docker/nginx/Dockerfile .
-                docker push ${NGINX_DOCKER_IMAGE}
-                docker push ${NGINX_DOCKER_IMAGE_LATEST}
-            - name: Build APP image
-              if: success()
-              run: |
-                  docker pull ${APP_DOCKER_IMAGE_LATEST} || true
-                  docker build --cache-from ${APP_DOCKER_IMAGE_LATEST} --tag ${APP_DOCKER_IMAGE} --tag ${APP_DOCKER_IMAGE_LATEST} -f build/docker/app/Dockerfile .
-                  docker push ${APP_DOCKER_IMAGE}
-                  docker push ${APP_DOCKER_IMAGE_LATEST}
+            -   uses: actions/checkout@v1
+            -   name: Docker login
+                run: docker login -u "${DOCKER_LOGIN}" -p "${DOCKER_PASSWORD}" "${DOCKER_REGISTRY}"
+                env:
+                    DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
+                    DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}
+                    DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+            -   name: Build NGINX image
+                if: success()
+                run: |
+                    docker pull ${NGINX_DOCKER_IMAGE_LATEST} || true
+                    docker build --cache-from ${NGINX_DOCKER_IMAGE_LATEST} --tag ${NGINX_DOCKER_IMAGE} --tag ${NGINX_DOCKER_IMAGE_LATEST} -f build/docker/nginx/Dockerfile .
+                    docker push ${NGINX_DOCKER_IMAGE}
+                    docker push ${NGINX_DOCKER_IMAGE_LATEST}
+            -   name: Build APP image
+                if: success()
+                run: |
+                    docker pull ${APP_DOCKER_IMAGE_LATEST} || true
+                    docker build --cache-from ${APP_DOCKER_IMAGE_LATEST} --tag ${APP_DOCKER_IMAGE} --tag ${APP_DOCKER_IMAGE_LATEST} -f build/docker/app/Dockerfile .
+                    docker push ${APP_DOCKER_IMAGE}
+                    docker push ${APP_DOCKER_IMAGE_LATEST}
 
 #    test:
 #        name: Test
