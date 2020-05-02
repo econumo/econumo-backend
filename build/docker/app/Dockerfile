@@ -36,7 +36,7 @@ COPY composer.json composer.lock symfony.lock /var/www/
 
 RUN composer install --no-scripts --prefer-dist --no-autoloader
 
-COPY app /var/www
+COPY . /var/www
 
 # Finish composer
 RUN composer install

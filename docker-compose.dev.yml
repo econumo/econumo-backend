@@ -25,7 +25,9 @@ services:
             - PHP_XDEBUG_REMOTE_HOST=${DOCKER_COMPOSE_XDEBUG_REMOTE_HOST}
 
     db:
-        build: ./build/docker/postgres/
+        build:
+            context: .
+            dockerfile: ./build/docker/postgres/Dockerfile
         ports:
             - ${DOCKER_COMPOSE_PORT_DB}:5432
         volumes:
