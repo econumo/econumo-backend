@@ -25,6 +25,13 @@ jobs:
                 docker build --cache-from ${NGINX_DOCKER_IMAGE_LATEST} --tag ${NGINX_DOCKER_IMAGE} --tag ${NGINX_DOCKER_IMAGE_LATEST} -f build/docker/nginx/Dockerfile .
                 docker push ${NGINX_DOCKER_IMAGE}
                 docker push ${NGINX_DOCKER_IMAGE_LATEST}
+            - name: Build APP image
+              if: success()
+              run: |
+                  docker pull ${APP_DOCKER_IMAGE_LATEST} || true
+                  docker build --cache-from ${APP_DOCKER_IMAGE_LATEST} --tag ${APP_DOCKER_IMAGE} --tag ${APP_DOCKER_IMAGE_LATEST} -f build/docker/app/Dockerfile .
+                  docker push ${APP_DOCKER_IMAGE}
+                  docker push ${APP_DOCKER_IMAGE_LATEST}
 
 #    test:
 #        name: Test
