@@ -1,0 +1,17 @@
+name: pipeline
+on: [push]
+jobs:
+    test:
+        name: Test application
+        runs-on: ubuntu-latest
+        env:
+            DOCKER_IMAGE: ${GITHUB_REPOSITORY}:${GITHUB_RUN_ID}
+            DOCKER_IMAGE_LATEST: ${GITHUB_REPOSITORY}:latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v1
+            - name: Install Task
+              uses: Arduino/actions/setup-taskfile@master
+            - name: Run tests
+              run: task test
