@@ -5,10 +5,10 @@ jobs:
         name: Build
         runs-on: ubuntu-latest
         env:
-            NGINX_DOCKER_IMAGE: ${GITHUB_REPOSITORY}/nginx:${GITHUB_RUN_ID}
-            NGINX_DOCKER_IMAGE_LATEST: ${GITHUB_REPOSITORY}/nginx:latest
-            APP_DOCKER_IMAGE: ${GITHUB_REPOSITORY}/app:${GITHUB_RUN_ID}
-            APP_DOCKER_IMAGE_LATEST: ${GITHUB_REPOSITORY}/app:latest
+            NGINX_DOCKER_IMAGE: ${{ GITHUB_REPOSITORY }}/nginx:${{ GITHUB_RUN_ID }}
+            NGINX_DOCKER_IMAGE_LATEST: ${{ GITHUB_REPOSITORY }}/nginx:latest
+            APP_DOCKER_IMAGE: ${{ GITHUB_REPOSITORY }}/app:${{ GITHUB_RUN_ID }}
+            APP_DOCKER_IMAGE_LATEST: ${{ GITHUB_REPOSITORY }}/app:latest
 
         steps:
             - name: Checkout
