@@ -14,15 +14,15 @@ tasks:
         cmds:
             - docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.test.yml up -d --build
             - docker-compose exec app composer install
-            - docker-compose exec app bin/console doctrine:migrations:migrate -n
-            - docker-compose exec test bin/console doctrine:migrations:migrate -n
-            - docker-compose exec test bin/console doctrine:fixtures:load -n  --purge-with-truncate
+#            - docker-compose exec app bin/console doctrine:migrations:migrate -n
+#            - docker-compose exec test bin/console doctrine:migrations:migrate -n
+#            - docker-compose exec test bin/console doctrine:fixtures:load -n  --purge-with-truncate
 
     test:
         desc: "Test application"
         cmds:
             - docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.test.yml up -d --build
-            - docker-compose exec -uwww-data test bin/console doctrine:database:create --env=test --if-not-exists -vvv
-            - docker-compose exec -uwww-data test bin/console doctrine:migration:migrate --env=test -n -vvv
-            - docker-compose exec -uwww-data test bin/console doctrine:fixtures:load --purge-with-truncate -n --env=test -vvv
+#            - docker-compose exec -uwww-data econumo-backend_test_1 bin/console doctrine:database:create --env=test --if-not-exists -vvv
+#            - docker-compose exec -uwww-data econumo-backend_test_1 bin/console doctrine:migration:migrate --env=test -n -vvv
+#            - docker-compose exec -uwww-data econumo-backend_test_1 bin/console doctrine:fixtures:load --purge-with-truncate -n --env=test -vvv
             - docker-compose exec -uwww-data test vendor/bin/codecept run --steps -vvv

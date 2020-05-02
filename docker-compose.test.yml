@@ -12,14 +12,13 @@ services:
         working_dir: /var/www
         depends_on:
             - db
-            - nginx
         environment:
             - ENVIRONMENT=test
             - COMPOSER_MEMORY_LIMIT=-1
             - PHP_DISPLAY_ERRORS=1
             - PHP_ERROR_REPORTING=32767
 
-    wiremock:
-        build: ./build/docker/wiremock
-        volumes:
-            - ./app/tests/wiremock/:/home/wiremock
+#    wiremock:
+#        build: ./build/docker/wiremock
+#        volumes:
+#            - ./app/tests/wiremock/:/home/wiremock
