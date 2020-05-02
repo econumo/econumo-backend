@@ -5,10 +5,10 @@ jobs:
         name: Build
         runs-on: ubuntu-latest
         env:
-            NGINX_DOCKER_IMAGE: ${GITHUB_REPOSITORY}/nginx:${GITHUB_RUN_ID}
-            NGINX_DOCKER_IMAGE_LATEST: ${GITHUB_REPOSITORY}/nginx:latest
-            APP_DOCKER_IMAGE: ${GITHUB_REPOSITORY}/app:${GITHUB_RUN_ID}
-            APP_DOCKER_IMAGE_LATEST: ${GITHUB_REPOSITORY}/app:latest
+            NGINX_DOCKER_IMAGE: ${{ secrets.DOCKER_REGISTRY }}/${{ GITHUB_REPOSITORY }}/nginx:${{ GITHUB_RUN_ID }}
+            NGINX_DOCKER_IMAGE_LATEST: ${{ secrets.DOCKER_REGISTRY }}/${{ GITHUB_REPOSITORY }}/nginx:latest
+            APP_DOCKER_IMAGE: ${{ secrets.DOCKER_REGISTRY }}/${{ GITHUB_REPOSITORY }}/app:${{ GITHUB_RUN_ID }}
+            APP_DOCKER_IMAGE_LATEST: ${{ secrets.DOCKER_REGISTRY }}/${{ GITHUB_REPOSITORY }}/app:latest
 
         steps:
             - uses: actions/checkout@v1
@@ -21,10 +21,12 @@ jobs:
             - name: Build NGINX image
               if: success()
               run: |
-                docker pull ${DOCKER_IMAGE_LATEST} || true
-                docker build --cache-from ${DOCKER_IMAGE_LATEST} --tag ${DOCKER_IMAGE} --tag ${DOCKER_IMAGE_LATEST} -f ${DOCKER_FILE} .
-                docker push ${DOCKER_IMAGE}
-                docker push ${DOCKER_IMAGE_LATEST}
+                echo $DOCKER_IMAGE
+                echo $DOCKER_IMAGE_LATEST
+#                docker pull ${DOCKER_IMAGE_LATEST} || true
+#                docker build --cache-from ${DOCKER_IMAGE_LATEST} --tag ${DOCKER_IMAGE} --tag ${DOCKER_IMAGE_LATEST} -f ${DOCKER_FILE} .
+#                docker push ${DOCKER_IMAGE}
+#                docker push ${DOCKER_IMAGE_LATEST}
               env:
                   DOCKER_IMAGE: ${NGINX_DOCKER_IMAGE}
                   DOCKER_IMAGE_LATEST: ${NGINX_DOCKER_IMAGE_LATEST}
