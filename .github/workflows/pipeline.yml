@@ -23,12 +23,14 @@ jobs:
               run: |
                 echo ${DOCKER_IMAGE}
                 echo ${DOCKER_IMAGE_LATEST}
+                echo ${NGINX_DOCKER_IMAGE}
+                echo ${NGINX_DOCKER_IMAGE_LATEST}
 #                docker pull ${DOCKER_IMAGE_LATEST} || true
 #                docker build --cache-from ${DOCKER_IMAGE_LATEST} --tag ${DOCKER_IMAGE} --tag ${DOCKER_IMAGE_LATEST} -f ${DOCKER_FILE} .
 #                docker push ${DOCKER_IMAGE}
 #                docker push ${DOCKER_IMAGE_LATEST}
               env:
-                  DOCKER_IMAGE: ${{ NGINX_DOCKER_IMAGE }}
+                  DOCKER_IMAGE: ${NGINX_DOCKER_IMAGE}
                   DOCKER_IMAGE_LATEST: ${NGINX_DOCKER_IMAGE_LATEST}
                   DOCKER_FILE: "build/docker/nginx/Dockerfile"
 
