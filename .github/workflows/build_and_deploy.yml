@@ -8,13 +8,18 @@ jobs:
     build_and_deploy:
         name: Build and deploy
         runs-on: ubuntu-latest
-        env:
-            DOCKER_IMAGE_NGINX: ${{ secrets.DOCKER_REGISTRY }}/${{ github.repository }}/nginx:${{ github.run_id }}
-            DOCKER_IMAGE_NGINX_LATEST: ${{ secrets.DOCKER_REGISTRY }}/${{ github.repository }}/nginx:latest
-            DOCKER_IMAGE_APP: ${{ secrets.DOCKER_REGISTRY }}/${{ github.repository }}/app:${{ github.run_id }}
-            DOCKER_IMAGE_APP_LATEST: ${{ secrets.DOCKER_REGISTRY }}/${{ github.repository }}/app:latest
-
         steps:
+            -   name: Prepare env
+                run: |
+                    repo=$(echo "${{ github.repository }}" | awk -F / '{print $2}')
+                    prefix="${{ secrets.DOCKER_REGISTRY }}/${{ github.repository }}"
+                    suffix=${{ github.run_id }}
+                    echo ::set-env name=DOCKER_IMAGE_NGINX::$(echo "${prefix}/${repo}_nginx:${suffix}")
+                    echo ::set-env name=DOCKER_IMAGE_NGINX_LATEST::$(echo "${prefix}/${repo}_nginx:latest")
+                    echo ::set-env name=DOCKER_IMAGE_APP::$(echo "${prefix}/${repo}_app:${suffix}")
+                    echo ::set-env name=DOCKER_IMAGE_APP_LATEST::$(echo "${prefix}/${repo}_app:latest")
+                shell: bash
+
             -   uses: actions/checkout@v1
 
             -   name: Docker login

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Command\Make;
 
@@ -11,21 +12,15 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class MakeApiCommand extends Command
 {
-    private const PREFIX_URL = '/api/v1/';
     protected static $defaultName = 'make:api';
 
     protected function configure()
     {
         $this
-            ->setDescription('Генерация структуры контроллера')
+            ->setDescription('Генерация структуры API')
             ->addArgument('url', InputArgument::OPTIONAL, '/api/v1/organization-events/get-list')
             ->addOption('http-method', null, InputOption::VALUE_REQUIRED, 'HTTP метод, например GET', 'GET')
-            ->addOption(
-                'dry-run',
-                null,
-                InputOption::VALUE_NONE,
-                'Пробный запуск'
-            );
+            ->addOption('dry-run', null, InputOption::VALUE_NONE);
     }
 
     /**
@@ -84,18 +79,12 @@ class MakeApiCommand extends Command
         return [
             '__CG_URL__' => $url,
             '__CG_HTTP_METHOD__' => $httpMethod,
-//            '__CG_HTTP_METHOD_UC__' => strtoupper($httpMethod),
-//            '__CG_HTTP_METHOD_LC__' => strtolower($httpMethod),
             '__CG_URL_TYPE__' => $prefix,
             '__CG_URL_TYPE_CC__' => $this->toCamelCase($prefix),
             '__CG_URL_TYPE_CCL__' => $this->toCamelCase($prefix, false),
-//            '__CG_URL_TYPE_LC__' => strtolower($prefix),
-//            '__CG_URL_TYPE_UC__' => strtoupper($prefix),
             '__CG_API_VERSION__' => $version,
             '__CG_API_VERSION_CC__' => $this->toCamelCase($version),
             '__CG_API_VERSION_CCL__' => $this->toCamelCase($version, false),
-//            '__CG_API_VERSION_LC__' => strtolower($version),
-//            '__CG_API_VERSION_UC__' => strtoupper($version),
             '__CG_API_SUBJECT__' => $subject,
             '__CG_API_SUBJECT_CC__' => $this->toCamelCase($subject),
             '__CG_API_SUBJECT_CCL__' => $this->toCamelCase($subject, false),
