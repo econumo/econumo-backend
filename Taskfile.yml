@@ -6,8 +6,8 @@ tasks:
         desc: "Start application"
         cmds:
             - docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
-            - docker-compose exec app composer install
-            - docker-compose exec app bin/console doctrine:migrations:migrate -n
+            - docker-compose exec -uwww-data app composer install
+#            - docker-compose exec -uwww-data app bin/console doctrine:migrations:migrate -n
 
     test-up:
         desc: "Start application (with tests)"
