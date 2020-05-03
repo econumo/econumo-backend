@@ -45,6 +45,7 @@ jobs:
                 if: success()
                 run: |
                     envsubst < docker-compose.production.yml > /tmp/docker-compose.yml
+                    cat /tmp/docker-compose.yml
                 env:
                     DOCKER_COMPOSE_PORT_NGINX: ${{ steps.dotenv.outputs.docker_compose_port_nginx }}
                     DOCKER_COMPOSE_PORT_DB: ${{ steps.dotenv.outputs.docker_compose_port_db }}
