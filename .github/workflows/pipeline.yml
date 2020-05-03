@@ -6,7 +6,7 @@ on:
 
 jobs:
     build:
-        name: Build
+        name: Build and deploy
         runs-on: ubuntu-latest
         env:
             DOCKER_IMAGE_NGINX: ${{ secrets.DOCKER_REGISTRY }}/${{ github.repository }}/nginx:${{ github.run_id }}
@@ -37,20 +37,15 @@ jobs:
                     docker push ${DOCKER_IMAGE_APP}
                     docker push ${DOCKER_IMAGE_APP_LATEST}
 
-
-    deploy:
-        name: Deploy
-        runs-on: ubuntu-latest
-        env:
-            DOCKER_IMAGE_NGINX: ${{ secrets.DOCKER_REGISTRY }}/${{ github.repository }}/nginx:${{ github.run_id }}
-            DOCKER_IMAGE_APP: ${{ secrets.DOCKER_REGISTRY }}/${{ github.repository }}/app:${{ github.run_id }}
-
-        steps:
+            -   name: Deploy
+                if: success()
             -   uses: actions/checkout@v1
             -   uses: falti/dotenv-action@v0.2.4
             -   name: Prepare docker-compose.yml
                 if: success()
                 run: |
+                    echo "${{ steps.dotenv.outputs.docker_compose_port_nginx }}"
+                    echo "${DOCKER_COMPOSE_PORT_NGINX}"
                     envsubst < docker-compose.production.yml > /tmp/docker-compose.yml
                     cat /tmp/docker-compose.yml
                 env:
