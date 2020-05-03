@@ -71,8 +71,8 @@ jobs:
                     key: ${{ secrets.DEPLOY_KEY }}
                     script_stop: true
                     script: |
-                        rm -f ${{ github.repository }}/docker-compose.yml.backup
-                        mv ${{ github.repository }}/docker-compose.yml ${{ github.repository }}/docker-compose.yml.backup
+                        rm -f ${{ github.repository }}/docker-compose.yml.backup || true
+                        mv ${{ github.repository }}/docker-compose.yml ${{ github.repository }}/docker-compose.yml.backup  || true
                         mv ${{ github.repository }}/docker-compose.yml.${{ github.run_id }} ${{ github.repository }}/docker-compose.yml
                         cd ${{ github.repository }} && docker-compose up -d
 #                        cd ${{ github.repository }} && docker-compose exec -uwww-data app bin/console doctrine:migration:migrate -n
