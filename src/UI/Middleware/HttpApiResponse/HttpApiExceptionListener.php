@@ -2,22 +2,23 @@
 
 declare(strict_types=1);
 
-namespace App\UI\Service\Response;
+namespace App\UI\Middleware\HttpApiResponse;
 
 use App\Application\Exception\ValidationException;
+use App\UI\Service\Response\ResponseFactory;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class HttpApiExceptionListener
 {
     /**
-     * @param GetResponseForExceptionEvent $event
-     * @throws \Exception
+     * @param ExceptionEvent $event
+     * @throws \Throwable
      */
-    public function onKernelException(GetResponseForExceptionEvent $event): void
+    public function onKernelException(ExceptionEvent $event): void
     {
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
         if ($event->getRequest() instanceof Request) {
             if ($exception instanceof ValidationException) {
                 $response = ResponseFactory::createErrorResponse(
