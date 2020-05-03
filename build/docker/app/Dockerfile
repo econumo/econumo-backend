@@ -27,8 +27,11 @@ RUN apk --update add git postgresql-dev \
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN composer global require hirak/prestissimo --no-plugins --no-scripts
 
+RUN echo 'aaaaaaaaa'
 
 FROM dev as prod
+
+RUN echo 'bbbbbbbb'
 
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
@@ -39,7 +42,7 @@ COPY . /var/www
 # Finish composer
 RUN composer dump-autoload --optimize
 
-RUN chown www-data:www-data /var/www/ -R
+# RUN chown www-data:www-data /var/www/ -R
 
 # cleanup
 RUN composer global remove hirak/prestissimo \
