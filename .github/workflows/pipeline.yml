@@ -41,7 +41,7 @@ jobs:
                 uses: falti/dotenv-action@v0.2.4
                 with:
                     log-variables: true
-            -   name: Prepare docker-compose.yml
+            -   name: Deploy
                 if: success()
                 run: |
                     envsubst < docker-compose.production.yml > /tmp/docker-compose.yml
@@ -49,7 +49,6 @@ jobs:
                     DOCKER_COMPOSE_PORT_NGINX: ${{ steps.dotenv.outputs.docker_compose_port_nginx }}
                     DOCKER_COMPOSE_PORT_DB: ${{ steps.dotenv.outputs.docker_compose_port_db }}
                     DOCKER_COMPOSE_PORT_APP: ${{ steps.dotenv.outputs.docker_compose_port_app }}
-            -   name: Deploy
             -   uses: appleboy/ssh-action@master
                 with:
                     host: ${{ secrets.DEPLOY_HOST }}
