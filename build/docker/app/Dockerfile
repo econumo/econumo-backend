@@ -52,3 +52,5 @@ RUN composer global remove hirak/prestissimo \
     && pecl uninstall xdebug \
     && rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
     && rm /usr/local/etc/php-fpm.d/xdebug.ini
+
+ENTRYPOINT ["php-fpm", "-F"]
