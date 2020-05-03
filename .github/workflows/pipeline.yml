@@ -9,10 +9,10 @@ jobs:
         name: Build
         runs-on: ubuntu-latest
         env:
-            NGINX_DOCKER_IMAGE: ${{ secrets.DOCKER_REGISTRY }}/${{ github.repository }}/nginx:${{ github.run_id }}
-            NGINX_DOCKER_IMAGE_LATEST: ${{ secrets.DOCKER_REGISTRY }}/${{ github.repository }}/nginx:latest
-            APP_DOCKER_IMAGE: ${{ secrets.DOCKER_REGISTRY }}/${{ github.repository }}/app:${{ github.run_id }}
-            APP_DOCKER_IMAGE_LATEST: ${{ secrets.DOCKER_REGISTRY }}/${{ github.repository }}/app:latest
+            DOCKER_IMAGE_NGINX: ${{ secrets.DOCKER_REGISTRY }}/${{ github.repository }}/nginx:${{ github.run_id }}
+            DOCKER_IMAGE_NGINX_LATEST: ${{ secrets.DOCKER_REGISTRY }}/${{ github.repository }}/nginx:latest
+            DOCKER_IMAGE_APP: ${{ secrets.DOCKER_REGISTRY }}/${{ github.repository }}/app:${{ github.run_id }}
+            DOCKER_IMAGE_APP_LATEST: ${{ secrets.DOCKER_REGISTRY }}/${{ github.repository }}/app:latest
 
         steps:
             -   uses: actions/checkout@v1
@@ -25,17 +25,48 @@ jobs:
             -   name: Build NGINX image
                 if: success()
                 run: |
-                    docker pull ${NGINX_DOCKER_IMAGE_LATEST} || true
-                    docker build --cache-from ${NGINX_DOCKER_IMAGE_LATEST} --tag ${NGINX_DOCKER_IMAGE} --tag ${NGINX_DOCKER_IMAGE_LATEST} -f build/docker/nginx/Dockerfile .
-                    docker push ${NGINX_DOCKER_IMAGE}
-                    docker push ${NGINX_DOCKER_IMAGE_LATEST}
+                    docker pull ${DOCKER_IMAGE_NGINX_LATEST} || true
+                    docker build --cache-from ${DOCKER_IMAGE_NGINX_LATEST} --tag ${DOCKER_IMAGE_NGINX} --tag ${DOCKER_IMAGE_NGINX_LATEST} -f build/docker/nginx/Dockerfile .
+                    docker push ${DOCKER_IMAGE_NGINX}
+                    docker push ${DOCKER_IMAGE_NGINX_LATEST}
             -   name: Build APP image
                 if: success()
                 run: |
-                    docker pull ${APP_DOCKER_IMAGE_LATEST} || true
-                    docker build --cache-from ${APP_DOCKER_IMAGE_LATEST} --tag ${APP_DOCKER_IMAGE} --tag ${APP_DOCKER_IMAGE_LATEST} -f build/docker/app/Dockerfile .
-                    docker push ${APP_DOCKER_IMAGE}
-                    docker push ${APP_DOCKER_IMAGE_LATEST}
+                    docker pull ${DOCKER_IMAGE_APP_LATEST} || true
+                    docker build --cache-from ${DOCKER_IMAGE_APP_LATEST} --tag ${DOCKER_IMAGE_APP} --tag ${DOCKER_IMAGE_APP_LATEST} -f build/docker/app/Dockerfile .
+                    docker push ${DOCKER_IMAGE_APP}
+                    docker push ${DOCKER_IMAGE_APP_LATEST}
+
+
+    deploy:
+        name: Deploy
+        runs-on: ubuntu-latest
+        env:
+            DOCKER_IMAGE_NGINX: ${{ secrets.DOCKER_REGISTRY }}/${{ github.repository }}/nginx:${{ github.run_id }}
+            DOCKER_IMAGE_APP: ${{ secrets.DOCKER_REGISTRY }}/${{ github.repository }}/app:${{ github.run_id }}
+
+        steps:
+            -   uses: actions/checkout@v1
+            -   uses: falti/dotenv-action@v0.2.4
+            -   name: Prepare docker-compose.yml
+                if: success()
+                run: |
+                    envsubst < docker-compose.production.yml > /tmp/docker-compose.yml
+                env:
+                    DOCKER_COMPOSE_PORT_NGINX: ${{ steps.dotenv.outputs.docker_compose_port_nginx }}
+                    DOCKER_COMPOSE_PORT_DB: ${{ steps.dotenv.outputs.docker_compose_port_db }}
+                    DOCKER_COMPOSE_PORT_APP: ${{ steps.dotenv.outputs.docker_compose_port_app }}
+            -   name: Deploy
+                uses: appleboy/ssh-action@master
+                with:
+                    host: ${{ secrets.DEPLOY_HOST }}
+                    username: ${{ secrets.DEPLOY_USERNAME }}
+                    key: ${{ secrets.DEPLOY_KEY }}
+                    script: |
+                        mkdir -p ${{ github.repository }}
+                        scp /tmp/docker-compose.yml ${{ secrets.USERNAME }}@${{ secrets.HOST }}:${{ github.repository }}/
+                        cd ${{ github.repository }} && docker-compose up -d
+#                        cd ${{ github.repository }} && docker-compose exec -uwww-data app bin/console doctrine:migration:migrate -n
 
 #    test:
 #        name: Test
