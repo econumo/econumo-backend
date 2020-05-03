@@ -36,7 +36,7 @@ jobs:
                 if: success()
                 run: |
                     docker pull ${DOCKER_IMAGE_APP_LATEST} || true
-                    docker build --cache-from ${DOCKER_IMAGE_APP_LATEST} --tag ${DOCKER_IMAGE_APP} --tag ${DOCKER_IMAGE_APP_LATEST} -f build/docker/app/Dockerfile .
+                    docker build --cache-from ${DOCKER_IMAGE_APP_LATEST} --tag ${DOCKER_IMAGE_APP} --tag ${DOCKER_IMAGE_APP_LATEST} --target prod -f build/docker/app/Dockerfile .
                     docker push ${DOCKER_IMAGE_APP}
                     docker push ${DOCKER_IMAGE_APP_LATEST}
 
