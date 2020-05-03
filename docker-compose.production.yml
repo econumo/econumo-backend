@@ -1,0 +1,15 @@
+---
+version: '3.5'
+
+services:
+    nginx:
+        image: docker.pkg.github.com/econumo/econumo-backend/nginx:latest
+        restart: always
+        ports:
+            - 8082:80
+        depends_on:
+            - app
+
+    app:
+        image: docker.pkg.github.com/econumo/econumo-backend/app:latest
+        restart: always
