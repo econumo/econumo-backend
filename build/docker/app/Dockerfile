@@ -32,10 +32,12 @@ FROM dev as prod
 
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
-COPY . /var/www
+COPY composer.json composer.lock symfony.lock /var/www/
+RUN composer install --no-scripts --prefer-dist --no-autoloader
 
+COPY . /var/www
 # Finish composer
-RUN composer install --prefer-dist --no-scripts --optimize-autoloader
+RUN composer install
 
 RUN chown www-data:www-data /var/www/ -R
 
