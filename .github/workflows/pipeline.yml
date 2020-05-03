@@ -50,13 +50,6 @@ jobs:
                     DOCKER_COMPOSE_PORT_DB: ${{ steps.dotenv.outputs.docker_compose_port_db }}
                     DOCKER_COMPOSE_PORT_APP: ${{ steps.dotenv.outputs.docker_compose_port_app }}
             -   name: Deploy
-                uses: garygrossgarten/github-action-scp@release
-                with:
-                    host: ${{ secrets.DEPLOY_HOST }}
-                    username: ${{ secrets.DEPLOY_USERNAME }}
-                    privateKey: ${{ secrets.DEPLOY_KEY }}
-                    local: "/tmp/docker-compose.yml"
-                    remote: "~/${{ github.repository }}/docker-compose.yml"
             -   uses: appleboy/ssh-action@master
                 with:
                     host: ${{ secrets.DEPLOY_HOST }}
@@ -65,6 +58,23 @@ jobs:
                     script_stop: true
                     script: |
                         mkdir -p ${{ github.repository }}
+            -   uses: garygrossgarten/github-action-scp@release
+                with:
+                    host: ${{ secrets.DEPLOY_HOST }}
+                    username: ${{ secrets.DEPLOY_USERNAME }}
+                    privateKey: ${{ secrets.DEPLOY_KEY }}
+                    local: "/tmp/docker-compose.yml"
+                    remote: "~/${{ github.repository }}/docker-compose.yml.${{ github.run_id }}"
+            -   uses: appleboy/ssh-action@master
+                with:
+                    host: ${{ secrets.DEPLOY_HOST }}
+                    username: ${{ secrets.DEPLOY_USERNAME }}
+                    key: ${{ secrets.DEPLOY_KEY }}
+                    script_stop: true
+                    script: |
+                        rm -f ~/${{ github.repository }}/docker-compose.yml.backup
+                        mv ~/${{ github.repository }}/docker-compose.yml ~/${{ github.repository }}/docker-compose.yml.backup
+                        mv ~/${{ github.repository }}/docker-compose.yml.${{ github.run_id }} ~/${{ github.repository }}/docker-compose.yml
                         cd ${{ github.repository }} && docker-compose up -d
 #                        cd ${{ github.repository }} && docker-compose exec -uwww-data app bin/console doctrine:migration:migrate -n
 
