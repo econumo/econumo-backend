@@ -37,9 +37,10 @@ jobs:
                     docker push ${DOCKER_IMAGE_APP}
                     docker push ${DOCKER_IMAGE_APP_LATEST}
 
-            -   uses: falti/dotenv-action@v0.2.4
+            -   name: dotenv
+                uses: falti/dotenv-action@v0.2.4
                 with:
-                    log-variables: true
+                    log-variables: false
             -   name: Prepare docker-compose.yml
                 if: success()
                 run: |
@@ -48,9 +49,9 @@ jobs:
                     envsubst < docker-compose.production.yml > /tmp/docker-compose.yml
                     cat /tmp/docker-compose.yml
                 env:
-                    DOCKER_COMPOSE_PORT_NGINX: ${{ steps.dotenv.outputs.DOCKER_COMPOSE_PORT_NGINX }}
-                    DOCKER_COMPOSE_PORT_DB: ${{ steps.dotenv.outputs.DOCKER_COMPOSE_PORT_DB }}
-                    DOCKER_COMPOSE_PORT_APP: ${{ steps.dotenv.outputs.DOCKER_COMPOSE_PORT_APP }}
+                    DOCKER_COMPOSE_PORT_NGINX: ${{ steps.dotenv.outputs.docker_compose_port_nginx }}
+                    DOCKER_COMPOSE_PORT_DB: ${{ steps.dotenv.outputs.docker_compose_port_db }}
+                    DOCKER_COMPOSE_PORT_APP: ${{ steps.dotenv.outputs.docker_compose_port_app }}
             -   name: Deploy
                 uses: appleboy/scp-action@master
                 with:
