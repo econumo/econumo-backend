@@ -63,7 +63,7 @@ jobs:
                     username: ${{ secrets.DEPLOY_USERNAME }}
                     privateKey: ${{ secrets.DEPLOY_KEY }}
                     local: "/tmp/docker-compose.yml"
-                    remote: "~/${{ github.repository }}/docker-compose.yml.${{ github.run_id }}"
+                    remote: "${{ github.repository }}/docker-compose.yml.${{ github.run_id }}"
             -   uses: appleboy/ssh-action@master
                 with:
                     host: ${{ secrets.DEPLOY_HOST }}
@@ -71,9 +71,9 @@ jobs:
                     key: ${{ secrets.DEPLOY_KEY }}
                     script_stop: true
                     script: |
-                        rm -f ~/${{ github.repository }}/docker-compose.yml.backup
-                        mv ~/${{ github.repository }}/docker-compose.yml ~/${{ github.repository }}/docker-compose.yml.backup
-                        mv ~/${{ github.repository }}/docker-compose.yml.${{ github.run_id }} ~/${{ github.repository }}/docker-compose.yml
+                        rm -f ${{ github.repository }}/docker-compose.yml.backup
+                        mv ${{ github.repository }}/docker-compose.yml ${{ github.repository }}/docker-compose.yml.backup
+                        mv ${{ github.repository }}/docker-compose.yml.${{ github.run_id }} ${{ github.repository }}/docker-compose.yml
                         cd ${{ github.repository }} && docker-compose up -d
 #                        cd ${{ github.repository }} && docker-compose exec -uwww-data app bin/console doctrine:migration:migrate -n
 
