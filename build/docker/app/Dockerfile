@@ -37,7 +37,7 @@ RUN composer install --no-scripts --prefer-dist --no-autoloader
 
 COPY . /var/www
 # Finish composer
-RUN composer install
+RUN composer dump-autoload --optimize
 
 RUN chown www-data:www-data /var/www/ -R
 
@@ -49,5 +49,3 @@ RUN composer global remove hirak/prestissimo \
     && pecl uninstall xdebug \
     && rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
     && rm /usr/local/etc/php-fpm.d/xdebug.ini
-
-
