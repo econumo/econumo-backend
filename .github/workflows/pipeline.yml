@@ -37,9 +37,6 @@ jobs:
                     docker push ${DOCKER_IMAGE_APP}
                     docker push ${DOCKER_IMAGE_APP_LATEST}
 
-            -   name: Deploy
-                if: success()
-            -   uses: actions/checkout@v1
             -   uses: falti/dotenv-action@v0.2.4
             -   name: Prepare docker-compose.yml
                 if: success()
