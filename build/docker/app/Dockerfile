@@ -42,7 +42,7 @@ COPY . /var/www
 # Finish composer
 RUN composer dump-autoload --optimize
 
-# RUN chown www-data:www-data /var/www/ -R
+RUN chown www-data:www-data /var/www/ -R
 
 # cleanup
 RUN composer global remove hirak/prestissimo \
