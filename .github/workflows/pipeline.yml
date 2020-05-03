@@ -38,6 +38,8 @@ jobs:
                     docker push ${DOCKER_IMAGE_APP_LATEST}
 
             -   uses: falti/dotenv-action@v0.2.4
+                with:
+                    log-variables: true
             -   name: Prepare docker-compose.yml
                 if: success()
                 run: |
