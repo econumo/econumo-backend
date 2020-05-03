@@ -14,4 +14,4 @@ services:
         image: ${DOCKER_IMAGE_APP}
         restart: always
         environment:
-            - ENVIRONMENT=prod
+            - APP_ENV=prod

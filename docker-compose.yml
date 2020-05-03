@@ -18,5 +18,3 @@ services:
             dockerfile: ./build/docker/app/Dockerfile
         restart: always
         working_dir: /var/www
-        environment:
-            - ENVIRONMENT=prod

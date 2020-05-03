@@ -17,7 +17,7 @@ services:
 #        ports:
 #            - ${DOCKER_COMPOSE_PORT_APP}:9000
         environment:
-            - ENVIRONMENT=dev
+            - APP_ENV=dev
             - COMPOSER_MEMORY_LIMIT=-1
             - PHP_DISPLAY_ERRORS=1
             - PHP_ERROR_REPORTING=32767
