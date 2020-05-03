@@ -24,8 +24,8 @@ RUN apk --update add git postgresql-dev \
     && rm -rf /tmp/* /var/cache/apk/*
 
 # composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-&& composer global require hirak/prestissimo --no-plugins --no-scripts
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN composer global require hirak/prestissimo --no-plugins --no-scripts
 
 
 FROM dev as prod
