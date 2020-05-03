@@ -37,15 +37,13 @@ jobs:
                     docker push ${DOCKER_IMAGE_APP}
                     docker push ${DOCKER_IMAGE_APP_LATEST}
 
-            -   name: dotenv
+            -   id: dotenv
                 uses: falti/dotenv-action@v0.2.4
                 with:
-                    log-variables: false
+                    log-variables: true
             -   name: Prepare docker-compose.yml
                 if: success()
                 run: |
-                    echo "${{ steps.dotenv.outputs.DOCKER_COMPOSE_PORT_NGINX }}"
-                    echo "${DOCKER_COMPOSE_PORT_NGINX}"
                     envsubst < docker-compose.production.yml > /tmp/docker-compose.yml
                     cat /tmp/docker-compose.yml
                 env:
