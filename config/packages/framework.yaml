@@ -1,9 +1,9 @@
+---
 framework:
     secret: '%env(APP_SECRET)%'
     csrf_protection: false
-    #http_method_override: true
 
-    #esi: true
-    #fragments: true
     php_errors:
         log: true
+
+    validation: {enable_annotations: true}

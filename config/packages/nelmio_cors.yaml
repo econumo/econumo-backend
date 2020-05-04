@@ -1,3 +1,4 @@
+---
 nelmio_cors:
     defaults:
         origin_regex: true
@@ -7,4 +8,4 @@ nelmio_cors:
         expose_headers: ['Link']
         max_age: 3600
     paths:
-        '^/': null
+        '^/': ~

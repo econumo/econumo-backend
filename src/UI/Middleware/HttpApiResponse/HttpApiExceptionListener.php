@@ -9,6 +9,7 @@ use App\UI\Service\Response\ResponseFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 class HttpApiExceptionListener
 {
@@ -25,6 +26,11 @@ class HttpApiExceptionListener
                     $event->getRequest(),
                     $exception->getMessage(),
                     $exception->getErrors()
+                );
+            } elseif ($exception instanceof AuthenticationException) {
+                $response = ResponseFactory::createErrorResponse(
+                    $event->getRequest(),
+                    $exception->getMessage()
                 );
             } elseif ($exception instanceof HttpException) {
                 $response = ResponseFactory::createErrorResponse(

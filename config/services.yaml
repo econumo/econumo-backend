@@ -17,8 +17,7 @@ services:
         resource: '../src/*'
         exclude:
             - '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
-            - '../src/Infrastructure'
-            - '../src/Infrastructure/**.php'
+            - '../src/Infrastructure/Doctrine/Migrations/**.php'
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
@@ -31,10 +30,6 @@ services:
     App\UI\Middleware\HttpApiResponse\HttpApiExceptionListener:
         tags:
             - {name: kernel.event_listener, event: kernel.exception}
-
-#    App\Infrastructure\AuthToken\AuthTokenGeneratorInterface:
-#        class: App\Infrastructure\AuthToken\JwtAuthTokenGenerator
-#        public: true
 
     JWTTokenAuthenticator:
         class: Lexik\Bundle\JWTAuthenticationBundle\Security\Guard\JWTTokenAuthenticator
