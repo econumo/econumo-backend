@@ -17,8 +17,7 @@ services:
         resource: '../src/*'
         exclude:
             - '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
-            - '../src/Infrastructure'
-            - '../src/Infrastructure/**.php'
+            - '../src/Infrastructure/Doctrine/Migrations/**.php'
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
@@ -39,7 +38,7 @@ services:
     JWTTokenAuthenticator:
         class: Lexik\Bundle\JWTAuthenticationBundle\Security\Guard\JWTTokenAuthenticator
 
-    kernel.event_listener.json_request_transformer:
-        class: Qandidate\Common\Symfony\HttpKernel\EventListener\JsonRequestTransformerListener
-        tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 100 }
+#    kernel.event_listener.json_request_transformer:
+#        class: Qandidate\Common\Symfony\HttpKernel\EventListener\JsonRequestTransformerListener
+#        tags:
+#            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 100 }

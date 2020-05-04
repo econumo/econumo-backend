@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Datetime;
 
 use App\Domain\Service\Datetime\DatetimeServiceInterface;
+use DateTimeImmutable;
 
 class DatetimeService implements DatetimeServiceInterface
 {
@@ -13,7 +14,6 @@ class DatetimeService implements DatetimeServiceInterface
      */
     public function getCurrentDatetime(): \DateTimeInterface
     {
-        return new \DateTimeImmutable();
+        return new DateTimeImmutable();
     }
-
 }

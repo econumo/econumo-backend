@@ -26,6 +26,6 @@ doctrine:
         auto_mapping: true
         mappings:
             App:
-                type: yml
-                dir: '%kernel.project_dir%/src/Infrastructure/Doctrine/PostgreSQL/mapping'
+                type: annotation
+                dir: '%kernel.project_dir%/src/Domain/Entity'
                 prefix: 'App\Domain\Entity'

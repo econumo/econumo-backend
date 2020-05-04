@@ -7,7 +7,7 @@ tasks:
         cmds:
             - docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build --remove-orphans
             - docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app composer install
-#            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app bin/console doctrine:migrations:migrate -n
+            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app bin/console doctrine:migrations:migrate -n
 
     dev-down:
         desc: "Stop application"

@@ -116,6 +116,7 @@ jobs:
                         mv ${{ github.repository }}/docker-compose.yml.${{ github.run_id }} ${{ github.repository }}/docker-compose.yml
                         mv ${{ github.repository }}/docker-compose.prod.yml.${{ github.run_id }} ${{ github.repository }}/docker-compose.prod.yml
                         cd ${{ github.repository }} && docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+                        cd ${{ github.repository }} && docker-compose -f docker-compose.yml -f docker-compose.prod.yml exec -uwww-data app bin/console doctrine:migrations:migrate -n
 
             -   name: Cleanup
                 if: success()
