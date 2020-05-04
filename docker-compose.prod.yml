@@ -11,3 +11,9 @@ services:
         restart: always
         environment:
             - APP_ENV=prod
+        networks:
+            - infra_net
+
+networks:
+    infra_net:
+        external: true
