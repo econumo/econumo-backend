@@ -3,19 +3,24 @@ version: '3.5'
 
 services:
     nginx:
+        build:
+            context: .
+            dockerfile: ./build/docker/nginx/Dockerfile
         volumes:
             - ./public:/var/www/public:cached
 
     app:
         build:
+            context: .
+            dockerfile: ./build/docker/app/Dockerfile
             target: dev
         depends_on:
             - db
         volumes:
             - .:/var/www:cached
             - ./var/:/var/www/var:delegated
-#        ports:
-#            - ${DOCKER_COMPOSE_PORT_APP}:9000
+        ports:
+            - ${DOCKER_COMPOSE_PORT_APP}:9000
         environment:
             - APP_ENV=dev
             - COMPOSER_MEMORY_LIMIT=-1

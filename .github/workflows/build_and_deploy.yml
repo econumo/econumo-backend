@@ -53,8 +53,11 @@ jobs:
             -   name: Deploy
                 if: success()
                 run: |
-                    envsubst < docker-compose.production.yml > /tmp/docker-compose.yml
+                    envsubst < docker-compose.yml > /tmp/docker-compose.yml
+                    envsubst < docker-compose.production.yml > /tmp/docker-compose.production.yml
                     cat /tmp/docker-compose.yml
+                    echo "\n"
+                    cat /tmp/docker-compose.production.yml
                 env:
                     DOCKER_COMPOSE_PORT_NGINX: ${{ steps.dotenv.outputs.docker_compose_port_nginx }}
                     DOCKER_COMPOSE_PORT_DB: ${{ steps.dotenv.outputs.docker_compose_port_db }}
@@ -77,6 +80,14 @@ jobs:
                     local: "/tmp/docker-compose.yml"
                     remote: "${{ github.repository }}/docker-compose.yml.${{ github.run_id }}"
 
+            -   uses: garygrossgarten/github-action-scp@release
+                with:
+                    host: ${{ secrets.DEPLOY_HOST }}
+                    username: ${{ secrets.DEPLOY_USERNAME }}
+                    privateKey: ${{ secrets.DEPLOY_KEY }}
+                    local: "/tmp/docker-compose.production.yml"
+                    remote: "${{ github.repository }}/docker-compose.production.yml.${{ github.run_id }}"
+
             -   uses: appleboy/ssh-action@master
                 with:
                     host: ${{ secrets.DEPLOY_HOST }}
@@ -85,33 +96,14 @@ jobs:
                     script_stop: true
                     script: |
                         rm -f ${{ github.repository }}/docker-compose.yml.backup || true
+                        rm -f ${{ github.repository }}/docker-compose.production.yml.backup || true
                         mv ${{ github.repository }}/docker-compose.yml ${{ github.repository }}/docker-compose.yml.backup  || true
+                        mv ${{ github.repository }}/docker-compose.production.yml ${{ github.repository }}/docker-compose.production.yml.backup  || true
                         mv ${{ github.repository }}/docker-compose.yml.${{ github.run_id }} ${{ github.repository }}/docker-compose.yml
-                        cd ${{ github.repository }} && docker-compose up -d
-#                        cd ${{ github.repository }} && docker-compose exec -uwww-data app bin/console doctrine:migration:migrate -n
+                        mv ${{ github.repository }}/docker-compose.production.yml.${{ github.run_id }} ${{ github.repository }}/docker-compose.production.yml
+                        cd ${{ github.repository }} && docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d
 
             -   name: Cleanup
                 if: success()
                 run: |
-                    rm -f /tmp/docker-compose.yml
-#    test:
-#        name: Test
-#        runs-on: ubuntu-latest
-#        env:
-#            DOCKER_IMAGE: ${GITHUB_REPOSITORY}:${GITHUB_RUN_ID}
-#            DOCKER_IMAGE_LATEST: ${GITHUB_REPOSITORY}:latest
-#
-#        steps:
-#            - name: Checkout
-#              uses: actions/checkout@v1
-#            - name: Install Task
-#              uses: Arduino/actions/setup-taskfile@master
-#            - name: Docker login
-#              run: docker login -u "${DOCKER_LOGIN}" -p "${DOCKER_PASSWORD}" "${DOCKER_REGISTRY}"
-#              env:
-#                  DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
-#                  DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}
-#                  DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-#            - name: Run tests
-#              if: success()
-#              run: echo 111
+                    rm -f /tmp/docker-compose*

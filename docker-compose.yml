@@ -3,18 +3,10 @@ version: '3.5'
 
 services:
     nginx:
-        build:
-            context: .
-            dockerfile: ./build/docker/nginx/Dockerfile
-        restart: always
         ports:
             - ${DOCKER_COMPOSE_PORT_NGINX}:80
         depends_on:
             - app
 
     app:
-        build:
-            context: .
-            dockerfile: ./build/docker/app/Dockerfile
-        restart: always
         working_dir: /var/www

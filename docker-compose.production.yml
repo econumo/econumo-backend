@@ -5,10 +5,6 @@ services:
     nginx:
         image: ${DOCKER_IMAGE_NGINX}
         restart: always
-        ports:
-            - ${DOCKER_COMPOSE_PORT_NGINX}:80
-        depends_on:
-            - app
 
     app:
         image: ${DOCKER_IMAGE_APP}
