@@ -13,21 +13,21 @@ jobs:
             DOCKER_LOGIN: ${{ github.actor }}
             DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
         steps:
-            -   uses: actions/checkout@v1
+#            -   name: Check requirements
+#                run: |
+#                    [[ -z "$DOCKER_REGISTRY" ]] && { echo '$DOCKER_REGISTRY is empty'; exit 1; }
+#                    [[ -z "$DOCKER_LOGIN" ]] && { echo '$DOCKER_LOGIN is empty'; exit 1; }
+#                    [[ -z "$DOCKER_PASSWORD" ]] && { echo '$DOCKER_PASSWORD is empty'; exit 1; }
+#                    [[ -z "$SECRETS_DEPLOY_HOST" ]] && { echo 'Secret DEPLOY_HOST is empty'; exit 1; }
+#                    [[ -z "$SECRETS_DEPLOY_USERNAME" ]] && { echo 'Secret DEPLOY_USERNAME is empty'; exit 1; }
+#                    [[ -z "$SECRETS_DEPLOY_KEY" ]] && { echo 'Secret DEPLOY_KEY is empty'; exit 1; }
+#                env:
+#                    SECRETS_DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+#                    SECRETS_DEPLOY_USERNAME: ${{ secrets.DEPLOY_USERNAME }}
+#                    SECRETS_DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+#                shell: bash
 
-            -   name: Check requirements
-                run: |
-                    [[ -z "$DOCKER_REGISTRY" ]] && { echo '$DOCKER_REGISTRY is empty'; exit 1; }
-                    [[ -z "$DOCKER_LOGIN" ]] && { echo '$DOCKER_LOGIN is empty'; exit 1; }
-                    [[ -z "$DOCKER_PASSWORD" ]] && { echo '$DOCKER_PASSWORD is empty'; exit 1; }
-                    [[ -z "$SECRETS_DEPLOY_HOST" ]] && { echo 'Secret DEPLOY_HOST is empty'; exit 1; }
-                    [[ -z "$SECRETS_DEPLOY_USERNAME" ]] && { echo 'Secret DEPLOY_USERNAME is empty'; exit 1; }
-                    [[ -z "$SECRETS_DEPLOY_KEY" ]] && { echo 'Secret DEPLOY_KEY is empty'; exit 1; }
-                env:
-                    SECRETS_DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
-                    SECRETS_DEPLOY_USERNAME: ${{ secrets.DEPLOY_USERNAME }}
-                    SECRETS_DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
-                shell: bash
+            -   uses: actions/checkout@v1
 
             -   name: Prepare env
                 run: |
