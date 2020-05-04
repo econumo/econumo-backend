@@ -5,24 +5,34 @@ tasks:
     dev-up:
         desc: "Start application"
         cmds:
-            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build --remove-orphans
             - docker-compose exec -uwww-data app composer install
 #            - docker-compose exec -uwww-data app bin/console doctrine:migrations:migrate -n
 
-    test-up:
-        desc: "Start application (with tests)"
+    dev-down:
+        desc: "Stop application"
         cmds:
-            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.test.yml up -d --build
-            - docker-compose exec app composer install
+            - docker-compose down --remove-orphans
+
+    dev-sh:
+        desc: "Jump into app container"
+        cmds:
+            - docker-compose exec -uwww-data app sh
+
+#    test-up:
+#        desc: "Start application (with tests)"
+#        cmds:
+#            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.test.yml up -d --build
+#            - docker-compose exec app composer install
 #            - docker-compose exec app bin/console doctrine:migrations:migrate -n
 #            - docker-compose exec test bin/console doctrine:migrations:migrate -n
 #            - docker-compose exec test bin/console doctrine:fixtures:load -n  --purge-with-truncate
 
-    test:
-        desc: "Test application"
-        cmds:
-            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.test.yml up -d --build
+#    test:
+#        desc: "Test application"
+#        cmds:
+#            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.test.yml up -d --build
 #            - docker-compose exec -uwww-data econumo-backend_test_1 bin/console doctrine:database:create --env=test --if-not-exists -vvv
 #            - docker-compose exec -uwww-data econumo-backend_test_1 bin/console doctrine:migration:migrate --env=test -n -vvv
 #            - docker-compose exec -uwww-data econumo-backend_test_1 bin/console doctrine:fixtures:load --purge-with-truncate -n --env=test -vvv
-            - docker-compose exec -uwww-data test vendor/bin/codecept run --steps -vvv
+#            - docker-compose exec -uwww-data test vendor/bin/codecept run --steps -vvv
