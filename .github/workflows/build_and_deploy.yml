@@ -109,15 +109,15 @@ jobs:
                     key: ${{ secrets.DEPLOY_KEY }}
                     script_stop: true
                     script: |
-                        rm -f ${{ github.repository }}/docker-compose.yml.backup || true
-                        rm -f ${{ github.repository }}/docker-compose.prod.yml.backup || true
-                        mv ${{ github.repository }}/docker-compose.yml ${{ github.repository }}/docker-compose.yml.backup  || true
-                        mv ${{ github.repository }}/docker-compose.prod.yml ${{ github.repository }}/docker-compose.prod.yml.backup  || true
-                        mv ${{ github.repository }}/docker-compose.yml.${{ github.run_id }} ${{ github.repository }}/docker-compose.yml
-                        mv ${{ github.repository }}/docker-compose.prod.yml.${{ github.run_id }} ${{ github.repository }}/docker-compose.prod.yml
-                        cd ${{ github.repository }} && docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+                        rm -f ~/${{ github.repository }}/docker-compose.yml.backup || true
+                        rm -f ~/${{ github.repository }}/docker-compose.prod.yml.backup || true
+                        mv ~/${{ github.repository }}/docker-compose.yml ~/${{ github.repository }}/docker-compose.yml.backup  || true
+                        mv ~/${{ github.repository }}/docker-compose.prod.yml ~/${{ github.repository }}/docker-compose.prod.yml.backup  || true
+                        mv ~/${{ github.repository }}/docker-compose.yml.${{ github.run_id }} ~/${{ github.repository }}/docker-compose.yml
+                        mv ~/${{ github.repository }}/docker-compose.prod.yml.${{ github.run_id }} ~/${{ github.repository }}/docker-compose.prod.yml
+                        cd ~/${{ github.repository }} && docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
                         sleep 15
-                        cd ${{ github.repository }} && docker-compose -f docker-compose.yml -f docker-compose.prod.yml exec -uwww-data app bin/console doctrine:migrations:migrate -n
+                        cd ~/${{ github.repository }} && docker-compose -f docker-compose.yml -f docker-compose.prod.yml exec -uwww-data app bin/console doctrine:migrations:migrate -n
 
             -   name: Cleanup
                 if: success()
