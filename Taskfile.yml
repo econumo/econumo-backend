@@ -6,18 +6,18 @@ tasks:
         desc: "Start application"
         cmds:
             - docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build --remove-orphans
-            - docker-compose exec -uwww-data app composer install
-#            - docker-compose exec -uwww-data app bin/console doctrine:migrations:migrate -n
+            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app composer install
+#            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app bin/console doctrine:migrations:migrate -n
 
     dev-down:
         desc: "Stop application"
         cmds:
-            - docker-compose down --remove-orphans
+            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml down --remove-orphans
 
     dev-sh:
         desc: "Jump into app container"
         cmds:
-            - docker-compose exec -uwww-data app sh
+            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app sh
 
 #    test-up:
 #        desc: "Start application (with tests)"
