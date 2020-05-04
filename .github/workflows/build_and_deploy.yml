@@ -8,11 +8,17 @@ jobs:
     build_and_deploy:
         name: Build and deploy
         runs-on: ubuntu-latest
+        env:
+            DOCKER_REGISTRY: 'docker.pkg.github.com'
+            DOCKER_LOGIN: ${{ github.actor }}
+            DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
         steps:
+            -   uses: actions/checkout@v1
+
             -   name: Prepare env
                 run: |
                     repo=$(echo "${{ github.repository }}" | awk -F / '{print $2}')
-                    prefix="${{ secrets.DOCKER_REGISTRY }}/${{ github.repository }}"
+                    prefix="${DOCKER_REGISTRY}/${{ github.repository }}"
                     suffix=${{ github.run_id }}
                     echo ::set-env name=DOCKER_IMAGE_NGINX::$(echo "${prefix}/${repo}_nginx:${suffix}")
                     echo ::set-env name=DOCKER_IMAGE_NGINX_LATEST::$(echo "${prefix}/${repo}_nginx:latest")
@@ -20,14 +26,8 @@ jobs:
                     echo ::set-env name=DOCKER_IMAGE_APP_LATEST::$(echo "${prefix}/${repo}_app:latest")
                 shell: bash
 
-            -   uses: actions/checkout@v1
-
             -   name: Docker login
                 run: docker login -u "${DOCKER_LOGIN}" -p "${DOCKER_PASSWORD}" "${DOCKER_REGISTRY}"
-                env:
-                    DOCKER_REGISTRY: 'docker.pkg.github.com'
-                    DOCKER_LOGIN: ${{ github.actor }}
-                    DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
 
             -   name: Build NGINX image
                 if: success()
