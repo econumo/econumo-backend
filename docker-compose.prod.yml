@@ -13,6 +13,7 @@ services:
             - APP_ENV=prod
         networks:
             - infra_net
+            - econumo-backend_default
 
 networks:
     infra_net:
