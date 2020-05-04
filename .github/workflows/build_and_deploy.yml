@@ -54,10 +54,10 @@ jobs:
                 if: success()
                 run: |
                     envsubst < docker-compose.yml > /tmp/docker-compose.yml
-                    envsubst < docker-compose.production.yml > /tmp/docker-compose.production.yml
+                    envsubst < docker-compose.prod.yml > /tmp/docker-compose.prod.yml
                     cat /tmp/docker-compose.yml
                     echo "\n"
-                    cat /tmp/docker-compose.production.yml
+                    cat /tmp/docker-compose.prod.yml
                 env:
                     DOCKER_COMPOSE_PORT_NGINX: ${{ steps.dotenv.outputs.docker_compose_port_nginx }}
                     DOCKER_COMPOSE_PORT_DB: ${{ steps.dotenv.outputs.docker_compose_port_db }}
@@ -85,8 +85,8 @@ jobs:
                     host: ${{ secrets.DEPLOY_HOST }}
                     username: ${{ secrets.DEPLOY_USERNAME }}
                     privateKey: ${{ secrets.DEPLOY_KEY }}
-                    local: "/tmp/docker-compose.production.yml"
-                    remote: "${{ github.repository }}/docker-compose.production.yml.${{ github.run_id }}"
+                    local: "/tmp/docker-compose.prod.yml"
+                    remote: "${{ github.repository }}/docker-compose.prod.yml.${{ github.run_id }}"
 
             -   uses: appleboy/ssh-action@master
                 with:
@@ -96,12 +96,12 @@ jobs:
                     script_stop: true
                     script: |
                         rm -f ${{ github.repository }}/docker-compose.yml.backup || true
-                        rm -f ${{ github.repository }}/docker-compose.production.yml.backup || true
+                        rm -f ${{ github.repository }}/docker-compose.prod.yml.backup || true
                         mv ${{ github.repository }}/docker-compose.yml ${{ github.repository }}/docker-compose.yml.backup  || true
-                        mv ${{ github.repository }}/docker-compose.production.yml ${{ github.repository }}/docker-compose.production.yml.backup  || true
+                        mv ${{ github.repository }}/docker-compose.prod.yml ${{ github.repository }}/docker-compose.prod.yml.backup  || true
                         mv ${{ github.repository }}/docker-compose.yml.${{ github.run_id }} ${{ github.repository }}/docker-compose.yml
-                        mv ${{ github.repository }}/docker-compose.production.yml.${{ github.run_id }} ${{ github.repository }}/docker-compose.production.yml
-                        cd ${{ github.repository }} && docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d
+                        mv ${{ github.repository }}/docker-compose.prod.yml.${{ github.run_id }} ${{ github.repository }}/docker-compose.prod.yml
+                        cd ${{ github.repository }} && docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 
             -   name: Cleanup
                 if: success()
