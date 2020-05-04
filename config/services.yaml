@@ -31,14 +31,10 @@ services:
         tags:
             - {name: kernel.event_listener, event: kernel.exception}
 
-#    App\Infrastructure\AuthToken\AuthTokenGeneratorInterface:
-#        class: App\Infrastructure\AuthToken\JwtAuthTokenGenerator
-#        public: true
-
     JWTTokenAuthenticator:
         class: Lexik\Bundle\JWTAuthenticationBundle\Security\Guard\JWTTokenAuthenticator
 
-#    kernel.event_listener.json_request_transformer:
-#        class: Qandidate\Common\Symfony\HttpKernel\EventListener\JsonRequestTransformerListener
-#        tags:
-#            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 100 }
+    kernel.event_listener.json_request_transformer:
+        class: Qandidate\Common\Symfony\HttpKernel\EventListener\JsonRequestTransformerListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 100 }
