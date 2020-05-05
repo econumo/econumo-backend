@@ -41,8 +41,8 @@ class Id implements JsonSerializable
         return $this->value;
     }
 
-    public function isEqual(Id $id): bool
+    public function isEqual(self $valueObject): bool
     {
-        return $this->value === $id->getValue();
+        return $this->value === $valueObject->getValue();
     }
 }

@@ -18,6 +18,7 @@ doctrine:
         charset: 'utf8'
         types:
             uuid: App\Infrastructure\Doctrine\Type\UuidType
+            account_type: App\Infrastructure\Doctrine\Type\AccountType
         server_version: 11
 
     orm:
