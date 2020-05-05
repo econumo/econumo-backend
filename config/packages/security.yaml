@@ -18,8 +18,7 @@ security:
             anonymous: lazy
             json_login:
                 check_path: /api/v1/user/login
-#                success_handler: lexik_jwt_authentication.handler.authentication_success
-#                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+                failure_handler: App\Infrastructure\Auth\AuthenticationFailureHandler
 
         api:
             pattern:   ^/api

@@ -25,17 +25,14 @@ class HttpApiExceptionListener
                 $response = ResponseFactory::createErrorResponse(
                     $event->getRequest(),
                     $exception->getMessage(),
+                    (int) $exception->getCode(),
                     $exception->getErrors()
-                );
-            } elseif ($exception instanceof AuthenticationException) {
-                $response = ResponseFactory::createErrorResponse(
-                    $event->getRequest(),
-                    $exception->getMessage()
                 );
             } elseif ($exception instanceof HttpException) {
                 $response = ResponseFactory::createErrorResponse(
                     $event->getRequest(),
                     $exception->getMessage(),
+                    (int) $exception->getCode(),
                     [],
                     $exception->getStatusCode()
                 );

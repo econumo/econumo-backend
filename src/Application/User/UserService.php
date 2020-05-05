@@ -6,6 +6,7 @@ namespace App\Application\User;
 use App\Application\User\Assembler\LoginDisplayAssembler;
 use App\Application\User\Dto\LoginDisplayDto;
 use App\Domain\Entity\User\User;
+use App\Domain\Entity\ValueObject\Id;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 
 class UserService
@@ -20,7 +21,7 @@ class UserService
     private $authToken;
 
     public function __construct(
-        AuthTokenInterface $authToken,
+        JWTTokenManagerInterface $authToken,
         LoginDisplayAssembler $loginDisplayAssembler
     ) {
         $this->loginDisplayAssembler = $loginDisplayAssembler;
@@ -30,7 +31,8 @@ class UserService
     public function login(User $user): LoginDisplayDto
     {
         $token = $this->authToken->create($user);
+        $budgetId = new Id('budget_1');
 
-        return $this->loginDisplayAssembler->assemble($token);
+        return $this->loginDisplayAssembler->assemble($token, $budgetId);
     }
 }

@@ -35,11 +35,15 @@ nelmio_api_doc:
                 type: object
                 required:
                     - message
+                    - code
                     - errors
                 properties:
                     message:
                         type: string
                         description: Инф. сообщение
+                    code:
+                        type: integer
+                        description: Код ошибки
                     errors:
                         type: array
                         description: Список ошибок
@@ -64,14 +68,14 @@ nelmio_api_doc:
                 type: object
                 required:
                     - message
-                    - exceptionMessage
+                    - code
                 properties:
                     message:
                         type: string
                         description: Текст ошибки
-                    exceptionMessage:
-                        type: string
-                        description: Текст исключения
+                    code:
+                        type: integer
+                        description: Код ошибки
                     exceptionType:
                         type: string
                         description: Тип исключения
