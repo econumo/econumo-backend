@@ -5,7 +5,8 @@ namespace App\Infrastructure\Doctrine\Repository;
 
 use App\Domain\Entity\Account\Account;
 use App\Domain\Entity\User\User;
-use App\Domain\Repository\UserRepositoryInterface;
+use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Repository\AccountRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -15,11 +16,24 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method User[]    findAll()
  * @method User[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class AccountRepository extends ServiceEntityRepository implements UserRepositoryInterface
+class AccountRepository extends ServiceEntityRepository implements AccountRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Account::class);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function findByUserId(Id $id): array
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.userId = :id')
+            ->setParameter('id', $id->getValue())
+            ->orderBy('a.position', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 
     // /**

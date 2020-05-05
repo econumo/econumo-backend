@@ -43,8 +43,8 @@ class Account
     private $currencyId;
 
     /**
-     * @var float
-     * @ORM\Column(type="decimal")
+     * @var string
+     * @ORM\Column(type="decimal", precision=19, scale=2)
      */
     private $balance;
 
@@ -85,9 +85,81 @@ class Account
         $this->userId = $userId;
         $this->name = $name;
         $this->currencyId = $currencyId;
-        $this->balance = $balance;
+        $this->balance = (string)$balance;
         $this->type = $type;
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
+    }
+
+    /**
+     * @return Id
+     */
+    public function getId(): Id
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPosition(): int
+    {
+        return $this->position;
+    }
+
+    /**
+     * @return Id
+     */
+    public function getCurrencyId(): Id
+    {
+        return $this->currencyId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBalance(): string
+    {
+        return $this->balance;
+    }
+
+    /**
+     * @return AccountType
+     */
+    public function getType(): AccountType
+    {
+        return $this->type;
+    }
+
+    /**
+     * @return Id
+     */
+    public function getUserId(): Id
+    {
+        return $this->userId;
+    }
+
+    /**
+     * @return DateTimeInterface
+     */
+    public function getCreatedAt(): DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @return DateTimeInterface
+     */
+    public function getUpdatedAt(): DateTimeInterface
+    {
+        return $this->updatedAt;
     }
 }

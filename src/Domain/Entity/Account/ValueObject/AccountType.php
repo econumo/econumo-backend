@@ -43,7 +43,7 @@ final class AccountType implements JsonSerializable
         return $this->value === $valueObject->getValue();
     }
 
-    public function getValue(): string
+    public function getValue(): int
     {
         return $this->value;
     }
