@@ -4,10 +4,9 @@ nelmio_api_doc:
         use_jms: false
     areas:
         path_patterns:
-            - ^/api(?!/documentation$)
-            - ^/_/status
+            - ^/api(?!/doc$)
     documentation:
-        host: 127.0.0.1:8082
+        host: '127.0.0.1:%env(resolve:DOCKER_COMPOSE_PORT_NGINX)%'
         info:
             title: API documentation
             description: API documentation

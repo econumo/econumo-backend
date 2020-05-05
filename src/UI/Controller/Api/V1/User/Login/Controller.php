@@ -28,6 +28,7 @@ class Controller extends AbstractController
 
     /**
      * @SWG\Tag(name="user", description=""),
+     * @SWG\Post(security={})
      * @SWG\Parameter(
      *     name="payload",
      *     in="body",
