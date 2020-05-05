@@ -12,9 +12,9 @@ services:
         environment:
             - APP_ENV=prod
         networks:
-            - infra_net
-            - econumo-backend_default
+            - default
+            - infra_econumo
 
 networks:
-    infra_net:
+    infra_econumo:
         external: true
