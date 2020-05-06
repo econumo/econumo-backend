@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\UI\Controller\Api\V1\Account\GetList;
 
 use App\Application\Account\AccountService;
-use App\Domain\Entity\User\User;
+use App\Domain\Entity\User;
 use App\UI\Service\Response\ResponseFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;

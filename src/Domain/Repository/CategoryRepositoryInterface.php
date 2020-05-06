@@ -3,14 +3,14 @@ declare(strict_types=1);
 
 namespace App\Domain\Repository;
 
-use App\Domain\Entity\Account;
+use App\Domain\Entity\Category;
 use App\Domain\Entity\ValueObject\Id;
 
-interface AccountRepositoryInterface
+interface CategoryRepositoryInterface
 {
     /**
      * @param Id $id
-     * @return Account[]
+     * @return Category[]
      */
     public function findByUserId(Id $id): array;
 }

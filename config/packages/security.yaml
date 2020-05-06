@@ -1,6 +1,6 @@
 security:
     encoders:
-        App\Domain\Entity\User\User:
+        App\Domain\Entity\User:
             algorithm: auto
 
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
@@ -38,5 +38,5 @@ security:
         # used to reload user from session & other features (e.g. switch_user)
         app_user_provider:
             entity:
-                class: App\Domain\Entity\User\User
+                class: App\Domain\Entity\User
                 property: username

@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Domain\Entity\Account;
+namespace App\Domain\Entity;
 
-use App\Domain\Entity\Account\ValueObject\AccountType;
+use App\Domain\Entity\ValueObject\AccountType;
 use App\Domain\Entity\ValueObject\Id;
 use DateTime;
 use DateTimeImmutable;

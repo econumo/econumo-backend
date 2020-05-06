@@ -1,40 +1,33 @@
 <?php
 declare(strict_types=1);
 
-namespace App\UI\Controller\Api\V1\User\Login;
+namespace App\UI\Controller\Api\V1\Category\GetList;
 
-use App\Application\User\UserService;
+use App\Application\Category\CategoryService;
 use App\Domain\Entity\User;
 use App\UI\Service\Response\ResponseFactory;
-use Nelmio\ApiDocBundle\Annotation\Model as SwgModel;
-use Swagger\Annotations as SWG;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Nelmio\ApiDocBundle\Annotation\Model as SwgModel;
+use Swagger\Annotations as SWG;
 
 class Controller extends AbstractController
 {
     /**
-     * @var UserService
+     * @var CategoryService
      */
-    private $userService;
+    private $categoryService;
 
     public function __construct(
-        UserService $userService
+        CategoryService $categoryService
     ) {
-        $this->userService = $userService;
+        $this->categoryService = $categoryService;
     }
 
     /**
-     * @SWG\Tag(name="user", description=""),
-     * @SWG\Post(security={})
-     * @SWG\Parameter(
-     *     name="payload",
-     *     in="body",
-     *     required=true,
-     *     @SWG\Schema(ref=@SwgModel(type=\App\UI\Controller\Api\V1\User\Login\Model::class)),
-     * ),
+     * @SWG\Tag(name="category", description=""),
      * @SWG\Response(
      *     response=200,
      *     description="OK",
@@ -45,7 +38,7 @@ class Controller extends AbstractController
      *             @SWG\Schema(
      *                 @SWG\Property(
      *                     property="data",
-     *                     ref=@SwgModel(type=\App\Application\User\Dto\LoginDisplayDto::class)
+     *                     ref=@SwgModel(type=\App\Application\Category\Dto\GetListDisplayDto::class)
      *                 )
      *             )
      *         }
@@ -54,7 +47,7 @@ class Controller extends AbstractController
      * @SWG\Response(response=400, description="Bad Request", @SWG\Schema(ref="#/definitions/JsonResponseError")),
      * @SWG\Response(response=500, description="Internal Server Error", @SWG\Schema(ref="#/definitions/JsonResponseException")),
      *
-     * @Route("/api/v1/user/login", methods={"POST"})
+     * @Route("/api/v1/category/get-list", methods={"GET"})
      *
      * @param Request $request
      * @return Response
@@ -63,7 +56,7 @@ class Controller extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
-        $result = $this->userService->login($user);
+        $result = $this->categoryService->getList($user->getId());
 
         return ResponseFactory::createOkResponse($request, $result);
     }

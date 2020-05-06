@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Doctrine\Repository;
 
-use App\Domain\Entity\User\User;
+use App\Domain\Entity\User;
 use App\Domain\Repository\UserRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;

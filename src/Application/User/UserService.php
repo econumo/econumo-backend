@@ -6,7 +6,7 @@ namespace App\Application\User;
 use App\Application\User\Assembler\LoginDisplayAssembler;
 use App\Application\User\Dto\LoginDisplayDto;
 use App\Application\User\Dto\LogoutDisplayDto;
-use App\Domain\Entity\User\User;
+use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\Id;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 

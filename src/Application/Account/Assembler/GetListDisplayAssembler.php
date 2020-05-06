@@ -5,7 +5,7 @@ namespace App\Application\Account\Assembler;
 
 use App\Application\Account\Dto\AccountDisplayDto;
 use App\Application\Account\Dto\GetListDisplayDto;
-use App\Domain\Entity\Account\Account;
+use App\Domain\Entity\Account;
 
 class GetListDisplayAssembler
 {
@@ -17,7 +17,7 @@ class GetListDisplayAssembler
     {
         $dto = new GetListDisplayDto();
         $dto->items = [];
-        foreach ($accounts as $account) {
+        foreach (array_reverse($accounts) as $account) {
             $item = new AccountDisplayDto();
             $item->id = $account->getId();
             $item->name = $account->getName();

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Doctrine\Type;
 
-use App\Domain\Entity\Account\ValueObject\AccountType as ValueObject;
+use App\Domain\Entity\ValueObject\AccountType as ValueObject;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\SmallIntType;
 

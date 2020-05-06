@@ -2,7 +2,7 @@
 
 namespace App\DataFixtures;
 
-use App\Domain\Entity\User\User;
+use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\Id;
 use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
