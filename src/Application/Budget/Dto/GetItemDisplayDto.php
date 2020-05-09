@@ -7,11 +7,17 @@ use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Definition(
- *     required={"period", "values"}
+ *     required={"budget", "period", "values"}
  * )
  */
 class GetItemDisplayDto
 {
+    /**
+     * @var GetListItemDisplayDto
+     * @SWG\Property()
+     */
+    public $budget;
+
     /**
      * @var GetItemPeriodDisplayDto[]
      * @SWG\Property()

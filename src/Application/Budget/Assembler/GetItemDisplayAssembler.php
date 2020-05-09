@@ -6,6 +6,7 @@ namespace App\Application\Budget\Assembler;
 use App\Application\Budget\Dto\GetItemDisplayDto;
 use App\Application\Budget\Dto\GetItemPeriodDisplayDto;
 use App\Application\Budget\Dto\GetItemValueDisplayDto;
+use App\Application\Budget\Dto\GetListItemDisplayDto;
 use App\Domain\Entity\Budget;
 use App\Domain\Entity\BudgetData;
 use DateInterval;
@@ -26,6 +27,12 @@ class GetItemDisplayAssembler
     public function assemble(Budget $budget, array $data, DateTimeInterface $fromDate, DateTimeInterface $toDate): GetItemDisplayDto
     {
         $dto = new GetItemDisplayDto();
+        $dto->budget = new GetListItemDisplayDto();
+        $dto->budget->id = $budget->getId()->getValue();
+        $dto->budget->name = $budget->getName();
+        $dto->budget->position = $budget->getPosition();
+        $dto->budget->currencyId = $budget->getCurrencyId()->getValue();
+
         $dto->period = [];
         $interval = new DateInterval('P1M');
         /** @var DateTimeInterface[] $period */
