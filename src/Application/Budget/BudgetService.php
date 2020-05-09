@@ -52,12 +52,11 @@ class BudgetService
 
     public function getItem(string $id, string $from, string $to): GetItemDisplayDto
     {
-        $budget = $this->budgetRepository->find(new Id($id));
         $tmpFromDate = DateTimeImmutable::createFromFormat('Y-m-d', $from);
         $fromDate = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $tmpFromDate->format('Y-m-01 00:00:00'));
         $tmpToDate = DateTimeImmutable::createFromFormat('Y-m-d', $to);
         $toDate = DateTimeImmutable::createFromFormat('Y-n-d H:i:s', $tmpToDate->format('Y-m-t 23:59:59'));
-
+        $budget = $this->budgetRepository->find(new Id($id));
         $data = $this->budgetDataRepository->findByBudgetId($budget->getId(), $fromDate, $toDate,);
 
         return $this->getItemDisplayAssembler->assemble($budget, $data, $fromDate, $toDate);
