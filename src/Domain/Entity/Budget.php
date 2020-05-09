@@ -107,4 +107,12 @@ class Budget
     {
         return $this->currencyId;
     }
+
+    /**
+     * @return Id
+     */
+    public function getUserId(): Id
+    {
+        return $this->userId;
+    }
 }
