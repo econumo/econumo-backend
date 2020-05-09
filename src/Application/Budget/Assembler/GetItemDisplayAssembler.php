@@ -41,7 +41,7 @@ class GetItemDisplayAssembler
         foreach ($period as $date) {
             $item = new GetItemPeriodDisplayDto();
             $item->id = $date->format(static::PERIOD_ID_FORMAT);
-            $item->monthNumber = $date->format('m');
+            $item->month = $date->format('m');
             $item->position = $i++;
             $dto->period[] = $item;
         }

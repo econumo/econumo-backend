@@ -24,7 +24,7 @@ class GetItemPeriodDisplayDto
      * @var string
      * @SWG\Property(example="02")
      */
-    public $monthNumber;
+    public $month;
 
     /**
      * Position
