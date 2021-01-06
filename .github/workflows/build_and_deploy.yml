@@ -34,10 +34,10 @@ jobs:
                     repo=$(echo "${{ github.repository }}" | awk -F / '{print $2}')
                     prefix="${DOCKER_REGISTRY}/${{ github.repository }}"
                     suffix=${{ github.run_id }}
-                    echo ::set-env name=DOCKER_IMAGE_NGINX::$(echo "${prefix}/${repo}_nginx:${suffix}")
-                    echo ::set-env name=DOCKER_IMAGE_NGINX_LATEST::$(echo "${prefix}/${repo}_nginx:latest")
-                    echo ::set-env name=DOCKER_IMAGE_APP::$(echo "${prefix}/${repo}_app:${suffix}")
-                    echo ::set-env name=DOCKER_IMAGE_APP_LATEST::$(echo "${prefix}/${repo}_app:latest")
+                    echo "DOCKER_IMAGE_NGINX=$(echo "${prefix}/${repo}_nginx:${suffix}")" >> $GITHUB_ENV
+                    echo "DOCKER_IMAGE_NGINX_LATEST=$(echo "${prefix}/${repo}_nginx:latest")" >> $GITHUB_ENV
+                    echo "DOCKER_IMAGE_APP=$(echo "${prefix}/${repo}_app:${suffix}")" >> $GITHUB_ENV
+                    echo "DOCKER_IMAGE_APP_LATEST=$(echo "${prefix}/${repo}_app:latest")" >> $GITHUB_ENV
                 shell: bash
 
             -   name: Docker login
