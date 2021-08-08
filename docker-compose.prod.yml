@@ -13,8 +13,8 @@ services:
             - APP_ENV=prod
         networks:
             - default
-            - infra_econumo
+            - infra_deer
 
 networks:
-    infra_econumo:
+    infra_deer:
         external: true
