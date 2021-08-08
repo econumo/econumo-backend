@@ -25,7 +25,7 @@ RUN apk --update add git postgresql-dev \
 
 # composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-RUN composer global require hirak/prestissimo --no-plugins --no-scripts
+# RUN composer global require hirak/prestissimo --no-plugins --no-scripts
 
 
 FROM dev as prod
@@ -42,8 +42,8 @@ RUN composer dump-autoload --optimize
 RUN chown www-data:www-data /var/www/ -R
 
 # cleanup
-RUN composer global remove hirak/prestissimo \
-    && composer clear-cache \
+RUN composer clear-cache \
+#    && composer global remove hirak/prestissimo \
     && rm /usr/local/bin/composer \
     && apk del git \
     && pecl uninstall xdebug \
