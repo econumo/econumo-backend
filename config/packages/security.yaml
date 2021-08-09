@@ -15,11 +15,11 @@ security:
             security: false
 
         login:
-            pattern: ^/api/v1/user/login
+            pattern: ^/api/v1/user/login-user
             stateless: true
             anonymous: lazy
             json_login:
-                check_path: /api/v1/user/login
+                check_path: /api/v1/user/login-user
                 failure_handler: App\Infrastructure\Auth\AuthenticationFailureHandler
 
         api:
@@ -32,10 +32,10 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - {path: ^/api/v1/user/login, roles: IS_AUTHENTICATED_ANONYMOUSLY}
+        - {path: ^/api/v1/user/login-user, roles: IS_AUTHENTICATED_ANONYMOUSLY}
         - {path: ^/api/doc.json, roles: IS_AUTHENTICATED_ANONYMOUSLY}
         - {path: ^/api, roles: IS_AUTHENTICATED_FULLY}
 
     providers:
         app_user_provider:
-            id: \App\Infrastructure\Doctrine\UserProvider
+            id: App\Infrastructure\Doctrine\UserProvider

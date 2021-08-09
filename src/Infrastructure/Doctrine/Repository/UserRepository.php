@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Infrastructure\Doctrine\Repository;
@@ -79,16 +80,28 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     */
     public function secureEmail(User $user, string $email): void
     {
-        $hashedEmail = $email;
-        for ($i = 0; $i < 500; $i++) {
-            $hashedEmail = sha1($hashedEmail);
-        }
+        $hashedEmail = $this->hashEmail($email);
         $user->updateEmail($hashedEmail);
     }
 
     public function loadByEmail(string $email): User
     {
-        // TODO: Implement loadByEmail() method.
-        return new NotFoundException('Not found');
+        /** @var User|null $user */
+        $user = $this->findOneBy(['email' => $this->hashEmail($email)]);
+        if ($user === null) {
+            throw new NotFoundException(sprintf('User with e-mail %s not found', $email));
+        }
+
+        return $user;
+    }
+
+    private function hashEmail(string $email): string
+    {
+        $hashedEmail = $email;
+        for ($i = 0; $i < 500; $i++) {
+            $hashedEmail = sha1($hashedEmail);
+        }
+
+        return $hashedEmail;
     }
 }
