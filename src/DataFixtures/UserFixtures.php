@@ -2,33 +2,22 @@
 
 namespace App\DataFixtures;
 
-use App\Domain\Entity\User;
-use App\Domain\Entity\ValueObject\Id;
-use DateTime;
+use App\Domain\Factory\UserFactoryInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserFixtures extends Fixture
 {
-    /**
-     * @var UserPasswordEncoderInterface
-     */
-    private $passwordEncoder;
+    private UserFactoryInterface $userFactory;
 
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(UserFactoryInterface $userFactory)
     {
-        $this->passwordEncoder = $passwordEncoder;
+        $this->userFactory = $userFactory;
     }
 
     public function load(ObjectManager $manager)
     {
-        $user = new User(
-            new Id('7c884d22-438d-47b7-a59e-e04a7bf028eb'),
-            '1@user',
-            new DateTime('2020-05-04 21:39:00')
-        );
-        $user->updatePassword($this->passwordEncoder->encodePassword($user, 'pass'));
+        $user = $this->userFactory->create('Dmitry', 'dmitry@econumo', 'pass');
         $manager->persist($user);
 
         $manager->flush();

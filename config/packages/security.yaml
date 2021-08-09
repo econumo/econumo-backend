@@ -1,7 +1,9 @@
 security:
-    encoders:
+    password_hashers:
         App\Domain\Entity\User:
-            algorithm: auto
+            algorithm: sha512
+            encode_as_base64: true
+            iterations: 500
 
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
 #    providers:
