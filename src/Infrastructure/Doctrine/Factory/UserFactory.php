@@ -34,11 +34,7 @@ class UserFactory implements UserFactoryInterface
             $name,
             $this->datetimeService->getCurrentDatetime()
         );
-        $hashedEmail = $email;
-        for ($i = 0; $i < 500; $i++) {
-            $hashedEmail = sha1($hashedEmail);
-        }
-        $user->updateEmail($hashedEmail);
+        $this->repository->secureEmail($user, $email);
         $user->updatePassword($this->userPasswordHasher->hashPassword($user, $password));
 
         return $user;

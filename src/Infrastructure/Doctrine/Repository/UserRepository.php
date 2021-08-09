@@ -5,6 +5,7 @@ namespace App\Infrastructure\Doctrine\Repository;
 
 use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\UserRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -76,4 +77,18 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         ;
     }
     */
+    public function secureEmail(User $user, string $email): void
+    {
+        $hashedEmail = $email;
+        for ($i = 0; $i < 500; $i++) {
+            $hashedEmail = sha1($hashedEmail);
+        }
+        $user->updateEmail($hashedEmail);
+    }
+
+    public function loadByEmail(string $email): User
+    {
+        // TODO: Implement loadByEmail() method.
+        return new NotFoundException('Not found');
+    }
 }
