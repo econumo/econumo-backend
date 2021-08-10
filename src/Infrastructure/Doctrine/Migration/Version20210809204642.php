@@ -26,7 +26,6 @@ final class Version20210809204642 extends AbstractMigration
         $this->addSql('DROP TABLE budget_data');
         $this->addSql('DROP INDEX uniq_8d93d649f85e0677');
         $this->addSql('ALTER TABLE "user" ADD email VARCHAR(255) NOT NULL');
-        $this->addSql('DELETE * FROM user WHERE 1=1');
         $this->addSql('ALTER TABLE "user" ADD salt VARCHAR(255) NOT NULL');
         $this->addSql('ALTER TABLE "user" ALTER id TYPE UUID');
         $this->addSql('ALTER TABLE "user" ALTER id DROP DEFAULT');
