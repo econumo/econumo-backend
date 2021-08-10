@@ -7,7 +7,7 @@ namespace App\Infrastructure\Doctrine\Factory;
 use App\Domain\Entity\User;
 use App\Domain\Factory\UserFactoryInterface;
 use App\Domain\Repository\UserRepositoryInterface;
-use App\Domain\Service\Datetime\DatetimeServiceInterface;
+use App\Domain\Service\DatetimeServiceInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFactory implements UserFactoryInterface

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Datetime;
 
-use App\Domain\Service\Datetime\DatetimeServiceInterface;
+use App\Domain\Service\DatetimeServiceInterface;
 use DateTimeImmutable;
 
 class DatetimeService implements DatetimeServiceInterface

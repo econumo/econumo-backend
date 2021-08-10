@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\UI\Service\Validator\ValidatorInterface;
 use App\UI\Service\Response\ResponseFactory;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Swagger\Annotations as SWG;
@@ -66,6 +67,9 @@ class LoginUserV1Controller extends AbstractController
     public function __invoke(Request $request): Response
     {
         $user = $this->getUser();
+//        if ($user === null) {
+//            throw new AccessDeniedHttpException('Auth failed');
+//        }
         $result = $this->userService->loginUser($user);
 
         return ResponseFactory::createOkResponse($request, $result);

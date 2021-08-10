@@ -1,28 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DataFixtures;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Persistence\ObjectManager;
 use Doctrine\DBAL\Connection;
+use Doctrine\Persistence\ObjectManager;
 use Exception;
 
 abstract class AbstractFixture extends Fixture
 {
-    /**
-     * @var string
-     */
-    public $tableName;
+    /** @var string Table name in database */
+    public string $tableName;
 
-    /**
-     * @var string
-     */
-    public $dataFile;
+    /** @var string Path to file with fixtures. Could be empty. ex. "tests/fixtures/user.php" */
+    public string $dataFile;
 
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private Connection $connection;
 
     public function __construct(Connection $connection)
     {
@@ -30,7 +25,6 @@ abstract class AbstractFixture extends Fixture
     }
 
     /**
-     * @param ObjectManager $manager
      * @throws \Doctrine\DBAL\DBALException
      * @throws Exception
      */
@@ -45,7 +39,6 @@ abstract class AbstractFixture extends Fixture
     }
 
     /**
-     * @return string
      * @throws Exception
      */
     protected function getTableName(): string
@@ -58,19 +51,18 @@ abstract class AbstractFixture extends Fixture
     }
 
     /**
-     * @return array
      * @throws Exception
      */
     protected function getDataForInsert(): array
     {
         if (empty($this->dataFile)) {
-            throw new Exception('$dataFile name property must be set');
+            $this->dataFile = sprintf('tests/fixtures/%s.php', $this->tableName);
         }
 
         if (file_exists($this->dataFile) === false) {
             throw new Exception(sprintf('File "%s" not exists', $this->dataFile));
         }
 
-        return require($this->dataFile);
+        return require $this->dataFile;
     }
 }

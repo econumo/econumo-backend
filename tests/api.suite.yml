@@ -6,17 +6,18 @@
 
 actor: ApiTester
 modules:
-    enabled:
-        - \App\Tests\Helper\Api
-        - Symfony:
-              app_path: 'src'
-              var_path: 'var'
-              environment: 'test'
-#        - Doctrine2:
-#              depends: Symfony
-#              cleanup: true
-        - REST:
-              depends: Symfony
-              part: Json
-              timeout: 60
-        - Asserts:
+  enabled:
+    - \App\Tests\Helper\Api
+    - \App\Tests\Helper\DbHelper
+    - Symfony:
+        app_path: 'src'
+        var_path: 'var'
+        environment: 'test'
+    - Doctrine2:
+        depends: Symfony
+        cleanup: true
+    - REST:
+        depends: Symfony
+        part: Json
+        timeout: 60
+    - Asserts:
