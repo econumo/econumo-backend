@@ -12,14 +12,11 @@ final class AccountType implements JsonSerializable
     public const CASH = 1;
     public const CREDIT_CARD = 2;
 
-    /**
-     * @var string
-     */
-    private $value;
+    private int $value;
 
     public function __construct(int $value)
     {
-        if (!static::isValid($value)) {
+        if (!self::isValid($value)) {
             throw new DomainException(sprintf('AccountType %d not exists', $value));
         }
         $this->value = $value;
@@ -27,7 +24,7 @@ final class AccountType implements JsonSerializable
 
     public static function isValid(int $value): bool
     {
-        return in_array($value, [static::CASH, static::CREDIT_CARD], true);
+        return in_array($value, [self::CASH, self::CREDIT_CARD], true);
     }
 
     /**

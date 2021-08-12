@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Infrastructure\Doctrine\Repository\CurrencyRepository")
- * @ORM\Table(name="`currency`")
+ * @ORM\Table(name="`currencies`")
  */
 class Currency
 {

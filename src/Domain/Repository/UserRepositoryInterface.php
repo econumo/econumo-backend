@@ -5,12 +5,13 @@ namespace App\Domain\Repository;
 
 use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Entity\ValueObject\Identifier;
 
 interface UserRepositoryInterface
 {
     public function getNextIdentity(): Id;
 
-    public function secureEmail(User $user, string $email): void;
+    public function loadByIdentifier(Identifier $identifier): User;
 
-    public function loadByEmail(string $email): User;
+    public function save(User ...$users): void;
 }

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Domain\Entity;
 
+use App\Domain\Entity\ValueObject\Email;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Entity\ValueObject\Identifier;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -14,7 +16,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Infrastructure\Doctrine\Repository\UserRepository")
- * @ORM\Table(name="`user`")
+ * @ORM\Table(name="`users`")
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -29,18 +31,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string")
      */
-    private string $username;
-
-    /**
-     * @ORM\Column(type="json")
-     */
-    private array $roles = [];
+    private string $name;
 
     /**
      * @var string The hashed e-mail
-     * @ORM\Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true, length=40)
      */
-    private string $email;
+    private string $identifier;
 
     /**
      * @var string The hashed password
@@ -64,19 +61,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private DateTimeInterface $updatedAt;
 
-    public function __construct(Id $id, string $salt, string $name, DateTimeInterface $createdAt)
+    public function __construct(Id $id, string $salt, string $name, Email $email, DateTimeInterface $createdAt)
     {
         $this->id = $id;
         $this->salt = $salt;
-        $this->username = $name;
+        $this->name = $name;
+        $this->identifier = Identifier::createFromEmail($email)->getValue();
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
-        $this->roles = $this->getRoles();
     }
 
     public function getId(): Id
     {
         return $this->id;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
     }
 
     /**
@@ -86,7 +88,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUsername(): string
     {
-        return (string)$this->username;
+        return $this->getUserIdentifier();
     }
 
     /**
@@ -94,16 +96,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getRoles(): array
     {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
-    }
-
-    public function getEmail(): string
-    {
-        return $this->email;
+        return ['ROLE_USER'];
     }
 
     /**
@@ -112,11 +105,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getPassword(): string
     {
         return $this->password;
-    }
-
-    public function updateEmail(string $email): void
-    {
-        $this->email = $email;
     }
 
     public function updatePassword(string $password): void
@@ -137,12 +125,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function eraseCredentials()
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+
     }
 
-    public function getUserIdentifier()
+    public function getUserIdentifier(): string
     {
-        return $this->email;
+        return $this->identifier;
     }
 }

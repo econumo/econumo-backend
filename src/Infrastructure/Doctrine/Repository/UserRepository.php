@@ -6,11 +6,15 @@ namespace App\Infrastructure\Doctrine\Repository;
 
 use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Entity\ValueObject\Identifier;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\UserRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\ORMException;
+use Doctrine\ORM\ORMInvalidArgumentException;
 use Doctrine\Persistence\ManagerRegistry;
 use Ramsey\Uuid\Uuid;
+use RuntimeException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -50,6 +54,22 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
+    public function save(User ...$users): void
+    {
+        try {
+            $this->getEntityManager()->beginTransaction();
+            foreach ($users as $user) {
+                $this->getEntityManager()->persist($user);
+            }
+            $this->getEntityManager()->flush();
+            $this->getEntityManager()->commit();
+        } catch (ORMException | ORMInvalidArgumentException $e) {
+            $this->getEntityManager()->rollback();
+            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
+
     // /**
     //  * @return User[] Returns an array of User objects
     //  */
@@ -78,30 +98,15 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         ;
     }
     */
-    public function secureEmail(User $user, string $email): void
-    {
-        $hashedEmail = $this->hashEmail($email);
-        $user->updateEmail($hashedEmail);
-    }
 
-    public function loadByEmail(string $email): User
+    public function loadByIdentifier(Identifier $identifier): User
     {
         /** @var User|null $user */
-        $user = $this->findOneBy(['email' => $this->hashEmail($email)]);
+        $user = $this->findOneBy(['identifier' => $identifier->getValue()]);
         if ($user === null) {
-            throw new NotFoundException(sprintf('User with e-mail %s not found', $email));
+            throw new NotFoundException(sprintf('User with identifier %s not found', $identifier));
         }
 
         return $user;
-    }
-
-    private function hashEmail(string $email): string
-    {
-        $hashedEmail = $email;
-        for ($i = 0; $i < 500; $i++) {
-            $hashedEmail = sha1($hashedEmail);
-        }
-
-        return $hashedEmail;
     }
 }

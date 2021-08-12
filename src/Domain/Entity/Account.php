@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Domain\Entity;
@@ -12,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Infrastructure\Doctrine\Repository\AccountRepository")
- * @ORM\Table(name="`account`")
+ * @ORM\Table(name="`accounts`")
  */
 class Account
 {
@@ -20,57 +21,48 @@ class Account
      * @ORM\Id()
      * @ORM\CustomIdGenerator("NONE")
      * @ORM\Column(type="uuid")
-     * @var Id
      */
-    private $id;
+    private Id $id;
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @var string
      */
-    private $name;
+    private string $name;
 
     /**
      * @ORM\Column(type="smallint", options={"unsigned"=true, "default"=0})
-     * @var int
      */
-    private $position;
+    private int $position;
 
     /**
-     * @var Id
      * @ORM\Column(type="uuid")
      */
-    private $currencyId;
+    private Id $currencyId;
 
     /**
-     * @var string
      * @ORM\Column(type="decimal", precision=19, scale=2)
      */
-    private $balance;
+    private string $balance;
 
     /**
-     * @var AccountType
      * @ORM\Column(type="account_type")
      */
-    private $type;
+    private AccountType $type;
 
     /**
-     * @var Id
      * @ORM\Column(type="uuid")
      */
-    private $userId;
+    private Id $userId;
 
     /**
-     * @var DateTimeInterface
      * @ORM\Column(type="datetime_immutable")
      */
-    private $createdAt;
+    private DateTimeImmutable $createdAt;
 
     /**
-     * @var DateTimeInterface
      * @ORM\Column(type="datetime")
      */
-    private $updatedAt;
+    private DateTimeInterface $updatedAt;
 
     public function __construct(
         Id $id,
@@ -91,75 +83,33 @@ class Account
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
     }
 
-    /**
-     * @return Id
-     */
     public function getId(): Id
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return int
-     */
     public function getPosition(): int
     {
         return $this->position;
     }
 
-    /**
-     * @return Id
-     */
     public function getCurrencyId(): Id
     {
         return $this->currencyId;
     }
 
-    /**
-     * @return string
-     */
-    public function getBalance(): string
+    public function getBalance(): float
     {
-        return $this->balance;
+        return (float)$this->balance;
     }
 
-    /**
-     * @return AccountType
-     */
     public function getType(): AccountType
     {
         return $this->type;
-    }
-
-    /**
-     * @return Id
-     */
-    public function getUserId(): Id
-    {
-        return $this->userId;
-    }
-
-    /**
-     * @return DateTimeInterface
-     */
-    public function getCreatedAt(): DateTimeInterface
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * @return DateTimeInterface
-     */
-    public function getUpdatedAt(): DateTimeInterface
-    {
-        return $this->updatedAt;
     }
 }

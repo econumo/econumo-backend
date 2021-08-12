@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Doctrine;
 
 use App\Domain\Entity\User;
+use App\Domain\Entity\ValueObject\Identifier;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\UserRepositoryInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -35,7 +36,7 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
     public function loadUserByIdentifier(string $identifier): UserInterface
     {
         try {
-            return $this->userRepository->loadByEmail($identifier);
+            return $this->userRepository->loadByIdentifier(new Identifier($identifier));
         } catch (NotFoundException $exception) {
             $ex = new UserNotFoundException($exception->getMessage(), $exception->getCode(), $exception);
             $ex->setUserIdentifier($identifier);
