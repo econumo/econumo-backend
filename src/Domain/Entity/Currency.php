@@ -21,30 +21,40 @@ class Currency
      * @ORM\Column(type="uuid")
      * @var Id
      */
-    private $id;
+    private Id $id;
 
     /**
      * @ORM\Column(type="string", length=64)
      * @var string
      */
-    private $sign;
+    private string $sign;
 
     /**
      * @var DateTimeInterface
      * @ORM\Column(type="datetime_immutable")
      */
-    private $createdAt;
+    private DateTimeImmutable $createdAt;
 
     /**
      * @var DateTimeInterface
      * @ORM\Column(type="datetime")
      */
-    private $updatedAt;
+    private DateTimeInterface $updatedAt;
 
     public function __construct(Id $id, string $sign, DateTimeInterface $createdAt) {
         $this->id = $id;
         $this->sign = $sign;
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
+    }
+
+    public function getId(): Id
+    {
+        return $this->id;
+    }
+
+    public function getSign(): string
+    {
+        return $this->sign;
     }
 }

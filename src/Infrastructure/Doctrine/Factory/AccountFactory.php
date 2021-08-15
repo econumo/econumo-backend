@@ -24,8 +24,14 @@ class AccountFactory implements AccountFactoryInterface
         $this->datetimeService = $datetimeService;
     }
 
-    public function create(Id $userId, string $name, AccountType $accountType, Id $currencyId, float $balance): Account
-    {
+    public function create(
+        Id $userId,
+        string $name,
+        AccountType $accountType,
+        Id $currencyId,
+        float $balance,
+        string $icon
+    ): Account {
         return new Account(
             $this->accountRepository->getNextIdentity(),
             $userId,
@@ -33,6 +39,7 @@ class AccountFactory implements AccountFactoryInterface
             $currencyId,
             $balance,
             $accountType,
+            $icon,
             $this->datetimeService->getCurrentDatetime()
         );
     }

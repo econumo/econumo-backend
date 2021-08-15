@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace App\Infrastructure\Doctrine\Repository;
 
 use App\Domain\Entity\Currency;
+use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\CurrencyRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -21,32 +23,14 @@ class CurrencyRepository extends ServiceEntityRepository implements CurrencyRepo
         parent::__construct($registry, Currency::class);
     }
 
-    // /**
-    //  * @return User[] Returns an array of User objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function get(Id $id): Currency
     {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        /** @var Currency|null $item */
+        $item = $this->find($id);
+        if ($item === null) {
+            throw new NotFoundException(sprintf('Currency with identifier %s not found', $item));
+        }
 
-    /*
-    public function findOneBySomeField($value): ?User
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $item;
     }
-    */
 }

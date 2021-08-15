@@ -7,7 +7,7 @@ use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Definition(
- *     required={"id", "name", "position", "currencyId", "balance", "type"}
+ *     required={"id", "name", "position", "currencyId", "balance", "type", "icon"}
  * )
  */
 class AccountItemResultDto
@@ -17,40 +17,54 @@ class AccountItemResultDto
      * @var string
      * @SWG\Property(example="a5e2eee2-56aa-43c6-a827-ca155683ea8d")
      */
-    public $id;
+    public string $id;
 
     /**
      * Account name
      * @var string
      * @SWG\Property(example="Cash")
      */
-    public $name;
+    public string $name;
 
     /**
      * Position
      * @var int
      * @SWG\Property(example="1")
      */
-    public $position;
+    public int $position;
 
     /**
      * Currency Id
      * @var string
      * @SWG\Property(example="77adad8a-9982-4e08-8fd7-5ef336c7a5c9")
      */
-    public $currencyId;
+    public string $currencyId;
+
+    /**
+     * Currency signature
+     * @var string
+     * @SWG\Property(example="$")
+     */
+    public string $currencySign;
 
     /**
      * Current balance
      * @var float
      * @SWG\Property(example="13.07")
      */
-    public $balance;
+    public float $balance;
 
     /**
      * Account type
      * @var int
      * @SWG\Property(example="1")
      */
-    public $type;
+    public int $type;
+
+    /**
+     * Account icon
+     * @var string
+     * @SWG\Property(example="rounded_corner")
+     */
+    public string $icon;
 }

@@ -50,6 +50,11 @@ class Account
     private AccountType $type;
 
     /**
+     * @ORM\Column(type="string", length=64)
+     */
+    private string $icon;
+
+    /**
      * @ORM\Column(type="uuid")
      */
     private Id $userId;
@@ -71,6 +76,7 @@ class Account
         Id $currencyId,
         float $balance,
         AccountType $type,
+        string $icon,
         DateTimeInterface $createdAt
     ) {
         $this->id = $id;
@@ -79,6 +85,7 @@ class Account
         $this->currencyId = $currencyId;
         $this->balance = (string)$balance;
         $this->type = $type;
+        $this->icon = $icon;
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
     }
@@ -111,5 +118,10 @@ class Account
     public function getType(): AccountType
     {
         return $this->type;
+    }
+
+    public function getIcon(): string
+    {
+        return $this->icon;
     }
 }
