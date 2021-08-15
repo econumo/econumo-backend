@@ -41,6 +41,13 @@ class AccountItemResultDto
     public string $currencyId;
 
     /**
+     * Currency alias
+     * @var string
+     * @SWG\Property(example="RUB")
+     */
+    public string $currencyAlias;
+
+    /**
      * Currency signature
      * @var string
      * @SWG\Property(example="$")

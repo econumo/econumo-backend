@@ -38,10 +38,12 @@ class GetCollectionV1ResultAssembler
             $item->position = $account->getPosition();
             $item->currencyId = $account->getCurrencyId()->getValue();
             try {
-                $item->currencySign = $this->currencyRepository->get($account->getCurrencyId())->getSign();
+                $currency = $this->currencyRepository->get($account->getCurrencyId());
             } catch (NotFoundException $exception) {
-                $item->currencySign = '';
+                $currency = null;
             }
+            $item->currencySign = $currency !== null ? $currency->getSign() : '';
+            $item->currencyAlias = $currency !== null ? $currency->getAlias() : '';
             $item->balance = $account->getBalance();
             $item->type = $account->getType()->getValue();
             $item->icon = $account->getIcon();

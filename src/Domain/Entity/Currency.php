@@ -24,7 +24,13 @@ class Currency
     private Id $id;
 
     /**
-     * @ORM\Column(type="string", length=64)
+     * @ORM\Column(type="string", unique=true, length=32)
+     * @var string
+     */
+    private string $alias;
+
+    /**
+     * @ORM\Column(type="string", length=32)
      * @var string
      */
     private string $sign;
@@ -41,8 +47,9 @@ class Currency
      */
     private DateTimeInterface $updatedAt;
 
-    public function __construct(Id $id, string $sign, DateTimeInterface $createdAt) {
+    public function __construct(Id $id, string $alias, string $sign, DateTimeInterface $createdAt) {
         $this->id = $id;
+        $this->alias = $alias;
         $this->sign = $sign;
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
@@ -51,6 +58,11 @@ class Currency
     public function getId(): Id
     {
         return $this->id;
+    }
+
+    public function getAlias(): string
+    {
+        return $this->alias;
     }
 
     public function getSign(): string
