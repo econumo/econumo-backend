@@ -94,4 +94,9 @@ class Category
     {
         return $this->type;
     }
+
+    public function getUserId(): Id
+    {
+        return $this->userId;
+    }
 }

@@ -28,7 +28,7 @@ class GetCollectionV1ResultAssembler
             $item->name = $category->getName();
             $item->position = $category->getPosition();
             $item->type = $category->getType()->getAlias();
-            $item->accountId = null; // @todo return not null if shared account
+            $item->ownerId = $category->getUserId()->getValue();
             $result->items[] = $item;
         }
 

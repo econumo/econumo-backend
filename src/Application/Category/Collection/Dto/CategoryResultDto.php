@@ -7,7 +7,7 @@ use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Definition(
- *     required={"id", "name", "position", "type"}
+ *     required={"id", "name", "position", "type", "ownerId"}
  * )
  */
 class CategoryResultDto
@@ -20,10 +20,10 @@ class CategoryResultDto
     public string $id;
 
     /**
-     * Shared account id
+     * User owner id
      * @SWG\Property(example="f680553f-6b40-407d-a528-5123913be0aa")
      */
-    public ?string $accountId;
+    public string $ownerId;
 
     /**
      * Name

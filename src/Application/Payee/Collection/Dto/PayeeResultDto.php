@@ -7,7 +7,7 @@ use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Definition(
- *     required={"id", "name", "position"}
+ *     required={"id", "name", "position", "ownerId"}
  * )
  */
 class PayeeResultDto
