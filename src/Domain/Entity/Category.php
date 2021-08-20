@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Entity;
 
+use App\Domain\Entity\ValueObject\CategoryType;
 use App\Domain\Entity\ValueObject\Id;
 use DateTime;
 use DateTimeImmutable;
@@ -21,126 +22,76 @@ class Category
      * @ORM\Column(type="uuid")
      * @var Id
      */
-    private $id;
+    private Id $id;
 
     /**
      * @ORM\Column(type="string", length=64)
      * @var string
      */
-    private $name;
+    private string $name;
 
     /**
      * @ORM\Column(type="smallint", options={"unsigned"=true, "default"=0})
      * @var int
      */
-    private $level;
+    private int $position;
 
     /**
-     * @ORM\Column(type="smallint", options={"unsigned"=true, "default"=0})
-     * @var int
+     * @ORM\Column(type="category_type")
      */
-    private $position;
-
-    /**
-     * @ORM\Column(type="boolean", options={"default"=false})
-     * @var int
-     */
-    private $isIncome;
+    private CategoryType $type;
 
     /**
      * @var Id
      * @ORM\Column(type="uuid")
      */
-    private $userId;
+    private Id $userId;
 
     /**
      * @var DateTimeInterface
      * @ORM\Column(type="datetime_immutable")
      */
-    private $createdAt;
+    private DateTimeImmutable $createdAt;
 
     /**
      * @var DateTimeInterface
      * @ORM\Column(type="datetime")
      */
-    private $updatedAt;
+    private DateTimeInterface $updatedAt;
 
     public function __construct(
         Id $id,
         Id $userId,
         string $name,
-        int $level,
+        CategoryType $type,
         DateTimeInterface $createdAt
     ) {
         $this->id = $id;
         $this->userId = $userId;
         $this->name = $name;
-        $this->level = $level;
+        $this->position = 0;
+        $this->type = $type;
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
     }
 
-    /**
-     * @return Id
-     */
     public function getId(): Id
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return int
-     */
-    public function getLevel(): int
-    {
-        return $this->level;
-    }
-
-    /**
-     * @return int
-     */
     public function getPosition(): int
     {
         return $this->position;
     }
 
-    /**
-     * @return int
-     */
-    public function isIncome(): int
+    public function getType(): CategoryType
     {
-        return $this->isIncome;
-    }
-
-    /**
-     * @return Id
-     */
-    public function getUserId(): Id
-    {
-        return $this->userId;
-    }
-
-    /**
-     * @return DateTimeInterface
-     */
-    public function getCreatedAt(): DateTimeInterface
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * @return DateTimeInterface
-     */
-    public function getUpdatedAt(): DateTimeInterface
-    {
-        return $this->updatedAt;
+        return $this->type;
     }
 }

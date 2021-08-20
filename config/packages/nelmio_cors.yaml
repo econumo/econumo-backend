@@ -7,6 +7,6 @@ nelmio_cors:
         allow_headers: ['Content-Type', 'Authorization']
         max_age: 3600
     paths:
-        '^/_/api/doc.json':
+        '^/api/doc.json':
             allow_methods: ['OPTIONS', 'GET']
         '^/api/': ~

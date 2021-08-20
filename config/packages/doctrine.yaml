@@ -19,6 +19,7 @@ doctrine:
         types:
             uuid: App\Infrastructure\Doctrine\Type\UuidType
             account_type: App\Infrastructure\Doctrine\Type\AccountType
+            category_type: App\Infrastructure\Doctrine\Type\CategoryType
         server_version: 11
 
     orm:

@@ -6,7 +6,7 @@ nelmio_api_doc:
         path_patterns:
             - ^/api(?!/doc$)
     documentation:
-        host: '127.0.0.1:%env(resolve:DOCKER_COMPOSE_PORT_NGINX)%'
+        host: 'http://127.0.0.1:%env(resolve:DOCKER_COMPOSE_PORT_NGINX)%'
         info:
             title: API documentation
             description: API documentation
