@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Category\Collection\Dto;
+namespace App\Application\Payee\Collection\Dto;
 
 use Swagger\Annotations as SWG;
 
@@ -14,7 +14,7 @@ use Swagger\Annotations as SWG;
 class GetCollectionV1ResultDto
 {
     /**
-     * @var CategoryResultDto[]
+     * @var PayeeResultDto[]
      * @SWG\Property()
      */
     public array $items = [];

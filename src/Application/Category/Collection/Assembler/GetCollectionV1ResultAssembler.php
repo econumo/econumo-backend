@@ -22,7 +22,7 @@ class GetCollectionV1ResultAssembler
     ): GetCollectionV1ResultDto {
         $result = new GetCollectionV1ResultDto();
         $result->items = [];
-        foreach (array_reverse($categories) as $category) {
+        foreach ($categories as $category) {
             $item = new CategoryResultDto();
             $item->id = $category->getId()->getValue();
             $item->name = $category->getName();
