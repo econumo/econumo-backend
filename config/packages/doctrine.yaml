@@ -20,6 +20,7 @@ doctrine:
             uuid: App\Infrastructure\Doctrine\Type\UuidType
             account_type: App\Infrastructure\Doctrine\Type\AccountType
             category_type: App\Infrastructure\Doctrine\Type\CategoryType
+            transaction_type: App\Infrastructure\Doctrine\Type\TransactionType
         server_version: 11
 
     orm:
