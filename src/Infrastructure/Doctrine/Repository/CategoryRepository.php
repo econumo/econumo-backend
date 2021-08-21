@@ -25,42 +25,18 @@ class CategoryRepository extends ServiceEntityRepository implements CategoryRepo
     /**
      * @inheritDoc
      */
-    public function findByUserId(Id $id): array
+    public function findByUserId(Id $userId): array
     {
         return $this->createQueryBuilder('c')
             ->andWhere('c.userId = :id')
-            ->setParameter('id', $id->getValue())
+            ->setParameter('id', $userId->getValue())
             ->orderBy('c.position', 'ASC')
             ->getQuery()
             ->getResult();
     }
 
-    // /**
-    //  * @return User[] Returns an array of User objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function get(Id $id): Category
     {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        return $this->find($id);
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?User
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

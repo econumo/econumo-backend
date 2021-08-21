@@ -62,6 +62,12 @@ class TransactionResultDto
     public string $categoryId;
 
     /**
+     * Category name
+     * @SWG\Property(example="Food")
+     */
+    public string $categoryName;
+
+    /**
      * Description
      * @SWG\Property(example="bananas")
      */
@@ -74,14 +80,38 @@ class TransactionResultDto
     public ?string $payeeId;
 
     /**
+     * Payee name
+     * @SWG\Property(example="Amazon")
+     */
+    public string $payeeName = '';
+
+    /**
      * Tag id
      * @SWG\Property(example="f680553f-6b40-407d-a528-5123913be0aa")
      */
     public ?string $tagId;
 
     /**
+     * Tag name
+     * @SWG\Property(example="#travel")
+     */
+    public string $tagName;
+
+    /**
      * Transaction date
      * @SWG\Property(example="2021-08-01 10:00:00")
      */
     public string $date;
+
+    /**
+     * Transaction day
+     * @SWG\Property(example="2021-08-01")
+     */
+    public string $day;
+
+    /**
+     * Transaction time
+     * @SWG\Property(example="10:00")
+     */
+    public string $time;
 }

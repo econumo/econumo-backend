@@ -9,8 +9,10 @@ use App\Domain\Entity\ValueObject\Id;
 interface CategoryRepositoryInterface
 {
     /**
-     * @param Id $id
+     * @param Id $userId
      * @return Category[]
      */
-    public function findByUserId(Id $id): array;
+    public function findByUserId(Id $userId): array;
+
+    public function get(Id $id): Category;
 }
