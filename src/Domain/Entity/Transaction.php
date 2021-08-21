@@ -149,6 +149,11 @@ class Transaction
         return (float)$this->amount;
     }
 
+    public function getAmountRecipient(): ?float
+    {
+        return $this->amountRecipient === null ? null : (float)$this->amountRecipient;
+    }
+
     public function getCategoryId(): Id
     {
         return $this->categoryId;
