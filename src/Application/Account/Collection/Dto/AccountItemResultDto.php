@@ -20,6 +20,13 @@ class AccountItemResultDto
     public string $id;
 
     /**
+     * User owner id
+     * @var string
+     * @SWG\Property(example="a5e2eee2-56aa-43c6-a827-ca155683ea8d")
+     */
+    public string $ownerId;
+
+    /**
      * Account name
      * @var string
      * @SWG\Property(example="Cash")

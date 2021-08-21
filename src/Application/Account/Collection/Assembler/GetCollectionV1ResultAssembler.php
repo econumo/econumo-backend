@@ -34,6 +34,7 @@ class GetCollectionV1ResultAssembler
         foreach (array_reverse($accounts) as $account) {
             $item = new AccountItemResultDto();
             $item->id = $account->getId()->getValue();
+            $item->ownerId = $account->getUserId()->getValue();
             $item->name = $account->getName();
             $item->position = $account->getPosition();
             $item->currencyId = $account->getCurrencyId()->getValue();

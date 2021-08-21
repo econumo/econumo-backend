@@ -95,6 +95,11 @@ class Account
         return $this->id;
     }
 
+    public function getUserId(): Id
+    {
+        return $this->userId;
+    }
+
     public function getName(): string
     {
         return $this->name;
