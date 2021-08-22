@@ -11,11 +11,13 @@ interface AccountRepositoryInterface
 {
     public function getNextIdentity(): Id;
 
-    public function save(Account ...$accounts): void;
-
     /**
-     * @param Id $id
+     * @param Id $userId
      * @return Account[]
      */
-    public function findByUserId(Id $id): array;
+    public function findByUserId(Id $userId): array;
+
+    public function get(Id $id): Account;
+
+    public function save(Account ...$accounts): void;
 }

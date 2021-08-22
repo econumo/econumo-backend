@@ -21,7 +21,7 @@ class GetCollectionV1Form extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('accountId', TextType::class, [
-            'constraints' => [new NotBlank(), new Uuid()],
+            'constraints' => [new Uuid()],
         ]);
     }
 }

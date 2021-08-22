@@ -14,4 +14,6 @@ interface UserRepositoryInterface
     public function loadByIdentifier(Identifier $identifier): User;
 
     public function save(User ...$users): void;
+
+    public function get(Id $id): User;
 }

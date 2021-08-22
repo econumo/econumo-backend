@@ -55,9 +55,9 @@ class Transaction
     private ?string $amountRecipient;
 
     /**
-     * @ORM\Column(type="uuid")
+     * @ORM\Column(type="uuid", nullable=true)
      */
-    private Id $categoryId;
+    private ?Id $categoryId;
 
     /**
      * @ORM\Column(type="string")
@@ -94,14 +94,15 @@ class Transaction
         Id $userId,
         TransactionType $type,
         Id $accountId,
-        Id $categoryId,
+        ?Id $categoryId,
         float $amount,
+        DateTimeInterface $transactionDate,
         DateTimeInterface $createdAt,
-        ?Id $accountRecipientId = null,
+        ?Id $accountRecipientId,
         ?float $amountRecipient,
-        string $description = '',
-        ?Id $payeeId = null,
-        ?Id $tagId = null
+        string $description,
+        ?Id $payeeId,
+        ?Id $tagId
     ) {
         $this->id = $id;
         $this->userId = $userId;
@@ -110,13 +111,13 @@ class Transaction
         $this->categoryId = $categoryId;
         $this->amount = (string)$amount;
         $this->accountRecipientId = $accountRecipientId;
-        $this->amountRecipient = (string)$amountRecipient;
+        $this->amountRecipient = $amountRecipient === null ? null : (string)$amountRecipient;
         $this->description = $description;
         $this->payeeId = $payeeId;
         $this->tagId = $tagId;
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
-        $this->spentAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
+        $this->spentAt = DateTime::createFromFormat('Y-m-d H:i:s', $transactionDate->format('Y-m-d H:i:s'));
     }
 
     public function getId(): Id
@@ -154,7 +155,7 @@ class Transaction
         return $this->amountRecipient === null ? null : (float)$this->amountRecipient;
     }
 
-    public function getCategoryId(): Id
+    public function getCategoryId(): ?Id
     {
         return $this->categoryId;
     }

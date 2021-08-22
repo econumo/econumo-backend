@@ -26,6 +26,12 @@ class TransactionResultDto
     public string $authorId;
 
     /**
+     * User author name
+     * @SWG\Property(example="John")
+     */
+    public string $authorName;
+
+    /**
      * Transaction type
      * @SWG\Property(example="expense")
      */
@@ -59,7 +65,7 @@ class TransactionResultDto
      * Category id
      * @SWG\Property(example="f680553f-6b40-407d-a528-5123913be0aa")
      */
-    public string $categoryId;
+    public ?string $categoryId;
 
     /**
      * Category name

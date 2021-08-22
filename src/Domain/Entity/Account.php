@@ -6,6 +6,7 @@ namespace App\Domain\Entity;
 
 use App\Domain\Entity\ValueObject\AccountType;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Entity\ValueObject\TransactionType;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -113,6 +114,21 @@ class Account
     public function getCurrencyId(): Id
     {
         return $this->currencyId;
+    }
+
+    public function applyTransaction(Transaction $transaction): void
+    {
+        if ($transaction->getType()->isExpense()) {
+            $this->balance = (string)((float)$this->balance - $transaction->getAmount());
+        } elseif ($transaction->getType()->isIncome()) {
+            $this->balance = (string)((float)$this->balance + $transaction->getAmount());
+        } elseif ($transaction->getType()->isTransfer()) {
+            if ($transaction->getAccountId()->isEqual($this->id)) {
+                $this->balance = (string)((float)$this->balance - $transaction->getAmount());
+            } elseif ($transaction->getAccountRecipientId()->isEqual($this->id)) {
+                $this->balance = (string)((float)$this->balance + $transaction->getAmount());
+            }
+        }
     }
 
     public function getBalance(): float

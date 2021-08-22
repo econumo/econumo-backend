@@ -69,36 +69,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         }
     }
 
-
-    // /**
-    //  * @return User[] Returns an array of User objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?User
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
-
     public function loadByIdentifier(Identifier $identifier): User
     {
         /** @var User|null $user */
@@ -108,5 +78,16 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         }
 
         return $user;
+    }
+
+    public function get(Id $id): User
+    {
+        /** @var User|null $item */
+        $item = $this->find($id);
+        if ($item === null) {
+            throw new NotFoundException(sprintf('User with ID %s not found', $id));
+        }
+
+        return $item;
     }
 }

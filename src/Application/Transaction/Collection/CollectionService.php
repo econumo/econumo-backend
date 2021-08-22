@@ -32,12 +32,15 @@ class CollectionService
         GetCollectionV1RequestDto $dto,
         Id $userId
     ): GetCollectionV1ResultDto {
-        $accountId = new Id($dto->accountId);
-        if (!$this->accountService->isAccountAvailable($userId, $accountId)) {
+        if ($dto->accountId && !$this->accountService->isAccountAvailable($userId, new Id($dto->accountId))) {
             throw new ValidationException(sprintf('Account %s not available', $dto->accountId));
         }
 
-        $transactions = $this->transactionRepository->findByAccountId($accountId);
+        if ($dto->accountId) {
+            $transactions = $this->transactionRepository->findByAccountId(new Id($dto->accountId));
+        } else {
+            $transactions = $this->transactionRepository->findByUserId($userId);
+        }
         return $this->getCollectionV1ResultAssembler->assemble($dto, $transactions);
     }
 }

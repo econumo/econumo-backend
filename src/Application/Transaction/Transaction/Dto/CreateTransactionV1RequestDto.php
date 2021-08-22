@@ -31,7 +31,7 @@ class CreateTransactionV1RequestDto
     /**
      * @SWG\Property(example="1234.4")
      */
-    public ?float $amountRecipient;
+    public ?float $amountRecipient = null;
 
     /**
      * @SWG\Property(example="")
@@ -41,30 +41,30 @@ class CreateTransactionV1RequestDto
     /**
      * @SWG\Property(example="")
      */
-    public ?string $accountRecipientId;
+    public ?string $accountRecipientId = null;
 
     /**
      * @SWG\Property(example="")
      */
-    public string $categoryId;
+    public ?string $categoryId = null;
 
     /**
-     * @SWG\Property(example="")
-     */
-    public string $description;
-
-    /**
-     * @SWG\Property(example="")
-     */
-    public ?string $payeeId;
-
-    /**
-     * @SWG\Property(example="")
-     */
-    public ?string $tagId;
-
-    /**
-     * @SWG\Property(example="")
+     * @SWG\Property(example="2021-07-22 00:22:00")
      */
     public string $date;
+
+    /**
+     * @SWG\Property(example="")
+     */
+    public ?string $description = null;
+
+    /**
+     * @SWG\Property(example="")
+     */
+    public ?string $payeeId = null;
+
+    /**
+     * @SWG\Property(example="")
+     */
+    public ?string $tagId = null;
 }

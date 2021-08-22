@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Domain\Repository;
@@ -13,4 +14,8 @@ interface TransactionRepositoryInterface
      * @return Transaction[]
      */
     public function findByAccountId(Id $id): array;
+
+    public function save(Transaction ...$transactions): void;
+
+    public function findByUserId(Id $userId): array;
 }

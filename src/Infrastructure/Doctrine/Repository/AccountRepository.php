@@ -6,6 +6,7 @@ namespace App\Infrastructure\Doctrine\Repository;
 
 use App\Domain\Entity\Account;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\AccountRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\ORMException;
@@ -53,42 +54,24 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
     /**
      * @inheritDoc
      */
-    public function findByUserId(Id $id): array
+    public function findByUserId(Id $userId): array
     {
         return $this->createQueryBuilder('a')
             ->andWhere('a.userId = :id')
-            ->setParameter('id', $id->getValue())
+            ->setParameter('id', $userId->getValue())
             ->orderBy('a.position', 'ASC')
             ->getQuery()
             ->getResult();
     }
 
-    // /**
-    //  * @return User[] Returns an array of User objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function get(Id $id): Account
     {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        /** @var Account|null $item */
+        $item = $this->find($id);
+        if ($item === null) {
+            throw new NotFoundException(sprintf('Account with ID %s not found', $id));
+        }
 
-    /*
-    public function findOneBySomeField($value): ?User
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $item;
     }
-    */
 }

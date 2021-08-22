@@ -12,8 +12,25 @@ final class TransactionType implements JsonSerializable
     public const EXPENSE = 0;
     public const INCOME = 1;
     public const TRANSFER = 2;
+    public const EXPENSE_ALIAS = 'expense';
+    public const INCOME_ALIAS = 'income';
+    public const TRANSFER_ALIAS = 'transfer';
+    private const MAPPING = [
+        self::EXPENSE_ALIAS => self::EXPENSE,
+        self::INCOME_ALIAS => self::INCOME,
+        self::TRANSFER_ALIAS => self::TRANSFER,
+    ];
 
     private int $value;
+
+    public static function createFromAlias(string $alias): self
+    {
+        $alias = strtolower(trim($alias));
+        if (!array_key_exists($alias, self::MAPPING)) {
+            throw new DomainException(sprintf('TransactionType %d not exists', $alias));
+        }
+        return new self(self::MAPPING[$alias]);
+    }
 
     public function __construct(int $value)
     {
@@ -25,19 +42,16 @@ final class TransactionType implements JsonSerializable
 
     public static function isValid(int $value): bool
     {
-        return in_array($value, [self::INCOME, self::EXPENSE, self::TRANSFER], true);
+        return in_array($value, self::MAPPING, true);
     }
 
     public function getAlias(): string
     {
-        switch ($this->value) {
-            case self::INCOME:
-                return 'income';
-            case self::EXPENSE:
-                return 'expense';
-            case self::TRANSFER:
-                return 'transfer';
+        $index = array_search($this->value, self::MAPPING, true);
+        if (!empty($index)) {
+            return $index;
         }
+
         throw new DomainException(sprintf('Alias for TransactionType %d not exists', $this->value));
     }
 
@@ -72,5 +86,10 @@ final class TransactionType implements JsonSerializable
     public function getValue(): int
     {
         return $this->value;
+    }
+
+    public function __toString()
+    {
+        return (string)$this->value;
     }
 }

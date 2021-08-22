@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Validator\Constraints\Uuid;
 
 class CreateTransactionV1Form extends AbstractType
@@ -22,15 +23,41 @@ class CreateTransactionV1Form extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('id', TextType::class, [
-            'constraints' => [new NotBlank(), new Uuid()],
-        ])
+        $builder
+            ->add('id', TextType::class, [
+                'constraints' => [new NotBlank(), new Uuid()],
+            ])
             ->add('type', ChoiceType::class, [
                 'constraints' => [new NotBlank()],
                 'choices' => ['expense', 'income', 'transfer']
             ])
             ->add('amount', NumberType::class, [
                 'constraints' => [new NotBlank()]
-            ]);
+            ])
+            ->add('amountRecipient', NumberType::class, [
+                'constraints' => []
+            ])
+            ->add('accountId', TextType::class, [
+                'constraints' => [new NotBlank(), new Uuid()]
+            ])
+            ->add('accountRecipientId', TextType::class, [
+                'constraints' => [new Uuid()]
+            ])
+            ->add('categoryId', TextType::class, [
+                'constraints' => [new Uuid()]
+            ])
+            ->add('date', TextType::class, [
+                'constraints' => [new NotBlank()]
+            ])
+            ->add('description', TextType::class, [
+                'constraints' => [new Type('string')]
+            ])
+            ->add('payeeId', TextType::class, [
+                'constraints' => [new Uuid()]
+            ])
+            ->add('tagId', TextType::class, [
+                'constraints' => [new Uuid()]
+            ])
+        ;
     }
 }
