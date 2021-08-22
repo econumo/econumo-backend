@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Infrastructure\Doctrine\Repository;
@@ -81,5 +82,10 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
     public function findByUserId(Id $userId): array
     {
         return $this->findBy(['userId' => $userId->getValue()]);
+    }
+
+    public function delete(Transaction $transaction): void
+    {
+        $this->getEntityManager()->remove($transaction);
     }
 }

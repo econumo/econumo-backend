@@ -12,7 +12,7 @@ use Swagger\Annotations as SWG;
  *     required={"accountBalance"}
  * )
  */
-class CreateTransactionV1ResultDto
+class DeleteTransactionV1ResultDto
 {
     /**
      * Account balance

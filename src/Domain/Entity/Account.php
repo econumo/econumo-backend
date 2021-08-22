@@ -131,6 +131,21 @@ class Account
         }
     }
 
+    public function rollbackTransaction(Transaction $transaction): void
+    {
+        if ($transaction->getType()->isExpense()) {
+            $this->balance = (string)((float)$this->balance + $transaction->getAmount());
+        } elseif ($transaction->getType()->isIncome()) {
+            $this->balance = (string)((float)$this->balance - $transaction->getAmount());
+        } elseif ($transaction->getType()->isTransfer()) {
+            if ($transaction->getAccountId()->isEqual($this->id)) {
+                $this->balance = (string)((float)$this->balance + $transaction->getAmount());
+            } elseif ($transaction->getAccountRecipientId()->isEqual($this->id)) {
+                $this->balance = (string)((float)$this->balance - $transaction->getAmount());
+            }
+        }
+    }
+
     public function getBalance(): float
     {
         return (float)$this->balance;

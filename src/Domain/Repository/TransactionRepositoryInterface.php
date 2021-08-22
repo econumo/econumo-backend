@@ -18,4 +18,8 @@ interface TransactionRepositoryInterface
     public function save(Transaction ...$transactions): void;
 
     public function findByUserId(Id $userId): array;
+
+    public function get(Id $id): Transaction;
+
+    public function delete(Transaction $transaction): void;
 }
