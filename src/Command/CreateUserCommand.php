@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Domain\Entity\ValueObject\Email;
 use App\Domain\Factory\UserFactoryInterface;
 use App\Domain\Repository\UserRepositoryInterface;
 use Symfony\Component\Console\Command\Command;
@@ -42,7 +43,7 @@ class CreateUserCommand extends Command
         $email = trim($input->getArgument('email'));
         $password = trim($input->getArgument('password'));
 
-        $user = $this->userFactory->create($name, $email, $password);
+        $user = $this->userFactory->create($name, new Email($email), $password);
         $this->userRepository->save($user);
         $io->success(sprintf('User %s successfully created! (id: %s)', $name, $user->getId()));
 

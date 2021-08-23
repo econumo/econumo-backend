@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Doctrine\Repository;
 
 use App\Domain\Entity\User;
+use App\Domain\Entity\ValueObject\Email;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\Identifier;
 use App\Domain\Exception\NotFoundException;
@@ -89,5 +90,16 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         }
 
         return $item;
+    }
+
+    public function getByEmail(Email $email): User
+    {
+        /** @var User|null $user */
+        $user = $this->findOneBy(['identifier' => $email->getValue()]);
+        if ($user === null) {
+            throw new NotFoundException(sprintf('User with email %s not found', $email));
+        }
+
+        return $user;
     }
 }

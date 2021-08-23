@@ -5,10 +5,6 @@ security:
             encode_as_base64: true
             iterations: 500
 
-    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
-#    providers:
-#        jwt:
-#            id: App\Infrastructure\AuthToken\JwtUserProvider
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -33,6 +29,7 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
+        - {path: ^/api/v1/user/register-user, roles: IS_AUTHENTICATED_ANONYMOUSLY}
         - {path: ^/api/v1/user/login-user, roles: IS_AUTHENTICATED_ANONYMOUSLY}
         - {path: ^/api/doc.json, roles: IS_AUTHENTICATED_ANONYMOUSLY}
         - {path: ^/api, roles: IS_AUTHENTICATED_FULLY}

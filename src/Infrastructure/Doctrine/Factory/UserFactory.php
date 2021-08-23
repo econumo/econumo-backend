@@ -27,13 +27,13 @@ class UserFactory implements UserFactoryInterface
         $this->userPasswordHasher = $userPasswordHasher;
     }
 
-    public function create(string $name, string $email, string $password): User
+    public function create(string $name, Email $email, string $password): User
     {
         $user = new User(
             $this->userRepository->getNextIdentity(),
             sha1(random_bytes(10)),
             $name,
-            new Email($email),
+            $email,
             $this->datetimeService->getCurrentDatetime()
         );
         $user->updatePassword($this->userPasswordHasher->hashPassword($user, $password));
