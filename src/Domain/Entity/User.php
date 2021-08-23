@@ -34,8 +34,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private string $name;
 
     /**
-     * @var string The hashed e-mail
-     * @ORM\Column(type="string", unique=true, length=32)
+     * @var string E-mail
+     * @ORM\Column(type="string", unique=true, length=256)
      */
     private string $identifier;
 

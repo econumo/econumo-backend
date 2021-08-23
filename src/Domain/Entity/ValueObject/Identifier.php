@@ -10,7 +10,7 @@ final class Identifier
 
     public static function createFromEmail(Email $email): self
     {
-        return new self(md5(strtolower($email->getValue())));
+        return new self(strtolower(trim($email->getValue())));
     }
 
     public function __construct(string $value)
