@@ -20,6 +20,7 @@ security:
             anonymous: lazy
             json_login:
                 check_path: /api/v1/user/login-user
+                success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: App\Infrastructure\Auth\AuthenticationFailureHandler
 
         api:

@@ -10,12 +10,7 @@ final class Identifier
 
     public static function createFromEmail(Email $email): self
     {
-        $hashedEmail = $email->getValue();
-        for ($i = 0; $i < 500; $i++) {
-            $hashedEmail = sha1($hashedEmail);
-        }
-
-        return new self($hashedEmail);
+        return new self(md5(strtolower($email->getValue())));
     }
 
     public function __construct(string $value)
