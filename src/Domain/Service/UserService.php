@@ -6,6 +6,7 @@ namespace App\Domain\Service;
 
 use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\Email;
+use App\Domain\Exception\NotFoundException;
 use App\Domain\Exception\UserRegisteredException;
 use App\Domain\Factory\UserFactoryInterface;
 use App\Domain\Repository\UserRepositoryInterface;
@@ -25,9 +26,12 @@ class UserService implements UserServiceInterface
 
     public function register(Email $email, string $password, string $name): User
     {
-        if ($this->userRepository->getByEmail($email)) {
+        try {
+            $this->userRepository->getByEmail($email);
             throw new UserRegisteredException();
+        } catch (NotFoundException $exception) {
         }
+
         $user = $this->userFactory->create($name, $email, $password);
         $this->userRepository->save($user);
 

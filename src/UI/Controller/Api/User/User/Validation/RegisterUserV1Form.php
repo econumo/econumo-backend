@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class RegisterUserV1Form extends AbstractType
@@ -21,11 +22,11 @@ class RegisterUserV1Form extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('email', TextType::class, [
-            'constraints' => [new NotBlank(), new Email()],
+            'constraints' => [new NotBlank(), new Email(), new Length(['max' => 256])],
         ])->add('password', TextType::class, [
-            'constraints' => [new NotBlank()],
+            'constraints' => [new NotBlank(), new Length(['min' => 5])],
         ])->add('name', TextType::class, [
-            'constraints' => [new NotBlank()],
+            'constraints' => [new NotBlank(), new Length(['min' => 2])],
         ]);
     }
 }
