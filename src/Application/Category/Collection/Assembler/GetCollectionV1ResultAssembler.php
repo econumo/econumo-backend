@@ -11,6 +11,13 @@ use App\Domain\Entity\Category;
 
 class GetCollectionV1ResultAssembler
 {
+    private CategoryToDtoV1ResultAssembler $categoryToDtoV1ResultAssembler;
+
+    public function __construct(CategoryToDtoV1ResultAssembler $categoryToDtoV1ResultAssembler)
+    {
+        $this->categoryToDtoV1ResultAssembler = $categoryToDtoV1ResultAssembler;
+    }
+
     /**
      * @param GetCollectionV1RequestDto $dto
      * @param Category[] $categories
@@ -23,13 +30,7 @@ class GetCollectionV1ResultAssembler
         $result = new GetCollectionV1ResultDto();
         $result->items = [];
         foreach ($categories as $category) {
-            $item = new CategoryResultDto();
-            $item->id = $category->getId()->getValue();
-            $item->name = $category->getName();
-            $item->position = $category->getPosition();
-            $item->type = $category->getType()->getAlias();
-            $item->ownerId = $category->getUserId()->getValue();
-            $result->items[] = $item;
+            $result->items[] = $this->categoryToDtoV1ResultAssembler->assemble($category);
         }
 
         return $result;

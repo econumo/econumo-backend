@@ -5,9 +5,13 @@ namespace App\Infrastructure\Doctrine\Repository;
 
 use App\Domain\Entity\Category;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\CategoryRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\ORMException;
+use Doctrine\ORM\ORMInvalidArgumentException;
 use Doctrine\Persistence\ManagerRegistry;
+use RuntimeException;
 
 /**
  * @method Category|null find($id, $lockMode = null, $lockVersion = null)
@@ -37,6 +41,27 @@ class CategoryRepository extends ServiceEntityRepository implements CategoryRepo
 
     public function get(Id $id): Category
     {
-        return $this->find($id);
+        /** @var Category|null $item */
+        $item = $this->find($id);
+        if ($item === null) {
+            throw new NotFoundException(sprintf('Category with ID %s not found', $id));
+        }
+
+        return $item;
+    }
+
+    public function save(Category ...$categories): void
+    {
+        try {
+            $this->getEntityManager()->beginTransaction();
+            foreach ($categories as $category) {
+                $this->getEntityManager()->persist($category);
+            }
+            $this->getEntityManager()->flush();
+            $this->getEntityManager()->commit();
+        } catch (ORMException | ORMInvalidArgumentException $e) {
+            $this->getEntityManager()->rollback();
+            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
     }
 }

@@ -11,8 +11,23 @@ final class CategoryType implements JsonSerializable
 {
     public const EXPENSE = 0;
     public const INCOME = 1;
+    public const EXPENSE_ALIAS = 'expense';
+    public const INCOME_ALIAS = 'income';
+    private const MAPPING = [
+        self::EXPENSE_ALIAS => self::EXPENSE,
+        self::INCOME_ALIAS => self::INCOME
+    ];
 
     private int $value;
+
+    public static function createFromAlias(string $alias): self
+    {
+        $alias = strtolower(trim($alias));
+        if (!array_key_exists($alias, self::MAPPING)) {
+            throw new DomainException(sprintf('CategoryType %d not exists', $alias));
+        }
+        return new self(self::MAPPING[$alias]);
+    }
 
     public function __construct(int $value)
     {
@@ -64,5 +79,10 @@ final class CategoryType implements JsonSerializable
     public function getValue(): int
     {
         return $this->value;
+    }
+
+    public function __toString()
+    {
+        return (string)$this->value;
     }
 }

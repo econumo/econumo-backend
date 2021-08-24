@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Domain\Repository;
@@ -15,4 +16,6 @@ interface CategoryRepositoryInterface
     public function findByUserId(Id $userId): array;
 
     public function get(Id $id): Category;
+
+    public function save(Category ...$categories): void;
 }
