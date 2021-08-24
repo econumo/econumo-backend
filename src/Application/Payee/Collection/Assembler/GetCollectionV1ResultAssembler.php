@@ -6,11 +6,17 @@ namespace App\Application\Payee\Collection\Assembler;
 
 use App\Application\Payee\Collection\Dto\GetCollectionV1RequestDto;
 use App\Application\Payee\Collection\Dto\GetCollectionV1ResultDto;
-use App\Application\Payee\Collection\Dto\PayeeResultDto;
 use App\Domain\Entity\Payee;
 
 class GetCollectionV1ResultAssembler
 {
+    private PayeeToDtoV1ResultAssembler $payeeToDtoV1ResultAssembler;
+
+    public function __construct(PayeeToDtoV1ResultAssembler $payeeToDtoV1ResultAssembler)
+    {
+        $this->payeeToDtoV1ResultAssembler = $payeeToDtoV1ResultAssembler;
+    }
+
     /**
      * @param GetCollectionV1RequestDto $dto
      * @param Payee[] $payees
@@ -23,12 +29,7 @@ class GetCollectionV1ResultAssembler
         $result = new GetCollectionV1ResultDto();
         $result->items = [];
         foreach ($payees as $payee) {
-            $item = new PayeeResultDto();
-            $item->id = $payee->getId()->getValue();
-            $item->name = $payee->getName();
-            $item->position = $payee->getPosition();
-            $item->ownerId = $payee->getUserId()->getValue();
-            $result->items[] = $item;
+            $result->items[] = $this->payeeToDtoV1ResultAssembler->assemble($payee);
         }
 
         return $result;

@@ -15,4 +15,6 @@ interface PayeeRepositoryInterface
     public function findByUserId(Id $userId): array;
 
     public function get(Id $id): Payee;
+
+    public function save(Payee ...$payees): void;
 }
