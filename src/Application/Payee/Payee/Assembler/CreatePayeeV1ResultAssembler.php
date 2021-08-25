@@ -23,7 +23,7 @@ class CreatePayeeV1ResultAssembler
         Payee $payee
     ): CreatePayeeV1ResultDto {
         $result = new CreatePayeeV1ResultDto();
-        $result->payee = $this->payeeToDtoV1ResultAssembler->assemble($payee);
+        $result->item = $this->payeeToDtoV1ResultAssembler->assemble($payee);
 
         return $result;
     }

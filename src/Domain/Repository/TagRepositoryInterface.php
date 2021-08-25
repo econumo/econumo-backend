@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Domain\Repository;
@@ -15,4 +16,6 @@ interface TagRepositoryInterface
     public function findByUserId(Id $userId): array;
 
     public function get(Id $id): Tag;
+
+    public function save(Tag ...$tags): void;
 }

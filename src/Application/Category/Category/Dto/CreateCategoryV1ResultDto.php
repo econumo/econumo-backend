@@ -9,7 +9,7 @@ use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Definition(
- *     required={"category"}
+ *     required={"item"}
  * )
  */
 class CreateCategoryV1ResultDto
@@ -18,5 +18,5 @@ class CreateCategoryV1ResultDto
      * Category
      * @SWG\Property()
      */
-    public CategoryResultDto $category;
+    public CategoryResultDto $item;
 }

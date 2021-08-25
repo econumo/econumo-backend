@@ -9,7 +9,7 @@ use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Definition(
- *     required={"payee"}
+ *     required={"item"}
  * )
  */
 class CreatePayeeV1ResultDto
@@ -18,5 +18,5 @@ class CreatePayeeV1ResultDto
      * Payee
      * @SWG\Property()
      */
-    public PayeeResultDto $payee;
+    public PayeeResultDto $item;
 }

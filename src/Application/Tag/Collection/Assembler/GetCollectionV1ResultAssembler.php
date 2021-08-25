@@ -6,11 +6,17 @@ namespace App\Application\Tag\Collection\Assembler;
 
 use App\Application\Tag\Collection\Dto\GetCollectionV1RequestDto;
 use App\Application\Tag\Collection\Dto\GetCollectionV1ResultDto;
-use App\Application\Tag\Collection\Dto\TagResultDto;
 use App\Domain\Entity\Tag;
 
 class GetCollectionV1ResultAssembler
 {
+    private TagToDtoV1ResultAssembler $tagToDtoV1ResultAssembler;
+
+    public function __construct(TagToDtoV1ResultAssembler $tagToDtoV1ResultAssembler)
+    {
+        $this->tagToDtoV1ResultAssembler = $tagToDtoV1ResultAssembler;
+    }
+
     /**
      * @param GetCollectionV1RequestDto $dto
      * @param Tag[] $tags
@@ -23,13 +29,7 @@ class GetCollectionV1ResultAssembler
         $result = new GetCollectionV1ResultDto();
         $result->items = [];
         foreach ($tags as $tag) {
-            $item = new TagResultDto();
-            $item->id = $tag->getId()->getValue();
-            $item->name = $tag->getName();
-            $item->position = $tag->getPosition();
-            $item->ownerId = $tag->getUserId()->getValue();
-            $item->isArchived = $tag->isArchived() ? 1 : 0;
-            $result->items[] = $item;
+            $result->items[] = $this->tagToDtoV1ResultAssembler->assemble($tag);
         }
 
         return $result;

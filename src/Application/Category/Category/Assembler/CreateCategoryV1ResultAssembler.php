@@ -23,7 +23,7 @@ class CreateCategoryV1ResultAssembler
         Category $category
     ): CreateCategoryV1ResultDto {
         $result = new CreateCategoryV1ResultDto();
-        $result->category = $this->categoryToDtoV1ResultAssembler->assemble($category);
+        $result->item = $this->categoryToDtoV1ResultAssembler->assemble($category);
 
         return $result;
     }
