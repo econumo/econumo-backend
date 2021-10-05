@@ -20,4 +20,6 @@ interface AccountRepositoryInterface
     public function get(Id $id): Account;
 
     public function save(Account ...$accounts): void;
+
+    public function delete(Id $id): void;
 }

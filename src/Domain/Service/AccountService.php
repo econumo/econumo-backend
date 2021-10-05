@@ -48,4 +48,9 @@ class AccountService implements AccountServiceInterface
 
         return $account;
     }
+
+    public function delete(Id $id): void
+    {
+        $this->accountRepository->delete($id);
+    }
 }

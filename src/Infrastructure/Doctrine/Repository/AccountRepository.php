@@ -74,4 +74,11 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
 
         return $item;
     }
+
+    public function delete(Id $id): void
+    {
+        $account = $this->get($id);
+        $this->getEntityManager()->remove($account);
+        $this->getEntityManager()->flush();
+    }
 }
