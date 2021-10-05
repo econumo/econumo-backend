@@ -86,6 +86,7 @@ class Account
         $this->balance = (string)$balance;
         $this->type = $type;
         $this->icon = $icon;
+        $this->position = 1000;
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
     }

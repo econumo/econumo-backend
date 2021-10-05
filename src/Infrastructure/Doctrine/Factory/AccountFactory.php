@@ -25,6 +25,7 @@ class AccountFactory implements AccountFactoryInterface
     }
 
     public function create(
+        Id $id,
         Id $userId,
         string $name,
         AccountType $accountType,
@@ -33,7 +34,7 @@ class AccountFactory implements AccountFactoryInterface
         string $icon
     ): Account {
         return new Account(
-            $this->accountRepository->getNextIdentity(),
+            $id,
             $userId,
             $name,
             $currencyId,

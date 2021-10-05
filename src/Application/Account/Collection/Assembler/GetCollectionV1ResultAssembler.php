@@ -4,20 +4,17 @@ declare(strict_types=1);
 
 namespace App\Application\Account\Collection\Assembler;
 
-use App\Application\Account\Collection\Dto\AccountItemResultDto;
 use App\Application\Account\Collection\Dto\GetCollectionV1RequestDto;
 use App\Application\Account\Collection\Dto\GetCollectionV1ResultDto;
 use App\Domain\Entity\Account;
-use App\Domain\Exception\NotFoundException;
-use App\Domain\Repository\CurrencyRepositoryInterface;
 
 class GetCollectionV1ResultAssembler
 {
-    private CurrencyRepositoryInterface $currencyRepository;
+    private AccountToDtoV1ResultAssembler $accountToDtoV1ResultAssembler;
 
-    public function __construct(CurrencyRepositoryInterface $currencyRepository)
+    public function __construct(AccountToDtoV1ResultAssembler $accountToDtoV1ResultAssembler)
     {
-        $this->currencyRepository = $currencyRepository;
+        $this->accountToDtoV1ResultAssembler = $accountToDtoV1ResultAssembler;
     }
 
     /**
@@ -32,23 +29,7 @@ class GetCollectionV1ResultAssembler
         $result = new GetCollectionV1ResultDto();
         $result->items = [];
         foreach (array_reverse($accounts) as $account) {
-            $item = new AccountItemResultDto();
-            $item->id = $account->getId()->getValue();
-            $item->ownerId = $account->getUserId()->getValue();
-            $item->name = $account->getName();
-            $item->position = $account->getPosition();
-            $item->currencyId = $account->getCurrencyId()->getValue();
-            try {
-                $currency = $this->currencyRepository->get($account->getCurrencyId());
-            } catch (NotFoundException $exception) {
-                $currency = null;
-            }
-            $item->currencySign = $currency !== null ? $currency->getSign() : '';
-            $item->currencyAlias = $currency !== null ? $currency->getAlias() : '';
-            $item->balance = $account->getBalance();
-            $item->type = $account->getType()->getValue();
-            $item->icon = $account->getIcon();
-            $result->items[] = $item;
+            $result->items[] = $this->accountToDtoV1ResultAssembler->assemble($account);
         }
 
         return $result;
