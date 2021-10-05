@@ -11,5 +11,5 @@ interface TransactionFactoryInterface
 {
     public function create(TransactionDto $dto): Transaction;
 
-    public function createCorrection(Id $accountId, float $correction): Transaction;
+    public function createCorrection(Id $accountId, float $correction, string $comment = ''): Transaction;
 }

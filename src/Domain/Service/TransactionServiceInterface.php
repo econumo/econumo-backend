@@ -14,5 +14,5 @@ interface TransactionServiceInterface
 
     public function deleteTransaction(Transaction $transaction): void;
 
-    public function updateBalance(Id $accountId, float $correction): Transaction;
+    public function updateBalance(Id $accountId, float $correction, string $comment = ''): Transaction;
 }

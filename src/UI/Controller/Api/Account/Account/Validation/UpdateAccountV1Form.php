@@ -31,6 +31,7 @@ class UpdateAccountV1Form extends AbstractType
             ->add('balance', NumberType::class, [
                 'constraints' => [new NotBlank()],
             ])
-            ->add('icon', TextType::class);
+            ->add('icon', TextType::class)
+            ->add('comment', TextType::class);
     }
 }

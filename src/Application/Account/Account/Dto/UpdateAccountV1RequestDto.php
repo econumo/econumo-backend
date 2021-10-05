@@ -32,4 +32,9 @@ class UpdateAccountV1RequestDto
      * @SWG\Property(example="wallet")
      */
     public string $icon = '';
+
+    /**
+     * @SWG\Property(example="correction")
+     */
+    public string $comment = '';
 }
