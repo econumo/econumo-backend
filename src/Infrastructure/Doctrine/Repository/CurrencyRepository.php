@@ -33,4 +33,12 @@ class CurrencyRepository extends ServiceEntityRepository implements CurrencyRepo
 
         return $item;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAll(): array
+    {
+        return $this->findAll();
+    }
 }

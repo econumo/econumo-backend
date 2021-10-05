@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\UI\Controller\Api\Account\Collection;
 
 use App\Application\Account\Collection\CollectionService;
-use App\Application\Account\Collection\Dto\GetCollectionV1RequestDto;
+use App\Application\Account\Collection\Dto\ReorderCollectionV1RequestDto;
 use App\Domain\Entity\User;
-use App\UI\Controller\Api\Account\Collection\Validation\GetCollectionV1Form;
+use App\UI\Controller\Api\Account\Collection\Validation\ReorderCollectionV1Form;
 use App\Application\Exception\ValidationException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Swagger\Annotations as SWG;
 
-class GetCollectionV1Controller extends AbstractController
+class ReorderCollectionV1Controller extends AbstractController
 {
     private CollectionService $collectionService;
     private ValidatorInterface $validator;
@@ -33,6 +33,12 @@ class GetCollectionV1Controller extends AbstractController
      * Account Collection
      *
      * @SWG\Tag(name="Account"),
+     * @SWG\Parameter(
+     *     name="payload",
+     *     in="body",
+     *     required=true,
+     *     @SWG\Schema(ref=@Model(type=\App\Application\Account\Collection\Dto\ReorderCollectionV1RequestDto::class)),
+     * ),
      * @SWG\Response(
      *     response=200,
      *     description="OK",
@@ -43,7 +49,7 @@ class GetCollectionV1Controller extends AbstractController
      *             @SWG\Schema(
      *                 @SWG\Property(
      *                     property="data",
-     *                     ref=@Model(type=\App\Application\Account\Collection\Dto\GetCollectionV1ResultDto::class)
+     *                     ref=@Model(type=\App\Application\Account\Collection\Dto\ReorderCollectionV1ResultDto::class)
      *                 )
      *             )
      *         }
@@ -52,7 +58,7 @@ class GetCollectionV1Controller extends AbstractController
      * @SWG\Response(response=400, description="Bad Request", @SWG\Schema(ref="#/definitions/JsonResponseError")),
      * @SWG\Response(response=500, description="Internal Server Error", @SWG\Schema(ref="#/definitions/JsonResponseException")),
      *
-     * @Route("/api/v1/account/get-collection", methods={"GET"})
+     * @Route("/api/v1/account/reorder-collection", methods={"POST"})
      *
      * @param Request $request
      * @return Response
@@ -60,11 +66,11 @@ class GetCollectionV1Controller extends AbstractController
      */
     public function __invoke(Request $request): Response
     {
-        $dto = new GetCollectionV1RequestDto();
-        $this->validator->validate(GetCollectionV1Form::class, $request->query->all(), $dto);
+        $dto = new ReorderCollectionV1RequestDto();
+        $this->validator->validate(ReorderCollectionV1Form::class, $request->request->all(), $dto);
         /** @var User $user */
         $user = $this->getUser();
-        $result = $this->collectionService->getCollection($dto, $user->getId());
+        $result = $this->collectionService->reorderCollection($dto, $user->getId());
 
         return ResponseFactory::createOkResponse($request, $result);
     }

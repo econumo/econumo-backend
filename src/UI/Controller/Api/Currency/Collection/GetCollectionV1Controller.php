@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\UI\Controller\Api\Account\Collection;
+namespace App\UI\Controller\Api\Currency\Collection;
 
-use App\Application\Account\Collection\CollectionService;
-use App\Application\Account\Collection\Dto\GetCollectionV1RequestDto;
+use App\Application\Currency\Collection\CollectionService;
+use App\Application\Currency\Collection\Dto\GetCollectionV1RequestDto;
 use App\Domain\Entity\User;
-use App\UI\Controller\Api\Account\Collection\Validation\GetCollectionV1Form;
+use App\UI\Controller\Api\Currency\Collection\Validation\GetCollectionV1Form;
 use App\Application\Exception\ValidationException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,9 +30,9 @@ class GetCollectionV1Controller extends AbstractController
     }
 
     /**
-     * Account Collection
+     * Currency Collection
      *
-     * @SWG\Tag(name="Account"),
+     * @SWG\Tag(name="Currency"),
      * @SWG\Response(
      *     response=200,
      *     description="OK",
@@ -43,7 +43,7 @@ class GetCollectionV1Controller extends AbstractController
      *             @SWG\Schema(
      *                 @SWG\Property(
      *                     property="data",
-     *                     ref=@Model(type=\App\Application\Account\Collection\Dto\GetCollectionV1ResultDto::class)
+     *                     ref=@Model(type=\App\Application\Currency\Collection\Dto\GetCollectionV1ResultDto::class)
      *                 )
      *             )
      *         }
@@ -52,7 +52,7 @@ class GetCollectionV1Controller extends AbstractController
      * @SWG\Response(response=400, description="Bad Request", @SWG\Schema(ref="#/definitions/JsonResponseError")),
      * @SWG\Response(response=500, description="Internal Server Error", @SWG\Schema(ref="#/definitions/JsonResponseException")),
      *
-     * @Route("/api/v1/account/get-collection", methods={"GET"})
+     * @Route("/api/v1/currency/get-collection", methods={"GET"})
      *
      * @param Request $request
      * @return Response

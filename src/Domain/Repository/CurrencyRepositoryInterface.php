@@ -16,4 +16,9 @@ interface CurrencyRepositoryInterface
      * @throws NotFoundException
      */
     public function get(Id $id): Currency;
+
+    /**
+     * @return Currency[]
+     */
+    public function getAll(): array;
 }

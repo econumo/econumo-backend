@@ -6,7 +6,6 @@ namespace App\Domain\Entity;
 
 use App\Domain\Entity\ValueObject\AccountType;
 use App\Domain\Entity\ValueObject\Id;
-use App\Domain\Entity\ValueObject\TransactionType;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
