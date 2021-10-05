@@ -44,7 +44,7 @@ class TransactionFactory implements TransactionFactoryInterface
         );
     }
 
-    public function createCorrection(Id $accountId, float $correction, string $comment = ''): Transaction
+    public function createCorrection(Id $accountId, float $correction, \DateTimeInterface $transactionDate, string $comment = ''): Transaction
     {
         $account = $this->accountRepository->get($accountId);
         return new Transaction(
@@ -54,7 +54,7 @@ class TransactionFactory implements TransactionFactoryInterface
             $accountId,
             null,
             abs($correction),
-            $this->datetimeService->getCurrentDatetime(),
+            $transactionDate,
             $this->datetimeService->getCurrentDatetime(),
             null,
             null,

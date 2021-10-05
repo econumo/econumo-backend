@@ -18,5 +18,5 @@ interface AccountServiceInterface
 
     public function update(Id $accountId, string $name, string $icon = null): void;
 
-    public function updateBalance(Id $accountId, float $balance, string $comment = ''): ?Transaction;
+    public function updateBalance(Id $accountId, float $balance, \DateTimeInterface $updatedAt, string $comment = ''): ?Transaction;
 }

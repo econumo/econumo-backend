@@ -34,6 +34,11 @@ class UpdateAccountV1RequestDto
     public string $icon = '';
 
     /**
+     * @SWG\Property(example="2020-01-01 23:59:59")
+     */
+    public string $updatedAt;
+
+    /**
      * @SWG\Property(example="correction")
      */
     public string $comment = '';

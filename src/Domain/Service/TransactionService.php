@@ -58,9 +58,9 @@ class TransactionService implements TransactionServiceInterface
         }
     }
 
-    public function updateBalance(Id $accountId, float $correction, string $comment = ''): Transaction
+    public function updateBalance(Id $accountId, float $correction, \DateTimeInterface $updatedAt, string $comment = ''): Transaction
     {
-        $transaction = $this->transactionFactory->createCorrection($accountId, $correction, $comment);
+        $transaction = $this->transactionFactory->createCorrection($accountId, $correction, $updatedAt, $comment);
         $this->transactionRepository->save($transaction);
         $account = $this->accountRepository->get($accountId);
         $account->applyTransaction($transaction);

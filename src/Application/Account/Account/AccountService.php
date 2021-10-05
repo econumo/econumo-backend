@@ -79,9 +79,10 @@ class AccountService
             throw new AccessDeniedHttpException();
         }
         $account = $this->accountRepository->get($accountId);
+        $updatedAt = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dto->updatedAt);
 
         $this->accountService->update($accountId, $dto->name, $dto->icon);
-        $transaction = $this->accountService->updateBalance($accountId, $dto->balance, $dto->comment);
+        $transaction = $this->accountService->updateBalance($accountId, $dto->balance, $updatedAt, $dto->comment);
         return $this->updateAccountV1ResultAssembler->assemble($dto, $account, $transaction);
     }
 }
