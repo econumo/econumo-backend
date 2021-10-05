@@ -9,6 +9,8 @@ use App\Domain\Entity\ValueObject\Id;
 
 interface TransactionRepositoryInterface
 {
+    public function getNextIdentity(): Id;
+
     /**
      * @param Id $id
      * @return Transaction[]

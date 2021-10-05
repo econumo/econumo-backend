@@ -160,4 +160,14 @@ class Account
     {
         return $this->icon;
     }
+
+    public function updateName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function updateIcon(string $icon): void
+    {
+        $this->icon = $icon;
+    }
 }
