@@ -49,8 +49,8 @@ class AccountService implements AccountServiceInterface
             $dto->icon
         );
         $this->accountRepository->save($account);
-        $access = $this->accountAccessFactory->create($account->getId(), $dto->userId, AccountRole::admin());
-        $this->accountAccessRepository->save($access);
+//        $access = $this->accountAccessFactory->create($account->getId(), $dto->userId, AccountRole::admin());
+//        $this->accountAccessRepository->save($access);
 
         return $account;
     }

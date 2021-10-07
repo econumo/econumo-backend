@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace _CG_APPROOT_\Application\_CG_MODULE_\_CG_SUBJECT_;
+namespace _CG_APPROOT_\Application\_CG_MODULE_;
 
-use _CG_APPROOT_\Application\_CG_MODULE_\_CG_SUBJECT_\Dto\_CG_ACTION__CG_SUBJECT__CG_VERSION_RequestDto;
-use _CG_APPROOT_\Application\_CG_MODULE_\_CG_SUBJECT_\Dto\_CG_ACTION__CG_SUBJECT__CG_VERSION_ResultDto;
-use _CG_APPROOT_\Application\_CG_MODULE_\_CG_SUBJECT_\Assembler\_CG_ACTION__CG_SUBJECT__CG_VERSION_ResultAssembler;
+use _CG_APPROOT_\Application\_CG_MODULE_\Dto\_CG_ACTION__CG_SUBJECT__CG_VERSION_RequestDto;
+use _CG_APPROOT_\Application\_CG_MODULE_\Dto\_CG_ACTION__CG_SUBJECT__CG_VERSION_ResultDto;
+use _CG_APPROOT_\Application\_CG_MODULE_\Assembler\_CG_ACTION__CG_SUBJECT__CG_VERSION_ResultAssembler;
 
 class _CG_SUBJECT_Service
 {

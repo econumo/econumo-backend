@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace _CG_APPROOT_\UI\Controller\Api\_CG_MODULE_\_CG_SUBJECT_;
 
-use _CG_APPROOT_\Application\_CG_MODULE_\_CG_SUBJECT_\_CG_SUBJECT_Service;
-use _CG_APPROOT_\Application\_CG_MODULE_\_CG_SUBJECT_\Dto\_CG_ACTION__CG_SUBJECT__CG_VERSION_RequestDto;
+use _CG_APPROOT_\Application\_CG_MODULE_\_CG_SUBJECT_Service;
+use _CG_APPROOT_\Application\_CG_MODULE_\Dto\_CG_ACTION__CG_SUBJECT__CG_VERSION_RequestDto;
 use _CG_APPROOT_\UI\Controller\Api\_CG_MODULE_\_CG_SUBJECT_\Validation\_CG_ACTION__CG_SUBJECT__CG_VERSION_Form;
 use App\Application\Exception\ValidationException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

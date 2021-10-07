@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace _CG_APPROOT_\Application\_CG_MODULE_\_CG_SUBJECT_\Dto;
+namespace _CG_APPROOT_\Application\_CG_MODULE_\Dto;
 
 use Swagger\Annotations as SWG;
 

@@ -125,33 +125,30 @@ class MakeAPIMaker extends AbstractMaker
                 $version,
             ),
             'RequestDto.php' => sprintf(
-                '%s/src/Application/%s/%s/Dto/%s%s%sRequestDto.php',
+                '%s/src/Application/%s/Dto/%s%s%sRequestDto.php',
                 $basePath,
                 $module,
-                $subject,
                 $action,
                 $subject,
                 $version,
             ),
             'ResultDto.php' => sprintf(
-                '%s/src/Application/%s/%s/Dto/%s%s%sResultDto.php',
+                '%s/src/Application/%s/Dto/%s%s%sResultDto.php',
                 $basePath,
                 $module,
-                $subject,
                 $action,
                 $subject,
                 $version,
             ),
             'ResultAssembler.php' => sprintf(
-                '%s/src/Application/%s/%s/Assembler/%s%s%sResultAssembler.php',
+                '%s/src/Application/%s/Assembler/%s%s%sResultAssembler.php',
                 $basePath,
                 $module,
-                $subject,
                 $action,
                 $subject,
                 $version,
             ),
-            'Service.php' => sprintf('%s/src/Application/%s/%s/%sService.php', $basePath, $module, $subject, $subject),
+            'Service.php' => sprintf('%s/src/Application/%s/%sService.php', $basePath, $module, $subject),
         ];
 
         $filesystem = new Filesystem();
