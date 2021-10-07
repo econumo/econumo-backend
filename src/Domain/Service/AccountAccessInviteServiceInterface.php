@@ -12,7 +12,7 @@ use App\Domain\Entity\ValueObject\Id;
 
 interface AccountAccessInviteServiceInterface
 {
-    public function generate(Id $accountId, Email $recipientUsername, AccountRole $role): AccountAccessInvite;
+    public function generate(Id $userId, Id $accountId, Email $recipientUsername, AccountRole $role): AccountAccessInvite;
 
     public function accept(Id $userId, string $code): Account;
 }

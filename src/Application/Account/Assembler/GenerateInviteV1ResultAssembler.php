@@ -8,18 +8,32 @@ use App\Application\Account\Dto\GenerateInviteV1RequestDto;
 use App\Application\Account\Dto\GenerateInviteV1ResultDto;
 use App\Application\Account\Dto\InviteResultDto;
 use App\Domain\Entity\AccountAccessInvite;
+use App\Domain\Repository\AccountRepositoryInterface;
+use App\Domain\Repository\UserRepositoryInterface;
 
 class GenerateInviteV1ResultAssembler
 {
+    private AccountRepositoryInterface $accountRepository;
+    private UserRepositoryInterface $userRepository;
+
+    public function __construct(AccountRepositoryInterface $accountRepository, UserRepositoryInterface $userRepository)
+    {
+        $this->accountRepository = $accountRepository;
+        $this->userRepository = $userRepository;
+    }
+
     public function assemble(
         GenerateInviteV1RequestDto $dto,
         AccountAccessInvite $invite
     ): GenerateInviteV1ResultDto {
         $result = new GenerateInviteV1ResultDto();
+        $user = $this->userRepository->get($invite->getRecipientId());
         $inviteDto = new InviteResultDto();
         $inviteDto->accountId = $dto->accountId;
         $inviteDto->role = $invite->getRole()->getAlias();
         $inviteDto->code = $invite->getCode();
+        $inviteDto->recipientUsername = $dto->recipientUsername;
+        $inviteDto->recipientName = $user->getName();
         $result->invite = $inviteDto;
 
         return $result;

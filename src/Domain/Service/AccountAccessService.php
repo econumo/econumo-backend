@@ -30,7 +30,7 @@ class AccountAccessService implements AccountAccessServiceInterface
 
     public function canDeleteAccount(Id $userId, Id $accountId): bool
     {
-        return $this->isAdmin($userId, $accountId);
+        return $this->isOwner($userId, $accountId);
     }
 
     public function canUpdateAccount(Id $userId, Id $accountId): bool
@@ -60,7 +60,17 @@ class AccountAccessService implements AccountAccessServiceInterface
 
     public function canGenerateInvite(Id $userId, Id $accountId): bool
     {
-        return $this->isAdmin($userId, $accountId);
+        return $this->isOwner($userId, $accountId);
+    }
+
+    private function isOwner(Id $userId, Id $accountId): bool
+    {
+        $account = $this->accountRepository->get($accountId);
+        if ($account->getUserId()->isEqual($userId)) {
+            return true;
+        }
+
+        return false;
     }
 
     private function isAdmin(Id $userId, Id $accountId): bool

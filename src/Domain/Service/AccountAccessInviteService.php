@@ -11,6 +11,9 @@ use App\Domain\Entity\AccountAccessInvite;
 use App\Domain\Entity\ValueObject\AccountRole;
 use App\Domain\Entity\ValueObject\Email;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Exception\AccountAccessException;
+use App\Domain\Exception\DomainException;
+use App\Domain\Exception\NotFoundException;
 use App\Domain\Factory\AccountAccessFactoryInterface;
 use App\Domain\Factory\AccountAccessInviteFactoryInterface;
 use App\Domain\Repository\AccountAccessInviteRepositoryInterface;
@@ -44,14 +47,22 @@ class AccountAccessInviteService implements AccountAccessInviteServiceInterface
     }
 
     public function generate(
+        Id $userId,
         Id $accountId,
         Email $recipientUsername,
         AccountRole $role
     ): AccountAccessInvite {
         $account = $this->accountRepository->get($accountId);
         $recipient = $this->userRepository->getByEmail($recipientUsername);
-        $oldInvite = $this->accountAccessInviteRepository->get($accountId, $recipient->getId());
-        $this->accountAccessInviteRepository->delete($oldInvite);
+        if ($userId->isEqual($recipient->getId())) {
+            throw new AccountAccessException('Access for yourself is prohibited');
+        }
+        try {
+            $oldInvite = $this->accountAccessInviteRepository->get($accountId, $recipient->getId());
+            $this->accountAccessInviteRepository->delete($oldInvite);
+        } catch (NotFoundException $exception) {
+            // do nothing
+        }
         $invite = $this->accountAccessInviteFactory->create(
             $accountId,
             $recipient->getId(),

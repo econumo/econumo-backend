@@ -71,6 +71,11 @@ class AccountAccessInvite
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
     }
 
+    public function getRecipientId(): Id
+    {
+        return $this->recipientId;
+    }
+
     public function getAccountId(): Id
     {
         return $this->accountId;

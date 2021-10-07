@@ -41,6 +41,7 @@ class InviteService
     ): GenerateInviteV1ResultDto {
         $this->accountAccessService->checkGenerateInviteAccess($userId, new Id($dto->accountId));
         $invite = $this->accountAccessInviteService->generate(
+            $userId,
             new Id($dto->accountId),
             new Email($dto->recipientUsername),
             AccountRole::createFromAlias($dto->role)

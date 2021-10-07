@@ -27,4 +27,14 @@ class InviteResultDto
      * @SWG\Property(example="admin")
      */
     public string $role;
+
+    /**
+     * @SWG\Property(example="recipient@econumo.dev")
+     */
+    public string $recipientUsername;
+
+    /**
+     * @SWG\Property(example="John Do")
+     */
+    public string $recipientName;
 }
