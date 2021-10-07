@@ -8,6 +8,7 @@ use _CG_APPROOT_\Application\_CG_MODULE_\_CG_SUBJECT_Service;
 use _CG_APPROOT_\Application\_CG_MODULE_\Dto\_CG_ACTION__CG_SUBJECT__CG_VERSION_RequestDto;
 use _CG_APPROOT_\UI\Controller\Api\_CG_MODULE_\_CG_SUBJECT_\Validation\_CG_ACTION__CG_SUBJECT__CG_VERSION_Form;
 use App\Application\Exception\ValidationException;
+use App\Domain\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -68,7 +69,9 @@ class _CG_ACTION__CG_SUBJECT__CG_VERSION_Controller extends AbstractController
     {
         $dto = new _CG_ACTION__CG_SUBJECT__CG_VERSION_RequestDto();
         $this->validator->validate(_CG_ACTION__CG_SUBJECT__CG_VERSION_Form::class, $request->query->all(), $dto);
-        $result = $this->_CG_SUBJECT_LCFIRST_Service->_CG_ACTION_LCFIRST__CG_SUBJECT_($dto);
+        /** @var User $user */
+        $user = $this->getUser();
+        $result = $this->_CG_SUBJECT_LCFIRST_Service->_CG_ACTION_LCFIRST__CG_SUBJECT_($dto, $user->getId());
 
         return ResponseFactory::createOkResponse($request, $result);
     }

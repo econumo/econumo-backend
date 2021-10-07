@@ -53,10 +53,20 @@ class AccountAccessInviteRepository extends ServiceEntityRepository implements A
         return $item;
     }
 
-    public function delete(Id $accountId, Id $recipientId): void
+    public function delete(AccountAccessInvite $invite): void
     {
-        $item = $this->get($accountId, $recipientId);
-        $this->getEntityManager()->remove($item);
+        $this->getEntityManager()->remove($invite);
         $this->getEntityManager()->flush();
+    }
+
+    public function getByUserAndCode(Id $userId, string $code): AccountAccessInvite
+    {
+        /** @var AccountAccessInvite|null $item */
+        $item = $this->findOneBy(['recipientId' => $userId, 'code' => $code]);
+        if ($item === null) {
+            throw new NotFoundException('AccountAccessInvite not found');
+        }
+
+        return $item;
     }
 }

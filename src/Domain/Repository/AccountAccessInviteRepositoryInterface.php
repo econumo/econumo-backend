@@ -14,5 +14,7 @@ interface AccountAccessInviteRepositoryInterface
 
     public function get(Id $accountId, Id $recipientId): AccountAccessInvite;
 
-    public function delete(Id $accountId, Id $recipientId): void;
+    public function getByUserAndCode(Id $userId, string $code): AccountAccessInvite;
+
+    public function delete(AccountAccessInvite $invite): void;
 }
