@@ -70,4 +70,14 @@ class AccountAccessInvite
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
     }
+
+    public function getCode(): string
+    {
+        return $this->code;
+    }
+
+    public function getRole(): AccountRole
+    {
+        return $this->role;
+    }
 }

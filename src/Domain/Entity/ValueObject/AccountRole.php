@@ -35,6 +35,16 @@ final class AccountRole implements JsonSerializable
         return new self(self::GUEST);
     }
 
+    public static function createFromAlias(string $alias): self
+    {
+        $index = array_search($alias, self::MAPPING, true);
+        if ($index === false) {
+            throw new DomainException(sprintf('AccountRole with alias %d not exists', $alias));
+        }
+
+        return new self((int)$index);
+    }
+
     public function __construct(int $value)
     {
         if (!self::isValid($value)) {
