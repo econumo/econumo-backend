@@ -80,4 +80,21 @@ class AccountAccessRepository extends ServiceEntityRepository implements Account
     {
         return $this->findBy(['accountId' => $accountId]);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getOwnedByUser(Id $userId): array
+    {
+        $dql =<<<'DQL'
+SELECT a.id FROM App\Domain\Entity\AccountAccess aa
+LEFT JOIN App\Domain\Entity\Account a WITH a.id = aa.accountId
+WHERE a.userId = :id
+GROUP BY a.id
+DQL;
+        $query = $this->getEntityManager()->createQuery($dql)->setParameter('id', $userId->getValue());
+        $ids = array_column($query->getScalarResult(), 'id');
+
+        return $this->findBy(['accountId' => $ids]);
+    }
 }

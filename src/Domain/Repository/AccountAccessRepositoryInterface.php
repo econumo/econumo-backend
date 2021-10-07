@@ -27,4 +27,10 @@ interface AccountAccessRepositoryInterface
     public function get(Id $accountId, Id $userId): AccountAccess;
 
     public function delete(Id $accountId, Id $userId): void;
+
+    /**
+     * @param Id $userId
+     * @return AccountAccess[]
+     */
+    public function getOwnedByUser(Id $userId): array;
 }

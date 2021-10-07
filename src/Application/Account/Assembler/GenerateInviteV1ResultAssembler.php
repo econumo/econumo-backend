@@ -8,17 +8,14 @@ use App\Application\Account\Dto\GenerateInviteV1RequestDto;
 use App\Application\Account\Dto\GenerateInviteV1ResultDto;
 use App\Application\Account\Dto\InviteResultDto;
 use App\Domain\Entity\AccountAccessInvite;
-use App\Domain\Repository\AccountRepositoryInterface;
 use App\Domain\Repository\UserRepositoryInterface;
 
 class GenerateInviteV1ResultAssembler
 {
-    private AccountRepositoryInterface $accountRepository;
     private UserRepositoryInterface $userRepository;
 
-    public function __construct(AccountRepositoryInterface $accountRepository, UserRepositoryInterface $userRepository)
+    public function __construct(UserRepositoryInterface $userRepository)
     {
-        $this->accountRepository = $accountRepository;
         $this->userRepository = $userRepository;
     }
 

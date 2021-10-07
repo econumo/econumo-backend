@@ -49,7 +49,7 @@ class AcceptInviteV1Controller extends AbstractController
      *             @SWG\Schema(
      *                 @SWG\Property(
      *                     property="data",
-     *                     ref=@Model(type=\App\Application\Account\Invite\Dto\AcceptInviteV1ResultDto::class)
+     *                     ref=@Model(type=\App\Application\Account\Dto\AcceptInviteV1ResultDto::class)
      *                 )
      *             )
      *         }

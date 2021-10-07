@@ -17,4 +17,10 @@ interface AccountAccessInviteRepositoryInterface
     public function getByUserAndCode(Id $userId, string $code): AccountAccessInvite;
 
     public function delete(AccountAccessInvite $invite): void;
+
+    /**
+     * @param Id $userId
+     * @return AccountAccessInvite[]
+     */
+    public function getUnacceptedByUser(Id $userId): array;
 }

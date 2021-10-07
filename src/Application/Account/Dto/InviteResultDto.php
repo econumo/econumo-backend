@@ -21,7 +21,7 @@ class InviteResultDto
     /**
      * @SWG\Property(example="12345")
      */
-    public string $code;
+    public ?string $code = null;
 
     /**
      * @SWG\Property(example="admin")

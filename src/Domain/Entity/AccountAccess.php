@@ -59,6 +59,11 @@ class AccountAccess
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
     }
 
+    public function getAccountId(): Id
+    {
+        return $this->accountId;
+    }
+
     public function getUserId(): Id
     {
         return $this->userId;

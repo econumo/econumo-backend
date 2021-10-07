@@ -69,4 +69,9 @@ class AccountAccessInviteRepository extends ServiceEntityRepository implements A
 
         return $item;
     }
+
+    public function getUnacceptedByUser(Id $userId): array
+    {
+        return $this->findBy(['ownerId' => $userId]);
+    }
 }

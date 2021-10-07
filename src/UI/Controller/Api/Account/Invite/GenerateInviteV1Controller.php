@@ -49,7 +49,7 @@ class GenerateInviteV1Controller extends AbstractController
      *             @SWG\Schema(
      *                 @SWG\Property(
      *                     property="data",
-     *                     ref=@Model(type=\App\Application\Account\Invite\Dto\GenerateInviteV1ResultDto::class)
+     *                     ref=@Model(type=\App\Application\Account\Dto\GenerateInviteV1ResultDto::class)
      *                 )
      *             )
      *         }
