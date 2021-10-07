@@ -32,9 +32,20 @@ class TagRepository extends ServiceEntityRepository implements TagRepositoryInte
      */
     public function findByUserId(Id $userId): array
     {
+        $dql =<<<'DQL'
+SELECT u.id FROM App\Domain\Entity\User u
+LEFT JOIN App\Domain\Entity\AccountAccess aa WITH aa.userId = :id
+LEFT JOIN App\Domain\Entity\Account a WITH a.id = aa.accountId
+GROUP BY u.id
+DQL;
+        $query = $this->getEntityManager()->createQuery($dql)->setParameter('id', $userId->getValue());
+        $ids = array_column($query->getScalarResult(), 'id');
+        $ids[] = $userId->getValue();
+        $ids = array_unique($ids);
+
         return $this->createQueryBuilder('c')
-            ->andWhere('c.userId = :id')
-            ->setParameter('id', $userId->getValue())
+            ->andWhere('c.userId IN(:ids)')
+            ->setParameter('ids', $ids)
             ->orderBy('c.position', 'ASC')
             ->getQuery()
             ->getResult();

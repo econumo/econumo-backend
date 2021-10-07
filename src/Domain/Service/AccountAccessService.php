@@ -127,4 +127,11 @@ class AccountAccessService implements AccountAccessServiceInterface
             throw new AccessDeniedException('Access is not allowed');
         }
     }
+
+    public function checkViewTransactionsAccess(Id $userId, Id $accountId): void
+    {
+        if (!$this->canViewTransactions($userId, $accountId)) {
+            throw new AccessDeniedException('Access is not allowed');
+        }
+    }
 }

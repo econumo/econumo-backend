@@ -32,11 +32,8 @@ class CollectionService
         GetCollectionV1RequestDto $dto,
         Id $userId
     ): GetCollectionV1ResultDto {
-        if ($dto->accountId && !$this->accountAccessService->canViewTransactions($userId, new Id($dto->accountId))) {
-            throw new ValidationException(sprintf('Account %s not available', $dto->accountId));
-        }
-
         if ($dto->accountId) {
+            $this->accountAccessService->checkViewTransactionsAccess($userId, new Id($dto->accountId));
             $transactions = $this->transactionRepository->findByAccountId(new Id($dto->accountId));
         } else {
             $transactions = $this->transactionRepository->findByUserId($userId);

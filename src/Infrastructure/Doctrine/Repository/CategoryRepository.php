@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Doctrine\Repository;
 
+use App\Domain\Entity\Account;
+use App\Domain\Entity\AccountAccess;
 use App\Domain\Entity\Category;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\NotFoundException;
@@ -10,6 +12,7 @@ use App\Domain\Repository\CategoryRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\ORMInvalidArgumentException;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 use RuntimeException;
 
@@ -31,10 +34,21 @@ class CategoryRepository extends ServiceEntityRepository implements CategoryRepo
      */
     public function findByUserId(Id $userId): array
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.userId = :id')
-            ->setParameter('id', $userId->getValue())
-            ->orderBy('c.position', 'ASC')
+        $dql =<<<'DQL'
+SELECT u.id FROM App\Domain\Entity\User u
+LEFT JOIN App\Domain\Entity\AccountAccess aa WITH aa.userId = :id
+LEFT JOIN App\Domain\Entity\Account a WITH a.id = aa.accountId
+GROUP BY u.id
+DQL;
+        $query = $this->getEntityManager()->createQuery($dql)->setParameter('id', $userId->getValue());
+        $ids = array_column($query->getScalarResult(), 'id');
+        $ids[] = $userId->getValue();
+        $ids = array_unique($ids);
+        $builder = $this->createQueryBuilder('c')
+            ->where('c.userId IN(:ids)')
+            ->setParameter('ids', $ids)
+            ->orderBy('c.position', 'ASC');
+        return $builder
             ->getQuery()
             ->getResult();
     }

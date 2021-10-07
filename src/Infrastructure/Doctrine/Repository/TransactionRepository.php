@@ -81,7 +81,17 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
 
     public function findByUserId(Id $userId): array
     {
-        return $this->findBy(['userId' => $userId->getValue()]);
+        $query = $this->getEntityManager()
+            ->createQuery('SELECT aa.accountId FROM App\Domain\Entity\AccountAccess aa WHERE aa.userId = :id')
+            ->setParameter('id', $userId->getValue());
+        $sharedIds = array_column($query->getScalarResult(), 'accountId');
+
+        $query = $this->getEntityManager()
+            ->createQuery('SELECT a.id FROM App\Domain\Entity\Account a WHERE a.userId = :id')
+            ->setParameter('id', $userId->getValue());
+        $userAccountIds = array_column($query->getScalarResult(), 'id');
+        $ids = array_unique(array_merge($sharedIds, $userAccountIds));
+        return $this->findBy(['accountId' => $ids]);
     }
 
     public function delete(Transaction $transaction): void
