@@ -8,6 +8,7 @@ use App\Application\Account\Account\Dto\AddAccountV1RequestDto;
 use App\Application\Account\Account\Dto\AddAccountV1ResultDto;
 use App\Application\Account\Collection\Assembler\AccountToDtoV1ResultAssembler;
 use App\Domain\Entity\Account;
+use App\Domain\Entity\ValueObject\Id;
 
 class AddAccountV1ResultAssembler
 {
@@ -20,10 +21,11 @@ class AddAccountV1ResultAssembler
 
     public function assemble(
         AddAccountV1RequestDto $dto,
+        Id $userId,
         Account $account
     ): AddAccountV1ResultDto {
         $result = new AddAccountV1ResultDto();
-        $result->item = $this->accountToDtoV1ResultAssembler->assemble($account);
+        $result->item = $this->accountToDtoV1ResultAssembler->assemble($userId, $account);
 
         return $result;
     }

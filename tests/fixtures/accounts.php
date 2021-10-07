@@ -3,7 +3,7 @@
 return [
     [
         'id' => '0aaa0450-564e-411e-8018-7003f6dbeb92',
-        'user_id' => 'aff21334-96f0-4fb1-84d8-0223d0280954',
+        'user_id' => '77be9577-147b-4f05-9aa7-91d9b159de5b',
         'name' => 'TF/Кредитка',
         'position' => 0,
         'currency_id' => 'fe5d9269-b69c-4841-9c04-136225447eca',

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Account\Account\Dto;
 
-use App\Application\Account\Collection\Dto\AccountItemResultDto;
+use App\Application\Account\Collection\Dto\AccountResultDto;
 use App\Application\Transaction\Collection\Dto\TransactionResultDto;
 use Swagger\Annotations as SWG;
 
@@ -18,7 +18,7 @@ class UpdateAccountV1ResultDto
     /**
      * @SWG\Property()
      */
-    public AccountItemResultDto $item;
+    public AccountResultDto $item;
 
     /**
      * @SWG\Property()

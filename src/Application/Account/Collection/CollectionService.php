@@ -34,7 +34,7 @@ class CollectionService
         Id $userId
     ): GetCollectionV1ResultDto {
         $accounts = $this->accountRepository->findByUserId($userId);
-        return $this->getCollectionV1ResultAssembler->assemble($dto, $accounts);
+        return $this->getCollectionV1ResultAssembler->assemble($dto, $userId, $accounts);
     }
 
     public function reorderCollection(

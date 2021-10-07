@@ -7,6 +7,7 @@ namespace App\Application\Account\Collection\Assembler;
 use App\Application\Account\Collection\Dto\GetCollectionV1RequestDto;
 use App\Application\Account\Collection\Dto\GetCollectionV1ResultDto;
 use App\Domain\Entity\Account;
+use App\Domain\Entity\ValueObject\Id;
 
 class GetCollectionV1ResultAssembler
 {
@@ -24,12 +25,13 @@ class GetCollectionV1ResultAssembler
      */
     public function assemble(
         GetCollectionV1RequestDto $dto,
+        Id $userId,
         array $accounts
     ): GetCollectionV1ResultDto {
         $result = new GetCollectionV1ResultDto();
         $result->items = [];
         foreach (array_reverse($accounts) as $account) {
-            $result->items[] = $this->accountToDtoV1ResultAssembler->assemble($account);
+            $result->items[] = $this->accountToDtoV1ResultAssembler->assemble($userId, $account);
         }
 
         return $result;

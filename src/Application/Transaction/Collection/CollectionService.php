@@ -10,29 +10,29 @@ use App\Application\Transaction\Collection\Dto\GetCollectionV1ResultDto;
 use App\Application\Transaction\Collection\Assembler\GetCollectionV1ResultAssembler;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Repository\TransactionRepositoryInterface;
-use App\Domain\Service\AccountServiceInterface;
+use App\Domain\Service\AccountAccessServiceInterface;
 
 class CollectionService
 {
     private GetCollectionV1ResultAssembler $getCollectionV1ResultAssembler;
-    private AccountServiceInterface $accountService;
     private TransactionRepositoryInterface $transactionRepository;
+    private AccountAccessServiceInterface $accountAccessService;
 
     public function __construct(
         GetCollectionV1ResultAssembler $getCollectionV1ResultAssembler,
-        AccountServiceInterface $accountService,
-        TransactionRepositoryInterface $transactionRepository
+        TransactionRepositoryInterface $transactionRepository,
+        AccountAccessServiceInterface $accountAccessService
     ) {
         $this->getCollectionV1ResultAssembler = $getCollectionV1ResultAssembler;
-        $this->accountService = $accountService;
         $this->transactionRepository = $transactionRepository;
+        $this->accountAccessService = $accountAccessService;
     }
 
     public function getCollection(
         GetCollectionV1RequestDto $dto,
         Id $userId
     ): GetCollectionV1ResultDto {
-        if ($dto->accountId && !$this->accountService->isAccountAvailable($userId, new Id($dto->accountId))) {
+        if ($dto->accountId && !$this->accountAccessService->canViewTransactions($userId, new Id($dto->accountId))) {
             throw new ValidationException(sprintf('Account %s not available', $dto->accountId));
         }
 

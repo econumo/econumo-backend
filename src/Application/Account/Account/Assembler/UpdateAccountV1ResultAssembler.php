@@ -10,6 +10,7 @@ use App\Application\Account\Collection\Assembler\AccountToDtoV1ResultAssembler;
 use App\Application\Transaction\Collection\Assembler\TransactionToDtoV1ResultAssembler;
 use App\Domain\Entity\Account;
 use App\Domain\Entity\Transaction;
+use App\Domain\Entity\ValueObject\Id;
 
 class UpdateAccountV1ResultAssembler
 {
@@ -26,11 +27,12 @@ class UpdateAccountV1ResultAssembler
 
     public function assemble(
         UpdateAccountV1RequestDto $dto,
+        Id $userId,
         Account $account,
         ?Transaction $transaction = null
     ): UpdateAccountV1ResultDto {
         $result = new UpdateAccountV1ResultDto();
-        $result->item = $this->accountToDtoV1ResultAssembler->assemble($account);
+        $result->item = $this->accountToDtoV1ResultAssembler->assemble($userId, $account);
         if ($transaction) {
             $result->transaction = $this->transactionToDtoV1ResultAssembler->assemble($transaction);
         }

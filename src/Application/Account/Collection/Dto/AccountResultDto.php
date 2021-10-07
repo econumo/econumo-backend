@@ -7,10 +7,10 @@ use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Definition(
- *     required={"id", "name", "position", "currencyId", "balance", "type", "icon"}
+ *     required={"id", "name", "position", "currencyId", "balance", "type", "icon", "sharedAccess"}
  * )
  */
-class AccountItemResultDto
+class AccountResultDto
 {
     /**
      * Id
@@ -81,4 +81,11 @@ class AccountItemResultDto
      * @SWG\Property(example="rounded_corner")
      */
     public string $icon;
+
+    /**
+     * Account access
+     * @var AccountRoleResultDto[]
+     * @SWG\Property(example="rounded_corner")
+     */
+    public array $sharedAccess = [];
 }

@@ -14,7 +14,7 @@ use Swagger\Annotations as SWG;
 class GetCollectionV1ResultDto
 {
     /**
-     * @var AccountItemResultDto[]
+     * @var AccountResultDto[]
      * @SWG\Property()
      */
     public array $items = [];

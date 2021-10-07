@@ -15,6 +15,7 @@ use App\Application\Account\Account\Dto\UpdateAccountV1ResultDto;
 use App\Application\Account\Account\Assembler\UpdateAccountV1ResultAssembler;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Repository\AccountRepositoryInterface;
+use App\Domain\Service\AccountAccessServiceInterface;
 use App\Domain\Service\AccountServiceInterface;
 use App\Domain\Service\Dto\AccountDto;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -26,19 +27,22 @@ class AccountService
     private AccountServiceInterface $accountService;
     private UpdateAccountV1ResultAssembler $updateAccountV1ResultAssembler;
     private AccountRepositoryInterface $accountRepository;
+    private AccountAccessServiceInterface $accountAccessService;
 
     public function __construct(
         AddAccountV1ResultAssembler $addAccountV1ResultAssembler,
         AccountServiceInterface $accountService,
         DeleteAccountV1ResultAssembler $deleteAccountV1ResultAssembler,
         UpdateAccountV1ResultAssembler $updateAccountV1ResultAssembler,
-        AccountRepositoryInterface $accountRepository
+        AccountRepositoryInterface $accountRepository,
+        AccountAccessServiceInterface $accountAccessService
     ) {
         $this->addAccountV1ResultAssembler = $addAccountV1ResultAssembler;
         $this->accountService = $accountService;
         $this->deleteAccountV1ResultAssembler = $deleteAccountV1ResultAssembler;
         $this->updateAccountV1ResultAssembler = $updateAccountV1ResultAssembler;
         $this->accountRepository = $accountRepository;
+        $this->accountAccessService = $accountAccessService;
     }
 
     public function addAccount(
@@ -54,7 +58,7 @@ class AccountService
         $accountDto->icon = $dto->icon;
 
         $account = $this->accountService->add($accountDto);
-        return $this->addAccountV1ResultAssembler->assemble($dto, $account);
+        return $this->addAccountV1ResultAssembler->assemble($dto, $userId, $account);
     }
 
     public function deleteAccount(
@@ -62,7 +66,7 @@ class AccountService
         Id $userId
     ): DeleteAccountV1ResultDto {
         $accountId = new Id($dto->id);
-        if (!$this->accountService->isAccountAvailable($userId, $accountId)) {
+        if (!$this->accountAccessService->canDeleteAccount($userId, $accountId)) {
             throw new AccessDeniedHttpException();
         }
 
@@ -75,14 +79,13 @@ class AccountService
         Id $userId
     ): UpdateAccountV1ResultDto {
         $accountId = new Id($dto->id);
-        if (!$this->accountService->isAccountAvailable($userId, $accountId)) {
+        if (!$this->accountAccessService->canUpdateAccount($userId, $accountId)) {
             throw new AccessDeniedHttpException();
         }
-        $account = $this->accountRepository->get($accountId);
-        $updatedAt = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dto->updatedAt);
-
         $this->accountService->update($accountId, $dto->name, $dto->icon);
+        $updatedAt = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dto->updatedAt);
         $transaction = $this->accountService->updateBalance($accountId, $dto->balance, $updatedAt, $dto->comment);
-        return $this->updateAccountV1ResultAssembler->assemble($dto, $account, $transaction);
+        $account = $this->accountRepository->get($accountId);
+        return $this->updateAccountV1ResultAssembler->assemble($dto, $userId, $account, $transaction);
     }
 }

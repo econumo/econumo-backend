@@ -14,32 +14,32 @@ use App\Application\Transaction\Transaction\Dto\DeleteTransactionV1ResultDto;
 use App\Application\Transaction\Transaction\Assembler\DeleteTransactionV1ResultAssembler;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Repository\TransactionRepositoryInterface;
-use App\Domain\Service\AccountServiceInterface;
+use App\Domain\Service\AccountAccessServiceInterface;
 use App\Domain\Service\TransactionServiceInterface;
 
 class TransactionService
 {
     private CreateTransactionV1ResultAssembler $createTransactionV1ResultAssembler;
-    private AccountServiceInterface $accountService;
     private RequestToDomainDtoAssembler $requestToDomainDtoAssembler;
     private TransactionServiceInterface $transactionService;
     private DeleteTransactionV1ResultAssembler $deleteTransactionV1ResultAssembler;
     private TransactionRepositoryInterface $transactionRepository;
+    private AccountAccessServiceInterface $accountAccessService;
 
     public function __construct(
         CreateTransactionV1ResultAssembler $createTransactionV1ResultAssembler,
-        AccountServiceInterface $accountService,
         RequestToDomainDtoAssembler $requestToDomainDtoAssembler,
         TransactionServiceInterface $transactionService,
         DeleteTransactionV1ResultAssembler $deleteTransactionV1ResultAssembler,
-        TransactionRepositoryInterface $transactionRepository
+        TransactionRepositoryInterface $transactionRepository,
+        AccountAccessServiceInterface $accountAccessService
     ) {
         $this->createTransactionV1ResultAssembler = $createTransactionV1ResultAssembler;
-        $this->accountService = $accountService;
         $this->requestToDomainDtoAssembler = $requestToDomainDtoAssembler;
         $this->transactionService = $transactionService;
         $this->deleteTransactionV1ResultAssembler = $deleteTransactionV1ResultAssembler;
         $this->transactionRepository = $transactionRepository;
+        $this->accountAccessService = $accountAccessService;
     }
 
     public function createTransaction(
@@ -47,7 +47,7 @@ class TransactionService
         Id $userId
     ): CreateTransactionV1ResultDto {
         $accountId = new Id($dto->accountId);
-        if (!$this->accountService->isAccountAvailable($userId, $accountId)) {
+        if (!$this->accountAccessService->canAddTransaction($userId, $accountId)) {
             throw new ValidationException(sprintf('Account %s not available', $dto->accountId));
         }
 
@@ -61,7 +61,7 @@ class TransactionService
         Id $userId
     ): DeleteTransactionV1ResultDto {
         $transaction = $this->transactionRepository->get(new Id($dto->id));
-        if (!$this->accountService->isAccountAvailable($userId, $transaction->getAccountId())) {
+        if (!$this->accountAccessService->canDeleteTransaction($userId, $transaction->getAccountId())) {
             throw new ValidationException(sprintf('Transaction %s not available', $dto->id));
         }
 
