@@ -8,7 +8,7 @@ use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Definition(
- *     required={"id", "name"}
+ *     required={"id", "name", "type"}
  * )
  */
 class CreateCategoryV1RequestDto
@@ -27,4 +27,9 @@ class CreateCategoryV1RequestDto
      * @SWG\Property(example="expense")
      */
     public string $type;
+
+    /**
+     * @SWG\Property(example="0aaa0450-564e-411e-8018-7003f6dbeb92")
+     */
+    public ?string $accountId = null;
 }

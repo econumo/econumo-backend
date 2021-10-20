@@ -19,4 +19,8 @@ interface AccountAccessServiceInterface
     public function checkGenerateInviteAccess(Id $userId, Id $accountId): void;
     public function canAddPayee(Id $userId, Id $accountId): bool;
     public function checkAddPayee(Id $userId, Id $accountId): void;
+    public function canAddCategory(Id $userId, Id $accountId): bool;
+    public function checkAddCategory(Id $userId, Id $accountId): void;
+    public function canAddTag(Id $userId, Id $accountId): bool;
+    public function checkAddTag(Id $userId, Id $accountId): void;
 }

@@ -146,4 +146,28 @@ class AccountAccessService implements AccountAccessServiceInterface
             throw new AccessDeniedException('Access is not allowed');
         }
     }
+
+    public function canAddCategory(Id $userId, Id $accountId): bool
+    {
+        return $this->isAdmin($userId, $accountId);
+    }
+
+    public function checkAddCategory(Id $userId, Id $accountId): void
+    {
+        if (!$this->canAddCategory($userId, $accountId)) {
+            throw new AccessDeniedException('Access is not allowed');
+        }
+    }
+
+    public function canAddTag(Id $userId, Id $accountId): bool
+    {
+        return $this->isAdmin($userId, $accountId);
+    }
+
+    public function checkAddTag(Id $userId, Id $accountId): void
+    {
+        if (!$this->canAddTag($userId, $accountId)) {
+            throw new AccessDeniedException('Access is not allowed');
+        }
+    }
 }

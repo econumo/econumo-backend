@@ -31,6 +31,8 @@ class CreateCategoryV1Form extends AbstractType
             ->add('type', ChoiceType::class, [
                 'constraints' => [new NotBlank()],
                 'choices' => ['expense', 'income']
+            ])->add('accountId', TextType::class, [
+                'constraints' => [new Uuid()],
             ]);
     }
 }

@@ -24,6 +24,8 @@ class CreateTagV1Form extends AbstractType
             'constraints' => [new NotBlank(), new Uuid()],
         ])->add('name', TextType::class, [
             'constraints' => [new NotBlank()],
+        ])->add('accountId', TextType::class, [
+            'constraints' => [new Uuid()],
         ]);
     }
 }
