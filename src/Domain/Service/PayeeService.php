@@ -9,17 +9,20 @@ namespace App\Domain\Service;
 use App\Domain\Entity\Payee;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Factory\PayeeFactoryInterface;
+use App\Domain\Repository\AccountRepositoryInterface;
 use App\Domain\Repository\PayeeRepositoryInterface;
 
 class PayeeService implements PayeeServiceInterface
 {
     private PayeeFactoryInterface $payeeFactory;
     private PayeeRepositoryInterface $payeeRepository;
+    private AccountRepositoryInterface $accountRepository;
 
-    public function __construct(PayeeFactoryInterface $payeeFactory, PayeeRepositoryInterface $payeeRepository)
+    public function __construct(PayeeFactoryInterface $payeeFactory, PayeeRepositoryInterface $payeeRepository, AccountRepositoryInterface $accountRepository)
     {
         $this->payeeFactory = $payeeFactory;
         $this->payeeRepository = $payeeRepository;
+        $this->accountRepository = $accountRepository;
     }
 
     public function createPayee(Id $userId, Id $payeeId, string $name): Payee
@@ -28,5 +31,15 @@ class PayeeService implements PayeeServiceInterface
         $this->payeeRepository->save($payee);
 
         return $payee;
+    }
+
+    public function createPayeeForAccount(Id $userId, Id $accountId, Id $payeeId, string $name): Payee
+    {
+        $account = $this->accountRepository->get($accountId);
+        if ($userId->isEqual($account->getUserId())) {
+            return $this->createPayee($userId, $payeeId, $name);
+        }
+
+        return $this->createPayee($account->getUserId(), $payeeId, $name);
     }
 }

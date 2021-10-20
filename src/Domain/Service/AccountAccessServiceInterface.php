@@ -17,4 +17,6 @@ interface AccountAccessServiceInterface
     public function canDeleteTransaction(Id $userId, Id $accountId): bool;
     public function canGenerateInvite(Id $userId, Id $accountId): bool;
     public function checkGenerateInviteAccess(Id $userId, Id $accountId): void;
+    public function canAddPayee(Id $userId, Id $accountId): bool;
+    public function checkAddPayee(Id $userId, Id $accountId): void;
 }

@@ -134,4 +134,16 @@ class AccountAccessService implements AccountAccessServiceInterface
             throw new AccessDeniedException('Access is not allowed');
         }
     }
+
+    public function canAddPayee(Id $userId, Id $accountId): bool
+    {
+        return $this->isAdmin($userId, $accountId);
+    }
+
+    public function checkAddPayee(Id $userId, Id $accountId): void
+    {
+        if (!$this->canAddPayee($userId, $accountId)) {
+            throw new AccessDeniedException('Access is not allowed');
+        }
+    }
 }
