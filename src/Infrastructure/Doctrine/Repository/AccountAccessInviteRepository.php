@@ -30,14 +30,11 @@ class AccountAccessInviteRepository extends ServiceEntityRepository implements A
     public function save(AccountAccessInvite ...$items): void
     {
         try {
-            $this->getEntityManager()->beginTransaction();
             foreach ($items as $item) {
                 $this->getEntityManager()->persist($item);
             }
             $this->getEntityManager()->flush();
-            $this->getEntityManager()->commit();
         } catch (ORMException | ORMInvalidArgumentException $e) {
-            $this->getEntityManager()->rollback();
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
     }

@@ -29,6 +29,7 @@ class AccountAccessInviteService implements AccountAccessInviteServiceInterface
     private AccountRepositoryInterface $accountRepository;
     private AccountAccessFactoryInterface $accountAccessFactory;
     private AccountAccessRepositoryInterface $accountAccessRepository;
+    private AntiCorruptionServiceInterface $antiCorruptionService;
 
     public function __construct(
         UserRepositoryInterface $userRepository,
@@ -36,7 +37,8 @@ class AccountAccessInviteService implements AccountAccessInviteServiceInterface
         AccountAccessInviteFactoryInterface $accountAccessInviteFactory,
         AccountRepositoryInterface $accountRepository,
         AccountAccessFactoryInterface $accountAccessFactory,
-        AccountAccessRepositoryInterface $accountAccessRepository
+        AccountAccessRepositoryInterface $accountAccessRepository,
+        AntiCorruptionServiceInterface $antiCorruptionService
     ) {
         $this->userRepository = $userRepository;
         $this->accountAccessInviteRepository = $accountAccessInviteRepository;
@@ -44,6 +46,7 @@ class AccountAccessInviteService implements AccountAccessInviteServiceInterface
         $this->accountRepository = $accountRepository;
         $this->accountAccessFactory = $accountAccessFactory;
         $this->accountAccessRepository = $accountAccessRepository;
+        $this->antiCorruptionService = $antiCorruptionService;
     }
 
     public function generate(
@@ -57,19 +60,26 @@ class AccountAccessInviteService implements AccountAccessInviteServiceInterface
         if ($userId->isEqual($recipient->getId())) {
             throw new AccountAccessException('Access for yourself is prohibited');
         }
+        $this->antiCorruptionService->beginTransaction();
         try {
-            $oldInvite = $this->accountAccessInviteRepository->get($accountId, $recipient->getId());
-            $this->accountAccessInviteRepository->delete($oldInvite);
-        } catch (NotFoundException $exception) {
-            // do nothing
+            try {
+                $oldInvite = $this->accountAccessInviteRepository->get($accountId, $recipient->getId());
+                $this->accountAccessInviteRepository->delete($oldInvite);
+            } catch (NotFoundException $exception) {
+                // do nothing
+            }
+            $invite = $this->accountAccessInviteFactory->create(
+                $accountId,
+                $recipient->getId(),
+                $account->getUserId(),
+                $role
+            );
+            $this->accountAccessInviteRepository->save($invite);
+            $this->antiCorruptionService->commit();
+        } catch (\Throwable $exception) {
+            $this->antiCorruptionService->rollback();
+            throw $exception;
         }
-        $invite = $this->accountAccessInviteFactory->create(
-            $accountId,
-            $recipient->getId(),
-            $account->getUserId(),
-            $role
-        );
-        $this->accountAccessInviteRepository->save($invite);
 
         return $invite;
     }
@@ -78,13 +88,20 @@ class AccountAccessInviteService implements AccountAccessInviteServiceInterface
     {
         $invite = $this->accountAccessInviteRepository->getByUserAndCode($userId, $code);
         $account = $this->accountRepository->get($invite->getAccountId());
-        $access = $this->accountAccessFactory->create(
-            $account->getId(),
-            $userId,
-            $invite->getRole()
-        );
-        $this->accountAccessRepository->save($access);
-        $this->accountAccessInviteRepository->delete($invite);
+        $this->antiCorruptionService->beginTransaction();
+        try {
+            $access = $this->accountAccessFactory->create(
+                $account->getId(),
+                $userId,
+                $invite->getRole()
+            );
+            $this->accountAccessRepository->save($access);
+            $this->accountAccessInviteRepository->delete($invite);
+            $this->antiCorruptionService->commit();
+        } catch (\Throwable $exception) {
+            $this->antiCorruptionService->rollback();
+            throw $exception;
+        }
 
         return $account;
     }

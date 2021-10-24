@@ -53,14 +53,11 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
     public function save(Transaction ...$transactions): void
     {
         try {
-            $this->getEntityManager()->beginTransaction();
             foreach ($transactions as $transaction) {
                 $this->getEntityManager()->persist($transaction);
             }
             $this->getEntityManager()->flush();
-            $this->getEntityManager()->commit();
         } catch (ORMException | ORMInvalidArgumentException $e) {
-            $this->getEntityManager()->rollback();
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
     }

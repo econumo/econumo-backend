@@ -65,14 +65,11 @@ DQL;
     public function save(Tag ...$tags): void
     {
         try {
-            $this->getEntityManager()->beginTransaction();
             foreach ($tags as $tag) {
                 $this->getEntityManager()->persist($tag);
             }
             $this->getEntityManager()->flush();
-            $this->getEntityManager()->commit();
         } catch (ORMException | ORMInvalidArgumentException $e) {
-            $this->getEntityManager()->rollback();
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
     }

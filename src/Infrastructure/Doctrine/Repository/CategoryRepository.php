@@ -67,14 +67,11 @@ DQL;
     public function save(Category ...$categories): void
     {
         try {
-            $this->getEntityManager()->beginTransaction();
             foreach ($categories as $category) {
                 $this->getEntityManager()->persist($category);
             }
             $this->getEntityManager()->flush();
-            $this->getEntityManager()->commit();
         } catch (ORMException | ORMInvalidArgumentException $e) {
-            $this->getEntityManager()->rollback();
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
     }

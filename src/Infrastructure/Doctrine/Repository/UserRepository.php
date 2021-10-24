@@ -58,14 +58,11 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function save(User ...$users): void
     {
         try {
-            $this->getEntityManager()->beginTransaction();
             foreach ($users as $user) {
                 $this->getEntityManager()->persist($user);
             }
             $this->getEntityManager()->flush();
-            $this->getEntityManager()->commit();
         } catch (ORMException | ORMInvalidArgumentException $e) {
-            $this->getEntityManager()->rollback();
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
     }

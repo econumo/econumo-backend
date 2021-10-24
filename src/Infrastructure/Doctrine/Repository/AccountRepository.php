@@ -41,14 +41,11 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
     public function save(Account ...$accounts): void
     {
         try {
-            $this->getEntityManager()->beginTransaction();
             foreach ($accounts as $account) {
                 $this->getEntityManager()->persist($account);
             }
             $this->getEntityManager()->flush();
-            $this->getEntityManager()->commit();
         } catch (ORMException | ORMInvalidArgumentException $e) {
-            $this->getEntityManager()->rollback();
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
     }

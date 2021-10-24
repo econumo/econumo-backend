@@ -65,14 +65,11 @@ DQL;
     public function save(Payee ...$payees): void
     {
         try {
-            $this->getEntityManager()->beginTransaction();
             foreach ($payees as $payee) {
                 $this->getEntityManager()->persist($payee);
             }
             $this->getEntityManager()->flush();
-            $this->getEntityManager()->commit();
         } catch (ORMException | ORMInvalidArgumentException $e) {
-            $this->getEntityManager()->rollback();
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
     }

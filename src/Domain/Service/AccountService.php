@@ -6,12 +6,9 @@ namespace App\Domain\Service;
 
 use App\Domain\Entity\Account;
 use App\Domain\Entity\Transaction;
-use App\Domain\Entity\ValueObject\AccountRole;
 use App\Domain\Entity\ValueObject\AccountType;
 use App\Domain\Entity\ValueObject\Id;
-use App\Domain\Factory\AccountAccessFactoryInterface;
 use App\Domain\Factory\AccountFactoryInterface;
-use App\Domain\Repository\AccountAccessRepositoryInterface;
 use App\Domain\Repository\AccountRepositoryInterface;
 use App\Domain\Service\Dto\AccountDto;
 
@@ -20,21 +17,15 @@ class AccountService implements AccountServiceInterface
     private AccountRepositoryInterface $accountRepository;
     private AccountFactoryInterface $accountFactory;
     private TransactionServiceInterface $transactionService;
-    private AccountAccessRepositoryInterface $accountAccessRepository;
-    private AccountAccessFactoryInterface $accountAccessFactory;
 
     public function __construct(
         AccountRepositoryInterface $accountRepository,
         AccountFactoryInterface $accountFactory,
-        TransactionServiceInterface $transactionService,
-        AccountAccessRepositoryInterface $accountAccessRepository,
-        AccountAccessFactoryInterface $accountAccessFactory
+        TransactionServiceInterface $transactionService
     ) {
         $this->accountRepository = $accountRepository;
         $this->accountFactory = $accountFactory;
         $this->transactionService = $transactionService;
-        $this->accountAccessRepository = $accountAccessRepository;
-        $this->accountAccessFactory = $accountAccessFactory;
     }
 
     public function add(AccountDto $dto): Account
@@ -49,8 +40,6 @@ class AccountService implements AccountServiceInterface
             $dto->icon
         );
         $this->accountRepository->save($account);
-//        $access = $this->accountAccessFactory->create($account->getId(), $dto->userId, AccountRole::admin());
-//        $this->accountAccessRepository->save($access);
 
         return $account;
     }
