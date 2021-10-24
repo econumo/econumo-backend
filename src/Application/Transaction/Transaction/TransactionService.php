@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Application\Transaction\Transaction;
 
 use App\Application\Exception\ValidationException;
+use App\Application\RequestIdLockServiceInterface;
 use App\Application\Transaction\Transaction\Assembler\RequestToDomainDtoAssembler;
 use App\Application\Transaction\Transaction\Dto\CreateTransactionV1RequestDto;
 use App\Application\Transaction\Transaction\Dto\CreateTransactionV1ResultDto;
@@ -25,6 +26,7 @@ class TransactionService
     private DeleteTransactionV1ResultAssembler $deleteTransactionV1ResultAssembler;
     private TransactionRepositoryInterface $transactionRepository;
     private AccountAccessServiceInterface $accountAccessService;
+    private RequestIdLockServiceInterface $requestIdLockService;
 
     public function __construct(
         CreateTransactionV1ResultAssembler $createTransactionV1ResultAssembler,
@@ -32,7 +34,8 @@ class TransactionService
         TransactionServiceInterface $transactionService,
         DeleteTransactionV1ResultAssembler $deleteTransactionV1ResultAssembler,
         TransactionRepositoryInterface $transactionRepository,
-        AccountAccessServiceInterface $accountAccessService
+        AccountAccessServiceInterface $accountAccessService,
+        RequestIdLockServiceInterface $requestIdLockService
     ) {
         $this->createTransactionV1ResultAssembler = $createTransactionV1ResultAssembler;
         $this->requestToDomainDtoAssembler = $requestToDomainDtoAssembler;
@@ -40,6 +43,7 @@ class TransactionService
         $this->deleteTransactionV1ResultAssembler = $deleteTransactionV1ResultAssembler;
         $this->transactionRepository = $transactionRepository;
         $this->accountAccessService = $accountAccessService;
+        $this->requestIdLockService = $requestIdLockService;
     }
 
     public function createTransaction(
@@ -51,8 +55,16 @@ class TransactionService
             throw new ValidationException(sprintf('Account %s not available', $dto->accountId));
         }
 
-        $transactionDto = $this->requestToDomainDtoAssembler->assemble($dto, $userId);
-        $transaction = $this->transactionService->createTransaction($transactionDto);
+        $requestId = $this->requestIdLockService->register(new Id($dto->id));
+        try {
+            $transactionDto = $this->requestToDomainDtoAssembler->assemble($dto, $userId);
+            $transaction = $this->transactionService->createTransaction($transactionDto);
+            $this->requestIdLockService->update($requestId, $transaction->getId());
+        } catch (\Throwable $exception) {
+            $this->requestIdLockService->remove($requestId);
+            throw $exception;
+        }
+
         return $this->createTransactionV1ResultAssembler->assemble($dto, $transaction);
     }
 

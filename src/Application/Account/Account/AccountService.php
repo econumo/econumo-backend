@@ -13,6 +13,7 @@ use App\Application\Account\Account\Dto\DeleteAccountV1ResultDto;
 use App\Application\Account\Account\Dto\UpdateAccountV1RequestDto;
 use App\Application\Account\Account\Dto\UpdateAccountV1ResultDto;
 use App\Application\Account\Account\Assembler\UpdateAccountV1ResultAssembler;
+use App\Application\RequestIdLockServiceInterface;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Repository\AccountRepositoryInterface;
 use App\Domain\Service\AccountAccessServiceInterface;
@@ -28,6 +29,7 @@ class AccountService
     private UpdateAccountV1ResultAssembler $updateAccountV1ResultAssembler;
     private AccountRepositoryInterface $accountRepository;
     private AccountAccessServiceInterface $accountAccessService;
+    private RequestIdLockServiceInterface $requestIdLockService;
 
     public function __construct(
         AddAccountV1ResultAssembler $addAccountV1ResultAssembler,
@@ -35,7 +37,8 @@ class AccountService
         DeleteAccountV1ResultAssembler $deleteAccountV1ResultAssembler,
         UpdateAccountV1ResultAssembler $updateAccountV1ResultAssembler,
         AccountRepositoryInterface $accountRepository,
-        AccountAccessServiceInterface $accountAccessService
+        AccountAccessServiceInterface $accountAccessService,
+        RequestIdLockServiceInterface $requestIdLockService
     ) {
         $this->addAccountV1ResultAssembler = $addAccountV1ResultAssembler;
         $this->accountService = $accountService;
@@ -43,6 +46,7 @@ class AccountService
         $this->updateAccountV1ResultAssembler = $updateAccountV1ResultAssembler;
         $this->accountRepository = $accountRepository;
         $this->accountAccessService = $accountAccessService;
+        $this->requestIdLockService = $requestIdLockService;
     }
 
     public function addAccount(
@@ -57,7 +61,14 @@ class AccountService
         $accountDto->balance = $dto->balance;
         $accountDto->icon = $dto->icon;
 
-        $account = $this->accountService->add($accountDto);
+        $requestId = $this->requestIdLockService->register($accountDto->id);
+        try {
+            $account = $this->accountService->add($accountDto);
+            $this->requestIdLockService->update($requestId, $account->getId());
+        } catch (\Throwable $exception) {
+            $this->requestIdLockService->remove($requestId);
+            throw $exception;
+        }
         return $this->addAccountV1ResultAssembler->assemble($dto, $userId, $account);
     }
 
