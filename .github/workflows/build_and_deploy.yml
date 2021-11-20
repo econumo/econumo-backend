@@ -66,9 +66,9 @@ jobs:
                 if: success()
                 run: |
                     docker run --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:database:create --if-not-exists
-                    docker run --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:migration:migrate -n
-                    docker run --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:fixtures:load --purge-with-truncate -n
-                    docker run --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} vendor/bin/codecept run
+#                    docker run --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:migration:migrate -n
+#                    docker run --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:fixtures:load --purge-with-truncate -n
+#                    docker run --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} vendor/bin/codecept run
 
             -   name: Push APP image
                 if: success()
