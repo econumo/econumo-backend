@@ -62,10 +62,10 @@ jobs:
                     docker pull ${DOCKER_IMAGE_APP_LATEST} || true
                     docker build --cache-from ${DOCKER_IMAGE_APP_LATEST} --tag ${DOCKER_IMAGE_APP} --tag ${DOCKER_IMAGE_APP_LATEST} --target prod -f build/docker/app/Dockerfile .
 
-            -   name: Test APP image
-                if: success()
-                run: |
-                    docker run --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} ls -la
+#            -   name: Test APP image
+#                if: success()
+#                run: |
+#                    docker run --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} ls -la
 #                    docker run --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:database:create --if-not-exists
 #                    docker run --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:migration:migrate -n
 #                    docker run --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:fixtures:load --purge-with-truncate -n
