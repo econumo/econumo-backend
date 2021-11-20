@@ -56,7 +56,7 @@ abstract class AbstractFixture extends Fixture
     protected function getDataForInsert(): array
     {
         if (empty($this->dataFile)) {
-            $this->dataFile = sprintf('tests/fixtures/%s.php', $this->tableName);
+            $this->dataFile = sprintf('tests/_data/fixtures/%s.php', $this->tableName);
         }
 
         if (file_exists($this->dataFile) === false) {

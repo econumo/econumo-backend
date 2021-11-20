@@ -19,7 +19,7 @@ class GenerateInviteV1RequestDto
     public string $accountId;
 
     /**
-     * @SWG\Property(example="dmitry@econumo.local")
+     * @SWG\Property(example="john@snow.test")
      */
     public string $recipientUsername;
 

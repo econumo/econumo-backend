@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Account\Dto;
 
-use App\Application\Account\Collection\Dto\AccountResultDto;
+use App\Application\Account\Dto\AccountResultDto;
 use Swagger\Annotations as SWG;
 
 /**

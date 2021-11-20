@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\UI\Controller\Api\Transaction\Transaction;
 
-use App\Application\Transaction\Transaction\TransactionService;
-use App\Application\Transaction\Transaction\Dto\CreateTransactionV1RequestDto;
+use App\Application\Transaction\TransactionService;
+use App\Application\Transaction\Dto\CreateTransactionV1RequestDto;
 use App\UI\Controller\Api\Transaction\Transaction\Validation\CreateTransactionV1Form;
 use App\Application\Exception\ValidationException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -36,7 +36,7 @@ class CreateTransactionV1Controller extends AbstractController
      *     name="payload",
      *     in="body",
      *     required=true,
-     *     @SWG\Schema(ref=@Model(type=\App\Application\Transaction\Transaction\Dto\CreateTransactionV1RequestDto::class)),
+     *     @SWG\Schema(ref=@Model(type=\App\Application\Transaction\Dto\CreateTransactionV1RequestDto::class)),
      * ),
      * @SWG\Response(
      *     response=200,
@@ -48,7 +48,7 @@ class CreateTransactionV1Controller extends AbstractController
      *             @SWG\Schema(
      *                 @SWG\Property(
      *                     property="data",
-     *                     ref=@Model(type=\App\Application\Transaction\Transaction\Dto\CreateTransactionV1ResultDto::class)
+     *                     ref=@Model(type=\App\Application\Transaction\Dto\CreateTransactionV1ResultDto::class)
      *                 )
      *             )
      *         }

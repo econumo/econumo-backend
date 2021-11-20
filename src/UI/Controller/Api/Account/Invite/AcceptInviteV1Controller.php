@@ -37,7 +37,7 @@ class AcceptInviteV1Controller extends AbstractController
      *     name="payload",
      *     in="body",
      *     required=true,
-     *     @SWG\Schema(ref=@Model(type=\App\Application\Account\Invite\Dto\AcceptInviteV1RequestDto::class)),
+     *     @SWG\Schema(ref=@Model(type=\App\Application\Account\Dto\AcceptInviteV1RequestDto::class)),
      * ),
      * @SWG\Response(
      *     response=200,

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\UI\Controller\Api\User\User;
 
-use App\Application\User\User\UserService;
-use App\Application\User\User\Dto\LogoutUserV1RequestDto;
+use App\Application\User\UserService;
+use App\Application\User\Dto\LogoutUserV1RequestDto;
 use App\UI\Controller\Api\User\User\Validation\LogoutUserV1Form;
 use App\Application\Exception\ValidationException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -42,7 +42,7 @@ class LogoutUserV1Controller extends AbstractController
      *             @SWG\Schema(
      *                 @SWG\Property(
      *                     property="data",
-     *                     ref=@Model(type=\App\Application\User\User\Dto\LogoutUserV1ResultDto::class)
+     *                     ref=@Model(type=\App\Application\User\Dto\LogoutUserV1ResultDto::class)
      *                 )
      *             )
      *         }

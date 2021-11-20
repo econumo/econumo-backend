@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\UI\Controller\Api\User\Updates;
 
-use App\Application\User\Updates\UpdatesService;
-use App\Application\User\Updates\Dto\CheckUpdatesV1RequestDto;
+use App\Application\User\UpdatesService;
+use App\Application\User\Dto\CheckUpdatesV1RequestDto;
 use App\Domain\Entity\User;
 use App\UI\Controller\Api\User\Updates\Validation\CheckUpdatesV1Form;
 use App\Application\Exception\ValidationException;
@@ -50,7 +50,7 @@ class CheckUpdatesV1Controller extends AbstractController
      *             @SWG\Schema(
      *                 @SWG\Property(
      *                     property="data",
-     *                     ref=@Model(type=\App\Application\User\Updates\Dto\CheckUpdatesV1ResultDto::class)
+     *                     ref=@Model(type=\App\Application\User\Dto\CheckUpdatesV1ResultDto::class)
      *                 )
      *             )
      *         }

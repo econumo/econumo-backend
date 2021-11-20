@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\UI\Controller\Api\Tag\Tag;
 
-use App\Application\Tag\Tag\TagService;
-use App\Application\Tag\Tag\Dto\CreateTagV1RequestDto;
+use App\Application\Tag\TagService;
+use App\Application\Tag\Dto\CreateTagV1RequestDto;
 use App\UI\Controller\Api\Tag\Tag\Validation\CreateTagV1Form;
 use App\Application\Exception\ValidationException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -36,7 +36,7 @@ class CreateTagV1Controller extends AbstractController
      *     name="payload",
      *     in="body",
      *     required=true,
-     *     @SWG\Schema(ref=@Model(type=\App\Application\Tag\Tag\Dto\CreateTagV1RequestDto::class)),
+     *     @SWG\Schema(ref=@Model(type=\App\Application\Tag\Dto\CreateTagV1RequestDto::class)),
      * ),
      * @SWG\Response(
      *     response=200,
@@ -48,7 +48,7 @@ class CreateTagV1Controller extends AbstractController
      *             @SWG\Schema(
      *                 @SWG\Property(
      *                     property="data",
-     *                     ref=@Model(type=\App\Application\Tag\Tag\Dto\CreateTagV1ResultDto::class)
+     *                     ref=@Model(type=\App\Application\Tag\Dto\CreateTagV1ResultDto::class)
      *                 )
      *             )
      *         }

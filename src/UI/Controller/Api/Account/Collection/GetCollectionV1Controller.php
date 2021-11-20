@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\UI\Controller\Api\Account\Collection;
 
-use App\Application\Account\Collection\CollectionService;
-use App\Application\Account\Collection\Dto\GetCollectionV1RequestDto;
+use App\Application\Account\CollectionService;
+use App\Application\Account\Dto\GetCollectionV1RequestDto;
 use App\Domain\Entity\User;
 use App\UI\Controller\Api\Account\Collection\Validation\GetCollectionV1Form;
 use App\Application\Exception\ValidationException;
@@ -43,7 +43,7 @@ class GetCollectionV1Controller extends AbstractController
      *             @SWG\Schema(
      *                 @SWG\Property(
      *                     property="data",
-     *                     ref=@Model(type=\App\Application\Account\Collection\Dto\GetCollectionV1ResultDto::class)
+     *                     ref=@Model(type=\App\Application\Account\Dto\GetCollectionV1ResultDto::class)
      *                 )
      *             )
      *         }

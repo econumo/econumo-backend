@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\UI\Controller\Api\Payee\Payee;
 
-use App\Application\Payee\Payee\PayeeService;
-use App\Application\Payee\Payee\Dto\CreatePayeeV1RequestDto;
+use App\Application\Payee\PayeeService;
+use App\Application\Payee\Dto\CreatePayeeV1RequestDto;
 use App\UI\Controller\Api\Payee\Payee\Validation\CreatePayeeV1Form;
 use App\Application\Exception\ValidationException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -36,7 +36,7 @@ class CreatePayeeV1Controller extends AbstractController
      *     name="payload",
      *     in="body",
      *     required=true,
-     *     @SWG\Schema(ref=@Model(type=\App\Application\Payee\Payee\Dto\CreatePayeeV1RequestDto::class)),
+     *     @SWG\Schema(ref=@Model(type=\App\Application\Payee\Dto\CreatePayeeV1RequestDto::class)),
      * ),
      * @SWG\Response(
      *     response=200,
@@ -48,7 +48,7 @@ class CreatePayeeV1Controller extends AbstractController
      *             @SWG\Schema(
      *                 @SWG\Property(
      *                     property="data",
-     *                     ref=@Model(type=\App\Application\Payee\Payee\Dto\CreatePayeeV1ResultDto::class)
+     *                     ref=@Model(type=\App\Application\Payee\Dto\CreatePayeeV1ResultDto::class)
      *                 )
      *             )
      *         }

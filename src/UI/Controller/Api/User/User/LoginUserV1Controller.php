@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\UI\Controller\Api\User\User;
 
-use App\Application\User\User\UserService;
-use App\Application\User\User\Dto\LoginUserV1RequestDto;
+use App\Application\User\UserService;
+use App\Application\User\Dto\LoginUserV1RequestDto;
 use App\UI\Controller\Api\User\User\Validation\LoginUserV1Form;
 use App\Application\Exception\ValidationException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -37,7 +37,7 @@ class LoginUserV1Controller extends AbstractController
      *     name="payload",
      *     in="body",
      *     required=true,
-     *     @SWG\Schema(ref=@Model(type=\App\Application\User\User\Dto\LoginUserV1RequestDto::class)),
+     *     @SWG\Schema(ref=@Model(type=\App\Application\User\Dto\LoginUserV1RequestDto::class)),
      * ),
      * @SWG\Response(
      *     response=200,
@@ -49,7 +49,7 @@ class LoginUserV1Controller extends AbstractController
      *             @SWG\Schema(
      *                 @SWG\Property(
      *                     property="data",
-     *                     ref=@Model(type=\App\Application\User\User\Dto\LoginUserV1ResultDto::class)
+     *                     ref=@Model(type=\App\Application\User\Dto\LoginUserV1ResultDto::class)
      *                 )
      *             )
      *         }
@@ -67,9 +67,9 @@ class LoginUserV1Controller extends AbstractController
     public function __invoke(Request $request): Response
     {
         $user = $this->getUser();
-//        if ($user === null) {
-//            throw new AccessDeniedHttpException('Auth failed');
-//        }
+        if ($user === null) {
+            throw new AccessDeniedHttpException('Auth failed');
+        }
         $result = $this->userService->loginUser($user);
 
         return ResponseFactory::createOkResponse($request, $result);

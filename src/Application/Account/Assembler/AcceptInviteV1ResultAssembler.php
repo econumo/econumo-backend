@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Application\Account\Assembler;
 
-use App\Application\Account\Collection\Assembler\AccountToDtoV1ResultAssembler;
 use App\Application\Account\Dto\AcceptInviteV1RequestDto;
 use App\Application\Account\Dto\AcceptInviteV1ResultDto;
 use App\Domain\Entity\Account;

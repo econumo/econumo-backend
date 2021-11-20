@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\UI\Controller\Api\Category\Collection;
 
-use App\Application\Category\Collection\CollectionService;
-use App\Application\Category\Collection\Dto\GetCollectionV1RequestDto;
+use App\Application\Category\CollectionService;
+use App\Application\Category\Dto\GetCollectionV1RequestDto;
 use App\UI\Controller\Api\Category\Collection\Validation\GetCollectionV1Form;
 use App\Application\Exception\ValidationException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -42,7 +42,7 @@ class GetCollectionV1Controller extends AbstractController
      *             @SWG\Schema(
      *                 @SWG\Property(
      *                     property="data",
-     *                     ref=@Model(type=\App\Application\Category\Collection\Dto\GetCollectionV1ResultDto::class)
+     *                     ref=@Model(type=\App\Application\Category\Dto\GetCollectionV1ResultDto::class)
      *                 )
      *             )
      *         }

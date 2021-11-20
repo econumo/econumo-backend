@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\UI\Controller\Api\Account\Collection;
 
-use App\Application\Account\Collection\CollectionService;
-use App\Application\Account\Collection\Dto\ReorderCollectionV1RequestDto;
+use App\Application\Account\CollectionService;
+use App\Application\Account\Dto\ReorderCollectionV1RequestDto;
 use App\Domain\Entity\User;
 use App\UI\Controller\Api\Account\Collection\Validation\ReorderCollectionV1Form;
 use App\Application\Exception\ValidationException;
@@ -37,7 +37,7 @@ class ReorderCollectionV1Controller extends AbstractController
      *     name="payload",
      *     in="body",
      *     required=true,
-     *     @SWG\Schema(ref=@Model(type=\App\Application\Account\Collection\Dto\ReorderCollectionV1RequestDto::class)),
+     *     @SWG\Schema(ref=@Model(type=\App\Application\Account\Dto\ReorderCollectionV1RequestDto::class)),
      * ),
      * @SWG\Response(
      *     response=200,
@@ -49,7 +49,7 @@ class ReorderCollectionV1Controller extends AbstractController
      *             @SWG\Schema(
      *                 @SWG\Property(
      *                     property="data",
-     *                     ref=@Model(type=\App\Application\Account\Collection\Dto\ReorderCollectionV1ResultDto::class)
+     *                     ref=@Model(type=\App\Application\Account\Dto\ReorderCollectionV1ResultDto::class)
      *                 )
      *             )
      *         }

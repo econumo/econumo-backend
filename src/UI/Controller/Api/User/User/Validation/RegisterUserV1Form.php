@@ -24,9 +24,9 @@ class RegisterUserV1Form extends AbstractType
         $builder->add('email', TextType::class, [
             'constraints' => [new NotBlank(), new Email(), new Length(['max' => 256])],
         ])->add('password', TextType::class, [
-            'constraints' => [new NotBlank(), new Length(['min' => 5])],
+            'constraints' => [new NotBlank(), new Length(['min' => 4])],
         ])->add('name', TextType::class, [
-            'constraints' => [new NotBlank(), new Length(['min' => 2])],
+            'constraints' => [new NotBlank(), new Length(['min' => 3, 'max' => '20'])],
         ]);
     }
 }

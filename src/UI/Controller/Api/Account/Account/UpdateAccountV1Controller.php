@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\UI\Controller\Api\Account\Account;
 
-use App\Application\Account\Account\AccountService;
-use App\Application\Account\Account\Dto\UpdateAccountV1RequestDto;
+use App\Application\Account\AccountService;
+use App\Application\Account\Dto\UpdateAccountV1RequestDto;
 use App\Domain\Entity\User;
 use App\UI\Controller\Api\Account\Account\Validation\UpdateAccountV1Form;
 use App\Application\Exception\ValidationException;
@@ -37,7 +37,7 @@ class UpdateAccountV1Controller extends AbstractController
      *     name="payload",
      *     in="body",
      *     required=true,
-     *     @SWG\Schema(ref=@Model(type=\App\Application\Account\Account\Dto\UpdateAccountV1RequestDto::class)),
+     *     @SWG\Schema(ref=@Model(type=\App\Application\Account\Dto\UpdateAccountV1RequestDto::class)),
      * ),
      * @SWG\Response(
      *     response=200,
@@ -49,7 +49,7 @@ class UpdateAccountV1Controller extends AbstractController
      *             @SWG\Schema(
      *                 @SWG\Property(
      *                     property="data",
-     *                     ref=@Model(type=\App\Application\Account\Account\Dto\UpdateAccountV1ResultDto::class)
+     *                     ref=@Model(type=\App\Application\Account\Dto\UpdateAccountV1ResultDto::class)
      *                 )
      *             )
      *         }

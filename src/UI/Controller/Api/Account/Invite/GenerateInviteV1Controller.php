@@ -37,7 +37,7 @@ class GenerateInviteV1Controller extends AbstractController
      *     name="payload",
      *     in="body",
      *     required=true,
-     *     @SWG\Schema(ref=@Model(type=\App\Application\Account\Invite\Dto\GenerateInviteV1RequestDto::class)),
+     *     @SWG\Schema(ref=@Model(type=\App\Application\Account\Dto\GenerateInviteV1RequestDto::class)),
      * ),
      * @SWG\Response(
      *     response=200,

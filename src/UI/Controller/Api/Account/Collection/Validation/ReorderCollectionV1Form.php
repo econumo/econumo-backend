@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\UI\Controller\Api\Account\Collection\Validation;
 
-use App\Application\Account\Collection\Dto\ReorderCollectionV1RequestDto;
+use App\Application\Account\Dto\ReorderCollectionV1RequestDto;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\UI\Controller\Api\Category\Category;
 
-use App\Application\Category\Category\CategoryService;
-use App\Application\Category\Category\Dto\CreateCategoryV1RequestDto;
+use App\Application\Category\CategoryService;
+use App\Application\Category\Dto\CreateCategoryV1RequestDto;
 use App\UI\Controller\Api\Category\Category\Validation\CreateCategoryV1Form;
 use App\Application\Exception\ValidationException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -36,7 +36,7 @@ class CreateCategoryV1Controller extends AbstractController
      *     name="payload",
      *     in="body",
      *     required=true,
-     *     @SWG\Schema(ref=@Model(type=\App\Application\Category\Category\Dto\CreateCategoryV1RequestDto::class)),
+     *     @SWG\Schema(ref=@Model(type=\App\Application\Category\Dto\CreateCategoryV1RequestDto::class)),
      * ),
      * @SWG\Response(
      *     response=200,
@@ -48,7 +48,7 @@ class CreateCategoryV1Controller extends AbstractController
      *             @SWG\Schema(
      *                 @SWG\Property(
      *                     property="data",
-     *                     ref=@Model(type=\App\Application\Category\Category\Dto\CreateCategoryV1ResultDto::class)
+     *                     ref=@Model(type=\App\Application\Category\Dto\CreateCategoryV1ResultDto::class)
      *                 )
      *             )
      *         }

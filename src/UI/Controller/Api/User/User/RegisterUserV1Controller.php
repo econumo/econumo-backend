@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\UI\Controller\Api\User\User;
 
-use App\Application\User\User\UserService;
-use App\Application\User\User\Dto\RegisterUserV1RequestDto;
+use App\Application\User\UserService;
+use App\Application\User\Dto\RegisterUserV1RequestDto;
 use App\UI\Controller\Api\User\User\Validation\RegisterUserV1Form;
 use App\Application\Exception\ValidationException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -36,7 +36,7 @@ class RegisterUserV1Controller extends AbstractController
      *     name="payload",
      *     in="body",
      *     required=true,
-     *     @SWG\Schema(ref=@Model(type=\App\Application\User\User\Dto\RegisterUserV1RequestDto::class)),
+     *     @SWG\Schema(ref=@Model(type=\App\Application\User\Dto\RegisterUserV1RequestDto::class)),
      * ),
      * @SWG\Response(
      *     response=200,
@@ -48,7 +48,7 @@ class RegisterUserV1Controller extends AbstractController
      *             @SWG\Schema(
      *                 @SWG\Property(
      *                     property="data",
-     *                     ref=@Model(type=\App\Application\User\User\Dto\RegisterUserV1ResultDto::class)
+     *                     ref=@Model(type=\App\Application\User\Dto\RegisterUserV1ResultDto::class)
      *                 )
      *             )
      *         }

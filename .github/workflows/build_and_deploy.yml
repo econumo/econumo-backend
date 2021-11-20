@@ -12,6 +12,19 @@ jobs:
             DOCKER_REGISTRY: 'docker.pkg.github.com'
             DOCKER_LOGIN: ${{ github.actor }}
             DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+
+        services:
+            postgresql:
+                image: postgres:11
+                env:
+                    POSTGRES_USER: postgres
+                    POSTGRES_PASSWORD: postgres
+                    POSTGRES_DB: db
+                ports:
+                    - 5432:5432
+                # needed because the postgres container does not provide a healthcheck
+                options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
         steps:
 #            -   name: Check requirements
 #                run: |
@@ -43,6 +56,26 @@ jobs:
             -   name: Docker login
                 run: docker login -u "${DOCKER_LOGIN}" -p "${DOCKER_PASSWORD}" "${DOCKER_REGISTRY}"
 
+            -   name: Build APP image
+                if: success()
+                run: |
+                    docker pull ${DOCKER_IMAGE_APP_LATEST} || true
+                    docker build --cache-from ${DOCKER_IMAGE_APP_LATEST} --tag ${DOCKER_IMAGE_APP} --tag ${DOCKER_IMAGE_APP_LATEST} --target prod -f build/docker/app/Dockerfile .
+
+            -   name: Test APP image
+                if: success()
+                run: |
+                    docker run --add-host=db:127.0.0.1 bin/console doctrine:database:create --if-not-exists
+                    docker run --add-host=db:127.0.0.1 bin/console doctrine:migration:migrate -n
+                    docker run --add-host=db:127.0.0.1 bin/console doctrine:fixtures:load --purge-with-truncate -n
+                    docker run --add-host=db:127.0.0.1 vendor/bin/codecept run
+
+            -   name: Push APP image
+                if: success()
+                run: |
+                    docker push ${DOCKER_IMAGE_APP}
+                    docker push ${DOCKER_IMAGE_APP_LATEST}
+
             -   name: Build NGINX image
                 if: success()
                 run: |
@@ -50,14 +83,6 @@ jobs:
                     docker build --cache-from ${DOCKER_IMAGE_NGINX_LATEST} --tag ${DOCKER_IMAGE_NGINX} --tag ${DOCKER_IMAGE_NGINX_LATEST} -f build/docker/nginx/Dockerfile .
                     docker push ${DOCKER_IMAGE_NGINX}
                     docker push ${DOCKER_IMAGE_NGINX_LATEST}
-
-            -   name: Build APP image
-                if: success()
-                run: |
-                    docker pull ${DOCKER_IMAGE_APP_LATEST} || true
-                    docker build --cache-from ${DOCKER_IMAGE_APP_LATEST} --tag ${DOCKER_IMAGE_APP} --tag ${DOCKER_IMAGE_APP_LATEST} --target prod -f build/docker/app/Dockerfile .
-                    docker push ${DOCKER_IMAGE_APP}
-                    docker push ${DOCKER_IMAGE_APP_LATEST}
 
             -   id: dotenv
                 uses: falti/dotenv-action@v0.2.4
