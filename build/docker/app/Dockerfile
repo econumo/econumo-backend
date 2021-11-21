@@ -32,7 +32,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 FROM dev as stage
 
-COPY composer.json composer.lock symfony.lock /var/www/
+COPY composer.json composer.lock symfony.lock .env .env.test /var/www/
 RUN composer install --no-scripts --prefer-dist --no-autoloader
 COPY . /var/www
 # Finish composer
@@ -47,6 +47,7 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 # cleanup
 RUN composer clear-cache \
 #    && composer global remove hirak/prestissimo \
+    && rm /var/www/.env* \
     && rm /usr/local/bin/composer \
     && apk del git \
     && pecl uninstall xdebug \
