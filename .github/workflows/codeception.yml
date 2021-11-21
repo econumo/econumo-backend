@@ -6,7 +6,7 @@ on:
 
 jobs:
     codeception:
-        name: Build and deploy
+        name: Run tests
         runs-on: ubuntu-latest
         env:
             DOCKER_REGISTRY: 'docker.pkg.github.com'
@@ -49,7 +49,6 @@ jobs:
             -   name: Test APP image
                 if: success()
                 run: |
-                    docker run --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} ls -la
                     docker run --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:database:create --if-not-exists
                     docker run --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:migration:migrate -n
                     docker run --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:fixtures:load --purge-with-truncate -n
