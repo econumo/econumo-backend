@@ -29,9 +29,10 @@ class GetCollectionV1Controller extends AbstractController
     }
 
     /**
-     * Transaction Collection
+     * Get Transaction Collection
      *
      * @SWG\Tag(name="Transaction"),
+     * @SWG\Tag(name="Need automation"),
      * @SWG\Parameter(
      *     name="accountId",
      *     in="query",

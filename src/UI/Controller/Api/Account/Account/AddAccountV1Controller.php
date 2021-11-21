@@ -30,9 +30,10 @@ class AddAccountV1Controller extends AbstractController
     }
 
     /**
-     * Account Account
+     * Add Account
      *
      * @SWG\Tag(name="Account"),
+     * @SWG\Tag(name="Need automation"),
      * @SWG\Parameter(
      *     name="payload",
      *     in="body",

@@ -30,9 +30,10 @@ class ReorderCollectionV1Controller extends AbstractController
     }
 
     /**
-     * Account Collection
+     * Reorder Account Collection
      *
      * @SWG\Tag(name="Account"),
+     * @SWG\Tag(name="Need automation"),
      * @SWG\Parameter(
      *     name="payload",
      *     in="body",

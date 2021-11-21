@@ -29,9 +29,10 @@ class GetCollectionV1Controller extends AbstractController
     }
 
     /**
-     * Payee Collection
+     * Get Payee Collection
      *
      * @SWG\Tag(name="Payee"),
+     * @SWG\Tag(name="Need automation"),
      * @SWG\Response(
      *     response=200,
      *     description="OK",

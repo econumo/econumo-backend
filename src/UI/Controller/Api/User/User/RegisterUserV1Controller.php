@@ -29,9 +29,10 @@ class RegisterUserV1Controller extends AbstractController
     }
 
     /**
-     * User User
+     * Register User
      *
      * @SWG\Tag(name="User"),
+     * @SWG\Tag(name="Need automation"),
      * @SWG\Post(
      *     security={},
      *     @SWG\Parameter(

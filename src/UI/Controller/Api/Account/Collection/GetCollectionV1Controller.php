@@ -30,9 +30,10 @@ class GetCollectionV1Controller extends AbstractController
     }
 
     /**
-     * Account Collection
+     * Get Account Collection
      *
      * @SWG\Tag(name="Account"),
+     * @SWG\Tag(name="Need automation"),
      * @SWG\Response(
      *     response=200,
      *     description="OK",

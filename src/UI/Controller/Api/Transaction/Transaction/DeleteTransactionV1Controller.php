@@ -29,9 +29,10 @@ class DeleteTransactionV1Controller extends AbstractController
     }
 
     /**
-     * Transaction Transaction
+     * Delete Transaction
      *
      * @SWG\Tag(name="Transaction"),
+     * @SWG\Tag(name="Need automation"),
      * @SWG\Parameter(
      *     name="payload",
      *     in="body",

@@ -29,9 +29,10 @@ class CreateCategoryV1Controller extends AbstractController
     }
 
     /**
-     * Category Category
+     * Create Category
      *
      * @SWG\Tag(name="Category"),
+     * @SWG\Tag(name="Need automation"),
      * @SWG\Parameter(
      *     name="payload",
      *     in="body",

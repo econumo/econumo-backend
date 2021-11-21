@@ -30,9 +30,10 @@ class GetCollectionV1Controller extends AbstractController
     }
 
     /**
-     * Currency Collection
+     * Get Currency Collection
      *
      * @SWG\Tag(name="Currency"),
+     * @SWG\Tag(name="Need automation"),
      * @SWG\Response(
      *     response=200,
      *     description="OK",

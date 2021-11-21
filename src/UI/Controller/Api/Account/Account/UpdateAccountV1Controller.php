@@ -30,9 +30,10 @@ class UpdateAccountV1Controller extends AbstractController
     }
 
     /**
-     * Account Account
+     * Update Account
      *
      * @SWG\Tag(name="Account"),
+     * @SWG\Tag(name="Need automation"),
      * @SWG\Parameter(
      *     name="payload",
      *     in="body",

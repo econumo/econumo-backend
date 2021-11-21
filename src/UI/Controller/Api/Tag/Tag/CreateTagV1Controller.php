@@ -29,9 +29,10 @@ class CreateTagV1Controller extends AbstractController
     }
 
     /**
-     * Tag Tag
+     * Create Tag
      *
      * @SWG\Tag(name="Tag"),
+     * @SWG\Tag(name="Need automation"),
      * @SWG\Parameter(
      *     name="payload",
      *     in="body",

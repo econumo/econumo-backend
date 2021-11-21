@@ -29,9 +29,10 @@ class LogoutUserV1Controller extends AbstractController
     }
 
     /**
-     * User User
+     * Logout User
      *
      * @SWG\Tag(name="User"),
+     * @SWG\Tag(name="Need automation"),
      * @SWG\Response(
      *     response=200,
      *     description="OK",

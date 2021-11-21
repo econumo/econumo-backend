@@ -29,9 +29,10 @@ class GetCollectionV1Controller extends AbstractController
     }
 
     /**
-     * Category Collection
+     * Get Category Collection
      *
      * @SWG\Tag(name="Category"),
+     * @SWG\Tag(name="Need automation"),
      * @SWG\Response(
      *     response=200,
      *     description="OK",

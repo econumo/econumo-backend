@@ -29,9 +29,10 @@ class CreatePayeeV1Controller extends AbstractController
     }
 
     /**
-     * Payee Payee
+     * Create Payee
      *
      * @SWG\Tag(name="Payee"),
+     * @SWG\Tag(name="Need automation"),
      * @SWG\Parameter(
      *     name="payload",
      *     in="body",

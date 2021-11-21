@@ -30,9 +30,10 @@ class AcceptInviteV1Controller extends AbstractController
     }
 
     /**
-     * Account Invite
+     * Accept Account Invite
      *
      * @SWG\Tag(name="Account"),
+     * @SWG\Tag(name="Need automation"),
      * @SWG\Parameter(
      *     name="payload",
      *     in="body",

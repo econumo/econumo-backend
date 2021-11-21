@@ -30,9 +30,10 @@ class DeleteAccountV1Controller extends AbstractController
     }
 
     /**
-     * Account Account
+     * Delete Account
      *
      * @SWG\Tag(name="Account"),
+     * @SWG\Tag(name="Need automation"),
      * @SWG\Parameter(
      *     name="payload",
      *     in="body",

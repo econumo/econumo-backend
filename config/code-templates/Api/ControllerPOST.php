@@ -30,9 +30,10 @@ class _CG_ACTION__CG_SUBJECT__CG_VERSION_Controller extends AbstractController
     }
 
     /**
-     * _CG_MODULE_ _CG_SUBJECT_
+     * _CG_ACTION_ _CG_SUBJECT_LOWER_
      *
      * @SWG\Tag(name="_CG_MODULE_"),
+     * @SWG\Tag(name="Need automation"),
      * @SWG\Parameter(
      *     name="payload",
      *     in="body",

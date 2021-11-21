@@ -30,9 +30,10 @@ class GetInviteV1Controller extends AbstractController
     }
 
     /**
-     * Account Invite
+     * Get Account Invite
      *
      * @SWG\Tag(name="Account"),
+     * @SWG\Tag(name="Need automation"),
      * @SWG\Response(
      *     response=200,
      *     description="OK",
