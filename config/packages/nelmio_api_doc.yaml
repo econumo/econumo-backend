@@ -4,9 +4,8 @@ nelmio_api_doc:
         use_jms: false
     areas:
         path_patterns:
-            - ^/api(?!/doc$)
+            - ^/api(?!/doc)
     documentation:
-        host: '127.0.0.1:%env(resolve:DOCKER_COMPOSE_PORT_NGINX)%'
         info:
             title: API documentation
             description: API documentation
@@ -28,7 +27,7 @@ nelmio_api_doc:
                 properties:
                     message:
                         type: string
-                        description: Инф. сообщение
+                        description: Information
                     data:
                         type: object
             JsonResponseError:
@@ -40,13 +39,13 @@ nelmio_api_doc:
                 properties:
                     message:
                         type: string
-                        description: Инф. сообщение
+                        description: Information
                     code:
                         type: integer
-                        description: Код ошибки
+                        description: Error code
                     errors:
                         type: array
-                        description: Список ошибок
+                        description: Error list
                         items:
                             type: object
                             required:
@@ -56,13 +55,13 @@ nelmio_api_doc:
                             properties:
                                 key:
                                     type: string
-                                    description: Ключ ошибки
+                                    description: Error key
                                 message:
                                     type: string
-                                    description: Сообщение об ошибке
+                                    description: Error message
                                 code:
                                     type: string
-                                    description: Код ошибки
+                                    description: Error code
 
             JsonResponseException:
                 type: object
@@ -72,13 +71,13 @@ nelmio_api_doc:
                 properties:
                     message:
                         type: string
-                        description: Текст ошибки
+                        description: Information
                     code:
                         type: integer
-                        description: Код ошибки
+                        description: Error code
                     exceptionType:
                         type: string
-                        description: Тип исключения
+                        description: Exception type
                     stackTrace:
                         type: object
                         description: Stack trace

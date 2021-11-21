@@ -32,30 +32,33 @@ class RegisterUserV1Controller extends AbstractController
      * User User
      *
      * @SWG\Tag(name="User"),
-     * @SWG\Parameter(
-     *     name="payload",
-     *     in="body",
-     *     required=true,
-     *     @SWG\Schema(ref=@Model(type=\App\Application\User\Dto\RegisterUserV1RequestDto::class)),
-     * ),
-     * @SWG\Response(
-     *     response=200,
-     *     description="OK",
-     *     @SWG\Schema(
-     *         type="object",
-     *         allOf={
-     *             @SWG\Schema(ref="#/definitions/JsonResponseOk"),
-     *             @SWG\Schema(
-     *                 @SWG\Property(
-     *                     property="data",
-     *                     ref=@Model(type=\App\Application\User\Dto\RegisterUserV1ResultDto::class)
+     * @SWG\Post(
+     *     security={},
+     *     @SWG\Parameter(
+     *         name="payload",
+     *         in="body",
+     *         required=true,
+     *         @SWG\Schema(ref=@Model(type=\App\Application\User\Dto\RegisterUserV1RequestDto::class)),
+     *     ),
+     *     @SWG\Response(
+     *         response=200,
+     *         description="OK",
+     *         @SWG\Schema(
+     *             type="object",
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/JsonResponseOk"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(
+     *                         property="data",
+     *                         ref=@Model(type=\App\Application\User\Dto\RegisterUserV1ResultDto::class)
+     *                     )
      *                 )
-     *             )
-     *         }
-     *     )
-     * ),
-     * @SWG\Response(response=400, description="Bad Request", @SWG\Schema(ref="#/definitions/JsonResponseError")),
-     * @SWG\Response(response=500, description="Internal Server Error", @SWG\Schema(ref="#/definitions/JsonResponseException")),
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response=400, description="Bad Request", @SWG\Schema(ref="#/definitions/JsonResponseError")),
+     *     @SWG\Response(response=500, description="Internal Server Error", @SWG\Schema(ref="#/definitions/JsonResponseException")),
+     * )
      *
      * @Route("/api/v1/user/register-user", methods={"POST"})
      *
