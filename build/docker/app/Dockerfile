@@ -29,26 +29,20 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # RUN composer global require hirak/prestissimo --no-plugins --no-scripts
 
 
-FROM dev as test
-COPY composer.json composer.lock symfony.lock /var/www/
-RUN composer install --optimize-autoloader --no-scripts --no-suggest
-RUN vendor/bin/codecept build
-COPY . /var/www
-RUN chown www-data:www-data /var/www/ -R
 
-
-FROM dev as prod
-
-RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+FROM dev as stage
 
 COPY composer.json composer.lock symfony.lock /var/www/
 RUN composer install --no-scripts --prefer-dist --no-autoloader
-
 COPY . /var/www
 # Finish composer
 RUN composer dump-autoload --optimize
-
 RUN chown www-data:www-data /var/www/ -R
+
+
+FROM stage as prod
+
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
 # cleanup
 RUN composer clear-cache \
