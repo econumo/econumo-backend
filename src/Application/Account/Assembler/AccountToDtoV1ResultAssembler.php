@@ -11,18 +11,22 @@ use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\AccountAccessRepositoryInterface;
 use App\Domain\Repository\CurrencyRepositoryInterface;
+use App\Domain\Repository\UserRepositoryInterface;
 
 class AccountToDtoV1ResultAssembler
 {
     private CurrencyRepositoryInterface $currencyRepository;
     private AccountAccessRepositoryInterface $accountAccessRepository;
+    private UserRepositoryInterface $userRepository;
 
     public function __construct(
         CurrencyRepositoryInterface $currencyRepository,
-        AccountAccessRepositoryInterface $accountAccessRepository
+        AccountAccessRepositoryInterface $accountAccessRepository,
+        UserRepositoryInterface $userRepository
     ) {
         $this->currencyRepository = $currencyRepository;
         $this->accountAccessRepository = $accountAccessRepository;
+        $this->userRepository = $userRepository;
     }
 
     public function assemble(Id $userId, Account $account): AccountResultDto
@@ -46,8 +50,10 @@ class AccountToDtoV1ResultAssembler
 
         $accessList = $this->accountAccessRepository->getByAccount($account->getId());
         foreach ($accessList as $access) {
+            $user = $this->userRepository->get($access->getUserId());
             $sharedAccess = new AccountRoleResultDto();
             $sharedAccess->userId = $access->getUserId()->getValue();
+            $sharedAccess->userAvatar = $user->getAvatarUrl();
             $sharedAccess->role = $access->getRole()->getAlias();
             $item->sharedAccess[] = $sharedAccess;
         }

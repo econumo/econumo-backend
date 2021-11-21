@@ -7,7 +7,7 @@ use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Definition(
- *     required={"userId", "role"}
+ *     required={"userId", "userAvatar", "role"}
  * )
  */
 class AccountRoleResultDto
@@ -18,6 +18,13 @@ class AccountRoleResultDto
      * @SWG\Property(example="a5e2eee2-56aa-43c6-a827-ca155683ea8d")
      */
     public string $userId;
+
+    /**
+     * User avatar
+     * @var string
+     * @SWG\Property(example="https://example.com/avatar.jpg")
+     */
+    public string $userAvatar;
 
     /**
      * User role

@@ -24,6 +24,7 @@ class AuthenticationUpdateTokenPayload
         $data['id'] = $user->getId()->getValue();
         $data['name'] = $user->getName();
         $data['roles'] = $user->getRoles();
+        $data['avatar'] = $user->getAvatarUrl();
 
         $event->setData($data);
     }

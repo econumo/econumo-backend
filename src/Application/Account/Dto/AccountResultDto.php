@@ -50,7 +50,7 @@ class AccountResultDto
     /**
      * Currency alias
      * @var string
-     * @SWG\Property(example="RUB")
+     * @SWG\Property(example="USD")
      */
     public string $currencyAlias;
 
@@ -85,7 +85,7 @@ class AccountResultDto
     /**
      * Account access
      * @var AccountRoleResultDto[]
-     * @SWG\Property(example="rounded_corner")
+     * @SWG\Property()
      */
     public array $sharedAccess = [];
 }

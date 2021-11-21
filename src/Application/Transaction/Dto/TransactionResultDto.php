@@ -101,7 +101,7 @@ class TransactionResultDto
      * Tag name
      * @SWG\Property(example="#travel")
      */
-    public string $tagName;
+    public string $tagName = '';
 
     /**
      * Transaction date

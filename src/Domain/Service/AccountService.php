@@ -59,13 +59,13 @@ class AccountService implements AccountServiceInterface
         $this->accountRepository->save($account);
     }
 
-    public function updateBalance(Id $accountId, float $balance, \DateTimeInterface $updatedAt, string $comment = ''): ?Transaction
+    public function updateBalance(Id $accountId, float $balance, \DateTimeInterface $updatedAt, ?string $comment = ''): ?Transaction
     {
         $account = $this->accountRepository->get($accountId);
         if ((string)$account->getBalance() === (string)$balance) {
             return null;
         }
 
-        return $this->transactionService->updateBalance($accountId, $account->getBalance() - $balance, $updatedAt, $comment);
+        return $this->transactionService->updateBalance($accountId, $account->getBalance() - $balance, $updatedAt, (string) $comment);
     }
 }

@@ -48,6 +48,8 @@ class TransactionToDtoV1ResultAssembler
         ) === null ? null : $transaction->getAccountRecipientId()->getValue();
         $item->amount = $transaction->getAmount();
         $item->amountRecipient = $transaction->getAmount();
+        $item->categoryId = null;
+        $item->categoryName = '';
         if ($transaction->getCategoryId() !== null) {
             $item->categoryId = $transaction->getCategoryId()->getValue();
             try {
@@ -55,12 +57,10 @@ class TransactionToDtoV1ResultAssembler
             } catch (NotFoundException $e) {
                 $item->categoryName = '#error#';
             }
-        } else {
-            $item->categoryId = null;
-            $item->categoryName = '';
         }
         $item->description = $transaction->getDescription();
         $item->payeeId = $transaction->getPayeeId() === null ? null : $transaction->getPayeeId()->getValue();
+        $item->payeeName = '';
         if ($item->payeeId) {
             try {
                 $item->payeeName = $this->payeeRepository->get($transaction->getPayeeId())->getName();
@@ -69,6 +69,7 @@ class TransactionToDtoV1ResultAssembler
             }
         }
         $item->tagId = $transaction->getTagId() === null ? null : $transaction->getTagId()->getValue();
+        $item->tagName = '';
         if ($item->tagId) {
             try {
                 $item->tagName = $this->tagRepository->get($transaction->getTagId())->getName();

@@ -132,4 +132,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->identifier;
     }
+
+    public function getAvatarUrl(): string
+    {
+        return sprintf('https://www.gravatar.com/avatar/%s', md5($this->identifier));
+    }
 }

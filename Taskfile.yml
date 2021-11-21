@@ -35,3 +35,5 @@ tasks:
             - docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app bin/console doctrine:fixtures:load --purge-with-truncate -n --env=test -vvv
             - cmd: docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app vendor/bin/codecept run {{.CLI_ARGS}} --steps -v
               ignore_error: true
+            - cmd: docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app bin/console doctrine:database:drop --force --env=test -vvv
+              ignore_error: true

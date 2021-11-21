@@ -84,7 +84,7 @@ class TransactionService implements TransactionServiceInterface
             $account = $this->accountRepository->get($accountId);
             $account->applyTransaction($transaction);
             $this->accountRepository->save($account);
-            $this->antiCorruptionService->rollback();
+            $this->antiCorruptionService->commit();
         } catch (\Throwable $exception) {
             $this->antiCorruptionService->rollback();
             throw $exception;
