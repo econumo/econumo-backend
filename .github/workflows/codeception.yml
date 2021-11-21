@@ -1,8 +1,5 @@
 name: "Run tests"
-on:
-    push:
-        branches:
-            - master
+on: [push]
 
 jobs:
     codeception:
@@ -49,11 +46,11 @@ jobs:
             -   name: Test APP image
                 if: success()
                 run: |
-                    docker run --add-host=db:0.0.0.0 ${DOCKER_IMAGE_APP} bin/console doctrine:database:create --if-not-exists --env=test
-                    docker run --add-host=db:0.0.0.0 ${DOCKER_IMAGE_APP} bin/console doctrine:migration:migrate -n --env=test
-                    docker run --add-host=db:0.0.0.0 ${DOCKER_IMAGE_APP} bin/console doctrine:fixtures:load --purge-with-truncate -n --env=test
-                    docker run --add-host=db:0.0.0.0 ${DOCKER_IMAGE_APP} vendor/bin/codecept build
-                    docker run --add-host=db:0.0.0.0 ${DOCKER_IMAGE_APP} vendor/bin/codecept run
+                    docker run --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:database:create --if-not-exists --env=test
+                    docker run --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:migration:migrate -n --env=test
+                    docker run --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:fixtures:load --purge-with-truncate -n --env=test
+                    docker run --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} vendor/bin/codecept build
+                    docker run --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} vendor/bin/codecept run
                 env:
                     DATABASE_USER: postgres
                     DATABASE_PASSWORD: postgres
