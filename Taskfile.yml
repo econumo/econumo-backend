@@ -1,9 +1,9 @@
 ---
-version: '2'
+version: '3'
 
 tasks:
     up:
-        desc: "Start application"
+        desc: "Run application"
         cmds:
             - docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
             - docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app composer install
@@ -22,17 +22,16 @@ tasks:
             - docker-compose -f docker-compose.yml -f docker-compose.dev.yml down --remove-orphans
 
     sh:
-        desc: "Jump into app container"
+        desc: "Jump into application container"
         cmds:
             - docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app sh
 
     test:
-        desc: "Run tests"
+        desc: "Run tests (you could use arguments here after dash, ex: task tests -- unit)"
         cmds:
-            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.test.yml up -d
-            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.test.yml exec -uwww-data test bin/console doctrine:database:create --if-not-exists -vvv
-            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.test.yml exec -uwww-data test bin/console doctrine:migration:migrate --env=test -n -vvv
-            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.test.yml exec -uwww-data test bin/console doctrine:fixtures:load --purge-with-truncate -n --env=test -vvv
-            - cmd: docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.test.yml exec -uwww-data test vendor/bin/codecept run --steps -v
+            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app bin/console doctrine:database:create --if-not-exists --env=test -vvv
+            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app bin/console doctrine:migration:migrate -n --env=test -vvv
+            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app bin/console doctrine:fixtures:load --purge-with-truncate -n --env=test -vvv
+            - cmd: docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app vendor/bin/codecept run {{.CLI_ARGS}} --steps -v
               ignore_error: true
-            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.test.yml stop test
