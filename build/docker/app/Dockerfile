@@ -32,7 +32,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 FROM dev as stage
 
-COPY composer.json composer.lock symfony.lock .env .env.test /var/www/
+COPY composer.json composer.lock symfony.lock .env /var/www/
 RUN composer install --no-scripts --prefer-dist --no-autoloader
 COPY . /var/www
 # Finish composer

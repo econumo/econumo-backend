@@ -52,4 +52,8 @@ jobs:
                     docker run ${DOCKER_IMAGE_APP} vendor/bin/codecept build
                     docker run ${DOCKER_IMAGE_APP} vendor/bin/codecept run
                 env:
+                    DATABASE_USER: postgres
+                    DATABASE_PASSWORD: postgres
+                    DATABASE_NAME: db_test
                     DATABASE_HOST: postgres
+                    DATABASE_PORT: 5432
