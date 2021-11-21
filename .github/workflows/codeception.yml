@@ -1,0 +1,57 @@
+name: "Run tests"
+on:
+    push:
+        branches:
+            - master
+
+jobs:
+    codeception:
+        name: Build and deploy
+        runs-on: ubuntu-latest
+        env:
+            DOCKER_REGISTRY: 'docker.pkg.github.com'
+            DOCKER_LOGIN: ${{ github.actor }}
+            DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+
+        services:
+            postgresql:
+                image: postgres:11
+                env:
+                    POSTGRES_USER: postgres
+                    POSTGRES_PASSWORD: postgres
+                    POSTGRES_DB: db
+                ports:
+                    - 5432:5432
+                # needed because the postgres container does not provide a healthcheck
+                options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+        steps:
+            -   uses: actions/checkout@v1
+
+            -   name: Prepare env
+                run: |
+                    repo=$(echo "${{ github.repository }}" | awk -F / '{print $2}')
+                    prefix="${DOCKER_REGISTRY}/${{ github.repository }}"
+                    suffix=${{ github.run_id }}
+                    echo "DOCKER_IMAGE_APP=$(echo "${prefix}/${repo}_app:${suffix}")" >> $GITHUB_ENV
+                    echo "DOCKER_IMAGE_APP_LATEST=$(echo "${prefix}/${repo}_app:latest")" >> $GITHUB_ENV
+                shell: bash
+
+            -   name: Docker login
+                run: docker login -u "${DOCKER_LOGIN}" -p "${DOCKER_PASSWORD}" "${DOCKER_REGISTRY}"
+
+            -   name: Build APP image
+                if: success()
+                run: |
+                    docker pull ${DOCKER_IMAGE_APP_LATEST} || true
+                    docker build --cache-from ${DOCKER_IMAGE_APP_LATEST} --tag ${DOCKER_IMAGE_APP} --target dev -f build/docker/app/Dockerfile .
+
+            -   name: Test APP image
+                if: success()
+                run: |
+                    docker run --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} ls -la
+                    docker run --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:database:create --if-not-exists
+                    docker run --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:migration:migrate -n
+                    docker run --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:fixtures:load --purge-with-truncate -n
+                    docker run --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} vendor/bin/codecept run
+
