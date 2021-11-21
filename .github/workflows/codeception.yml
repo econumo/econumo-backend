@@ -41,19 +41,13 @@ jobs:
                 if: success()
                 run: |
                     docker pull ${DOCKER_IMAGE_APP_LATEST} || true
-                    docker build --cache-from ${DOCKER_IMAGE_APP_LATEST} --tag ${DOCKER_IMAGE_APP} --target stage -f build/docker/app/Dockerfile .
+                    docker build --build-arg DATABASE_USER=postgres --build-arg DATABASE_PASSWORD=postgres --build-arg DATABASE_NAME=db_test --build-arg DATABASE_HOST=postgres --build-arg DATABASE_PORT=5432 --cache-from ${DOCKER_IMAGE_APP_LATEST} --tag ${DOCKER_IMAGE_APP} --target stage -f build/docker/app/Dockerfile .
 
             -   name: Test APP image
                 if: success()
                 run: |
-                    docker run ${DOCKER_IMAGE_APP} bin/console doctrine:database:create --if-not-exists --env=test
-                    docker run ${DOCKER_IMAGE_APP} bin/console doctrine:migration:migrate -n --env=test
-                    docker run ${DOCKER_IMAGE_APP} bin/console doctrine:fixtures:load --purge-with-truncate -n --env=test
+                    docker run ${DOCKER_IMAGE_APP} bin/console doctrine:database:create --if-not-exists
+                    docker run ${DOCKER_IMAGE_APP} bin/console doctrine:migration:migrate -n
+                    docker run ${DOCKER_IMAGE_APP} bin/console doctrine:fixtures:load --purge-with-truncate -n
                     docker run ${DOCKER_IMAGE_APP} vendor/bin/codecept build
                     docker run ${DOCKER_IMAGE_APP} vendor/bin/codecept run
-                env:
-                    DATABASE_USER: postgres
-                    DATABASE_PASSWORD: postgres
-                    DATABASE_NAME: db_test
-                    DATABASE_HOST: postgres
-                    DATABASE_PORT: 5432
