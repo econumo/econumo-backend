@@ -46,8 +46,8 @@ jobs:
             -   name: Test APP image
                 if: success()
                 run: |
-                    docker run --env DATABASE_USER=postgres --env DATABASE_PASSWORD=postgres --env DATABASE_NAME=db --env DATABASE_HOST=postgres --env DATABASE_PORT=5432 ${DOCKER_IMAGE_APP} bin/console doctrine:database:create --if-not-exists
-                    docker run --env DATABASE_USER=postgres --env DATABASE_PASSWORD=postgres --env DATABASE_NAME=db --env DATABASE_HOST=postgres --env DATABASE_PORT=5432 ${DOCKER_IMAGE_APP} bin/console doctrine:migration:migrate -n
-                    docker run --env DATABASE_USER=postgres --env DATABASE_PASSWORD=postgres --env DATABASE_NAME=db --env DATABASE_HOST=postgres --env DATABASE_PORT=5432 ${DOCKER_IMAGE_APP} bin/console doctrine:fixtures:load --purge-with-truncate -n
-                    docker run --env DATABASE_USER=postgres --env DATABASE_PASSWORD=postgres --env DATABASE_NAME=db --env DATABASE_HOST=postgres --env DATABASE_PORT=5432 ${DOCKER_IMAGE_APP} vendor/bin/codecept build
-                    docker run --env DATABASE_USER=postgres --env DATABASE_PASSWORD=postgres --env DATABASE_NAME=db --env DATABASE_HOST=postgres --env DATABASE_PORT=5432 ${DOCKER_IMAGE_APP} vendor/bin/codecept run
+                    docker run --network="host" --env DATABASE_USER=postgres --env DATABASE_PASSWORD=postgres --env DATABASE_NAME=db --env DATABASE_HOST=localhost --env DATABASE_PORT=5432 ${DOCKER_IMAGE_APP} bin/console doctrine:database:create --if-not-exists
+                    docker run --network="host" --env DATABASE_USER=postgres --env DATABASE_PASSWORD=postgres --env DATABASE_NAME=db --env DATABASE_HOST=localhost --env DATABASE_PORT=5432 ${DOCKER_IMAGE_APP} bin/console doctrine:migration:migrate -n
+                    docker run --network="host" --env DATABASE_USER=postgres --env DATABASE_PASSWORD=postgres --env DATABASE_NAME=db --env DATABASE_HOST=localhost --env DATABASE_PORT=5432 ${DOCKER_IMAGE_APP} bin/console doctrine:fixtures:load --purge-with-truncate -n
+                    docker run --network="host" --env DATABASE_USER=postgres --env DATABASE_PASSWORD=postgres --env DATABASE_NAME=db --env DATABASE_HOST=localhost --env DATABASE_PORT=5432 ${DOCKER_IMAGE_APP} vendor/bin/codecept build
+                    docker run --network="host" --env DATABASE_USER=postgres --env DATABASE_PASSWORD=postgres --env DATABASE_NAME=db --env DATABASE_HOST=localhost --env DATABASE_PORT=5432 ${DOCKER_IMAGE_APP} vendor/bin/codecept run
