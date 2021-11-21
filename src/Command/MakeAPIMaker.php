@@ -59,7 +59,7 @@ class MakeAPIMaker extends AbstractMaker
 
         if (
             !preg_match(
-                '!^/api/(?P<version>v\d+)/(?P<module>[a-z0-9\-]+)/(?P<action>[a-z0-9]+)-(?P<subject>[a-z0-9]+)$!i',
+                '!^/api/(?P<version>v\d+)/(?P<module>[a-z0-9\-]+)/(?P<action>[a-z0-9]+)-(?P<subject>[a-z0-9\-]+)$!i',
                 $url,
                 $matches,
             )
@@ -73,7 +73,9 @@ class MakeAPIMaker extends AbstractMaker
                 return ucfirst(strtolower($item));
             }, explode('-', $matches['module'])),
         );
-        $subject = ucfirst(strtolower($matches['subject']));
+        $subject = implode('', array_map(function(string $item) {
+            return ucfirst(strtolower($item));
+        }, explode('-', $matches['subject'])));
         $action = ucfirst(strtolower($matches['action']));
         $version = strtoupper($matches['version']);
 
@@ -116,13 +118,12 @@ class MakeAPIMaker extends AbstractMaker
                 $version,
             ),
             'Cest.php' => sprintf(
-                '%s/tests/api/%s/%s/%s%s%sCest.php',
+                '%s/tests/api/%s/%s/%s%sCest.php',
                 $basePath,
                 strtolower($version),
-                $module,
+                strtolower($module),
                 $action,
                 $subject,
-                $version,
             ),
             'RequestDto.php' => sprintf(
                 '%s/src/Application/%s/Dto/%s%s%sRequestDto.php',

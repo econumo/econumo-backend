@@ -38,10 +38,12 @@ class TransactionToDtoV1ResultAssembler
         $item->id = $transaction->getId()->getValue();
         $item->authorId = $transaction->getUserId()->getValue();
         try {
-            $item->authorName = $this->userRepository->get($transaction->getUserId())->getName();
+            $user = $this->userRepository->get($transaction->getUserId());
         } catch (\Throwable $e) {
-            $item->authorName = '#user_not_found#';
+            $user = null;
         }
+        $item->authorName = $user ? $user->getName() : '#user_not_found#';
+        $item->authorAvatar = $user ? $user->getAvatarUrl() : '';
         $item->type = $transaction->getType()->getAlias();
         $item->accountId = $transaction->getAccountId()->getValue();
         $item->accountRecipientId = $transaction->getAccountRecipientId(

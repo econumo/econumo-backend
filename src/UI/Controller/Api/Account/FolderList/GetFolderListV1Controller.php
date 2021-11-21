@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace _CG_APPROOT_\UI\Controller\Api\_CG_MODULE_\_CG_SUBJECT_;
+namespace App\UI\Controller\Api\Account\FolderList;
 
-use _CG_APPROOT_\Application\_CG_MODULE_\_CG_SUBJECT_Service;
-use _CG_APPROOT_\Application\_CG_MODULE_\Dto\_CG_ACTION__CG_SUBJECT__CG_VERSION_RequestDto;
-use _CG_APPROOT_\UI\Controller\Api\_CG_MODULE_\_CG_SUBJECT_\Validation\_CG_ACTION__CG_SUBJECT__CG_VERSION_Form;
+use App\Application\Account\FolderListService;
+use App\Application\Account\Dto\GetFolderListV1RequestDto;
+use App\UI\Controller\Api\Account\FolderList\Validation\GetFolderListV1Form;
 use App\Application\Exception\ValidationException;
 use App\Domain\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,29 +18,22 @@ use Symfony\Component\Routing\Annotation\Route;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Swagger\Annotations as SWG;
 
-class _CG_ACTION__CG_SUBJECT__CG_VERSION_Controller extends AbstractController
+class GetFolderListV1Controller extends AbstractController
 {
-    private _CG_SUBJECT_Service $_CG_SUBJECT_LCFIRST_Service;
+    private FolderListService $folderListService;
     private ValidatorInterface $validator;
 
-    public function __construct(_CG_SUBJECT_Service $_CG_SUBJECT_LCFIRST_Service, ValidatorInterface $validator)
+    public function __construct(FolderListService $folderListService, ValidatorInterface $validator)
     {
-        $this->_CG_SUBJECT_LCFIRST_Service = $_CG_SUBJECT_LCFIRST_Service;
+        $this->folderListService = $folderListService;
         $this->validator = $validator;
     }
 
     /**
-     * _CG_ACTION_ _CG_SUBJECT_
+     * Get folder list
      *
-     * @SWG\Tag(name="_CG_MODULE_"),
+     * @SWG\Tag(name="Account"),
      * @SWG\Tag(name="Need automation"),
-     * @SWG\Parameter(
-     *     name="id",
-     *     in="query",
-     *     required=true,
-     *     type="string",
-     *     description="ID чего-либо",
-     * ),
      * @SWG\Response(
      *     response=200,
      *     description="OK",
@@ -51,7 +44,7 @@ class _CG_ACTION__CG_SUBJECT__CG_VERSION_Controller extends AbstractController
      *             @SWG\Schema(
      *                 @SWG\Property(
      *                     property="data",
-     *                     ref=@Model(type=\_CG_APPROOT_\Application\_CG_MODULE_\Dto\_CG_ACTION__CG_SUBJECT__CG_VERSION_ResultDto::class)
+     *                     ref=@Model(type=\App\Application\Account\Dto\GetFolderListV1ResultDto::class)
      *                 )
      *             )
      *         }
@@ -60,7 +53,7 @@ class _CG_ACTION__CG_SUBJECT__CG_VERSION_Controller extends AbstractController
      * @SWG\Response(response=400, description="Bad Request", @SWG\Schema(ref="#/definitions/JsonResponseError")),
      * @SWG\Response(response=500, description="Internal Server Error", @SWG\Schema(ref="#/definitions/JsonResponseException")),
      *
-     * @Route("_CG_URL_", methods={"_CG_METHOD_"})
+     * @Route("/api/v1/account/get-folder-list", methods={"GET"})
      *
      * @param Request $request
      * @return Response
@@ -68,11 +61,11 @@ class _CG_ACTION__CG_SUBJECT__CG_VERSION_Controller extends AbstractController
      */
     public function __invoke(Request $request): Response
     {
-        $dto = new _CG_ACTION__CG_SUBJECT__CG_VERSION_RequestDto();
-        $this->validator->validate(_CG_ACTION__CG_SUBJECT__CG_VERSION_Form::class, $request->query->all(), $dto);
+        $dto = new GetFolderListV1RequestDto();
+        $this->validator->validate(GetFolderListV1Form::class, $request->query->all(), $dto);
         /** @var User $user */
         $user = $this->getUser();
-        $result = $this->_CG_SUBJECT_LCFIRST_Service->_CG_ACTION_LCFIRST__CG_SUBJECT_($dto, $user->getId());
+        $result = $this->folderListService->getFolderList($dto, $user->getId());
 
         return ResponseFactory::createOkResponse($request, $result);
     }

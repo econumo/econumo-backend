@@ -7,7 +7,7 @@ use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Definition(
- *     required={"id", "authorId", "type", "accountId", "amount", "categoryId", "description", "date"}
+ *     required={"id", "authorId", "authorAvatar", "type", "accountId", "amount", "categoryId", "description", "date"}
  * )
  */
 class TransactionResultDto
@@ -24,6 +24,13 @@ class TransactionResultDto
      * @SWG\Property(example="f680553f-6b40-407d-a528-5123913be0aa")
      */
     public string $authorId;
+
+    /**
+     * Author avatar
+     * @var string
+     * @SWG\Property(example="https://example.com/avatar.jpg")
+     */
+    public string $authorAvatar;
 
     /**
      * User author name

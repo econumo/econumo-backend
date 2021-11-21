@@ -30,10 +30,10 @@ tasks:
         desc: "Run tests (you could use arguments here after dash, ex: task tests -- unit)"
         cmds:
             - docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+            - cmd: docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app bin/console doctrine:database:drop --force --env=test -vvv
+              ignore_error: true
             - docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app bin/console doctrine:database:create --if-not-exists --env=test -vvv
             - docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app bin/console doctrine:migration:migrate -n --env=test -vvv
             - docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app bin/console doctrine:fixtures:load --purge-with-truncate -n --env=test -vvv
             - cmd: docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app vendor/bin/codecept run {{.CLI_ARGS}} --steps -v
-              ignore_error: true
-            - cmd: docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app bin/console doctrine:database:drop --force --env=test -vvv
               ignore_error: true
