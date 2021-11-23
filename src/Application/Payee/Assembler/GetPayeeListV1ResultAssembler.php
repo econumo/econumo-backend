@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Application\Payee\Assembler;
 
-use App\Application\Payee\Dto\GetCollectionV1RequestDto;
-use App\Application\Payee\Dto\GetCollectionV1ResultDto;
+use App\Application\Payee\Dto\GetPayeeListV1RequestDto;
+use App\Application\Payee\Dto\GetPayeeListV1ResultDto;
 use App\Domain\Entity\Payee;
 
-class GetCollectionV1ResultAssembler
+class GetPayeeListV1ResultAssembler
 {
     private PayeeToDtoV1ResultAssembler $payeeToDtoV1ResultAssembler;
 
@@ -18,15 +18,15 @@ class GetCollectionV1ResultAssembler
     }
 
     /**
-     * @param GetCollectionV1RequestDto $dto
+     * @param GetPayeeListV1RequestDto $dto
      * @param Payee[] $payees
-     * @return GetCollectionV1ResultDto
+     * @return GetPayeeListV1ResultDto
      */
     public function assemble(
-        GetCollectionV1RequestDto $dto,
+        GetPayeeListV1RequestDto $dto,
         array $payees
-    ): GetCollectionV1ResultDto {
-        $result = new GetCollectionV1ResultDto();
+    ): GetPayeeListV1ResultDto {
+        $result = new GetPayeeListV1ResultDto();
         $result->items = [];
         foreach ($payees as $payee) {
             $result->items[] = $this->payeeToDtoV1ResultAssembler->assemble($payee);

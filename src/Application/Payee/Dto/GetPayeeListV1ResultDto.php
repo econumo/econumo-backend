@@ -11,7 +11,7 @@ use Swagger\Annotations as SWG;
  *     required={"items"}
  * )
  */
-class GetCollectionV1ResultDto
+class GetPayeeListV1ResultDto
 {
     /**
      * @var PayeeResultDto[]

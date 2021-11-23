@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\UI\Controller\Api\Payee\Collection;
+namespace App\UI\Controller\Api\Payee\PayeeList;
 
-use App\Application\Payee\CollectionService;
-use App\Application\Payee\Dto\GetCollectionV1RequestDto;
-use App\UI\Controller\Api\Payee\Collection\Validation\GetCollectionV1Form;
+use App\Application\Payee\PayeeListService;
+use App\Application\Payee\Dto\GetPayeeListV1RequestDto;
+use App\UI\Controller\Api\Payee\PayeeList\Validation\GetPayeeListV1Form;
 use App\Application\Exception\ValidationException;
+use App\Domain\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,22 +18,29 @@ use Symfony\Component\Routing\Annotation\Route;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Swagger\Annotations as SWG;
 
-class GetCollectionV1Controller extends AbstractController
+class GetPayeeListV1Controller extends AbstractController
 {
-    private CollectionService $collectionService;
+    private PayeeListService $payeeListService;
     private ValidatorInterface $validator;
 
-    public function __construct(CollectionService $collectionService, ValidatorInterface $validator)
+    public function __construct(PayeeListService $payeeListService, ValidatorInterface $validator)
     {
-        $this->collectionService = $collectionService;
+        $this->payeeListService = $payeeListService;
         $this->validator = $validator;
     }
 
     /**
-     * Get Payee Collection
+     * Get PayeeList
      *
      * @SWG\Tag(name="Payee"),
      * @SWG\Tag(name="Need automation"),
+     * @SWG\Parameter(
+     *     name="id",
+     *     in="query",
+     *     required=true,
+     *     type="string",
+     *     description="ID чего-либо",
+     * ),
      * @SWG\Response(
      *     response=200,
      *     description="OK",
@@ -43,7 +51,7 @@ class GetCollectionV1Controller extends AbstractController
      *             @SWG\Schema(
      *                 @SWG\Property(
      *                     property="data",
-     *                     ref=@Model(type=\App\Application\Payee\Dto\GetCollectionV1ResultDto::class)
+     *                     ref=@Model(type=\App\Application\Payee\Dto\GetPayeeListV1ResultDto::class)
      *                 )
      *             )
      *         }
@@ -52,7 +60,7 @@ class GetCollectionV1Controller extends AbstractController
      * @SWG\Response(response=400, description="Bad Request", @SWG\Schema(ref="#/definitions/JsonResponseError")),
      * @SWG\Response(response=500, description="Internal Server Error", @SWG\Schema(ref="#/definitions/JsonResponseException")),
      *
-     * @Route("/api/v1/payee/get-collection", methods={"GET"})
+     * @Route("/api/v1/payee/get-payee-list", methods={"GET"})
      *
      * @param Request $request
      * @return Response
@@ -60,10 +68,11 @@ class GetCollectionV1Controller extends AbstractController
      */
     public function __invoke(Request $request): Response
     {
-        $dto = new GetCollectionV1RequestDto();
-        $this->validator->validate(GetCollectionV1Form::class, $request->query->all(), $dto);
+        $dto = new GetPayeeListV1RequestDto();
+        $this->validator->validate(GetPayeeListV1Form::class, $request->query->all(), $dto);
+        /** @var User $user */
         $user = $this->getUser();
-        $result = $this->collectionService->getCollection($dto, $user->getId());
+        $result = $this->payeeListService->getPayeeList($dto, $user->getId());
 
         return ResponseFactory::createOkResponse($request, $result);
     }
