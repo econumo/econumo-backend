@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Application\Category\Assembler;
 
-use App\Application\Category\Dto\CategoryResultDto;
-use App\Application\Category\Dto\GetCollectionV1RequestDto;
-use App\Application\Category\Dto\GetCollectionV1ResultDto;
+use App\Application\Category\Dto\GetCategoryListV1RequestDto;
+use App\Application\Category\Dto\GetCategoryListV1ResultDto;
 use App\Domain\Entity\Category;
 
-class GetCollectionV1ResultAssembler
+class GetCategoryListV1ResultAssembler
 {
     private CategoryToDtoV1ResultAssembler $categoryToDtoV1ResultAssembler;
 
@@ -19,15 +18,15 @@ class GetCollectionV1ResultAssembler
     }
 
     /**
-     * @param GetCollectionV1RequestDto $dto
+     * @param GetCategoryListV1RequestDto $dto
      * @param Category[] $categories
-     * @return GetCollectionV1ResultDto
+     * @return GetCategoryListV1ResultDto
      */
     public function assemble(
-        GetCollectionV1RequestDto $dto,
+        GetCategoryListV1RequestDto $dto,
         array $categories
-    ): GetCollectionV1ResultDto {
-        $result = new GetCollectionV1ResultDto();
+    ): GetCategoryListV1ResultDto {
+        $result = new GetCategoryListV1ResultDto();
         $result->items = [];
         foreach ($categories as $category) {
             $result->items[] = $this->categoryToDtoV1ResultAssembler->assemble($category);
