@@ -6,7 +6,7 @@ tasks:
         desc: "Run application"
         cmds:
             - docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
-            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app composer install
+            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app composer install --no-scripts
             - docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app bin/console doctrine:migrations:migrate -n
 
     restart:
