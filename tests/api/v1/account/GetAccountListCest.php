@@ -7,9 +7,9 @@ namespace App\Tests\api\v1\account;
 use App\Tests\ApiTester;
 use Codeception\Util\HttpCode;
 
-class GetCollectionCest
+class GetAccountListCest
 {
-    private string $url = '/api/v1/account/get-collection';
+    private string $url = '/api/v1/account/get-account-list';
 
     /**
      * @throws \Codeception\Exception\ModuleException

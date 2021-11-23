@@ -8,14 +8,14 @@ use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Definition(
- *     required={"accounts"}
+ *     required={"items"}
  * )
  */
-class ReorderCollectionV1RequestDto
+class GetAccountListV1ResultDto
 {
     /**
-     * @var AccountRequestDto[]
+     * @var AccountResultDto[]
      * @SWG\Property()
      */
-    public array $accounts;
+    public array $items = [];
 }
