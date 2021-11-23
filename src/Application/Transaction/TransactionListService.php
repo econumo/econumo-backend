@@ -4,40 +4,39 @@ declare(strict_types=1);
 
 namespace App\Application\Transaction;
 
-use App\Application\Exception\ValidationException;
-use App\Application\Transaction\Dto\GetCollectionV1RequestDto;
-use App\Application\Transaction\Dto\GetCollectionV1ResultDto;
-use App\Application\Transaction\Assembler\GetCollectionV1ResultAssembler;
+use App\Application\Transaction\Dto\GetTransactionListV1RequestDto;
+use App\Application\Transaction\Dto\GetTransactionListV1ResultDto;
+use App\Application\Transaction\Assembler\GetTransactionListV1ResultAssembler;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Repository\TransactionRepositoryInterface;
 use App\Domain\Service\AccountAccessServiceInterface;
 
-class CollectionService
+class TransactionListService
 {
-    private GetCollectionV1ResultAssembler $getCollectionV1ResultAssembler;
+    private GetTransactionListV1ResultAssembler $getTransactionListV1ResultAssembler;
     private TransactionRepositoryInterface $transactionRepository;
     private AccountAccessServiceInterface $accountAccessService;
 
     public function __construct(
-        GetCollectionV1ResultAssembler $getCollectionV1ResultAssembler,
+        GetTransactionListV1ResultAssembler $getTransactionListV1ResultAssembler,
         TransactionRepositoryInterface $transactionRepository,
         AccountAccessServiceInterface $accountAccessService
     ) {
-        $this->getCollectionV1ResultAssembler = $getCollectionV1ResultAssembler;
+        $this->getTransactionListV1ResultAssembler = $getTransactionListV1ResultAssembler;
         $this->transactionRepository = $transactionRepository;
         $this->accountAccessService = $accountAccessService;
     }
 
-    public function getCollection(
-        GetCollectionV1RequestDto $dto,
+    public function getTransactionList(
+        GetTransactionListV1RequestDto $dto,
         Id $userId
-    ): GetCollectionV1ResultDto {
+    ): GetTransactionListV1ResultDto {
         if ($dto->accountId) {
             $this->accountAccessService->checkViewTransactionsAccess($userId, new Id($dto->accountId));
             $transactions = $this->transactionRepository->findByAccountId(new Id($dto->accountId));
         } else {
             $transactions = $this->transactionRepository->findByUserId($userId);
         }
-        return $this->getCollectionV1ResultAssembler->assemble($dto, $transactions);
+        return $this->getTransactionListV1ResultAssembler->assemble($dto, $transactions);
     }
 }

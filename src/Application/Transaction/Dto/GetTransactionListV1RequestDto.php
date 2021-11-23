@@ -11,7 +11,7 @@ use Swagger\Annotations as SWG;
  *     required={"id"}
  * )
  */
-class GetCollectionV1RequestDto
+class GetTransactionListV1RequestDto
 {
     /**
      * @SWG\Property(example="0aaa0450-564e-411e-8018-7003f6dbeb92")

@@ -34,13 +34,6 @@ class GetTagListV1Controller extends AbstractController
      *
      * @SWG\Tag(name="Tag"),
      * @SWG\Tag(name="Need automation"),
-     * @SWG\Parameter(
-     *     name="id",
-     *     in="query",
-     *     required=true,
-     *     type="string",
-     *     description="ID чего-либо",
-     * ),
      * @SWG\Response(
      *     response=200,
      *     description="OK",

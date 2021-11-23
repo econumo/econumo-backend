@@ -8,13 +8,9 @@ use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Definition(
- *     required={"id"}
+ *     required={}
  * )
  */
 class GetTagListV1RequestDto
 {
-    /**
-     * @SWG\Property(example="123")
-     */
-    public string $id;
 }

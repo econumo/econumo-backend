@@ -2,16 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\UI\Controller\Api\Transaction\Collection\Validation;
+namespace App\UI\Controller\Api\Transaction\TransactionList\Validation;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Uuid;
 
-class GetCollectionV1Form extends AbstractType
+class GetTransactionListV1Form extends AbstractType
 {
     public function configureOptions(OptionsResolver $resolver)
     {

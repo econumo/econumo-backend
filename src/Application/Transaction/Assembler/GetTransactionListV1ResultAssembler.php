@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Application\Transaction\Assembler;
 
-use App\Application\Transaction\Dto\GetCollectionV1RequestDto;
-use App\Application\Transaction\Dto\GetCollectionV1ResultDto;
+use App\Application\Transaction\Dto\GetTransactionListV1RequestDto;
+use App\Application\Transaction\Dto\GetTransactionListV1ResultDto;
 use App\Domain\Entity\Transaction;
 
-class GetCollectionV1ResultAssembler
+class GetTransactionListV1ResultAssembler
 {
     private TransactionToDtoV1ResultAssembler $transactionToDtoV1ResultAssembler;
 
@@ -19,15 +19,15 @@ class GetCollectionV1ResultAssembler
     }
 
     /**
-     * @param GetCollectionV1RequestDto $dto
+     * @param GetTransactionListV1RequestDto $dto
      * @param Transaction[] $transactions
-     * @return GetCollectionV1ResultDto
+     * @return GetTransactionListV1ResultDto
      */
     public function assemble(
-        GetCollectionV1RequestDto $dto,
+        GetTransactionListV1RequestDto $dto,
         array $transactions
-    ): GetCollectionV1ResultDto {
-        $result = new GetCollectionV1ResultDto();
+    ): GetTransactionListV1ResultDto {
+        $result = new GetTransactionListV1ResultDto();
         $result->items = [];
         foreach ($transactions as $transaction) {
             $result->items[] = $this->transactionToDtoV1ResultAssembler->assemble($transaction);
