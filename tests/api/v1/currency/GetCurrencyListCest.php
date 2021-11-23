@@ -7,9 +7,9 @@ namespace App\Tests\api\v1\currency;
 use App\Tests\ApiTester;
 use Codeception\Util\HttpCode;
 
-class GetCollectionCest
+class GetCurrencyListCest
 {
-    private string $url = '/api/v1/currency/get-collection';
+    private string $url = '/api/v1/currency/get-currency-list';
 
     /**
      * @throws \Codeception\Exception\ModuleException

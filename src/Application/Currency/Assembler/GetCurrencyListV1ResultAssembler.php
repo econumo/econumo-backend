@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Application\Currency\Assembler;
 
-use App\Application\Currency\Dto\GetCollectionV1RequestDto;
-use App\Application\Currency\Dto\GetCollectionV1ResultDto;
+use App\Application\Currency\Dto\GetCurrencyListV1RequestDto;
+use App\Application\Currency\Dto\GetCurrencyListV1ResultDto;
 use App\Domain\Entity\Currency;
 
-class GetCollectionV1ResultAssembler
+class GetCurrencyListV1ResultAssembler
 {
     private CurrencyToDtoV1ResultAssembler $currencyToDtoV1ResultAssembler;
 
@@ -18,15 +18,15 @@ class GetCollectionV1ResultAssembler
     }
 
     /**
-     * @param GetCollectionV1RequestDto $dto
+     * @param GetCurrencyListV1RequestDto $dto
      * @param Currency[] $currencies
-     * @return GetCollectionV1ResultDto
+     * @return GetCurrencyListV1ResultDto
      */
     public function assemble(
-        GetCollectionV1RequestDto $dto,
+        GetCurrencyListV1RequestDto $dto,
         array $currencies
-    ): GetCollectionV1ResultDto {
-        $result = new GetCollectionV1ResultDto();
+    ): GetCurrencyListV1ResultDto {
+        $result = new GetCurrencyListV1ResultDto();
         foreach ($currencies as $currency) {
             $result->items[] = $this->currencyToDtoV1ResultAssembler->assemble($currency);
         }

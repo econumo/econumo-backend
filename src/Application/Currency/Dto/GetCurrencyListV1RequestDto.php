@@ -11,6 +11,6 @@ use Swagger\Annotations as SWG;
  *     required={}
  * )
  */
-class GetCollectionV1RequestDto
+class GetCurrencyListV1RequestDto
 {
 }

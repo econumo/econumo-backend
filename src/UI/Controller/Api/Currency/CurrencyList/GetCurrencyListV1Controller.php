@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\UI\Controller\Api\Currency\Collection;
+namespace App\UI\Controller\Api\Currency\CurrencyList;
 
-use App\Application\Currency\CollectionService;
-use App\Application\Currency\Dto\GetCollectionV1RequestDto;
-use App\Domain\Entity\User;
-use App\UI\Controller\Api\Currency\Collection\Validation\GetCollectionV1Form;
+use App\Application\Currency\CurrencyListService;
+use App\Application\Currency\Dto\GetCurrencyListV1RequestDto;
+use App\UI\Controller\Api\Currency\CurrencyList\Validation\GetCurrencyListV1Form;
 use App\Application\Exception\ValidationException;
+use App\Domain\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,22 +18,29 @@ use Symfony\Component\Routing\Annotation\Route;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Swagger\Annotations as SWG;
 
-class GetCollectionV1Controller extends AbstractController
+class GetCurrencyListV1Controller extends AbstractController
 {
-    private CollectionService $collectionService;
+    private CurrencyListService $currencyListService;
     private ValidatorInterface $validator;
 
-    public function __construct(CollectionService $collectionService, ValidatorInterface $validator)
+    public function __construct(CurrencyListService $currencyListService, ValidatorInterface $validator)
     {
-        $this->collectionService = $collectionService;
+        $this->currencyListService = $currencyListService;
         $this->validator = $validator;
     }
 
     /**
-     * Get Currency Collection
+     * Get CurrencyList
      *
      * @SWG\Tag(name="Currency"),
      * @SWG\Tag(name="Need automation"),
+     * @SWG\Parameter(
+     *     name="id",
+     *     in="query",
+     *     required=true,
+     *     type="string",
+     *     description="ID чего-либо",
+     * ),
      * @SWG\Response(
      *     response=200,
      *     description="OK",
@@ -44,7 +51,7 @@ class GetCollectionV1Controller extends AbstractController
      *             @SWG\Schema(
      *                 @SWG\Property(
      *                     property="data",
-     *                     ref=@Model(type=\App\Application\Currency\Dto\GetCollectionV1ResultDto::class)
+     *                     ref=@Model(type=\App\Application\Currency\Dto\GetCurrencyListV1ResultDto::class)
      *                 )
      *             )
      *         }
@@ -53,7 +60,7 @@ class GetCollectionV1Controller extends AbstractController
      * @SWG\Response(response=400, description="Bad Request", @SWG\Schema(ref="#/definitions/JsonResponseError")),
      * @SWG\Response(response=500, description="Internal Server Error", @SWG\Schema(ref="#/definitions/JsonResponseException")),
      *
-     * @Route("/api/v1/currency/get-collection", methods={"GET"})
+     * @Route("/api/v1/currency/get-currency-list", methods={"GET"})
      *
      * @param Request $request
      * @return Response
@@ -61,11 +68,11 @@ class GetCollectionV1Controller extends AbstractController
      */
     public function __invoke(Request $request): Response
     {
-        $dto = new GetCollectionV1RequestDto();
-        $this->validator->validate(GetCollectionV1Form::class, $request->query->all(), $dto);
+        $dto = new GetCurrencyListV1RequestDto();
+        $this->validator->validate(GetCurrencyListV1Form::class, $request->query->all(), $dto);
         /** @var User $user */
         $user = $this->getUser();
-        $result = $this->collectionService->getCollection($dto, $user->getId());
+        $result = $this->currencyListService->getCurrencyList($dto, $user->getId());
 
         return ResponseFactory::createOkResponse($request, $result);
     }
