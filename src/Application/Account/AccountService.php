@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Application\Account;
 
-use App\Application\Account\Assembler\AddAccountV1ResultAssembler;
+use App\Application\Account\Assembler\CreateAccountV1ResultAssembler;
 use App\Application\Account\Assembler\DeleteAccountV1ResultAssembler;
-use App\Application\Account\Dto\AddAccountV1RequestDto;
-use App\Application\Account\Dto\AddAccountV1ResultDto;
+use App\Application\Account\Dto\CreateAccountV1RequestDto;
+use App\Application\Account\Dto\CreateAccountV1ResultDto;
 use App\Application\Account\Dto\DeleteAccountV1RequestDto;
 use App\Application\Account\Dto\DeleteAccountV1ResultDto;
 use App\Application\Account\Dto\UpdateAccountV1RequestDto;
@@ -23,8 +23,8 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class AccountService
 {
+    private CreateAccountV1ResultAssembler $createAccountV1ResultAssembler;
     private DeleteAccountV1ResultAssembler $deleteAccountV1ResultAssembler;
-    private AddAccountV1ResultAssembler $addAccountV1ResultAssembler;
     private AccountServiceInterface $accountService;
     private UpdateAccountV1ResultAssembler $updateAccountV1ResultAssembler;
     private AccountRepositoryInterface $accountRepository;
@@ -32,7 +32,7 @@ class AccountService
     private RequestIdLockServiceInterface $requestIdLockService;
 
     public function __construct(
-        AddAccountV1ResultAssembler $addAccountV1ResultAssembler,
+        CreateAccountV1ResultAssembler $createAccountV1ResultAssembler,
         AccountServiceInterface $accountService,
         DeleteAccountV1ResultAssembler $deleteAccountV1ResultAssembler,
         UpdateAccountV1ResultAssembler $updateAccountV1ResultAssembler,
@@ -40,7 +40,7 @@ class AccountService
         AccountAccessServiceInterface $accountAccessService,
         RequestIdLockServiceInterface $requestIdLockService
     ) {
-        $this->addAccountV1ResultAssembler = $addAccountV1ResultAssembler;
+        $this->createAccountV1ResultAssembler = $createAccountV1ResultAssembler;
         $this->accountService = $accountService;
         $this->deleteAccountV1ResultAssembler = $deleteAccountV1ResultAssembler;
         $this->updateAccountV1ResultAssembler = $updateAccountV1ResultAssembler;
@@ -49,10 +49,10 @@ class AccountService
         $this->requestIdLockService = $requestIdLockService;
     }
 
-    public function addAccount(
-        AddAccountV1RequestDto $dto,
+    public function createAccount(
+        CreateAccountV1RequestDto $dto,
         Id $userId
-    ): AddAccountV1ResultDto {
+    ): CreateAccountV1ResultDto {
         $accountDto = new AccountDto();
         $accountDto->userId = $userId;
         $accountDto->id = new Id($dto->id);
@@ -69,7 +69,7 @@ class AccountService
             $this->requestIdLockService->remove($requestId);
             throw $exception;
         }
-        return $this->addAccountV1ResultAssembler->assemble($dto, $userId, $account);
+        return $this->createAccountV1ResultAssembler->assemble($dto, $userId, $account);
     }
 
     public function deleteAccount(

@@ -38,7 +38,7 @@ class _CG_ACTION__CG_SUBJECT__CG_VERSION_Controller extends AbstractController
      *     name="payload",
      *     in="body",
      *     required=true,
-     *     @SWG\Schema(ref=@Model(type=\_CG_APPROOT_\Application\_CG_MODULE_\_CG_SUBJECT_\Dto\_CG_ACTION__CG_SUBJECT__CG_VERSION_RequestDto::class)),
+     *     @SWG\Schema(ref=@Model(type=\_CG_APPROOT_\Application\_CG_MODULE_\Dto\_CG_ACTION__CG_SUBJECT__CG_VERSION_RequestDto::class)),
      * ),
      * @SWG\Response(
      *     response=200,

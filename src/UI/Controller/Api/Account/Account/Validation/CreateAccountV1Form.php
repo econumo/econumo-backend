@@ -12,7 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Uuid;
 
-class AddAccountV1Form extends AbstractType
+class CreateAccountV1Form extends AbstractType
 {
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -34,6 +34,8 @@ class AddAccountV1Form extends AbstractType
             ->add('balance', NumberType::class, [
                 'constraints' => [new NotBlank()],
             ])
-            ->add('icon', TextType::class);
+            ->add('icon', TextType::class, [
+                'constraints' => [new NotBlank()],
+            ]);
     }
 }

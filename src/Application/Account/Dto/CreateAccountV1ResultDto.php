@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Application\Account\Dto;
 
-use App\Application\Account\Dto\AccountResultDto;
 use Swagger\Annotations as SWG;
 
 /**
@@ -12,7 +11,7 @@ use Swagger\Annotations as SWG;
  *     required={"item"}
  * )
  */
-class AddAccountV1ResultDto
+class CreateAccountV1ResultDto
 {
     /**
      * @SWG\Property()

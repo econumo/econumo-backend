@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace App\Application\Account\Assembler;
 
-use App\Application\Account\Dto\AddAccountV1RequestDto;
-use App\Application\Account\Dto\AddAccountV1ResultDto;
-use App\Application\Account\Assembler\AccountToDtoV1ResultAssembler;
+use App\Application\Account\Dto\CreateAccountV1RequestDto;
+use App\Application\Account\Dto\CreateAccountV1ResultDto;
 use App\Domain\Entity\Account;
 use App\Domain\Entity\ValueObject\Id;
 
-class AddAccountV1ResultAssembler
+class CreateAccountV1ResultAssembler
 {
     private AccountToDtoV1ResultAssembler $accountToDtoV1ResultAssembler;
 
@@ -20,11 +19,11 @@ class AddAccountV1ResultAssembler
     }
 
     public function assemble(
-        AddAccountV1RequestDto $dto,
+        CreateAccountV1RequestDto $dto,
         Id $userId,
         Account $account
-    ): AddAccountV1ResultDto {
-        $result = new AddAccountV1ResultDto();
+    ): CreateAccountV1ResultDto {
+        $result = new CreateAccountV1ResultDto();
         $result->item = $this->accountToDtoV1ResultAssembler->assemble($userId, $account);
 
         return $result;

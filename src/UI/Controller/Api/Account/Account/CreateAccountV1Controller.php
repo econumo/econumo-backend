@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\UI\Controller\Api\Account\Account;
 
 use App\Application\Account\AccountService;
-use App\Application\Account\Dto\AddAccountV1RequestDto;
-use App\Domain\Entity\User;
-use App\UI\Controller\Api\Account\Account\Validation\AddAccountV1Form;
+use App\Application\Account\Dto\CreateAccountV1RequestDto;
+use App\UI\Controller\Api\Account\Account\Validation\CreateAccountV1Form;
 use App\Application\Exception\ValidationException;
+use App\Domain\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Swagger\Annotations as SWG;
 
-class AddAccountV1Controller extends AbstractController
+class CreateAccountV1Controller extends AbstractController
 {
     private AccountService $accountService;
     private ValidatorInterface $validator;
@@ -30,7 +30,7 @@ class AddAccountV1Controller extends AbstractController
     }
 
     /**
-     * Add Account
+     * Create account
      *
      * @SWG\Tag(name="Account"),
      * @SWG\Tag(name="Need automation"),
@@ -38,7 +38,7 @@ class AddAccountV1Controller extends AbstractController
      *     name="payload",
      *     in="body",
      *     required=true,
-     *     @SWG\Schema(ref=@Model(type=\App\Application\Account\Dto\AddAccountV1RequestDto::class)),
+     *     @SWG\Schema(ref=@Model(type=\App\Application\Account\Dto\CreateAccountV1RequestDto::class)),
      * ),
      * @SWG\Response(
      *     response=200,
@@ -50,7 +50,7 @@ class AddAccountV1Controller extends AbstractController
      *             @SWG\Schema(
      *                 @SWG\Property(
      *                     property="data",
-     *                     ref=@Model(type=\App\Application\Account\Dto\AddAccountV1ResultDto::class)
+     *                     ref=@Model(type=\App\Application\Account\Dto\CreateAccountV1ResultDto::class)
      *                 )
      *             )
      *         }
@@ -59,7 +59,7 @@ class AddAccountV1Controller extends AbstractController
      * @SWG\Response(response=400, description="Bad Request", @SWG\Schema(ref="#/definitions/JsonResponseError")),
      * @SWG\Response(response=500, description="Internal Server Error", @SWG\Schema(ref="#/definitions/JsonResponseException")),
      *
-     * @Route("/api/v1/account/add-account", methods={"POST"})
+     * @Route("/api/v1/account/create-account", methods={"POST"})
      *
      * @param Request $request
      * @return Response
@@ -67,11 +67,11 @@ class AddAccountV1Controller extends AbstractController
      */
     public function __invoke(Request $request): Response
     {
-        $dto = new AddAccountV1RequestDto();
-        $this->validator->validate(AddAccountV1Form::class, $request->request->all(), $dto);
+        $dto = new CreateAccountV1RequestDto();
+        $this->validator->validate(CreateAccountV1Form::class, $request->request->all(), $dto);
         /** @var User $user */
         $user = $this->getUser();
-        $result = $this->accountService->addAccount($dto, $user->getId());
+        $result = $this->accountService->createAccount($dto, $user->getId());
 
         return ResponseFactory::createOkResponse($request, $result);
     }
