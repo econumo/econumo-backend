@@ -11,6 +11,6 @@ use Swagger\Annotations as SWG;
  *     required={}
  * )
  */
-class GetInviteV1RequestDto
+class GetInviteListV1RequestDto
 {
 }

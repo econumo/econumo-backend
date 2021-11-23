@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\UI\Controller\Api\Account\Invite\Validation;
+namespace App\UI\Controller\Api\Account\InviteList\Validation;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class GetInviteV1Form extends AbstractType
+class GetInviteListV1Form extends AbstractType
 {
     public function configureOptions(OptionsResolver $resolver)
     {

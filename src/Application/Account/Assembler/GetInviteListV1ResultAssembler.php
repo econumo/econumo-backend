@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Application\Account\Assembler;
 
-use App\Application\Account\Dto\GetInviteV1RequestDto;
-use App\Application\Account\Dto\GetInviteV1ResultDto;
+use App\Application\Account\Dto\GetInviteListV1RequestDto;
+use App\Application\Account\Dto\GetInviteListV1ResultDto;
 use App\Application\Account\Dto\InviteResultDto;
 use App\Domain\Entity\AccountAccess;
 use App\Domain\Entity\AccountAccessInvite;
 use App\Domain\Repository\UserRepositoryInterface;
 
-class GetInviteV1ResultAssembler
+class GetInviteListV1ResultAssembler
 {
     private UserRepositoryInterface $userRepository;
 
@@ -21,17 +21,17 @@ class GetInviteV1ResultAssembler
     }
 
     /**
-     * @param GetInviteV1RequestDto $dto
+     * @param GetInviteListV1RequestDto $dto
      * @param AccountAccess[] $acceptedInvites
      * @param AccountAccessInvite[] $waitingInvites
-     * @return GetInviteV1ResultDto
+     * @return GetInviteListV1ResultDto
      */
     public function assemble(
-        GetInviteV1RequestDto $dto,
+        GetInviteListV1RequestDto $dto,
         array $acceptedInvites,
         array $waitingInvites
-    ): GetInviteV1ResultDto {
-        $result = new GetInviteV1ResultDto();
+    ): GetInviteListV1ResultDto {
+        $result = new GetInviteListV1ResultDto();
 
         $waitingInvitesDto = [];
         foreach ($waitingInvites as $waitingInvite) {

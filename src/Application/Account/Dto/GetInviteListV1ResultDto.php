@@ -11,7 +11,7 @@ use Swagger\Annotations as SWG;
  *     required={"accepted", "waiting"}
  * )
  */
-class GetInviteV1ResultDto
+class GetInviteListV1ResultDto
 {
     /**
      * @var InviteResultDto[]

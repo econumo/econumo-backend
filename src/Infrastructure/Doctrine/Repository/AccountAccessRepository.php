@@ -85,8 +85,7 @@ class AccountAccessRepository extends ServiceEntityRepository implements Account
     {
         $dql =<<<'DQL'
 SELECT a.id FROM App\Domain\Entity\AccountAccess aa
-LEFT JOIN App\Domain\Entity\Account a WITH a.id = aa.accountId
-WHERE a.userId = :id
+JOIN App\Domain\Entity\Account a WITH a.id = aa.accountId AND aa.userId = :id
 GROUP BY a.id
 DQL;
         $query = $this->getEntityManager()->createQuery($dql)->setParameter('id', $userId->getValue());
