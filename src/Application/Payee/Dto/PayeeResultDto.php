@@ -7,7 +7,7 @@ use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Definition(
- *     required={"id", "name", "position", "ownerId"}
+ *     required={"id", "ownerUserId", "name", "position"}
  * )
  */
 class PayeeResultDto
@@ -20,10 +20,10 @@ class PayeeResultDto
     public string $id;
 
     /**
-     * Owner id
+     * Owner user id
      * @SWG\Property(example="f680553f-6b40-407d-a528-5123913be0aa")
      */
-    public string $ownerId;
+    public string $ownerUserId;
 
     /**
      * Name

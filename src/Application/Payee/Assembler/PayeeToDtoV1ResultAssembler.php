@@ -16,7 +16,7 @@ class PayeeToDtoV1ResultAssembler
         $item->id = $payee->getId()->getValue();
         $item->name = $payee->getName();
         $item->position = $payee->getPosition();
-        $item->ownerId = $payee->getUserId()->getValue();
+        $item->ownerUserId = $payee->getUserId()->getValue();
         return $item;
     }
 }

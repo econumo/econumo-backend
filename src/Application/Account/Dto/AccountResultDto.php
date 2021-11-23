@@ -7,7 +7,7 @@ use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Definition(
- *     required={"id", "name", "position", "currencyId", "balance", "type", "icon", "sharedAccess"}
+ *     required={"id", "ownerUserId", "name", "position", "currencyId", "balance", "type", "icon", "sharedAccess"}
  * )
  */
 class AccountResultDto
@@ -20,11 +20,11 @@ class AccountResultDto
     public string $id;
 
     /**
-     * User owner id
+     * Owner user id
      * @var string
      * @SWG\Property(example="a5e2eee2-56aa-43c6-a827-ca155683ea8d")
      */
-    public string $ownerId;
+    public string $ownerUserId;
 
     /**
      * Account name
@@ -84,7 +84,7 @@ class AccountResultDto
 
     /**
      * Account access
-     * @var AccountRoleResultDto[]
+     * @var SharedAccessItemResultDto[]
      * @SWG\Property()
      */
     public array $sharedAccess = [];

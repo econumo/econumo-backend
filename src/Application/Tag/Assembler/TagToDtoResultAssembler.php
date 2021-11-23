@@ -7,7 +7,7 @@ namespace App\Application\Tag\Assembler;
 use App\Application\Tag\Dto\TagResultDto;
 use App\Domain\Entity\Tag;
 
-class TagToDtoV1ResultAssembler
+class TagToDtoResultAssembler
 {
     public function assemble(Tag $tag): TagResultDto
     {
@@ -15,7 +15,7 @@ class TagToDtoV1ResultAssembler
         $item->id = $tag->getId()->getValue();
         $item->name = $tag->getName();
         $item->position = $tag->getPosition();
-        $item->ownerId = $tag->getUserId()->getValue();
+        $item->ownerUserId = $tag->getUserId()->getValue();
         $item->isArchived = $tag->isArchived() ? 1 : 0;
         return $item;
     }

@@ -47,16 +47,7 @@ class GetPayeeListCest
     {
         $I->amAuthenticatedAsJohn($I);
         $I->sendGET($this->url);
-        $I->seeResponseMatchesJsonType([
-            'data' => [
-                'items' => 'array',
-            ],
-        ]);
-        $I->seeResponseMatchesJsonType([
-            'id' => 'string',
-            'ownerId' => 'string',
-            'name' => 'string',
-            'position' => 'integer',
-        ], '$.data.items[0]');
+        $I->seeResponseMatchesJsonType($I->getRootResponseWithItemsJsonType());
+        $I->seeResponseMatchesJsonType($I->getPayeeDtoJsonType(), '$.data.items[0]');
     }
 }

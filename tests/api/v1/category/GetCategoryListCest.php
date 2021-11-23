@@ -47,17 +47,7 @@ class GetCategoryListCest
     {
         $I->amAuthenticatedAsJohn($I);
         $I->sendGET($this->url);
-        $I->seeResponseMatchesJsonType([
-            'data' => [
-                'items' => 'array',
-            ],
-        ]);
-        $I->seeResponseMatchesJsonType([
-            'id' => 'string',
-            'ownerId' => 'string',
-            'name' => 'string',
-            'position' => 'integer',
-            'type' => 'string',
-        ], '$.data.items[0]');
+        $I->seeResponseMatchesJsonType($I->getRootResponseWithItemsJsonType());
+        $I->seeResponseMatchesJsonType($I->getCategoryDtoJsonType(), '$.data.items[0]');
     }
 }

@@ -67,22 +67,9 @@ class CreateAccountCest
         ]);
         $I->seeResponseMatchesJsonType([
             'data' => [
-                'item' => 'array',
+                'item' => $I->getAccountDtoJsonType(),
             ],
         ]);
-        $I->seeResponseMatchesJsonType([
-            'id' => 'string',
-            'ownerId' => 'string',
-            'name' => 'string',
-            'position' => 'integer',
-            'currencyId' => 'string',
-            'currencyAlias' => 'string',
-            'currencySign' => 'string',
-            'balance' => 'float',
-            'type' => 'integer',
-            'icon' => 'string',
-            'sharedAccess' => 'array',
-        ], '$.data.item');
         $data = $I->grabDataFromResponseByJsonPath('$.data.item.sharedAccess[0]');
         $I->assertEmpty($data);
     }

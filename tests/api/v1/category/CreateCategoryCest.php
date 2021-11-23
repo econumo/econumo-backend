@@ -59,13 +59,7 @@ class CreateCategoryCest
         ]);
         $I->seeResponseMatchesJsonType([
             'data' => [
-                'item' => [
-                    'id' => 'string',
-                    'ownerId' => 'string',
-                    'name' => 'string',
-                    'position' => 'integer',
-                    'type' => 'string',
-                ],
+                'item' => $I->getCategoryDtoJsonType(),
             ]
         ]);
     }

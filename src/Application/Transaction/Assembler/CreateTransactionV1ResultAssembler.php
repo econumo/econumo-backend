@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Transaction\Assembler;
 
-use App\Application\Transaction\Assembler\TransactionToDtoV1ResultAssembler;
+use App\Application\Transaction\Assembler\TransactionToDtoResultAssembler;
 use App\Application\Transaction\Dto\CreateTransactionV1RequestDto;
 use App\Application\Transaction\Dto\CreateTransactionV1ResultDto;
 use App\Domain\Entity\Transaction;
@@ -13,11 +13,11 @@ use App\Domain\Repository\AccountRepositoryInterface;
 class CreateTransactionV1ResultAssembler
 {
     private AccountRepositoryInterface $accountRepository;
-    private TransactionToDtoV1ResultAssembler $transactionToDtoV1ResultAssembler;
+    private TransactionToDtoResultAssembler $transactionToDtoV1ResultAssembler;
 
     public function __construct(
         AccountRepositoryInterface $accountRepository,
-        TransactionToDtoV1ResultAssembler $transactionToDtoV1ResultAssembler
+        TransactionToDtoResultAssembler $transactionToDtoV1ResultAssembler
     ) {
         $this->accountRepository = $accountRepository;
         $this->transactionToDtoV1ResultAssembler = $transactionToDtoV1ResultAssembler;

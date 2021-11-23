@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\functional;
+namespace App\Tests\api;
 
 use App\Tests\ApiTester;
 use Codeception\Util\HttpCode;

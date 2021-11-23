@@ -51,27 +51,9 @@ class DeleteTransactionCest
             'data' => [
                 'accountBalance' => 'float',
                 'accountRecipientBalance' => 'float|null',
-                'transaction' => [
-                    'id' => 'string',
-                    'authorId' => 'string',
-                    'authorName' => 'string',
-                    'type' => 'string',
-                    'accountId' => 'string',
-                    'accountRecipientId' => 'string|null',
-                    'amount' => 'float',
-                    'amountRecipient' => 'float|null',
-                    'categoryId' => 'string|null',
-                    'categoryName' => 'string',
-                    'description' => 'string',
-                    'payeeId' => 'string|null',
-                    'payeeName' => 'string',
-                    'tagId' => 'string|null',
-                    'tagName' => 'string',
-                    'date' => 'string',
-                    'day' => 'string',
-                    'time' => 'string',
-                ],
+                'transaction' => $I->getTransactionDtoJsonType()
             ],
         ]);
+        $I->seeResponseMatchesJsonType($I->getCategoryDtoJsonType(), '$.data.transaction.category');
     }
 }

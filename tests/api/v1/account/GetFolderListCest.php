@@ -47,15 +47,7 @@ class GetFolderListCest
     {
         $I->amAuthenticatedAsJohn($I);
         $I->sendGET($this->url);
-        $I->seeResponseMatchesJsonType([
-            'data' => [
-                'items' => 'array',
-            ],
-        ]);
-        $I->seeResponseMatchesJsonType([
-            'id' => 'string',
-            'name' => 'string',
-            'position' => 'integer',
-        ], '$.data.items[0]');
+        $I->seeResponseMatchesJsonType($I->getRootResponseWithItemsJsonType());
+        $I->seeResponseMatchesJsonType($I->getAccountFolderDtoJsonType(), '$.data.items[0]');
     }
 }
