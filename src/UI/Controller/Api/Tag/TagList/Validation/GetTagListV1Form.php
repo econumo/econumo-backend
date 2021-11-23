@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\UI\Controller\Api\Tag\Collection\Validation;
+namespace App\UI\Controller\Api\Tag\TagList\Validation;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class GetCollectionV1Form extends AbstractType
+class GetTagListV1Form extends AbstractType
 {
     public function configureOptions(OptionsResolver $resolver)
     {

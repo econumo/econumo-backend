@@ -8,14 +8,13 @@ use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Definition(
- *     required={"items"}
+ *     required={"id"}
  * )
  */
-class GetCollectionV1ResultDto
+class GetTagListV1RequestDto
 {
     /**
-     * @var TagResultDto[]
-     * @SWG\Property()
+     * @SWG\Property(example="123")
      */
-    public array $items = [];
+    public string $id;
 }
