@@ -13,6 +13,7 @@ use Ramsey\Uuid\Uuid;
 
 class Api extends \Codeception\Module
 {
+    use AuthenticationTrait;
     use ContainerTrait;
 
     /**
@@ -24,17 +25,6 @@ class Api extends \Codeception\Module
         $uuid = Uuid::uuid4();
 
         return new Id($uuid->toString());
-    }
-
-    public function amAuthenticatedAsJohn(ApiTester $I): void
-    {
-        /** @var UserRepositoryInterface $userRepository */
-        $userRepository = $this->getContainerService(UserRepositoryInterface::class);
-        $user = $userRepository->getByEmail(new Email('john@snow.test'));
-        /** @var JWTTokenManagerInterface $tokenManager */
-        $tokenManager = $this->getContainerService(JWTTokenManagerInterface::class);
-        $token = $tokenManager->create($user);
-        $I->amBearerAuthenticated($token);
     }
 
     public function getRootResponseWithItemsJsonType(): array

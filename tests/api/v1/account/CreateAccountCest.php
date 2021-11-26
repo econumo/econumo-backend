@@ -16,7 +16,7 @@ class CreateAccountCest
      */
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendPOST($this->url, [
             'id' => '4b7946ca-2a48-4ea3-8645-2960cea6b94f',
             'name' => 'Savings Account',
@@ -32,7 +32,7 @@ class CreateAccountCest
      */
     public function requestShouldReturn400ResponseCode(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendPOST($this->url, [
             'id' => '',
             'name' => '',
@@ -57,7 +57,7 @@ class CreateAccountCest
      */
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendPOST($this->url, [
             'id' => '4b7946ca-2a48-4ea3-8645-2960cea6b94f',
             'name' => 'Savings Account',
