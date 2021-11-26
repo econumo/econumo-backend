@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Application\Account\Dto;
 
+use App\Application\Currency\Dto\CurrencyResultDto;
 use Swagger\Annotations as SWG;
 
 /**
@@ -41,25 +42,10 @@ class AccountResultDto
     public int $position;
 
     /**
-     * Currency Id
-     * @var string
-     * @SWG\Property(example="77adad8a-9982-4e08-8fd7-5ef336c7a5c9")
+     * Currency
+     * @SWG\Property()
      */
-    public string $currencyId;
-
-    /**
-     * Currency alias
-     * @var string
-     * @SWG\Property(example="USD")
-     */
-    public string $currencyAlias;
-
-    /**
-     * Currency signature
-     * @var string
-     * @SWG\Property(example="$")
-     */
-    public string $currencySign;
+    public CurrencyResultDto $currency;
 
     /**
      * Current balance

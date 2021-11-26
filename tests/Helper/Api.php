@@ -103,9 +103,7 @@ class Api extends \Codeception\Module
             'ownerUserId' => 'string',
             'name' => 'string',
             'position' => 'integer',
-            'currencyId' => 'string',
-            'currencyAlias' => 'string',
-            'currencySign' => 'string',
+            'currency' => $this->getCurrencyDtoJsonType(),
             'balance' => 'float|integer',
             'type' => 'integer',
             'icon' => 'string',
@@ -127,6 +125,15 @@ class Api extends \Codeception\Module
             'id' => 'string',
             'name' => 'string',
             'position' => 'integer',
+        ];
+    }
+
+    public function getCurrencyDtoJsonType(): array
+    {
+        return [
+            'id' => 'string',
+            'alias' => 'string',
+            'sign' => 'string',
         ];
     }
 }
