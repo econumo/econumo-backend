@@ -8,7 +8,7 @@ use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Definition(
- *     required={"id", "ownerUserId", "name", "position", "currencyId", "balance", "type", "icon", "sharedAccess"}
+ *     required={"id", "ownerUserId", "name", "position", "currency", "balance", "type", "icon", "sharedAccess"}
  * )
  */
 class AccountResultDto
