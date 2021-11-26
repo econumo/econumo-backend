@@ -10,10 +10,10 @@ use App\Domain\Entity\Transaction;
 
 class GetTransactionListV1ResultAssembler
 {
-    private TransactionToDtoV1ResultAssembler $transactionToDtoV1ResultAssembler;
+    private TransactionToDtoResultAssembler $transactionToDtoV1ResultAssembler;
 
     public function __construct(
-        TransactionToDtoV1ResultAssembler $transactionToDtoV1ResultAssembler
+        TransactionToDtoResultAssembler $transactionToDtoV1ResultAssembler
     ) {
         $this->transactionToDtoV1ResultAssembler = $transactionToDtoV1ResultAssembler;
     }

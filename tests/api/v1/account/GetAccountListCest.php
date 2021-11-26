@@ -25,7 +25,7 @@ class GetAccountListCest
      */
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendGET($this->url);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
@@ -35,7 +35,7 @@ class GetAccountListCest
      */
     public function requestShouldReturn400ResponseCode(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendGET($this->url, ['unexpected_param' => 'test']);
         $I->seeResponseCodeIs(HttpCode::BAD_REQUEST);
     }
@@ -45,30 +45,10 @@ class GetAccountListCest
      */
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendGET($this->url);
-        $I->seeResponseMatchesJsonType([
-            'data' => [
-                'items' => 'array',
-            ],
-        ]);
-        $I->seeResponseMatchesJsonType([
-            'id' => 'string',
-            'ownerId' => 'string',
-            'name' => 'string',
-            'position' => 'integer',
-            'currencyId' => 'string',
-            'currencyAlias' => 'string',
-            'currencySign' => 'string',
-            'balance' => 'float',
-            'type' => 'integer',
-            'icon' => 'string',
-            'sharedAccess' => 'array',
-        ], '$.data.items[3]');
-        $I->seeResponseMatchesJsonType([
-            'userId' => 'string',
-            'userAvatar' => 'string',
-            'role' => 'string',
-        ], '$.data.items[3].sharedAccess[0]');
+        $I->seeResponseMatchesJsonType($I->getRootResponseWithItemsJsonType());
+        $I->seeResponseMatchesJsonType($I->getAccountDtoJsonType(), '$.data.items[3]');
+        $I->seeResponseMatchesJsonType($I->getSharedAccessDtoJsonType(), '$.data.items[3].sharedAccess[0]');
     }
 }

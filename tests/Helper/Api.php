@@ -13,6 +13,7 @@ use Ramsey\Uuid\Uuid;
 
 class Api extends \Codeception\Module
 {
+    use AuthenticationTrait;
     use ContainerTrait;
 
     /**
@@ -26,14 +27,113 @@ class Api extends \Codeception\Module
         return new Id($uuid->toString());
     }
 
-    public function amAuthenticatedAsJohn(ApiTester $I): void
+    public function getRootResponseWithItemsJsonType(): array
     {
-        /** @var UserRepositoryInterface $userRepository */
-        $userRepository = $this->getContainerService(UserRepositoryInterface::class);
-        $user = $userRepository->getByEmail(new Email('john@snow.test'));
-        /** @var JWTTokenManagerInterface $tokenManager */
-        $tokenManager = $this->getContainerService(JWTTokenManagerInterface::class);
-        $token = $tokenManager->create($user);
-        $I->amBearerAuthenticated($token);
+        return [
+            'data' => [
+                'items' => 'array',
+            ],
+        ];
+    }
+
+    public function getTransactionDtoJsonType(): array
+    {
+        return [
+            'id' => 'string',
+            'author' => $this->getUserDtoJsonType(),
+            'type' => 'string',
+            'accountId' => 'string',
+            'accountRecipientId' => 'string|null',
+            'amount' => 'float|integer',
+            'amountRecipient' => 'float|integer|null',
+            'category' => 'array|null',
+            'description' => 'string',
+            'payee' => 'array|null',
+            'tag' => 'array|null',
+            'date' => 'string',
+        ];
+    }
+
+    public function getUserDtoJsonType(): array
+    {
+        return [
+            'id' => 'string',
+            'name' => 'string',
+            'avatar' => 'string',
+            'email' => 'string',
+        ];
+    }
+
+    public function getCategoryDtoJsonType(): array
+    {
+        return [
+            'id' => 'string',
+            'ownerUserId' => 'string',
+            'name' => 'string',
+            'position' => 'integer',
+            'type' => 'string',
+        ];
+    }
+
+    public function getPayeeDtoJsonType(): array
+    {
+        return [
+            'id' => 'string',
+            'ownerUserId' => 'string',
+            'name' => 'string',
+            'position' => 'integer|null',
+        ];
+    }
+
+    public function getTagDtoJsonType(): array
+    {
+        return [
+            'id' => 'string',
+            'ownerUserId' => 'string',
+            'name' => 'string',
+            'position' => 'integer|null',
+            'isArchived' => 'integer',
+        ];
+    }
+
+    public function getAccountDtoJsonType(): array
+    {
+        return [
+            'id' => 'string',
+            'ownerUserId' => 'string',
+            'name' => 'string',
+            'position' => 'integer',
+            'currency' => $this->getCurrencyDtoJsonType(),
+            'balance' => 'float|integer',
+            'type' => 'integer',
+            'icon' => 'string',
+            'sharedAccess' => 'array',
+        ];
+    }
+
+    public function getSharedAccessDtoJsonType(): array
+    {
+        return [
+            'user' => $this->getUserDtoJsonType(),
+            'role' => 'string',
+        ];
+    }
+
+    public function getAccountFolderDtoJsonType(): array
+    {
+        return [
+            'id' => 'string',
+            'name' => 'string',
+            'position' => 'integer',
+        ];
+    }
+
+    public function getCurrencyDtoJsonType(): array
+    {
+        return [
+            'id' => 'string',
+            'alias' => 'string',
+            'sign' => 'string',
+        ];
     }
 }

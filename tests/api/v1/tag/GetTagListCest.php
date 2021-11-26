@@ -16,7 +16,7 @@ class GetTagListCest
      */
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendGET($this->url);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
@@ -26,7 +26,7 @@ class GetTagListCest
      */
     public function requestShouldReturn400ResponseCode(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendGET($this->url, ['unexpected_param' => 'test']);
         $I->seeResponseCodeIs(HttpCode::BAD_REQUEST);
     }
@@ -45,19 +45,9 @@ class GetTagListCest
      */
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendGET($this->url);
-        $I->seeResponseMatchesJsonType([
-            'data' => [
-                'items' => 'array',
-            ],
-        ]);
-        $I->seeResponseMatchesJsonType([
-            'id' => 'string',
-            'ownerId' => 'string',
-            'name' => 'string',
-            'position' => 'integer',
-            'isArchived' => 'integer',
-        ], '$.data.items[0]');
+        $I->seeResponseMatchesJsonType($I->getRootResponseWithItemsJsonType());
+        $I->seeResponseMatchesJsonType($I->getTagDtoJsonType(), '$.data.items[0]');
     }
 }

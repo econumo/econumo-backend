@@ -6,7 +6,7 @@ namespace App\Application\Account\Assembler;
 
 use App\Application\Account\Dto\UpdateAccountV1RequestDto;
 use App\Application\Account\Dto\UpdateAccountV1ResultDto;
-use App\Application\Transaction\Assembler\TransactionToDtoV1ResultAssembler;
+use App\Application\Transaction\Assembler\TransactionToDtoResultAssembler;
 use App\Domain\Entity\Account;
 use App\Domain\Entity\Transaction;
 use App\Domain\Entity\ValueObject\Id;
@@ -14,11 +14,11 @@ use App\Domain\Entity\ValueObject\Id;
 class UpdateAccountV1ResultAssembler
 {
     private AccountToDtoV1ResultAssembler $accountToDtoV1ResultAssembler;
-    private TransactionToDtoV1ResultAssembler $transactionToDtoV1ResultAssembler;
+    private TransactionToDtoResultAssembler $transactionToDtoV1ResultAssembler;
 
     public function __construct(
         AccountToDtoV1ResultAssembler $accountToDtoV1ResultAssembler,
-        TransactionToDtoV1ResultAssembler $transactionToDtoV1ResultAssembler
+        TransactionToDtoResultAssembler $transactionToDtoV1ResultAssembler
     ) {
         $this->accountToDtoV1ResultAssembler = $accountToDtoV1ResultAssembler;
         $this->transactionToDtoV1ResultAssembler = $transactionToDtoV1ResultAssembler;

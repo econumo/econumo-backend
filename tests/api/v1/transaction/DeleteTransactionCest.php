@@ -25,7 +25,7 @@ class DeleteTransactionCest
      */
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendPOST($this->url, ['id' => '7cb3227d-22dc-4178-aeb4-02a8f815bdbd']);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
@@ -35,7 +35,7 @@ class DeleteTransactionCest
      */
     public function requestShouldReturn400ResponseCode(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendPOST($this->url, ['unexpected_param' => 'test']);
         $I->seeResponseCodeIs(HttpCode::BAD_REQUEST);
     }
@@ -45,33 +45,15 @@ class DeleteTransactionCest
      */
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendPOST($this->url, ['id' => '7cb3227d-22dc-4178-aeb4-02a8f815bdbd']);
         $I->seeResponseMatchesJsonType([
             'data' => [
                 'accountBalance' => 'float',
                 'accountRecipientBalance' => 'float|null',
-                'transaction' => [
-                    'id' => 'string',
-                    'authorId' => 'string',
-                    'authorName' => 'string',
-                    'type' => 'string',
-                    'accountId' => 'string',
-                    'accountRecipientId' => 'string|null',
-                    'amount' => 'float',
-                    'amountRecipient' => 'float|null',
-                    'categoryId' => 'string|null',
-                    'categoryName' => 'string',
-                    'description' => 'string',
-                    'payeeId' => 'string|null',
-                    'payeeName' => 'string',
-                    'tagId' => 'string|null',
-                    'tagName' => 'string',
-                    'date' => 'string',
-                    'day' => 'string',
-                    'time' => 'string',
-                ],
+                'transaction' => $I->getTransactionDtoJsonType()
             ],
         ]);
+        $I->seeResponseMatchesJsonType($I->getCategoryDtoJsonType(), '$.data.transaction.category');
     }
 }

@@ -16,7 +16,7 @@ class CreateCategoryCest
      */
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendPOST($this->url, [
             'id' => '3a2c32a4-45ec-4cb0-9794-a6bef87ba9a4',
             'name' => 'Food',
@@ -40,7 +40,7 @@ class CreateCategoryCest
      */
     public function requestShouldReturn400ResponseCode(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendPOST($this->url, ['unexpected_param' => 'test']);
         $I->seeResponseCodeIs(HttpCode::BAD_REQUEST);
     }
@@ -50,7 +50,7 @@ class CreateCategoryCest
      */
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendPOST($this->url, [
             'id' => '3a2c32a4-45ec-4cb0-9794-a6bef87ba9a4',
             'name' => 'Food',
@@ -59,13 +59,7 @@ class CreateCategoryCest
         ]);
         $I->seeResponseMatchesJsonType([
             'data' => [
-                'item' => [
-                    'id' => 'string',
-                    'ownerId' => 'string',
-                    'name' => 'string',
-                    'position' => 'integer',
-                    'type' => 'string',
-                ],
+                'item' => $I->getCategoryDtoJsonType(),
             ]
         ]);
     }

@@ -16,7 +16,7 @@ class GetTransactionListCest
      */
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendGET($this->url);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
@@ -26,7 +26,7 @@ class GetTransactionListCest
      */
     public function requestWithAccountIdShouldReturn200ResponseCode(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendGET($this->url, ['accountId' => '0aaa0450-564e-411e-8018-7003f6dbeb92']);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
@@ -36,7 +36,7 @@ class GetTransactionListCest
      */
     public function requestShouldReturn400ResponseCode(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendGET($this->url, ['unexpected_param' => 'test']);
         $I->seeResponseCodeIs(HttpCode::BAD_REQUEST);
     }
@@ -55,34 +55,13 @@ class GetTransactionListCest
      */
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendGET($this->url);
-        $I->seeResponseMatchesJsonType([
-            'data' => [
-                'items' => 'array',
-            ],
-        ]);
-        $I->seeResponseMatchesJsonType([
-            'id' => 'string',
-            'authorId' => 'string',
-            'authorAvatar' => 'string',
-            'authorName' => 'string',
-            'type' => 'string',
-            'accountId' => 'string',
-            'accountRecipientId' => 'string|null',
-            'amount' => 'float',
-            'amountRecipient' => 'float|null',
-            'categoryId' => 'string|null',
-            'categoryName' => 'string',
-            'description' => 'string',
-            'payeeId' => 'string|null',
-            'payeeName' => 'string',
-            'tagId' => 'string|null',
-            'tagName' => 'string',
-            'date' => 'string',
-            'day' => 'string',
-            'time' => 'string',
-        ], '$.data.items[0]');
+        $I->seeResponseMatchesJsonType($I->getRootResponseWithItemsJsonType());
+        $I->seeResponseMatchesJsonType($I->getTransactionDtoJsonType(), '$.data.items[0]');
+        $I->seeResponseMatchesJsonType($I->getCategoryDtoJsonType(), '$.data.items[0].category');
+        $I->seeResponseMatchesJsonType($I->getPayeeDtoJsonType(), '$.data.items[0].payee');
+        $I->seeResponseMatchesJsonType($I->getTagDtoJsonType(), '$.data.items[0].tag');
     }
 
     /**
@@ -90,34 +69,13 @@ class GetTransactionListCest
      */
     public function requestWithAccountIdShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendGET($this->url, ['accountId' => '0aaa0450-564e-411e-8018-7003f6dbeb92']);
-        $I->seeResponseMatchesJsonType([
-            'data' => [
-                'items' => 'array',
-            ],
-        ]);
-        $I->seeResponseMatchesJsonType([
-            'id' => 'string',
-            'authorId' => 'string',
-            'authorAvatar' => 'string',
-            'authorName' => 'string',
-            'type' => 'string',
-            'accountId' => 'string',
-            'accountRecipientId' => 'string|null',
-            'amount' => 'float',
-            'amountRecipient' => 'float|null',
-            'categoryId' => 'string|null',
-            'categoryName' => 'string',
-            'description' => 'string',
-            'payeeId' => 'string|null',
-            'payeeName' => 'string',
-            'tagId' => 'string|null',
-            'tagName' => 'string',
-            'date' => 'string',
-            'day' => 'string',
-            'time' => 'string',
-        ], '$.data.items[0]');
+        $I->seeResponseMatchesJsonType($I->getRootResponseWithItemsJsonType());
+        $I->seeResponseMatchesJsonType($I->getTransactionDtoJsonType(), '$.data.items[0]');
+        $I->seeResponseMatchesJsonType($I->getCategoryDtoJsonType(), '$.data.items[0].category');
+        $I->seeResponseMatchesJsonType($I->getPayeeDtoJsonType(), '$.data.items[0].payee');
+        $I->seeResponseMatchesJsonType($I->getTagDtoJsonType(), '$.data.items[0].tag');
     }
 
     /**
@@ -125,13 +83,9 @@ class GetTransactionListCest
      */
     public function requestWithAccountIdShouldReturnResponseWithEmptyList(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendGET($this->url, ['accountId' => '4eec1ee6-1992-4222-b9ab-31ece5eaad5d']);
-        $I->seeResponseMatchesJsonType([
-            'data' => [
-                'items' => 'array',
-            ],
-        ]);
+        $I->seeResponseMatchesJsonType($I->getRootResponseWithItemsJsonType());
         $data = $I->grabDataFromResponseByJsonPath('$.data.items[0]');
         $I->assertEmpty($data);
     }

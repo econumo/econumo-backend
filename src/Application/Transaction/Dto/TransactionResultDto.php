@@ -3,11 +3,15 @@ declare(strict_types=1);
 
 namespace App\Application\Transaction\Dto;
 
+use App\Application\Category\Dto\CategoryResultDto;
+use App\Application\Payee\Dto\PayeeResultDto;
+use App\Application\Tag\Dto\TagResultDto;
+use App\Application\User\Dto\UserResultDto;
 use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Definition(
- *     required={"id", "authorId", "authorAvatar", "type", "accountId", "amount", "categoryId", "description", "date"}
+ *     required={"id", "author", "type", "accountId", "amount", "description", "date"}
  * )
  */
 class TransactionResultDto
@@ -20,23 +24,11 @@ class TransactionResultDto
     public string $id;
 
     /**
-     * User author id
-     * @SWG\Property(example="f680553f-6b40-407d-a528-5123913be0aa")
+     * Author of transaction
+     * @var UserResultDto
+     * @SWG\Property()
      */
-    public string $authorId;
-
-    /**
-     * Author avatar
-     * @var string
-     * @SWG\Property(example="https://example.com/avatar.jpg")
-     */
-    public string $authorAvatar;
-
-    /**
-     * User author name
-     * @SWG\Property(example="John")
-     */
-    public string $authorName;
+    public UserResultDto $author;
 
     /**
      * Transaction type
@@ -69,16 +61,10 @@ class TransactionResultDto
     public ?float $amountRecipient;
 
     /**
-     * Category id
-     * @SWG\Property(example="f680553f-6b40-407d-a528-5123913be0aa")
+     * Category
+     * @SWG\Property()
      */
-    public ?string $categoryId;
-
-    /**
-     * Category name
-     * @SWG\Property(example="Food")
-     */
-    public string $categoryName;
+    public ?CategoryResultDto $category = null;
 
     /**
      * Description
@@ -87,44 +73,20 @@ class TransactionResultDto
     public string $description;
 
     /**
-     * Payee id
-     * @SWG\Property(example="f680553f-6b40-407d-a528-5123913be0aa")
+     * Payee
+     * @SWG\Property()
      */
-    public ?string $payeeId;
+    public ?PayeeResultDto $payee = null;
 
     /**
-     * Payee name
-     * @SWG\Property(example="Amazon")
+     * Tag
+     * @SWG\Property()
      */
-    public string $payeeName = '';
-
-    /**
-     * Tag id
-     * @SWG\Property(example="f680553f-6b40-407d-a528-5123913be0aa")
-     */
-    public ?string $tagId;
-
-    /**
-     * Tag name
-     * @SWG\Property(example="#travel")
-     */
-    public string $tagName = '';
+    public ?TagResultDto $tag = null;
 
     /**
      * Transaction date
      * @SWG\Property(example="2021-08-01 10:00:00")
      */
     public string $date;
-
-    /**
-     * Transaction day
-     * @SWG\Property(example="2021-08-01")
-     */
-    public string $day;
-
-    /**
-     * Transaction time
-     * @SWG\Property(example="10:00")
-     */
-    public string $time;
 }

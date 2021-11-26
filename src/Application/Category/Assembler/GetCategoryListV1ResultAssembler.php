@@ -10,9 +10,9 @@ use App\Domain\Entity\Category;
 
 class GetCategoryListV1ResultAssembler
 {
-    private CategoryToDtoV1ResultAssembler $categoryToDtoV1ResultAssembler;
+    private CategoryToDtoResultAssembler $categoryToDtoV1ResultAssembler;
 
-    public function __construct(CategoryToDtoV1ResultAssembler $categoryToDtoV1ResultAssembler)
+    public function __construct(CategoryToDtoResultAssembler $categoryToDtoV1ResultAssembler)
     {
         $this->categoryToDtoV1ResultAssembler = $categoryToDtoV1ResultAssembler;
     }
