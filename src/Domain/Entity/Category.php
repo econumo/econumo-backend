@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Domain\Entity;
@@ -8,55 +9,15 @@ use App\Domain\Entity\ValueObject\Id;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
-use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="App\Infrastructure\Doctrine\Repository\CategoryRepository")
- * @ORM\Table(name="`categories`")
- */
 class Category
 {
-    /**
-     * @ORM\Id()
-     * @ORM\CustomIdGenerator("NONE")
-     * @ORM\Column(type="uuid")
-     * @var Id
-     */
     private Id $id;
-
-    /**
-     * @ORM\Column(type="string", length=64)
-     * @var string
-     */
     private string $name;
-
-    /**
-     * @ORM\Column(type="smallint", options={"unsigned"=true, "default"=0})
-     * @var int
-     */
     private int $position;
-
-    /**
-     * @ORM\Column(type="category_type")
-     */
     private CategoryType $type;
-
-    /**
-     * @var Id
-     * @ORM\Column(type="uuid")
-     */
     private Id $userId;
-
-    /**
-     * @var DateTimeInterface
-     * @ORM\Column(type="datetime_immutable")
-     */
     private DateTimeImmutable $createdAt;
-
-    /**
-     * @var DateTimeInterface
-     * @ORM\Column(type="datetime")
-     */
     private DateTimeInterface $updatedAt;
 
     public function __construct(

@@ -55,15 +55,14 @@ class AccountService
     ): CreateAccountV1ResultDto {
         $accountDto = new AccountDto();
         $accountDto->userId = $userId;
-        $accountDto->id = new Id($dto->id);
         $accountDto->name = $dto->name;
         $accountDto->currencyId = new Id($dto->currencyId);
         $accountDto->balance = $dto->balance;
         $accountDto->icon = $dto->icon;
 
-        $requestId = $this->requestIdLockService->register($accountDto->id);
+        $requestId = $this->requestIdLockService->register(new Id($dto->id));
         try {
-            $account = $this->accountService->add($accountDto);
+            $account = $this->accountService->create($accountDto);
             $this->requestIdLockService->update($requestId, $account->getId());
         } catch (\Throwable $exception) {
             $this->requestIdLockService->remove($requestId);

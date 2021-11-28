@@ -9,84 +9,22 @@ use App\Domain\Entity\ValueObject\TransactionType;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
-use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="App\Infrastructure\Doctrine\Repository\TransactionRepository")
- * @ORM\Table(name="`transactions`")
- */
 class Transaction
 {
-    /**
-     * @ORM\Id()
-     * @ORM\CustomIdGenerator("NONE")
-     * @ORM\Column(type="uuid")
-     */
     private Id $id;
-
-    /**
-     * @ORM\Column(type="uuid")
-     */
     private Id $userId;
-
-    /**
-     * @ORM\Column(type="transaction_type")
-     */
     private TransactionType $type;
-
-    /**
-     * @ORM\Column(type="uuid")
-     */
     private Id $accountId;
-
-    /**
-     * @ORM\Column(type="uuid", nullable=true)
-     */
     private ?Id $accountRecipientId;
-
-    /**
-     * @ORM\Column(type="decimal", precision=19, scale=2)
-     */
     private string $amount;
-
-    /**
-     * @ORM\Column(type="decimal", precision=19, scale=2, nullable=true)
-     */
     private ?string $amountRecipient;
-
-    /**
-     * @ORM\Column(type="uuid", nullable=true)
-     */
     private ?Id $categoryId;
-
-    /**
-     * @ORM\Column(type="string")
-     */
     private string $description;
-
-    /**
-     * @ORM\Column(type="uuid", nullable=true)
-     */
     private ?Id $payeeId;
-
-    /**
-     * @ORM\Column(type="uuid", nullable=true)
-     */
     private ?Id $tagId;
-
-    /**
-     * @ORM\Column(type="datetime_immutable")
-     */
     private DateTimeImmutable $createdAt;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
     private DateTimeInterface $updatedAt;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
     private DateTimeInterface $spentAt;
 
     public function __construct(

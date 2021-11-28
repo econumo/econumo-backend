@@ -30,6 +30,6 @@ doctrine:
         auto_mapping: true
         mappings:
             App:
-                type: annotation
-                dir: '%kernel.project_dir%/src/Domain/Entity'
+                type: xml
+                dir: '%kernel.project_dir%/src/Infrastructure/Doctrine/Entity/mapping'
                 prefix: 'App\Domain\Entity'

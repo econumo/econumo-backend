@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Doctrine\Repository;
 
 use App\Domain\Entity\Transaction;
+use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\TransactionRepositoryInterface;
@@ -84,8 +85,8 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
         $sharedIds = array_column($sharedAccountsQuery->getScalarResult(), 'accountId');
 
         $accountsQuery = $this->getEntityManager()
-            ->createQuery('SELECT a.id FROM App\Domain\Entity\Account a WHERE a.userId = :id')
-            ->setParameter('id', $userId->getValue());
+            ->createQuery('SELECT a.id FROM App\Domain\Entity\Account a WHERE a.user = :user')
+            ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId));
         $userAccountIds = array_column($accountsQuery->getScalarResult(), 'id');
         $ids = array_unique(array_merge($sharedIds, $userAccountIds));
 

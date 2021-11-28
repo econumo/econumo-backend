@@ -41,4 +41,9 @@ class CurrencyRepository extends ServiceEntityRepository implements CurrencyRepo
     {
         return $this->findAll();
     }
+
+    public function getReference(Id $id): Currency
+    {
+        return $this->getEntityManager()->getReference(Currency::class, $id);
+    }
 }

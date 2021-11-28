@@ -10,7 +10,7 @@ use App\Domain\Service\Dto\AccountDto;
 
 interface AccountServiceInterface
 {
-    public function add(AccountDto $dto): Account;
+    public function create(AccountDto $dto): Account;
 
     public function delete(Id $id): void;
 

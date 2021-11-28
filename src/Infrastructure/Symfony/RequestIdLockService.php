@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Service;
+namespace App\Infrastructure\Symfony;
 
 use App\Application\Exception\ValidationException;
 use App\Application\RequestIdLockServiceInterface;

@@ -6,6 +6,7 @@ namespace App\Infrastructure\Doctrine\Repository;
 
 use App\Domain\Entity\Account;
 use App\Domain\Entity\AccountAccess;
+use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\AccountRepositoryInterface;
@@ -58,8 +59,9 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
         return $this->createQueryBuilder('a')
             ->select('a')
             ->leftJoin(AccountAccess::class, 'aa', Join::WITH, 'aa.accountId = a.id')
-            ->where('a.userId = :id')
+            ->where('a.user = :user')
             ->orWhere('aa.userId = :id')
+            ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId))
             ->setParameter('id', $userId->getValue())
             ->orderBy('a.position', 'ASC')
             ->getQuery()
@@ -82,5 +84,10 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
         $account = $this->get($id);
         $this->getEntityManager()->remove($account);
         $this->getEntityManager()->flush();
+    }
+
+    public function getReference(Id $id): Account
+    {
+        return $this->getEntityManager()->getReference(Account::class, $id);
     }
 }

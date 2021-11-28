@@ -28,10 +28,9 @@ class AccountService implements AccountServiceInterface
         $this->transactionService = $transactionService;
     }
 
-    public function add(AccountDto $dto): Account
+    public function create(AccountDto $dto): Account
     {
         $account = $this->accountFactory->create(
-            $dto->id,
             $dto->userId,
             $dto->name,
             new AccountType(AccountType::CREDIT_CARD),

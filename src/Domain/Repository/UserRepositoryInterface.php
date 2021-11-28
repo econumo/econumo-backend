@@ -19,4 +19,6 @@ interface UserRepositoryInterface
     public function save(User ...$users): void;
 
     public function get(Id $id): User;
+
+    public function getReference(Id $id): User;
 }

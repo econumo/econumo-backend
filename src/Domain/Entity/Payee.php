@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Domain\Entity;
@@ -7,45 +8,15 @@ use App\Domain\Entity\ValueObject\Id;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
-use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="App\Infrastructure\Doctrine\Repository\PayeeRepository")
- * @ORM\Table(name="`payees`")
- */
+
 class Payee
 {
-    /**
-     * @ORM\Id()
-     * @ORM\CustomIdGenerator("NONE")
-     * @ORM\Column(type="uuid")
-     */
     private Id $id;
-
-    /**
-     * @ORM\Column(type="string", length=64)
-     */
     private string $name;
-
-    /**
-     * @ORM\Column(type="smallint", options={"unsigned"=true, "default"=0})
-     */
     private int $position;
-
-    /**
-     * @ORM\Column(type="uuid")
-     */
     private Id $userId;
-
-    /**
-     * @ORM\Column(type="datetime_immutable")
-     */
     private DateTimeImmutable $createdAt;
-
-    /**
-     * @var DateTimeInterface
-     * @ORM\Column(type="datetime")
-     */
     private DateTimeInterface $updatedAt;
 
     public function __construct(
