@@ -9,6 +9,8 @@ use App\Domain\Entity\ValueObject\Id;
 
 interface TagRepositoryInterface
 {
+    public function getNextIdentity(): Id;
+
     /**
      * @param Id $userId
      * @return Tag[]

@@ -13,6 +13,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\ORMInvalidArgumentException;
 use Doctrine\Persistence\ManagerRegistry;
+use Ramsey\Uuid\Uuid;
 use RuntimeException;
 
 /**
@@ -26,6 +27,14 @@ class TagRepository extends ServiceEntityRepository implements TagRepositoryInte
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Tag::class);
+    }
+
+    public function getNextIdentity(): Id
+    {
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $uuid = Uuid::uuid4();
+
+        return new Id($uuid->toString());
     }
 
     /**
@@ -43,11 +52,13 @@ DQL;
             ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId));
         $ids = array_column($query->getScalarResult(), 'id');
         $ids[] = $userId->getValue();
-        $ids = array_unique($ids);
+        $users = array_map(function ($id) {
+            return $this->getEntityManager()->getReference(User::class, new Id($id));
+        }, array_unique($ids));
 
         return $this->createQueryBuilder('c')
-            ->andWhere('c.userId IN(:ids)')
-            ->setParameter('ids', $ids)
+            ->andWhere('c.user IN(:users)')
+            ->setParameter('users', $users)
             ->orderBy('c.position', 'ASC')
             ->getQuery()
             ->getResult();

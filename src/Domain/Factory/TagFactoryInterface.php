@@ -11,5 +11,5 @@ use App\Domain\Entity\ValueObject\Id;
 
 interface TagFactoryInterface
 {
-    public function create(Id $userId, Id $tagId, string $name): Tag;
+    public function create(Id $userId, string $name): Tag;
 }

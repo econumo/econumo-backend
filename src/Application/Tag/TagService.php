@@ -40,9 +40,9 @@ class TagService
             if ($dto->accountId !== null) {
                 $accountId = new Id($dto->accountId);
                 $this->accountAccessService->checkAddTag($userId, $accountId);
-                $tag = $this->tagService->createTagForAccount($userId, $accountId, new Id($dto->id), $dto->name);
+                $tag = $this->tagService->createTagForAccount($userId, $accountId, $dto->name);
             } else {
-                $tag = $this->tagService->createTag($userId, new Id($dto->id), $dto->name);
+                $tag = $this->tagService->createTag($userId, $dto->name);
             }
             $this->requestIdLockService->update($requestId, $tag->getId());
         } catch (\Throwable $exception) {
