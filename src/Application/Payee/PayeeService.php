@@ -40,9 +40,9 @@ class PayeeService
             if ($dto->accountId !== null) {
                 $accountId = new Id($dto->accountId);
                 $this->accountAccessService->checkAddPayee($userId, $accountId);
-                $payee = $this->payeeService->createPayeeForAccount($userId, $accountId, new Id($dto->id), $dto->name);
+                $payee = $this->payeeService->createPayeeForAccount($userId, $accountId, $dto->name);
             } else {
-                $payee = $this->payeeService->createPayee($userId, new Id($dto->id), $dto->name);
+                $payee = $this->payeeService->createPayee($userId, $dto->name);
             }
             $this->requestIdLockService->update($requestId, $payee->getId());
         } catch (\Throwable $exception) {

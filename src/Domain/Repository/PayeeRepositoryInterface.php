@@ -8,6 +8,8 @@ use App\Domain\Entity\ValueObject\Id;
 
 interface PayeeRepositoryInterface
 {
+    public function getNextIdentity(): Id;
+
     /**
      * @param Id $userId
      * @return Payee[]

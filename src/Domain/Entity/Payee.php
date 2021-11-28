@@ -9,24 +9,23 @@ use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 
-
 class Payee
 {
     private Id $id;
     private string $name;
     private int $position;
-    private Id $userId;
+    private User $user;
     private DateTimeImmutable $createdAt;
     private DateTimeInterface $updatedAt;
 
     public function __construct(
         Id $id,
-        Id $userId,
+        User $user,
         string $name,
         DateTimeInterface $createdAt
     ) {
         $this->id = $id;
-        $this->userId = $userId;
+        $this->user = $user;
         $this->name = $name;
         $this->position = 0;
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
@@ -50,6 +49,6 @@ class Payee
 
     public function getUserId(): Id
     {
-        return $this->userId;
+        return $this->user->getId();
     }
 }
