@@ -90,13 +90,13 @@ class AccountAccessRepository extends ServiceEntityRepository implements Account
     {
         $dql = <<<'DQL'
 SELECT a.id FROM App\Domain\Entity\AccountAccess aa
-JOIN App\Domain\Entity\Account a WITH a.id = aa.account AND aa.user = :user
+JOIN App\Domain\Entity\Account a WITH a = aa.account AND aa.user = :user
 GROUP BY a.id
 DQL;
         $query = $this->getEntityManager()->createQuery($dql)
             ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId));
         $accounts = array_map(function ($id) {
-            return $this->getEntityManager()->getReference(Account::class, $id);
+            return $this->getEntityManager()->getReference(Account::class, new Id($id));
         }, array_column($query->getScalarResult(), 'id'));
 
         return $this->findBy(['account' => $accounts]);
