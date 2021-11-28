@@ -10,6 +10,12 @@
 
 Run `task test` for all tests. Or you could use arguments for Codeception: `task test -- unit`
 
+## Api documentation: Swagger
+
+To access Swagger doc - follow the url `/api/doc`. For generating token use
+console command: `bin/console lexik:jwt:generate-token john@snow.test`
+
+
 ## Create new API-method
 
 For now only `GET-` and `POST-` methods are allowed. `GET` is used for reading, `POST` for writing.

@@ -136,4 +136,15 @@ class Api extends \Codeception\Module
             'sign' => 'string',
         ];
     }
+
+    public function getInviteDtoJsonType(): array
+    {
+        return [
+            'accountId' => 'string',
+            'code' => 'string|null',
+            'role' => 'string',
+            'recipientUsername' => 'string',
+            'recipientName' => 'string'
+        ];
+    }
 }
