@@ -20,4 +20,6 @@ interface CategoryRepositoryInterface
     public function get(Id $id): Category;
 
     public function save(Category ...$categories): void;
+
+    public function getReference(Id $id): Category;
 }

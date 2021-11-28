@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Doctrine\Factory;
+namespace App\Domain\Factory;
 
 use App\Domain\Entity\Account;
 use App\Domain\Entity\ValueObject\AccountType;
 use App\Domain\Entity\ValueObject\Id;
-use App\Domain\Factory\AccountFactoryInterface;
 use App\Domain\Repository\AccountRepositoryInterface;
 use App\Domain\Repository\CurrencyRepositoryInterface;
 use App\Domain\Repository\UserRepositoryInterface;

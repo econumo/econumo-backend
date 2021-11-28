@@ -89,4 +89,9 @@ DQL;
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
     }
+
+    public function getReference(Id $id): Category
+    {
+        return $this->getEntityManager()->getReference(Category::class, $id);
+    }
 }

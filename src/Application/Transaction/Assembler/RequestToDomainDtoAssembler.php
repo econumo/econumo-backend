@@ -17,7 +17,6 @@ class RequestToDomainDtoAssembler
         Id $userId
     ): TransactionDto {
         $result = new TransactionDto();
-        $result->id = new Id($dto->id);
         $result->type = TransactionType::createFromAlias($dto->type);
         $result->userId = $userId;
         $result->amount = $dto->amount;

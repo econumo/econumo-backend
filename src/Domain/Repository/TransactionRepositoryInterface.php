@@ -12,10 +12,10 @@ interface TransactionRepositoryInterface
     public function getNextIdentity(): Id;
 
     /**
-     * @param Id $id
+     * @param Id $accountId
      * @return Transaction[]
      */
-    public function findByAccountId(Id $id): array;
+    public function findByAccountId(Id $accountId): array;
 
     public function save(Transaction ...$transactions): void;
 

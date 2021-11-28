@@ -19,4 +19,6 @@ interface PayeeRepositoryInterface
     public function get(Id $id): Payee;
 
     public function save(Payee ...$payees): void;
+
+    public function getReference(Id $id): Payee;
 }

@@ -5,7 +5,7 @@
 
     <entity repository-class="App\Infrastructure\Doctrine\Repository\AccountAccessRepository"
             name="App\Domain\Entity\AccountAccess" table="account_access">
-        <id name="account" association-key="true" />
+        <id name="account" association-key="true"/>
         <id name="user" association-key="true"/>
 
         <field name="role" type="account_role" column="role" nullable="false"/>
@@ -13,10 +13,10 @@
         <field name="updatedAt" type="datetime" column="updated_at" nullable="false"/>
 
         <many-to-one field="account" target-entity="App\Domain\Entity\Account">
-            <join-column name="account_id" referenced-column-name="id"/>
+            <join-column name="account_id" referenced-column-name="id" nullable="false"/>
         </many-to-one>
         <many-to-one field="user" target-entity="App\Domain\Entity\User">
-            <join-column name="user_id" referenced-column-name="id"/>
+            <join-column name="user_id" referenced-column-name="id" nullable="false"/>
         </many-to-one>
     </entity>
 </doctrine-mapping>

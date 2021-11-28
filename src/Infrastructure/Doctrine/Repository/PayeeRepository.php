@@ -86,4 +86,9 @@ DQL;
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
     }
+
+    public function getReference(Id $id): Payee
+    {
+        return $this->getEntityManager()->getReference(Payee::class, $id);
+    }
 }
