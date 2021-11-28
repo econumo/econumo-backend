@@ -44,14 +44,12 @@ class CategoryService
                 $category = $this->categoryService->createCategoryForAccount(
                     $userId,
                     $accountId,
-                    new Id($dto->id),
                     $dto->name,
                     CategoryType::createFromAlias($dto->type)
                 );
             } else {
                 $category = $this->categoryService->createCategory(
                     $userId,
-                    new Id($dto->id),
                     $dto->name,
                     CategoryType::createFromAlias($dto->type)
                 );

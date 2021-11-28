@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Doctrine\Repository;
 
+use App\Domain\Entity\Account;
 use App\Domain\Entity\Transaction;
+use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\TransactionRepositoryInterface;
@@ -39,13 +41,13 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
     /**
      * @inheritDoc
      */
-    public function findByAccountId(Id $id): array
+    public function findByAccountId(Id $accountId): array
     {
-        return $this->createQueryBuilder('c')
-            ->where('c.accountId = :id')
-            ->orWhere('c.accountRecipientId = :id')
-            ->setParameter('id', $id->getValue())
-            ->orderBy('c.spentAt', 'DESC')
+        return $this->createQueryBuilder('t')
+            ->where('t.account = :account')
+            ->orWhere('t.accountRecipient = :account')
+            ->setParameter('account', $this->getEntityManager()->getReference(Account::class, $accountId))
+            ->orderBy('t.spentAt', 'DESC')
             ->getQuery()
             ->getResult();
     }
@@ -79,19 +81,21 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
     public function findByUserId(Id $userId): array
     {
         $sharedAccountsQuery = $this->getEntityManager()
-            ->createQuery('SELECT aa.accountId FROM App\Domain\Entity\AccountAccess aa WHERE aa.userId = :id')
-            ->setParameter('id', $userId->getValue());
+            ->createQuery('SELECT IDENTITY(aa.account) as accountId FROM App\Domain\Entity\AccountAccess aa WHERE aa.user = :user')
+            ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId));
         $sharedIds = array_column($sharedAccountsQuery->getScalarResult(), 'accountId');
 
         $accountsQuery = $this->getEntityManager()
-            ->createQuery('SELECT a.id FROM App\Domain\Entity\Account a WHERE a.userId = :id')
-            ->setParameter('id', $userId->getValue());
+            ->createQuery('SELECT a.id FROM App\Domain\Entity\Account a WHERE a.user = :user')
+            ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId));
         $userAccountIds = array_column($accountsQuery->getScalarResult(), 'id');
-        $ids = array_unique(array_merge($sharedIds, $userAccountIds));
+        $accounts = array_map(function ($id) {
+            return $this->getEntityManager()->getReference(Account::class, new Id($id));
+        }, array_unique(array_merge($sharedIds, $userAccountIds)));
 
         $query = $this->createQueryBuilder('t')
-            ->where('t.accountId IN(:ids) OR t.accountRecipientId IN(:ids)')
-            ->setParameter('ids', $ids);
+            ->where('t.account IN(:accounts) OR t.accountRecipient IN(:accounts)')
+            ->setParameter('accounts', $accounts);
 
         return $query->getQuery()->getResult();
     }

@@ -2,30 +2,36 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Doctrine\Factory;
+namespace App\Domain\Factory;
 
 use App\Domain\Entity\Account;
 use App\Domain\Entity\ValueObject\AccountType;
 use App\Domain\Entity\ValueObject\Id;
-use App\Domain\Factory\AccountFactoryInterface;
 use App\Domain\Repository\AccountRepositoryInterface;
+use App\Domain\Repository\CurrencyRepositoryInterface;
+use App\Domain\Repository\UserRepositoryInterface;
 use App\Domain\Service\DatetimeServiceInterface;
 
 class AccountFactory implements AccountFactoryInterface
 {
     private AccountRepositoryInterface $accountRepository;
     private DatetimeServiceInterface $datetimeService;
+    private CurrencyRepositoryInterface $currencyRepository;
+    private UserRepositoryInterface $userRepository;
 
     public function __construct(
         AccountRepositoryInterface $accountRepository,
-        DatetimeServiceInterface $datetimeService
+        DatetimeServiceInterface $datetimeService,
+        CurrencyRepositoryInterface $currencyRepository,
+        UserRepositoryInterface $userRepository
     ) {
         $this->accountRepository = $accountRepository;
         $this->datetimeService = $datetimeService;
+        $this->currencyRepository = $currencyRepository;
+        $this->userRepository = $userRepository;
     }
 
     public function create(
-        Id $id,
         Id $userId,
         string $name,
         AccountType $accountType,
@@ -34,10 +40,10 @@ class AccountFactory implements AccountFactoryInterface
         string $icon
     ): Account {
         return new Account(
-            $id,
-            $userId,
+            $this->accountRepository->getNextIdentity(),
+            $this->userRepository->getReference($userId),
             $name,
-            $currencyId,
+            $this->currencyRepository->getReference($currencyId),
             $balance,
             $accountType,
             $icon,

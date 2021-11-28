@@ -9,51 +9,24 @@ use App\Domain\Entity\ValueObject\Id;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
-use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="App\Infrastructure\Doctrine\Repository\AccountAccessRepository")
- * @ORM\Table(name="`account_access`")
- */
 class AccountAccess
 {
-    /**
-     * @ORM\Id()
-     * @ORM\CustomIdGenerator("NONE")
-     * @ORM\Column(type="uuid")
-     */
-    private Id $accountId;
-
-    /**
-     * @ORM\Id()
-     * @ORM\CustomIdGenerator("NONE")
-     * @ORM\Column(type="uuid")
-     */
-    private Id $userId;
-
-    /**
-     * @ORM\Column(type="account_role")
-     */
+    private Id $id;
+    private Account $account;
+    private User $user;
     private AccountRole $role;
-
-    /**
-     * @ORM\Column(type="datetime_immutable")
-     */
     private DateTimeImmutable $createdAt;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
     private DateTimeInterface $updatedAt;
 
     public function __construct(
-        Id $accountId,
-        Id $userId,
+        Account $account,
+        User $user,
         AccountRole $role,
         \DateTimeInterface $createdAt
     ) {
-        $this->accountId = $accountId;
-        $this->userId = $userId;
+        $this->account = $account;
+        $this->user = $user;
         $this->role = $role;
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
@@ -61,12 +34,12 @@ class AccountAccess
 
     public function getAccountId(): Id
     {
-        return $this->accountId;
+        return $this->account->getId();
     }
 
     public function getUserId(): Id
     {
-        return $this->userId;
+        return $this->user->getId();
     }
 
     public function getRole(): AccountRole

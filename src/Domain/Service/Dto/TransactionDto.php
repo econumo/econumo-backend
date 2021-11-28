@@ -10,8 +10,6 @@ use DateTimeInterface;
 
 class TransactionDto
 {
-    public Id $id;
-
     public TransactionType $type;
 
     public Id $userId;

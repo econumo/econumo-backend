@@ -8,19 +8,33 @@ namespace App\Domain\Factory;
 
 use App\Domain\Entity\Payee;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Repository\PayeeRepositoryInterface;
+use App\Domain\Repository\UserRepositoryInterface;
 use App\Domain\Service\DatetimeServiceInterface;
 
 class PayeeFactory implements PayeeFactoryInterface
 {
     private DatetimeServiceInterface $datetimeService;
+    private PayeeRepositoryInterface $payeeRepository;
+    private UserRepositoryInterface $userRepository;
 
-    public function __construct(DatetimeServiceInterface $datetimeService)
-    {
+    public function __construct(
+        DatetimeServiceInterface $datetimeService,
+        PayeeRepositoryInterface $payeeRepository,
+        UserRepositoryInterface $userRepository
+    ) {
         $this->datetimeService = $datetimeService;
+        $this->payeeRepository = $payeeRepository;
+        $this->userRepository = $userRepository;
     }
 
-    public function create(Id $userId, Id $payeeId, string $name): Payee
+    public function create(Id $userId, string $name): Payee
     {
-        return new Payee($payeeId, $userId, $name, $this->datetimeService->getCurrentDatetime());
+        return new Payee(
+            $this->payeeRepository->getNextIdentity(),
+            $this->userRepository->getReference($userId),
+            $name,
+            $this->datetimeService->getCurrentDatetime()
+        );
     }
 }

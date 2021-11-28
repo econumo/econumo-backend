@@ -9,6 +9,8 @@ use App\Domain\Entity\ValueObject\Id;
 
 interface TagRepositoryInterface
 {
+    public function getNextIdentity(): Id;
+
     /**
      * @param Id $userId
      * @return Tag[]
@@ -18,4 +20,6 @@ interface TagRepositoryInterface
     public function get(Id $id): Tag;
 
     public function save(Tag ...$tags): void;
+
+    public function getReference(Id $id): Tag;
 }

@@ -9,80 +9,34 @@ use App\Domain\Entity\ValueObject\Id;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
-use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="App\Infrastructure\Doctrine\Repository\AccountRepository")
- * @ORM\Table(name="`accounts`")
- */
 class Account
 {
-    /**
-     * @ORM\Id()
-     * @ORM\CustomIdGenerator("NONE")
-     * @ORM\Column(type="uuid")
-     */
     private Id $id;
-
-    /**
-     * @ORM\Column(type="string", length=64)
-     */
     private string $name;
-
-    /**
-     * @ORM\Column(type="smallint", options={"unsigned"=true, "default"=0})
-     */
     private int $position;
-
-    /**
-     * @ORM\Column(type="uuid")
-     */
-    private Id $currencyId;
-
-    /**
-     * @ORM\Column(type="decimal", precision=19, scale=2)
-     */
+    private Currency $currency;
     private string $balance;
-
-    /**
-     * @ORM\Column(type="account_type")
-     */
     private AccountType $type;
-
-    /**
-     * @ORM\Column(type="string", length=64)
-     */
     private string $icon;
-
-    /**
-     * @ORM\Column(type="uuid")
-     */
-    private Id $userId;
-
-    /**
-     * @ORM\Column(type="datetime_immutable")
-     */
+    private User $user;
     private DateTimeImmutable $createdAt;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
     private DateTimeInterface $updatedAt;
 
     public function __construct(
         Id $id,
-        Id $userId,
+        User $user,
         string $name,
-        Id $currencyId,
+        Currency $currency,
         float $balance,
         AccountType $type,
         string $icon,
         DateTimeInterface $createdAt
     ) {
         $this->id = $id;
-        $this->userId = $userId;
+        $this->user = $user;
         $this->name = $name;
-        $this->currencyId = $currencyId;
+        $this->currency = $currency;
         $this->balance = (string)$balance;
         $this->type = $type;
         $this->icon = $icon;
@@ -98,7 +52,7 @@ class Account
 
     public function getUserId(): Id
     {
-        return $this->userId;
+        return $this->user->getId();
     }
 
     public function getName(): string
@@ -113,7 +67,7 @@ class Account
 
     public function getCurrencyId(): Id
     {
-        return $this->currencyId;
+        return $this->currency->getId();
     }
 
     public function applyTransaction(Transaction $transaction): void

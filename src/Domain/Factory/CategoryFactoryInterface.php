@@ -9,5 +9,5 @@ use App\Domain\Entity\ValueObject\Id;
 
 interface CategoryFactoryInterface
 {
-    public function create(Id $userId, Id $id, string $name, CategoryType $type): Category;
+    public function create(Id $userId, string $name, CategoryType $type): Category;
 }

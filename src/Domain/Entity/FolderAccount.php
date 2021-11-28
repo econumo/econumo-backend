@@ -8,39 +8,13 @@ use App\Domain\Entity\ValueObject\Id;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
-use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity()
- * @ORM\Table(name="`folder_accounts`")
- */
 class FolderAccount
 {
-    /**
-     * @ORM\Id()
-     * @ORM\CustomIdGenerator("NONE")
-     * @ORM\Column(type="uuid")
-     */
     private Id $id;
-
-    /**
-     * @ORM\Column(type="uuid")
-     */
     private Id $accountId;
-
-    /**
-     * @ORM\Column(type="uuid")
-     */
     private Id $folderId;
-
-    /**
-     * @ORM\Column(type="datetime_immutable")
-     */
     private DateTimeImmutable $createdAt;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
     private DateTimeInterface $updatedAt;
 
     public function __construct(

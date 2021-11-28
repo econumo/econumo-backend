@@ -9,62 +9,28 @@ use App\Domain\Entity\ValueObject\Id;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
-use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="App\Infrastructure\Doctrine\Repository\AccountAccessInviteRepository")
- * @ORM\Table(name="`account_access_invites`")
- */
 class AccountAccessInvite
 {
-    /**
-     * @ORM\Id()
-     * @ORM\Column(type="uuid")
-     */
-    private Id $accountId;
-
-    /**
-     * @ORM\Id()
-     * @ORM\Column(type="uuid")
-     */
-    private Id $recipientId;
-
-    /**
-     * @ORM\Column(type="uuid")
-     */
-    private Id $ownerId;
-
-    /**
-     * @ORM\Column(type="account_role")
-     */
+    private Account $account;
+    private User $recipient;
+    private User $owner;
     private AccountRole $role;
-
-    /**
-     * @ORM\Column(type="string", options={"fixed"=true}, length=5)
-     */
     private string $code;
-
-    /**
-     * @ORM\Column(type="datetime_immutable")
-     */
     private DateTimeImmutable $createdAt;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
     private DateTimeInterface $updatedAt;
 
     public function __construct(
-        Id $accountId,
-        Id $recipientId,
-        Id $ownerId,
+        Account $account,
+        User $recipient,
+        User $owner,
         AccountRole $role,
         string $code,
         \DateTimeInterface $createdAt
     ) {
-        $this->accountId = $accountId;
-        $this->recipientId = $recipientId;
-        $this->ownerId = $ownerId;
+        $this->account = $account;
+        $this->recipient = $recipient;
+        $this->owner = $owner;
         $this->role = $role;
         $this->code = $code;
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
@@ -73,12 +39,12 @@ class AccountAccessInvite
 
     public function getRecipientId(): Id
     {
-        return $this->recipientId;
+        return $this->recipient->getId();
     }
 
     public function getAccountId(): Id
     {
-        return $this->accountId;
+        return $this->account->getId();
     }
 
     public function getCode(): string

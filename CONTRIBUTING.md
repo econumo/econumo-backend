@@ -10,6 +10,13 @@
 
 Run `task test` for all tests. Or you could use arguments for Codeception: `task test -- unit`
 
+## Create new API-method
+
+For now only `GET-` and `POST-` methods are allowed. `GET` is used for reading, `POST` for writing.
+
+See command `./bin/console make:api --help` for create new method.
+
+
 
 ## Secrets
 

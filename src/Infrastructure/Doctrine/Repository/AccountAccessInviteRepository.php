@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Doctrine\Repository;
 
+use App\Domain\Entity\Account;
 use App\Domain\Entity\AccountAccessInvite;
+use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\AccountAccessInviteRepositoryInterface;
@@ -42,7 +44,10 @@ class AccountAccessInviteRepository extends ServiceEntityRepository implements A
     public function get(Id $accountId, Id $recipientId): AccountAccessInvite
     {
         /** @var AccountAccessInvite|null $item */
-        $item = $this->findOneBy(['accountId' => $accountId, 'recipientId' => $recipientId]);
+        $item = $this->findOneBy([
+            'account' => $this->getEntityManager()->getReference(Account::class, $accountId),
+            'recipient' => $this->getEntityManager()->getReference(User::class, $recipientId)
+        ]);
         if ($item === null) {
             throw new NotFoundException('AccountAccessInvite not found');
         }
@@ -59,7 +64,12 @@ class AccountAccessInviteRepository extends ServiceEntityRepository implements A
     public function getByUserAndCode(Id $userId, string $code): AccountAccessInvite
     {
         /** @var AccountAccessInvite|null $item */
-        $item = $this->findOneBy(['recipientId' => $userId, 'code' => $code]);
+        $item = $this->findOneBy(
+            [
+                'recipient' => $this->getEntityManager()->getReference(User::class, $userId),
+                'code' => $code
+            ]
+        );
         if ($item === null) {
             throw new NotFoundException('AccountAccessInvite not found');
         }
@@ -69,6 +79,6 @@ class AccountAccessInviteRepository extends ServiceEntityRepository implements A
 
     public function getUnacceptedByUser(Id $userId): array
     {
-        return $this->findBy(['ownerId' => $userId]);
+        return $this->findBy(['owner' => $this->getEntityManager()->getReference(User::class, $userId)]);
     }
 }

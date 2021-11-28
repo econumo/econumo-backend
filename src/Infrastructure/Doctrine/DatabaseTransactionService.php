@@ -7,7 +7,7 @@ namespace App\Infrastructure\Doctrine;
 use App\Domain\Service\AntiCorruptionServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
-class TransactionService implements AntiCorruptionServiceInterface
+class DatabaseTransactionService implements AntiCorruptionServiceInterface
 {
     private EntityManagerInterface $entityManager;
     private bool $started = false;

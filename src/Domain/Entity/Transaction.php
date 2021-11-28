@@ -9,112 +9,50 @@ use App\Domain\Entity\ValueObject\TransactionType;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
-use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="App\Infrastructure\Doctrine\Repository\TransactionRepository")
- * @ORM\Table(name="`transactions`")
- */
 class Transaction
 {
-    /**
-     * @ORM\Id()
-     * @ORM\CustomIdGenerator("NONE")
-     * @ORM\Column(type="uuid")
-     */
     private Id $id;
-
-    /**
-     * @ORM\Column(type="uuid")
-     */
-    private Id $userId;
-
-    /**
-     * @ORM\Column(type="transaction_type")
-     */
+    private User $user;
     private TransactionType $type;
-
-    /**
-     * @ORM\Column(type="uuid")
-     */
-    private Id $accountId;
-
-    /**
-     * @ORM\Column(type="uuid", nullable=true)
-     */
-    private ?Id $accountRecipientId;
-
-    /**
-     * @ORM\Column(type="decimal", precision=19, scale=2)
-     */
+    private Account $account;
+    private ?Account $accountRecipient;
     private string $amount;
-
-    /**
-     * @ORM\Column(type="decimal", precision=19, scale=2, nullable=true)
-     */
     private ?string $amountRecipient;
-
-    /**
-     * @ORM\Column(type="uuid", nullable=true)
-     */
-    private ?Id $categoryId;
-
-    /**
-     * @ORM\Column(type="string")
-     */
+    private ?Category $category;
     private string $description;
-
-    /**
-     * @ORM\Column(type="uuid", nullable=true)
-     */
-    private ?Id $payeeId;
-
-    /**
-     * @ORM\Column(type="uuid", nullable=true)
-     */
-    private ?Id $tagId;
-
-    /**
-     * @ORM\Column(type="datetime_immutable")
-     */
+    private ?Payee $payee;
+    private ?Tag $tag;
     private DateTimeImmutable $createdAt;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
     private DateTimeInterface $updatedAt;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
     private DateTimeInterface $spentAt;
 
     public function __construct(
         Id $id,
-        Id $userId,
+        User $user,
         TransactionType $type,
-        Id $accountId,
-        ?Id $categoryId,
+        Account $account,
+        ?Category $category,
         float $amount,
         DateTimeInterface $transactionDate,
         DateTimeInterface $createdAt,
-        ?Id $accountRecipientId,
+        ?Account $accountRecipient,
         ?float $amountRecipient,
         string $description,
-        ?Id $payeeId,
-        ?Id $tagId
+        ?Payee $payee,
+        ?Tag $tag
     ) {
         $this->id = $id;
-        $this->userId = $userId;
+        $this->user = $user;
         $this->type = $type;
-        $this->accountId = $accountId;
-        $this->categoryId = $categoryId;
+        $this->account = $account;
+        $this->category = $category;
         $this->amount = (string)$amount;
-        $this->accountRecipientId = $accountRecipientId;
+        $this->accountRecipient = $accountRecipient;
         $this->amountRecipient = $amountRecipient === null ? null : (string)$amountRecipient;
         $this->description = $description;
-        $this->payeeId = $payeeId;
-        $this->tagId = $tagId;
+        $this->payee = $payee;
+        $this->tag = $tag;
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->spentAt = DateTime::createFromFormat('Y-m-d H:i:s', $transactionDate->format('Y-m-d H:i:s'));
@@ -127,7 +65,7 @@ class Transaction
 
     public function getUserId(): Id
     {
-        return $this->userId;
+        return $this->user->getId();
     }
 
     public function getType(): TransactionType
@@ -137,12 +75,12 @@ class Transaction
 
     public function getAccountId(): Id
     {
-        return $this->accountId;
+        return $this->account->getId();
     }
 
     public function getAccountRecipientId(): ?Id
     {
-        return $this->accountRecipientId;
+        return $this->accountRecipient !== null ? $this->accountRecipient->getId() : null;
     }
 
     public function getAmount(): float
@@ -157,7 +95,7 @@ class Transaction
 
     public function getCategoryId(): ?Id
     {
-        return $this->categoryId;
+        return $this->category !== null ? $this->category->getId() : null;
     }
 
     public function getDescription(): string
@@ -167,12 +105,12 @@ class Transaction
 
     public function getPayeeId(): ?Id
     {
-        return $this->payeeId;
+        return $this->payee !== null ? $this->payee->getId() : null;
     }
 
     public function getTagId(): ?Id
     {
-        return $this->tagId;
+        return $this->tag !== null ? $this->tag->getId() : null;
     }
 
     public function getSpentAt(): DateTimeInterface

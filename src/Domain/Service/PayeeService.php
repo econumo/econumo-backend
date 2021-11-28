@@ -25,21 +25,21 @@ class PayeeService implements PayeeServiceInterface
         $this->accountRepository = $accountRepository;
     }
 
-    public function createPayee(Id $userId, Id $payeeId, string $name): Payee
+    public function createPayee(Id $userId, string $name): Payee
     {
-        $payee = $this->payeeFactory->create($userId, $payeeId, $name);
+        $payee = $this->payeeFactory->create($userId, $name);
         $this->payeeRepository->save($payee);
 
         return $payee;
     }
 
-    public function createPayeeForAccount(Id $userId, Id $accountId, Id $payeeId, string $name): Payee
+    public function createPayeeForAccount(Id $userId, Id $accountId, string $name): Payee
     {
         $account = $this->accountRepository->get($accountId);
         if ($userId->isEqual($account->getUserId())) {
-            return $this->createPayee($userId, $payeeId, $name);
+            return $this->createPayee($userId, $name);
         }
 
-        return $this->createPayee($account->getUserId(), $payeeId, $name);
+        return $this->createPayee($account->getUserId(), $name);
     }
 }

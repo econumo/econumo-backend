@@ -6,6 +6,7 @@ namespace App\Infrastructure\Doctrine\Repository;
 use App\Domain\Entity\Account;
 use App\Domain\Entity\AccountAccess;
 use App\Domain\Entity\Category;
+use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\CategoryRepositoryInterface;
@@ -14,6 +15,7 @@ use Doctrine\ORM\ORMException;
 use Doctrine\ORM\ORMInvalidArgumentException;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
+use Ramsey\Uuid\Uuid;
 use RuntimeException;
 
 /**
@@ -29,6 +31,14 @@ class CategoryRepository extends ServiceEntityRepository implements CategoryRepo
         parent::__construct($registry, Category::class);
     }
 
+    public function getNextIdentity(): Id
+    {
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $uuid = Uuid::uuid4();
+
+        return new Id($uuid->toString());
+    }
+
     /**
      * @inheritDoc
      */
@@ -36,17 +46,21 @@ class CategoryRepository extends ServiceEntityRepository implements CategoryRepo
     {
         $dql =<<<'DQL'
 SELECT u.id FROM App\Domain\Entity\User u
-LEFT JOIN App\Domain\Entity\AccountAccess aa WITH aa.userId = :id
-LEFT JOIN App\Domain\Entity\Account a WITH a.id = aa.accountId
+LEFT JOIN App\Domain\Entity\AccountAccess aa WITH aa.user = :user
+LEFT JOIN App\Domain\Entity\Account a WITH a = aa.account
 GROUP BY u.id
 DQL;
-        $query = $this->getEntityManager()->createQuery($dql)->setParameter('id', $userId->getValue());
+        $query = $this->getEntityManager()->createQuery($dql)
+            ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId));
         $ids = array_column($query->getScalarResult(), 'id');
         $ids[] = $userId->getValue();
-        $ids = array_unique($ids);
+        $users = array_map(function ($id) {
+            return $this->getEntityManager()->getReference(User::class, new Id($id));
+        }, array_unique($ids));
+
         $builder = $this->createQueryBuilder('c')
-            ->where('c.userId IN(:ids)')
-            ->setParameter('ids', $ids)
+            ->where('c.user IN(:users)')
+            ->setParameter('users', $users)
             ->orderBy('c.position', 'ASC');
         return $builder
             ->getQuery()
@@ -74,5 +88,10 @@ DQL;
         } catch (ORMException | ORMInvalidArgumentException $e) {
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
+    }
+
+    public function getReference(Id $id): Category
+    {
+        return $this->getEntityManager()->getReference(Category::class, $id);
     }
 }

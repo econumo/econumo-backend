@@ -28,20 +28,20 @@ class TagService implements TagServiceInterface
         $this->accountRepository = $accountRepository;
     }
 
-    public function createTag(Id $userId, Id $tagId, string $name): Tag
+    public function createTag(Id $userId, string $name): Tag
     {
-        $tag = $this->tagFactory->create($userId, $tagId, $name);
+        $tag = $this->tagFactory->create($userId, $name);
         $this->tagRepository->save($tag);
         return $tag;
     }
 
-    public function createTagForAccount(Id $userId, Id $accountId, Id $tagId, string $name): Tag
+    public function createTagForAccount(Id $userId, Id $accountId, string $name): Tag
     {
         $account = $this->accountRepository->get($accountId);
         if ($userId->isEqual($account->getUserId())) {
-            return $this->createTag($userId, $tagId, $name);
+            return $this->createTag($userId, $name);
         }
 
-        return $this->createTag($account->getUserId(), $tagId, $name);
+        return $this->createTag($account->getUserId(), $name);
     }
 }

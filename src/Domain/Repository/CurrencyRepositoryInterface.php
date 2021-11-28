@@ -21,4 +21,6 @@ interface CurrencyRepositoryInterface
      * @return Currency[]
      */
     public function getAll(): array;
+
+    public function getReference(Id $id): Currency;
 }

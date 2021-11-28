@@ -8,8 +8,6 @@ use App\Domain\Entity\ValueObject\Id;
 
 class AccountDto
 {
-    public Id $id;
-
     public Id $userId;
 
     public float $balance;

@@ -22,4 +22,6 @@ interface AccountRepositoryInterface
     public function save(Account ...$accounts): void;
 
     public function delete(Id $id): void;
+
+    public function getReference(Id $id): Account;
 }
