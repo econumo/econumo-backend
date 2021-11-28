@@ -58,11 +58,10 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
     {
         return $this->createQueryBuilder('a')
             ->select('a')
-            ->leftJoin(AccountAccess::class, 'aa', Join::WITH, 'aa.accountId = a.id')
+            ->leftJoin(AccountAccess::class, 'aa', Join::WITH, 'aa.account = a')
             ->where('a.user = :user')
-            ->orWhere('aa.userId = :id')
+            ->orWhere('aa.user = :user')
             ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId))
-            ->setParameter('id', $userId->getValue())
             ->orderBy('a.position', 'ASC')
             ->getQuery()
             ->getResult();

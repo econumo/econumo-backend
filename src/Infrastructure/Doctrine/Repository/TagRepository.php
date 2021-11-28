@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Doctrine\Repository;
 
 use App\Domain\Entity\Tag;
+use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\TagRepositoryInterface;
@@ -34,11 +35,12 @@ class TagRepository extends ServiceEntityRepository implements TagRepositoryInte
     {
         $dql =<<<'DQL'
 SELECT u.id FROM App\Domain\Entity\User u
-LEFT JOIN App\Domain\Entity\AccountAccess aa WITH aa.userId = :id
-LEFT JOIN App\Domain\Entity\Account a WITH a.id = aa.accountId
+LEFT JOIN App\Domain\Entity\AccountAccess aa WITH aa.user = :user
+LEFT JOIN App\Domain\Entity\Account a WITH a = aa.account
 GROUP BY u.id
 DQL;
-        $query = $this->getEntityManager()->createQuery($dql)->setParameter('id', $userId->getValue());
+        $query = $this->getEntityManager()->createQuery($dql)
+            ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId));
         $ids = array_column($query->getScalarResult(), 'id');
         $ids[] = $userId->getValue();
         $ids = array_unique($ids);

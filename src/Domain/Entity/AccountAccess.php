@@ -12,20 +12,21 @@ use DateTimeInterface;
 
 class AccountAccess
 {
-    private Id $accountId;
-    private Id $userId;
+    private Id $id;
+    private Account $account;
+    private User $user;
     private AccountRole $role;
     private DateTimeImmutable $createdAt;
     private DateTimeInterface $updatedAt;
 
     public function __construct(
-        Id $accountId,
-        Id $userId,
+        Account $account,
+        User $user,
         AccountRole $role,
         \DateTimeInterface $createdAt
     ) {
-        $this->accountId = $accountId;
-        $this->userId = $userId;
+        $this->account = $account;
+        $this->user = $user;
         $this->role = $role;
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
@@ -33,12 +34,12 @@ class AccountAccess
 
     public function getAccountId(): Id
     {
-        return $this->accountId;
+        return $this->account->getId();
     }
 
     public function getUserId(): Id
     {
-        return $this->userId;
+        return $this->user->getId();
     }
 
     public function getRole(): AccountRole

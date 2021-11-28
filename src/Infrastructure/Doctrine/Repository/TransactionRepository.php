@@ -80,8 +80,8 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
     public function findByUserId(Id $userId): array
     {
         $sharedAccountsQuery = $this->getEntityManager()
-            ->createQuery('SELECT aa.accountId FROM App\Domain\Entity\AccountAccess aa WHERE aa.userId = :id')
-            ->setParameter('id', $userId->getValue());
+            ->createQuery('SELECT IDENTITY(aa.account) as accountId FROM App\Domain\Entity\AccountAccess aa WHERE aa.user = :user')
+            ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId));
         $sharedIds = array_column($sharedAccountsQuery->getScalarResult(), 'accountId');
 
         $accountsQuery = $this->getEntityManager()

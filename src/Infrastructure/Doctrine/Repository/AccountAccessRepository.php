@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Doctrine\Repository;
 
+use App\Domain\Entity\Account;
 use App\Domain\Entity\AccountAccess;
+use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\AccountAccessRepositoryInterface;
@@ -45,8 +47,8 @@ class AccountAccessRepository extends ServiceEntityRepository implements Account
     public function findByUserId(Id $userId): array
     {
         return $this->createQueryBuilder('a')
-            ->andWhere('a.userId = :id')
-            ->setParameter('id', $userId->getValue())
+            ->andWhere('a.user = :user')
+            ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId))
             ->orderBy('a.position', 'ASC')
             ->getQuery()
             ->getResult();
@@ -55,7 +57,10 @@ class AccountAccessRepository extends ServiceEntityRepository implements Account
     public function get(Id $accountId, Id $userId): AccountAccess
     {
         /** @var AccountAccess|null $item */
-        $item = $this->findOneBy(['accountId' => $accountId, 'userId' => $userId]);
+        $item = $this->findOneBy([
+            'account' => $this->getEntityManager()->getReference(Account::class, $accountId),
+            'user' => $this->getEntityManager()->getReference(User::class, $userId)
+        ]);
         if ($item === null) {
             throw new NotFoundException('AccountAccess not found');
         }
@@ -75,7 +80,7 @@ class AccountAccessRepository extends ServiceEntityRepository implements Account
      */
     public function getByAccount(Id $accountId): array
     {
-        return $this->findBy(['accountId' => $accountId]);
+        return $this->findBy(['account' => $this->getEntityManager()->getReference(Account::class, $accountId)]);
     }
 
     /**
@@ -83,14 +88,17 @@ class AccountAccessRepository extends ServiceEntityRepository implements Account
      */
     public function getOwnedByUser(Id $userId): array
     {
-        $dql =<<<'DQL'
+        $dql = <<<'DQL'
 SELECT a.id FROM App\Domain\Entity\AccountAccess aa
-JOIN App\Domain\Entity\Account a WITH a.id = aa.accountId AND aa.userId = :id
+JOIN App\Domain\Entity\Account a WITH a.id = aa.account AND aa.user = :user
 GROUP BY a.id
 DQL;
-        $query = $this->getEntityManager()->createQuery($dql)->setParameter('id', $userId->getValue());
-        $ids = array_column($query->getScalarResult(), 'id');
+        $query = $this->getEntityManager()->createQuery($dql)
+            ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId));
+        $accounts = array_map(function ($id) {
+            return $this->getEntityManager()->getReference(Account::class, $id);
+        }, array_column($query->getScalarResult(), 'id'));
 
-        return $this->findBy(['accountId' => $ids]);
+        return $this->findBy(['account' => $accounts]);
     }
 }

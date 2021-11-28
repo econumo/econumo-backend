@@ -7,22 +7,32 @@ namespace App\Domain\Factory;
 use App\Domain\Entity\AccountAccess;
 use App\Domain\Entity\ValueObject\AccountRole;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Repository\AccountRepositoryInterface;
+use App\Domain\Repository\UserRepositoryInterface;
 use App\Domain\Service\DatetimeServiceInterface;
 
 class AccountAccessFactory implements AccountAccessFactoryInterface
 {
     private DatetimeServiceInterface $datetimeService;
+    private AccountRepositoryInterface $accountRepository;
+    private UserRepositoryInterface $userRepository;
 
-    public function __construct(DatetimeServiceInterface $datetimeService)
+    public function __construct(
+        DatetimeServiceInterface $datetimeService,
+        AccountRepositoryInterface $accountRepository,
+        UserRepositoryInterface $userRepository
+    )
     {
         $this->datetimeService = $datetimeService;
+        $this->accountRepository = $accountRepository;
+        $this->userRepository = $userRepository;
     }
 
     public function create(Id $accountId, Id $userId, AccountRole $role): AccountAccess
     {
         return new AccountAccess(
-            $accountId,
-            $userId,
+            $this->accountRepository->getReference($accountId),
+            $this->userRepository->getReference($userId),
             $role,
             $this->datetimeService->getCurrentDatetime()
         );
