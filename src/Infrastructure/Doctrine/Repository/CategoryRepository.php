@@ -15,6 +15,7 @@ use Doctrine\ORM\ORMException;
 use Doctrine\ORM\ORMInvalidArgumentException;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
+use Ramsey\Uuid\Uuid;
 use RuntimeException;
 
 /**
@@ -28,6 +29,14 @@ class CategoryRepository extends ServiceEntityRepository implements CategoryRepo
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Category::class);
+    }
+
+    public function getNextIdentity(): Id
+    {
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $uuid = Uuid::uuid4();
+
+        return new Id($uuid->toString());
     }
 
     /**
@@ -45,10 +54,13 @@ DQL;
             ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId));
         $ids = array_column($query->getScalarResult(), 'id');
         $ids[] = $userId->getValue();
-        $ids = array_unique($ids);
+        $users = array_map(function ($id) {
+            return $this->getEntityManager()->getReference(User::class, new Id($id));
+        }, array_unique($ids));
+
         $builder = $this->createQueryBuilder('c')
-            ->where('c.userId IN(:ids)')
-            ->setParameter('ids', $ids)
+            ->where('c.user IN(:users)')
+            ->setParameter('users', $users)
             ->orderBy('c.position', 'ASC');
         return $builder
             ->getQuery()

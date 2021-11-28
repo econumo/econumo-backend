@@ -27,9 +27,9 @@ class CategoryService implements CategoryServiceInterface
         $this->accountRepository = $accountRepository;
     }
 
-    public function createCategory(Id $userId, Id $id, string $name, CategoryType $type): Category
+    public function createCategory(Id $userId, string $name, CategoryType $type): Category
     {
-        $category = $this->categoryFactory->create($userId, $id, $name, $type);
+        $category = $this->categoryFactory->create($userId, $name, $type);
         $this->categoryRepository->save($category);
 
         return $category;
@@ -38,15 +38,14 @@ class CategoryService implements CategoryServiceInterface
     public function createCategoryForAccount(
         Id $userId,
         Id $accountId,
-        Id $id,
         string $name,
         CategoryType $type
     ): Category {
         $account = $this->accountRepository->get($accountId);
         if ($userId->isEqual($account->getUserId())) {
-            return $this->createCategory($userId, $id, $name, $type);
+            return $this->createCategory($userId, $name, $type);
         }
 
-        return $this->createCategory($account->getUserId(), $id, $name, $type);
+        return $this->createCategory($account->getUserId(), $name, $type);
     }
 }

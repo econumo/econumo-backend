@@ -9,6 +9,8 @@ use App\Domain\Entity\ValueObject\Id;
 
 interface CategoryRepositoryInterface
 {
+    public function getNextIdentity(): Id;
+
     /**
      * @param Id $userId
      * @return Category[]

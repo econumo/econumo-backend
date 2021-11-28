@@ -10,7 +10,7 @@ use App\Domain\Entity\ValueObject\Id;
 
 interface CategoryServiceInterface
 {
-    public function createCategory(Id $userId, Id $id, string $name, CategoryType $type): Category;
+    public function createCategory(Id $userId, string $name, CategoryType $type): Category;
 
-    public function createCategoryForAccount(Id $userId, Id $accountId, Id $id, string $name, CategoryType $type): Category;
+    public function createCategoryForAccount(Id $userId, Id $accountId, string $name, CategoryType $type): Category;
 }

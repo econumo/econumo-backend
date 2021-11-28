@@ -16,19 +16,19 @@ class Category
     private string $name;
     private int $position;
     private CategoryType $type;
-    private Id $userId;
+    private User $user;
     private DateTimeImmutable $createdAt;
     private DateTimeInterface $updatedAt;
 
     public function __construct(
         Id $id,
-        Id $userId,
+        User $user,
         string $name,
         CategoryType $type,
         DateTimeInterface $createdAt
     ) {
         $this->id = $id;
-        $this->userId = $userId;
+        $this->user = $user;
         $this->name = $name;
         $this->position = 0;
         $this->type = $type;
@@ -58,6 +58,6 @@ class Category
 
     public function getUserId(): Id
     {
-        return $this->userId;
+        return $this->user->getId();
     }
 }
