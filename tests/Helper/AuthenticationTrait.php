@@ -16,9 +16,19 @@ trait AuthenticationTrait
 
     public function amAuthenticatedAsJohn(): void
     {
+        $this->amAuthenticatedAsUser('john@snow.test');
+    }
+
+    public function amAuthenticatedAsMargo(): void
+    {
+        $this->amAuthenticatedAsUser('margo@tirrell.test');
+    }
+
+    public function amAuthenticatedAsUser(string $email): void
+    {
         /** @var UserRepositoryInterface $userRepository */
         $userRepository = $this->getContainerService(UserRepositoryInterface::class);
-        $user = $userRepository->getByEmail(new Email('john@snow.test'));
+        $user = $userRepository->getByEmail(new Email($email));
         /** @var JWTTokenManagerInterface $tokenManager */
         $tokenManager = $this->getContainerService(JWTTokenManagerInterface::class);
         $token = $tokenManager->create($user);

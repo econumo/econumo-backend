@@ -61,4 +61,16 @@ return [
         'created_at' => '2021-08-12 19:43:09',
         'updated_at' => '2021-08-12 19:43:09',
     ],
+    [
+        'id' => '99ff78ec-5081-11ec-bf63-0242ac130002',
+        'user_id' => '48044d88-5081-11ec-bf63-0242ac130002',
+        'name' => 'Cash',
+        'position' => 1,
+        'currency_id' => 'fe5d9269-b69c-4841-9c04-136225447eca',
+        'balance' => '1000.01',
+        'type' => 1,
+        'icon' => 'wallet',
+        'created_at' => '2021-10-12 19:43:09',
+        'updated_at' => '2021-10-12 19:43:09',
+    ],
 ];
