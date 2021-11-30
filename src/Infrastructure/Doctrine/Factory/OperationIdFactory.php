@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Doctrine\Factory;
 
-use App\Domain\Entity\RequestId;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Service\DatetimeServiceInterface;
-use App\Infrastructure\Doctrine\Repository\RequestIdRepository;
+use App\Infrastructure\Doctrine\Entity\OperationId;
 
-class RequestIdFactory
+class OperationIdFactory
 {
-    private RequestIdRepository $requestIdRepository;
     private DatetimeServiceInterface $datetimeService;
 
     public function __construct(DatetimeServiceInterface $datetimeService)
@@ -19,8 +17,8 @@ class RequestIdFactory
         $this->datetimeService = $datetimeService;
     }
 
-    public function create(Id $id): RequestId
+    public function create(Id $id): OperationId
     {
-        return new RequestId($id, $this->datetimeService->getCurrentDatetime());
+        return new OperationId($id, $this->datetimeService->getCurrentDatetime());
     }
 }

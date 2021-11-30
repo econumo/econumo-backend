@@ -6,8 +6,10 @@ namespace App\UI\Controller\Api\Tag\Tag;
 
 use App\Application\Tag\TagService;
 use App\Application\Tag\Dto\CreateTagV1RequestDto;
+use App\Domain\Entity\ValueObject\Id;
 use App\UI\Controller\Api\Tag\Tag\Validation\CreateTagV1Form;
 use App\Application\Exception\ValidationException;
+use App\UI\Service\OperationServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,11 +23,16 @@ class CreateTagV1Controller extends AbstractController
 {
     private TagService $tagService;
     private ValidatorInterface $validator;
+    private OperationServiceInterface $operationService;
 
-    public function __construct(TagService $tagService, ValidatorInterface $validator)
-    {
+    public function __construct(
+        TagService $tagService,
+        ValidatorInterface $validator,
+        OperationServiceInterface $operationService
+    ) {
         $this->tagService = $tagService;
         $this->validator = $validator;
+        $this->operationService = $operationService;
     }
 
     /**
@@ -68,8 +75,10 @@ class CreateTagV1Controller extends AbstractController
     {
         $dto = new CreateTagV1RequestDto();
         $this->validator->validate(CreateTagV1Form::class, $request->request->all(), $dto);
+        $operation = $this->operationService->lock(new Id($dto->id));
         $user = $this->getUser();
         $result = $this->tagService->createTag($dto, $user->getId());
+        $this->operationService->release($operation);
 
         return ResponseFactory::createOkResponse($request, $result);
     }

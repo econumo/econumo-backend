@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\UI\Controller\Api\Transaction\Transaction\Validation;
 
+use App\Infrastructure\Symfony\Form\Constraints\OperationId;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -25,7 +26,7 @@ class CreateTransactionV1Form extends AbstractType
     {
         $builder
             ->add('id', TextType::class, [
-                'constraints' => [new NotBlank(), new Uuid()],
+                'constraints' => [new NotBlank(), new Uuid(), new OperationId()],
             ])
             ->add('type', ChoiceType::class, [
                 'constraints' => [new NotBlank()],

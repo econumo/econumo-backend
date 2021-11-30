@@ -6,8 +6,10 @@ namespace App\UI\Controller\Api\Transaction\Transaction;
 
 use App\Application\Transaction\TransactionService;
 use App\Application\Transaction\Dto\CreateTransactionV1RequestDto;
+use App\Domain\Entity\ValueObject\Id;
 use App\UI\Controller\Api\Transaction\Transaction\Validation\CreateTransactionV1Form;
 use App\Application\Exception\ValidationException;
+use App\UI\Service\OperationServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,11 +23,16 @@ class CreateTransactionV1Controller extends AbstractController
 {
     private TransactionService $transactionService;
     private ValidatorInterface $validator;
+    private OperationServiceInterface $operationService;
 
-    public function __construct(TransactionService $transactionService, ValidatorInterface $validator)
-    {
+    public function __construct(
+        TransactionService $transactionService,
+        ValidatorInterface $validator,
+        OperationServiceInterface $operationService
+    ) {
         $this->transactionService = $transactionService;
         $this->validator = $validator;
+        $this->operationService = $operationService;
     }
 
     /**
@@ -68,8 +75,10 @@ class CreateTransactionV1Controller extends AbstractController
     {
         $dto = new CreateTransactionV1RequestDto();
         $this->validator->validate(CreateTransactionV1Form::class, $request->request->all(), $dto);
+        $operation = $this->operationService->lock(new Id($dto->id));
         $user = $this->getUser();
         $result = $this->transactionService->createTransaction($dto, $user->getId());
+        $this->operationService->release($operation);
 
         return ResponseFactory::createOkResponse($request, $result);
     }
