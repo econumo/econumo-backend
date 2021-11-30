@@ -51,15 +51,15 @@ class TransactionFactory implements TransactionFactoryInterface
             $this->userRepository->getReference($dto->userId),
             $dto->type,
             $this->accountRepository->getReference($dto->accountId),
-            $this->categoryRepository->getReference($dto->categoryId),
+            (!$dto->categoryId ? null : $this->categoryRepository->getReference($dto->categoryId)),
             $dto->amount,
             $dto->date,
             $this->datetimeService->getCurrentDatetime(),
-            ($dto->accountRecipientId ? $this->accountRepository->getReference($dto->accountRecipientId) : null),
+            (!$dto->accountRecipientId ? null : $this->accountRepository->getReference($dto->accountRecipientId)),
             $dto->amountRecipient,
             $dto->description,
-            ($dto->payeeId ? $this->payeeRepository->getReference($dto->payeeId) : null),
-            ($dto->tagId ? $this->tagRepository->getReference($dto->tagId) : null),
+            (!$dto->payeeId ? null : $this->payeeRepository->getReference($dto->payeeId)),
+            (!$dto->tagId ? null :  $this->tagRepository->getReference($dto->tagId)),
         );
     }
 
