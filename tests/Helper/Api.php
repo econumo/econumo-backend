@@ -97,7 +97,7 @@ class Api extends \Codeception\Module
         return [
             'id' => 'string',
             'ownerUserId' => 'string',
-            'folder' => 'array|null',
+            'folderId' => 'string|null',
             'name' => 'string',
             'position' => 'integer',
             'currency' => $this->getCurrencyDtoJsonType(),

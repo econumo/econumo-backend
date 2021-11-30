@@ -15,18 +15,15 @@ class AccountToDtoV1ResultAssembler
     private AccountIdToSharedAccessResultAssembler $accountIdToSharedAccessResultAssembler;
     private CurrencyIdToDtoV1ResultAssembler $currencyIdToDtoV1ResultAssembler;
     private FolderRepositoryInterface $folderRepository;
-    private FolderToDtoV1ResultAssembler $folderToDtoV1ResultAssembler;
 
     public function __construct(
         AccountIdToSharedAccessResultAssembler $accountIdToSharedAccessResultAssembler,
         CurrencyIdToDtoV1ResultAssembler $currencyIdToDtoV1ResultAssembler,
-        FolderRepositoryInterface $folderRepository,
-        FolderToDtoV1ResultAssembler $folderToDtoV1ResultAssembler
+        FolderRepositoryInterface $folderRepository
     ) {
         $this->accountIdToSharedAccessResultAssembler = $accountIdToSharedAccessResultAssembler;
         $this->currencyIdToDtoV1ResultAssembler = $currencyIdToDtoV1ResultAssembler;
         $this->folderRepository = $folderRepository;
-        $this->folderToDtoV1ResultAssembler = $folderToDtoV1ResultAssembler;
     }
 
     public function assemble(Id $userId, Account $account): AccountResultDto
@@ -34,11 +31,11 @@ class AccountToDtoV1ResultAssembler
         $item = new AccountResultDto();
         $item->id = $account->getId()->getValue();
         $item->ownerUserId = $account->getUserId()->getValue();
-        $item->folder = null;
+        $item->folderId = null;
         $folders = $this->folderRepository->getByUserId($userId);
         foreach ($folders as $folder) {
             if ($folder->containsAccount($account)) {
-                $item->folder = $this->folderToDtoV1ResultAssembler->assemble($folder);
+                $item->folderId = $folder->getId()->getValue();
                 break;
             }
         }

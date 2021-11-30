@@ -28,9 +28,10 @@ class AccountResultDto
     public string $ownerUserId;
 
     /**
-     * @SWG\Property()
+     * Account folder id
+     * @SWG\Property(example="1ad16d32-36af-496e-9867-3919436b8d86")
      */
-    public ?FolderResultDto $folder;
+    public ?string $folderId;
 
     /**
      * Account name
