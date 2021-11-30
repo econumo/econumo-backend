@@ -15,7 +15,7 @@ interface FolderRepositoryInterface
      * @param Id $userId
      * @return Folder[]
      */
-    public function findByUserId(Id $userId): array;
+    public function getByUserId(Id $userId): array;
 
     public function get(Id $id): Folder;
 

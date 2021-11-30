@@ -7,24 +7,30 @@ namespace App\Domain\Factory;
 use App\Domain\Entity\Folder;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Repository\FolderRepositoryInterface;
+use App\Domain\Repository\UserRepositoryInterface;
 use App\Domain\Service\DatetimeServiceInterface;
 
 class FolderFactory implements FolderFactoryInterface
 {
     private DatetimeServiceInterface $datetimeService;
     private FolderRepositoryInterface $folderRepository;
+    private UserRepositoryInterface $userRepository;
 
-    public function __construct(DatetimeServiceInterface $datetimeService, FolderRepositoryInterface $folderRepository)
-    {
+    public function __construct(
+        DatetimeServiceInterface $datetimeService,
+        FolderRepositoryInterface $folderRepository,
+        UserRepositoryInterface $userRepository
+    ) {
         $this->datetimeService = $datetimeService;
         $this->folderRepository = $folderRepository;
+        $this->userRepository = $userRepository;
     }
 
     public function create(Id $userId, string $name): Folder
     {
         return new Folder(
             $this->folderRepository->getNextIdentity(),
-            $userId,
+            $this->userRepository->getReference($userId),
             $name,
             $this->datetimeService->getCurrentDatetime()
         );

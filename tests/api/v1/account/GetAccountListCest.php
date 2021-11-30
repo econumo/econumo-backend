@@ -49,6 +49,7 @@ class GetAccountListCest
         $I->sendGET($this->url);
         $I->seeResponseMatchesJsonType($I->getRootResponseWithItemsJsonType());
         $I->seeResponseMatchesJsonType($I->getAccountDtoJsonType(), '$.data.items[3]');
+        $I->seeResponseMatchesJsonType($I->getAccountFolderDtoJsonType(), '$.data.items[0].folder');
         $I->seeResponseMatchesJsonType($I->getSharedAccessDtoJsonType(), '$.data.items[3].sharedAccess[0]');
     }
 }

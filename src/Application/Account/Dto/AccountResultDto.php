@@ -28,6 +28,11 @@ class AccountResultDto
     public string $ownerUserId;
 
     /**
+     * @SWG\Property()
+     */
+    public ?FolderResultDto $folder;
+
+    /**
      * Account name
      * @var string
      * @SWG\Property(example="Cash")

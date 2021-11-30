@@ -8,26 +8,33 @@ use App\Domain\Entity\ValueObject\Id;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 class Folder
 {
     private Id $id;
     private string $name;
     private int $position;
-    private Id $userId;
+    private User $user;
+    /**
+     * @var ArrayCollection|Account[]
+     */
+    private Collection $accounts;
     private DateTimeImmutable $createdAt;
     private DateTimeInterface $updatedAt;
 
     public function __construct(
         Id $id,
-        Id $userId,
+        User $user,
         string $name,
         DateTimeInterface $createdAt
     ) {
         $this->id = $id;
-        $this->userId = $userId;
+        $this->user = $user;
         $this->name = $name;
         $this->position = 1000;
+        $this->accounts = new ArrayCollection();
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
     }
@@ -39,7 +46,7 @@ class Folder
 
     public function getUserId(): Id
     {
-        return $this->userId;
+        return $this->user->getId();
     }
 
     public function getName(): string
@@ -50,5 +57,20 @@ class Folder
     public function getPosition(): int
     {
         return $this->position;
+    }
+
+    public function containsAccount(Account $account): bool
+    {
+        return $this->accounts->contains($account);
+    }
+
+    public function addAccount(Account $account)
+    {
+        $this->accounts->add($account);
+    }
+
+    public function removeAccount(Account $account)
+    {
+        $this->accounts->removeElement($account);
     }
 }

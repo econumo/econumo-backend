@@ -27,7 +27,7 @@ class FolderListService
         GetFolderListV1RequestDto $dto,
         Id $userId
     ): GetFolderListV1ResultDto {
-        $folders = $this->folderRepository->findByUserId($userId);
+        $folders = $this->folderRepository->getByUserId($userId);
         return $this->getFolderListV1ResultAssembler->assemble($dto, $folders);
     }
 }

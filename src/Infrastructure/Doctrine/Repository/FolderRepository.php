@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Doctrine\Repository;
 
 use App\Domain\Entity\Folder;
+use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\FolderRepositoryInterface;
@@ -39,9 +40,9 @@ class FolderRepository extends ServiceEntityRepository implements FolderReposito
     /**
      * @inheritDoc
      */
-    public function findByUserId(Id $userId): array
+    public function getByUserId(Id $userId): array
     {
-        return $this->findBy(['userId' => $userId]);
+        return $this->findBy(['user' => $this->getEntityManager()->getReference(User::class, $userId)]);
     }
 
     public function get(Id $id): Folder
