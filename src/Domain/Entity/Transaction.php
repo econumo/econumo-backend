@@ -80,7 +80,7 @@ class Transaction
 
     public function getAccountRecipientId(): ?Id
     {
-        return $this->accountRecipient !== null ? $this->accountRecipient->getId() : null;
+        return $this->accountRecipient === null ? null : $this->accountRecipient->getId();
     }
 
     public function getAmount(): float
@@ -95,7 +95,7 @@ class Transaction
 
     public function getCategoryId(): ?Id
     {
-        return $this->category !== null ? $this->category->getId() : null;
+        return $this->category === null ? null : $this->category->getId();
     }
 
     public function getDescription(): string
@@ -105,12 +105,12 @@ class Transaction
 
     public function getPayeeId(): ?Id
     {
-        return $this->payee !== null ? $this->payee->getId() : null;
+        return $this->payee === null ? null : $this->payee->getId();
     }
 
     public function getTagId(): ?Id
     {
-        return $this->tag !== null ? $this->tag->getId() : null;
+        return $this->tag === null ? null : $this->tag->getId();
     }
 
     public function getSpentAt(): DateTimeInterface
