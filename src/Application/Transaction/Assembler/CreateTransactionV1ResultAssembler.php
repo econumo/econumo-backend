@@ -35,7 +35,7 @@ class CreateTransactionV1ResultAssembler
             $accountRecipient = $this->accountRepository->get($transaction->getAccountRecipientId());
             $result->accountRecipientBalance = $accountRecipient->getBalance();
         }
-        $result->transaction = $this->transactionToDtoV1ResultAssembler->assemble($transaction);
+        $result->item = $this->transactionToDtoV1ResultAssembler->assemble($transaction);
 
         return $result;
     }
