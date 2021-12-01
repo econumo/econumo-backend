@@ -26,5 +26,5 @@ class CreateTransactionV1ResultDto
      */
     public ?float $accountRecipientBalance = null;
 
-    public TransactionResultDto $transaction;
+    public TransactionResultDto $item;
 }
