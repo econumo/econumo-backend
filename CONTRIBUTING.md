@@ -5,10 +5,13 @@
 1. (Recommended) Install [task runner v3](https://taskfile.dev/#/installation) for using shortcuts from [Taskfile.yml](Taskfile.yml) 
 2. Clone repository
 3. Run `task up`
+4. To full rebuild application use `task restart` (it rebuilds docker images, composer, etc)
+
 
 ## Run tests
 
 Run `task test` for all tests. Or you could use arguments for Codeception: `task test -- unit`
+
 
 ## Api documentation: Swagger
 
@@ -22,16 +25,3 @@ For now only `GET-` and `POST-` methods are allowed. `GET` is used for reading, 
 
 See command `./bin/console make:api --help` for create new method.
 
-
-
-## Secrets
-
-- `DEPLOY_HOST`: docker-хост для доступа по ssh
-- `DEPLOY_USERNAME`: имя пользователя
-- `DEPLOY_KEY`: приватный ключ
-
-
-## Тех. долг
-- Перенести APP_SECRET в секреты
-- Завязать на APP_SECRET формирование jwt-ключа
-- В продакшене использовать другие jwt-ключи

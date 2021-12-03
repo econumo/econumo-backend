@@ -25,24 +25,38 @@ class MakeAPIMaker extends AbstractMaker
     public function configureCommand(Command $command, InputConfiguration $inputConf)
     {
         $command
-            ->setDescription('Генерация структуры файлов для API')
-            ->addArgument('method', InputArgument::REQUIRED, 'HTTP метод, GET или POST')
-            ->addArgument('url', InputArgument::REQUIRED, '/api/v1/business-english/receive-payment')
+            ->setDescription('Generate base structure for API')
+            ->addArgument('method', InputArgument::REQUIRED, 'HTTP method. Only GET and POST allowed')
+            ->addArgument('url', InputArgument::REQUIRED, '/api/v1/account/receive-payment')
             ->addOption(
                 'base-path',
                 null,
                 InputOption::VALUE_REQUIRED,
-                'Базовый путь к генерируемым файлам',
+                'Base path to generated files',
                 realpath(__DIR__ . '/../../'),
             )
             ->addOption(
                 'dry-run',
                 null,
                 InputOption::VALUE_NONE,
-                'Пробный запуск (покажет создаваемые файлы, но ничего создавать не будет)',
+                'Display files which will be created',
             )
-            ->addOption('delete', null, InputOption::VALUE_NONE, 'Удалить созданные файлы')
-            ->setHelp('');
+            ->addOption('remove', null, InputOption::VALUE_NONE, 'Remove generated files')
+            ->setHelp(<<<HELP
+API naming:
+We use GET-method for methods which only read data
+POST-methods - only for changing data (inserting, updating, deleting)
+
+Base structure of URL:
+/api/{VERSION}/{MODULE}/{ACTION}-{SUBJECT}
+
+Examples:
+Get accounts:
+bin/console make:api GET /api/v1/account/get-account-list
+
+Update account data:
+bin/console make:api POST /api/v1/account/update-account
+HELP);
     }
 
     public function generate(InputInterface $input, ConsoleStyle $io, Generator $generator)

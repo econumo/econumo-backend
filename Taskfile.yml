@@ -6,7 +6,7 @@ tasks:
         desc: "Run application"
         cmds:
             - docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
-            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app composer install --no-scripts
+            - task: composer-install
             - docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app bin/console doctrine:migrations:migrate -n
 
     restart:
@@ -20,7 +20,6 @@ tasks:
         desc: "Stop application"
         cmds:
             - docker-compose -f docker-compose.yml -f docker-compose.dev.yml down --remove-orphans
-
     sh:
         desc: "Jump into application container"
         cmds:
@@ -37,3 +36,9 @@ tasks:
             - docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app bin/console doctrine:fixtures:load --purge-with-truncate -n --env=test -vvv
             - cmd: docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app vendor/bin/codecept run {{.CLI_ARGS}} --steps -v
               ignore_error: true
+
+    composer-install:
+        cmds:
+            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app composer install
+        status:
+            - test -d vendor
