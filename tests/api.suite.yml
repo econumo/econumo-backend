@@ -8,7 +8,6 @@ actor: ApiTester
 modules:
   enabled:
     - \App\Tests\Helper\Api
-    - \App\Tests\Helper\DbHelper
     - Symfony:
         app_path: 'src'
         var_path: 'var'

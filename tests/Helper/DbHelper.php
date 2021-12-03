@@ -15,7 +15,22 @@ class DbHelper extends \Codeception\Module
      * @return array|null
      * @throws \Codeception\Exception\ModuleException
      */
-    public function grabRecord(string $table, array $values = []): ?array
+    public function grabQuery(string $sql, array $params = []): ?array
+    {
+        /** @var Doctrine2 $module */
+        $module = $this->getModule('Doctrine2');
+        $conn = $module->_getEntityManager()->getConnection();
+
+        return $conn->fetchAllAssociative($sql, $params);
+    }
+
+    /**
+     * @param string $table
+     * @param array $values
+     * @return array|null
+     * @throws \Codeception\Exception\ModuleException
+     */
+    public function grabRecords(string $table, array $values = []): ?array
     {
         /** @var Doctrine2 $module */
         $module = $this->getModule('Doctrine2');
@@ -36,7 +51,18 @@ class DbHelper extends \Codeception\Module
             return null;
         }
 
-        return $result[0];
+        return $result;
+    }
+
+    /**
+     * @param string $table
+     * @param array $values
+     * @return array|null
+     * @throws \Codeception\Exception\ModuleException
+     */
+    public function grabRecord(string $table, array $values = []): ?array
+    {
+        return $this->grabRecords($table, $values)[0];
     }
 
     /**

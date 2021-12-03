@@ -21,3 +21,4 @@ modules:
         timeout: 60
     - Asserts:
     - \App\Tests\Helper\Functional
+    - \App\Tests\Helper\DbHelper

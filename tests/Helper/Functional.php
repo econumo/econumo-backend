@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Tests\Helper;
 
 // here you can define custom actions
@@ -9,6 +10,7 @@ use Ramsey\Uuid\Uuid;
 
 class Functional extends \Codeception\Module
 {
+    use AuthenticationTrait;
     use ContainerTrait;
 
     /**
