@@ -67,4 +67,11 @@ class FolderRepository extends ServiceEntityRepository implements FolderReposito
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
     }
+
+    public function delete(Id $id): void
+    {
+        $folder = $this->get($id);
+        $this->getEntityManager()->remove($folder);
+        $this->getEntityManager()->flush();
+    }
 }
