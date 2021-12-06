@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace App\Tests\api\v1\account;
+require_once('vendor/autoload.php');
 
 use App\Tests\ApiTester;
 use Codeception\Util\HttpCode;
@@ -16,6 +17,7 @@ class CreateAccountCest
      */
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
+        $client = new \GuzzleHttp\Client();
         $I->amAuthenticatedAsJohn();
         $I->sendPOST($this->url, [
             'id' => '4b7946ca-2a48-4ea3-8645-2960cea6b94f',
@@ -25,6 +27,16 @@ class CreateAccountCest
             'icon' => 'savings',
         ]);
         $I->seeResponseCodeIs(HttpCode::OK);
+
+        $response = $client->request('POST', 'https://api.qase.io/v1/result/ECONUMO/4', [
+            'body' => '{"case_id":1,"status":"passed"}',
+            'headers' => [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'Token' => '3ff667870a94f374209801d4d4ef227d630601a0',
+            ],
+        ]);
+        echo $response->getBody();
     }
 
     /**
