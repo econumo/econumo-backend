@@ -74,4 +74,19 @@ class DeleteFolderCest
             'errors' => [],
         ]);
     }
+
+    /**
+     * @throws \Codeception\Exception\ModuleException
+     */
+    public function requestShouldReturn400IfRemoveForeignFolder(ApiTester $I): void
+    {
+        $I->amAuthenticatedAsJohn($I);
+        $I->sendPOST($this->url, ['id' => 'f425b05e-ec2d-4ef5-99c6-eef43c785398']);
+        $I->seeResponseCodeIs(HttpCode::BAD_REQUEST);
+        $I->seeResponseContainsJson([
+            'message' => 'Can not delete foreign folder',
+            'code' => 400,
+            'errors' => [],
+        ]);
+    }
 }

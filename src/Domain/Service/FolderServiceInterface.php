@@ -7,7 +7,5 @@ use App\Domain\Entity\ValueObject\Id;
 
 interface FolderServiceInterface
 {
-    public function userHaveTheOnlyFolder(Id $userId): bool;
-
-    public function delete(Id $folderId): void;
+    public function delete(Id $userId, Id $folderId): void;
 }

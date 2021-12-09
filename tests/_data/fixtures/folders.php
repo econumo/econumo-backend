@@ -17,4 +17,20 @@ return [
         'created_at' => '2021-08-12 19:43:09',
         'updated_at' => '2021-08-12 19:43:09',
     ],
+    [
+        'id' => '97fd547c-c153-4200-a87d-5aaf9e085a55',
+        'user_id' => '77be9577-147b-4f05-9aa7-91d9b159de5b',
+        'name' => 'Dany\'s Accounts',
+        'position' => 0,
+        'created_at' => '2021-12-09 10:43:09',
+        'updated_at' => '2021-12-09 10:43:09',
+    ],
+    [
+        'id' => 'f425b05e-ec2d-4ef5-99c6-eef43c785398',
+        'user_id' => '77be9577-147b-4f05-9aa7-91d9b159de5b',
+        'name' => 'Dany\'s Savings',
+        'position' => 1,
+        'created_at' => '2021-12-09 10:43:09',
+        'updated_at' => '2021-12-09 10:43:09',
+    ],
 ];

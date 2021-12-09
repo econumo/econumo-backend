@@ -9,6 +9,8 @@ use App\Application\Account\Dto\DeleteFolderV1ResultDto;
 use App\Application\Account\Assembler\DeleteFolderV1ResultAssembler;
 use App\Application\Exception\ValidationException;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Exception\ForeignFolderRemoveException;
+use App\Domain\Exception\TheOnlyFolderRemoveException;
 use App\Domain\Service\FolderServiceInterface;
 
 class FolderService
@@ -28,11 +30,14 @@ class FolderService
         DeleteFolderV1RequestDto $dto,
         Id $userId
     ): DeleteFolderV1ResultDto {
-        if ($this->folderService->userHaveTheOnlyFolder($userId)) {
-            throw new ValidationException('Can not delete the only folder');
-        }
         $folderId = new Id($dto->id);
-        $this->folderService->delete($folderId);
+        try {
+            $this->folderService->delete($userId, $folderId);
+        } catch (TheOnlyFolderRemoveException $e) {
+            throw new ValidationException('Can not delete the only folder');
+        } catch (ForeignFolderRemoveException $e) {
+            throw new ValidationException('Can not delete foreign folder');
+        }
 
         return $this->deleteFolderV1ResultAssembler->assemble($dto);
     }
