@@ -61,10 +61,10 @@ class TransactionResultDto
     public ?float $amountRecipient;
 
     /**
-     * Category
-     * @SWG\Property()
+     * Category id
+     * @SWG\Property(example="1b8559ac-4c77-47e4-a95c-1530a5274ab7")
      */
-    public ?CategoryResultDto $category = null;
+    public ?string $categoryId = null;
 
     /**
      * Description
@@ -73,16 +73,16 @@ class TransactionResultDto
     public string $description;
 
     /**
-     * Payee
-     * @SWG\Property()
+     * Payee id
+     * @SWG\Property(example="1b8559ac-4c77-47e4-a95c-1530a5274ab7")
      */
-    public ?PayeeResultDto $payee = null;
+    public ?string $payeeId = null;
 
     /**
-     * Tag
-     * @SWG\Property()
+     * Tag id
+     * @SWG\Property(example="1b8559ac-4c77-47e4-a95c-1530a5274ab7")
      */
-    public ?TagResultDto $tag = null;
+    public ?string $tagId = null;
 
     /**
      * Transaction date
