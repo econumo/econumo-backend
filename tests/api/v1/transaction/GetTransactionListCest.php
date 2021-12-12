@@ -59,9 +59,6 @@ class GetTransactionListCest
         $I->sendGET($this->url);
         $I->seeResponseMatchesJsonType($I->getRootResponseWithItemsJsonType());
         $I->seeResponseMatchesJsonType($I->getTransactionDtoJsonType(), '$.data.items[0]');
-        $I->seeResponseMatchesJsonType($I->getCategoryDtoJsonType(), '$.data.items[0].category');
-        $I->seeResponseMatchesJsonType($I->getPayeeDtoJsonType(), '$.data.items[0].payee');
-        $I->seeResponseMatchesJsonType($I->getTagDtoJsonType(), '$.data.items[0].tag');
     }
 
     /**
@@ -73,9 +70,6 @@ class GetTransactionListCest
         $I->sendGET($this->url, ['accountId' => '0aaa0450-564e-411e-8018-7003f6dbeb92']);
         $I->seeResponseMatchesJsonType($I->getRootResponseWithItemsJsonType());
         $I->seeResponseMatchesJsonType($I->getTransactionDtoJsonType(), '$.data.items[0]');
-        $I->seeResponseMatchesJsonType($I->getCategoryDtoJsonType(), '$.data.items[0].category');
-        $I->seeResponseMatchesJsonType($I->getPayeeDtoJsonType(), '$.data.items[0].payee');
-        $I->seeResponseMatchesJsonType($I->getTagDtoJsonType(), '$.data.items[0].tag');
     }
 
     /**

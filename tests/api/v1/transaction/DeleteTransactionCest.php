@@ -54,6 +54,5 @@ class DeleteTransactionCest
                 'transaction' => $I->getTransactionDtoJsonType()
             ],
         ]);
-        $I->seeResponseMatchesJsonType($I->getCategoryDtoJsonType(), '$.data.transaction.category');
     }
 }

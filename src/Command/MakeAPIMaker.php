@@ -41,7 +41,7 @@ class MakeAPIMaker extends AbstractMaker
                 InputOption::VALUE_NONE,
                 'Display files which will be created',
             )
-            ->addOption('remove', null, InputOption::VALUE_NONE, 'Remove generated files')
+            ->addOption('delete', null, InputOption::VALUE_NONE, 'Remove generated files')
             ->setHelp(<<<HELP
 API naming:
 We use GET-method for methods which only read data

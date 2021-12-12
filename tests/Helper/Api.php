@@ -42,10 +42,10 @@ class Api extends \Codeception\Module
             'accountRecipientId' => 'string|null',
             'amount' => 'float|integer',
             'amountRecipient' => 'float|integer|null',
-            'category' => 'array|null',
+            'categoryId' => 'string|null',
             'description' => 'string',
-            'payee' => 'array|null',
-            'tag' => 'array|null',
+            'payeeId' => 'string|null',
+            'tagId' => 'string|null',
             'date' => 'string',
         ];
     }
