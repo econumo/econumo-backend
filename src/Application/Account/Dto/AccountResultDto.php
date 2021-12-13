@@ -4,11 +4,12 @@ declare(strict_types=1);
 namespace App\Application\Account\Dto;
 
 use App\Application\Currency\Dto\CurrencyResultDto;
+use App\Application\User\Dto\UserResultDto;
 use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Definition(
- *     required={"id", "ownerUserId", "name", "position", "currency", "balance", "type", "icon", "sharedAccess"}
+ *     required={"id", "owner", "name", "position", "currency", "balance", "type", "icon", "sharedAccess"}
  * )
  */
 class AccountResultDto
@@ -21,11 +22,9 @@ class AccountResultDto
     public string $id;
 
     /**
-     * Owner user id
-     * @var string
-     * @SWG\Property(example="a5e2eee2-56aa-43c6-a827-ca155683ea8d")
+     * @SWG\Property()
      */
-    public string $ownerUserId;
+    public UserResultDto $owner;
 
     /**
      * Account folder id

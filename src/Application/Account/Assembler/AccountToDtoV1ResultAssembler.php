@@ -6,6 +6,7 @@ namespace App\Application\Account\Assembler;
 
 use App\Application\Account\Dto\AccountResultDto;
 use App\Application\Currency\Assembler\CurrencyIdToDtoV1ResultAssembler;
+use App\Application\User\Assembler\UserIdToDtoResultAssembler;
 use App\Domain\Entity\Account;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Repository\FolderRepositoryInterface;
@@ -15,22 +16,25 @@ class AccountToDtoV1ResultAssembler
     private AccountIdToSharedAccessResultAssembler $accountIdToSharedAccessResultAssembler;
     private CurrencyIdToDtoV1ResultAssembler $currencyIdToDtoV1ResultAssembler;
     private FolderRepositoryInterface $folderRepository;
+    private UserIdToDtoResultAssembler $userIdToDtoResultAssembler;
 
     public function __construct(
         AccountIdToSharedAccessResultAssembler $accountIdToSharedAccessResultAssembler,
         CurrencyIdToDtoV1ResultAssembler $currencyIdToDtoV1ResultAssembler,
-        FolderRepositoryInterface $folderRepository
+        FolderRepositoryInterface $folderRepository,
+        UserIdToDtoResultAssembler $userIdToDtoResultAssembler
     ) {
         $this->accountIdToSharedAccessResultAssembler = $accountIdToSharedAccessResultAssembler;
         $this->currencyIdToDtoV1ResultAssembler = $currencyIdToDtoV1ResultAssembler;
         $this->folderRepository = $folderRepository;
+        $this->userIdToDtoResultAssembler = $userIdToDtoResultAssembler;
     }
 
     public function assemble(Id $userId, Account $account): AccountResultDto
     {
         $item = new AccountResultDto();
         $item->id = $account->getId()->getValue();
-        $item->ownerUserId = $account->getUserId()->getValue();
+        $item->owner = $this->userIdToDtoResultAssembler->assemble($account->getUserId());
         $item->folderId = null;
         $folders = $this->folderRepository->getByUserId($userId);
         foreach ($folders as $folder) {

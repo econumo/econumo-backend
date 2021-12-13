@@ -96,7 +96,7 @@ class Api extends \Codeception\Module
     {
         return [
             'id' => 'string',
-            'ownerUserId' => 'string',
+            'owner' => $this->getUserDtoJsonType(),
             'folderId' => 'string|null',
             'name' => 'string',
             'position' => 'integer',
