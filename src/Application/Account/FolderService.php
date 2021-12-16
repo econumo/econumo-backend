@@ -36,7 +36,7 @@ class FolderService
         } catch (TheOnlyFolderRemoveException $e) {
             throw new ValidationException('Can not delete the only folder');
         } catch (ForeignFolderRemoveException $e) {
-            throw new ValidationException('Can not delete foreign folder');
+            throw new ValidationException('You don\'t have that folder');
         }
 
         return $this->deleteFolderV1ResultAssembler->assemble($dto);

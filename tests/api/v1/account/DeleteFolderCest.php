@@ -78,7 +78,7 @@ class DeleteFolderCest
         $I->sendPOST($this->url, ['id' => 'f425b05e-ec2d-4ef5-99c6-eef43c785398']);
         $I->seeResponseCodeIs(HttpCode::BAD_REQUEST);
         $I->seeResponseContainsJson([
-            'message' => 'Can not delete foreign folder',
+            'message' => 'You don\'t have that folder',
             'code' => 400,
             'errors' => [],
         ]);
