@@ -21,9 +21,7 @@ interface FolderRepositoryInterface
 
     public function save(Folder ...$items): void;
 
-    public function delete(Id $id): void;
-
-    public function isUserHasFolder(Id $userId, Id $folderId): bool;
+    public function delete(Folder $folder): void;
 
     public function isUserHasMoreThanOneFolder(Id $userId): bool;
 }

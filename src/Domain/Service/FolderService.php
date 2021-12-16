@@ -25,12 +25,13 @@ final class FolderService implements FolderServiceInterface
 
     public function delete(Id $userId, Id $folderId): void
     {
-        if (!$this->folderRepository->isUserHasFolder($userId, $folderId)) {
+        $folder = $this->folderRepository->get($folderId);
+        if (!$folder->belongsTo($userId)) {
             throw new ForeignFolderRemoveException();
         }
         if (!$this->folderRepository->isUserHasMoreThanOneFolder($userId)) {
             throw new TheOnlyFolderRemoveException();
         }
-        $this->folderRepository->delete($folderId);
+        $this->folderRepository->delete($folder);
     }
 }

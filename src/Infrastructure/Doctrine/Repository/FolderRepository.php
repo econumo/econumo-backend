@@ -68,19 +68,10 @@ class FolderRepository extends ServiceEntityRepository implements FolderReposito
         }
     }
 
-    public function delete(Id $id): void
+    public function delete(Folder $folder): void
     {
-        $folder = $this->get($id);
         $this->getEntityManager()->remove($folder);
         $this->getEntityManager()->flush();
-    }
-
-    public function isUserHasFolder(Id $userId, Id $folderId): bool
-    {
-        return 1 === count($this->findBy([
-            'user' => $this->getEntityManager()->getReference(User::class, $userId),
-            'id' => $folderId
-        ]));
     }
 
     public function isUserHasMoreThanOneFolder(Id $userId): bool
