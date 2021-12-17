@@ -73,4 +73,8 @@ class Folder
     {
         $this->accounts->removeElement($account);
     }
+
+    public function belongsTo(Id $userId): bool {
+        return $userId->isEqual($this->getUserId());
+    }
 }
