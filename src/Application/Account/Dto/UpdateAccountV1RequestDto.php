@@ -8,7 +8,7 @@ use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Definition(
- *     required={"id", "name", "balance", "updatedAt"}
+ *     required={"id", "name", "balance", "icon", "updatedAt"}
  * )
  */
 class UpdateAccountV1RequestDto
@@ -31,15 +31,10 @@ class UpdateAccountV1RequestDto
     /**
      * @SWG\Property(example="wallet")
      */
-    public ?string $icon = '';
+    public string $icon;
 
     /**
      * @SWG\Property(example="2020-01-01 23:59:59")
      */
     public string $updatedAt;
-
-    /**
-     * @SWG\Property(example="correction")
-     */
-    public ?string $comment = '';
 }

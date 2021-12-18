@@ -32,8 +32,9 @@ class UpdateAccountV1Form extends AbstractType
             ->add('balance', NumberType::class, [
                 'constraints' => [new NotBlank()],
             ])
-            ->add('icon', TextType::class)
-            ->add('comment', TextType::class)
+            ->add('icon', TextType::class, [
+                'constraints' => [new NotBlank()],
+            ])
             ->add('updatedAt', TextType::class, [
                 'constraints' => [new NotBlank(), new DateTime("Y-m-d H:i:s")]
             ]);

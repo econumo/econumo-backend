@@ -8,7 +8,7 @@ use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Definition(
- *     required={"id", "name", "currencyId", "balance"}
+ *     required={"id", "name", "currencyId", "balance", "icon"}
  * )
  */
 class CreateAccountV1RequestDto
