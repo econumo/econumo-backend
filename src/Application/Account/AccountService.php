@@ -19,6 +19,7 @@ use App\Domain\Service\AccountAccessServiceInterface;
 use App\Domain\Service\AccountServiceInterface;
 use App\Domain\Service\Dto\AccountDto;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AccountService
 {
@@ -28,6 +29,7 @@ class AccountService
     private UpdateAccountV1ResultAssembler $updateAccountV1ResultAssembler;
     private AccountRepositoryInterface $accountRepository;
     private AccountAccessServiceInterface $accountAccessService;
+    private TranslatorInterface $translator;
 
     public function __construct(
         CreateAccountV1ResultAssembler $createAccountV1ResultAssembler,
@@ -35,7 +37,8 @@ class AccountService
         DeleteAccountV1ResultAssembler $deleteAccountV1ResultAssembler,
         UpdateAccountV1ResultAssembler $updateAccountV1ResultAssembler,
         AccountRepositoryInterface $accountRepository,
-        AccountAccessServiceInterface $accountAccessService
+        AccountAccessServiceInterface $accountAccessService,
+        TranslatorInterface $translator
     ) {
         $this->createAccountV1ResultAssembler = $createAccountV1ResultAssembler;
         $this->accountService = $accountService;
@@ -43,6 +46,7 @@ class AccountService
         $this->updateAccountV1ResultAssembler = $updateAccountV1ResultAssembler;
         $this->accountRepository = $accountRepository;
         $this->accountAccessService = $accountAccessService;
+        $this->translator = $translator;
     }
 
     public function createAccount(
@@ -84,7 +88,7 @@ class AccountService
         $this->accountService->update($accountId, $dto->name, $dto->icon);
         $updatedAt = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dto->updatedAt);
         // @todo: добавить комментарий, что корректировка
-        $transaction = $this->accountService->updateBalance($accountId, $dto->balance, $updatedAt, '');
+        $transaction = $this->accountService->updateBalance($accountId, $dto->balance, $updatedAt, $this->translator->trans('account.correction.message'));
         $account = $this->accountRepository->get($accountId);
         return $this->updateAccountV1ResultAssembler->assemble($dto, $userId, $account, $transaction);
     }
