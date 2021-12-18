@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Transaction\Assembler;
 
-use App\Application\Transaction\Dto\CreateTransactionV1RequestDto;
+use App\Application\Transaction\Dto\UpdateTransactionV1RequestDto;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\TransactionType;
 use App\Domain\Repository\AccountRepositoryInterface;
@@ -14,7 +14,7 @@ use App\Domain\Repository\TagRepositoryInterface;
 use App\Domain\Service\Dto\TransactionDto;
 use DateTime;
 
-class RequestToDomainDtoAssembler
+class UpdateTransactionRequestToDomainDtoAssembler
 {
     private AccountRepositoryInterface $accountRepository;
     private CategoryRepositoryInterface $categoryRepository;
@@ -34,7 +34,7 @@ class RequestToDomainDtoAssembler
     }
 
     public function assemble(
-        CreateTransactionV1RequestDto $dto,
+        UpdateTransactionV1RequestDto $dto,
         Id $userId
     ): TransactionDto {
         $result = new TransactionDto();

@@ -54,6 +54,40 @@ class TransactionService implements TransactionServiceInterface
         return $transaction;
     }
 
+    public function updateTransaction(Id $id, TransactionDto $transactionDto): Transaction
+    {
+        $this->antiCorruptionService->beginTransaction();
+        $transaction = $this->transactionRepository->get($id);
+        $updatedTransaction = $this->transactionFactory->create($transactionDto);
+        try {
+            $account = $this->accountRepository->get($transaction->getAccountId());
+            $account->rollbackTransaction($transaction);
+            $account->applyTransaction($updatedTransaction);
+            $this->accountRepository->save($account);
+
+            if ($transaction->getType()->isTransfer() && $transaction->getAccountRecipientId() !== null) {
+                $accountRecipient = $this->accountRepository->get($transaction->getAccountRecipientId());
+                $accountRecipient->rollbackTransaction($transaction);
+                $this->accountRepository->save($accountRecipient);
+            }
+
+            if ($transactionDto->type->isTransfer() && $transactionDto->accountRecipientId !== null) {
+                $accountRecipient = $this->accountRepository->get($transactionDto->accountRecipientId);
+                $accountRecipient->applyTransaction($updatedTransaction);
+                $this->accountRepository->save($accountRecipient);
+            }
+
+            $transaction->update($transactionDto);
+            $this->transactionRepository->save($transaction);
+            $this->antiCorruptionService->commit();
+        } catch (\Throwable $exception) {
+            $this->antiCorruptionService->rollback();
+            throw $exception;
+        }
+
+        return $transaction;
+    }
+
     public function deleteTransaction(Transaction $transaction): void
     {
         $this->antiCorruptionService->beginTransaction();

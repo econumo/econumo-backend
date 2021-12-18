@@ -11,7 +11,7 @@ use Swagger\Annotations as SWG;
  *     required={"id", "type", "amount", "accountId", "date"}
  * )
  */
-class CreateTransactionV1RequestDto
+class UpdateTransactionV1RequestDto
 {
     /**
      * @SWG\Property(example="fa725671-bdce-43e6-8159-f37b748a667f")

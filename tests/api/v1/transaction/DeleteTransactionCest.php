@@ -49,10 +49,10 @@ class DeleteTransactionCest
         $I->sendPOST($this->url, ['id' => '7cb3227d-22dc-4178-aeb4-02a8f815bdbd']);
         $I->seeResponseMatchesJsonType([
             'data' => [
-                'accountBalance' => 'float',
-                'accountRecipientBalance' => 'float|null',
-                'transaction' => $I->getTransactionDtoJsonType()
+                'accounts' => 'array',
+                'item' => $I->getTransactionDtoJsonType()
             ],
         ]);
+        $I->seeResponseMatchesJsonType($I->getAccountDtoJsonType(), '$.data.accounts[0]');
     }
 }

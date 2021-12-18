@@ -7,18 +7,18 @@ namespace App\Tests\api\v1\transaction;
 use App\Tests\ApiTester;
 use Codeception\Util\HttpCode;
 
-class CreateTransactionCest
+class UpdateTransactionCest
 {
-    private string $url = '/api/v1/transaction/create-transaction';
+    private string $url = '/api/v1/transaction/update-transaction';
 
     /**
      * @throws \Codeception\Exception\ModuleException
      */
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn();
+        $I->amAuthenticatedAsJohn($I);
         $I->sendPOST($this->url, [
-            'id' => '3cc0335e-52ea-11ec-bf63-0242ac130002',
+            'id' => '7cb3227d-22dc-4178-aeb4-02a8f815bdbd',
             'type' => 'expense',
             'amount' => 433,
             'amountRecipient' => '',
@@ -38,8 +38,8 @@ class CreateTransactionCest
      */
     public function requestShouldReturn400ResponseCode(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, ['test' => 'f20ef9c2-52e8-11ec-bf63-0242ac130002']);
+        $I->amAuthenticatedAsJohn($I);
+        $I->sendPOST($this->url, ['test' => '7cb3227d-22dc-4178-aeb4-02a8f815bdbd']);
         $I->seeResponseCodeIs(HttpCode::BAD_REQUEST);
     }
 
@@ -49,7 +49,7 @@ class CreateTransactionCest
     public function requestShouldReturn401ResponseCode(ApiTester $I): void
     {
         $I->sendPOST($this->url, [
-            'id' => '3cc0335e-52ea-11ec-bf63-0242ac130002',
+            'id' => '7cb3227d-22dc-4178-aeb4-02a8f815bdbd',
             'type' => 'expense',
             'amount' => 433,
             'amountRecipient' => '',
@@ -69,9 +69,9 @@ class CreateTransactionCest
      */
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn();
+        $I->amAuthenticatedAsJohn($I);
         $I->sendPOST($this->url, [
-            'id' => '3cc0335e-52ea-11ec-bf63-0242ac130002',
+            'id' => '7cb3227d-22dc-4178-aeb4-02a8f815bdbd',
             'type' => 'expense',
             'amount' => 433,
             'amountRecipient' => '',

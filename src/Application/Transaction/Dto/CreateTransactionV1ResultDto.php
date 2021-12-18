@@ -4,27 +4,25 @@ declare(strict_types=1);
 
 namespace App\Application\Transaction\Dto;
 
-use App\Application\Transaction\Dto\TransactionResultDto;
+use App\Application\Account\Dto\AccountResultDto;
 use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Definition(
- *     required={"accountBalance"}
+ *     required={"item", "accounts"}
  * )
  */
 class CreateTransactionV1ResultDto
 {
     /**
-     * Account balance
-     * @SWG\Property(example="43.16")
+     * Transaction
+     * @SWG\Property()
      */
-    public float $accountBalance;
+    public TransactionResultDto $item;
 
     /**
-     * Account recipient balance
-     * @SWG\Property(example="215.43")
+     * @var AccountResultDto[]
+     * @SWG\Property()
      */
-    public ?float $accountRecipientBalance = null;
-
-    public TransactionResultDto $item;
+    public array $accounts = [];
 }
