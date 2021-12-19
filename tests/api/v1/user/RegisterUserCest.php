@@ -31,9 +31,9 @@ class RegisterUserCest
             'message' => 'string',
             'code' => 'integer',
             'errors' => [
-                'register_user_v1_form_email' => ['string'],
-                'register_user_v1_form_password' => ['string'],
-                'register_user_v1_form_name' => ['string'],
+                'email' => ['string'],
+                'password' => ['string'],
+                'name' => ['string'],
             ],
         ]);
     }
