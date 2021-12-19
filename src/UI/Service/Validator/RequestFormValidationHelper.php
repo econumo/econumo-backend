@@ -26,7 +26,7 @@ class RequestFormValidationHelper
             } elseif (!empty($subView->vars['errors'])) {
                 foreach ($subView->vars['errors'] as $error) {
                     /** @var FormError $error */
-                    $values[$subView->vars['id']][] = $error->getMessage();
+                    $values[$subView->vars['name']][] = $error->getMessage();
                 }
             }
         }
