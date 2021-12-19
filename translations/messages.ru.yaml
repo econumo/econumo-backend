@@ -1,3 +1,5 @@
 account:
   correction:
     message: Корректировка баланса
+  folder:
+    all_accounts: Все счета

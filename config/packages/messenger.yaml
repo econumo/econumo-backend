@@ -19,4 +19,6 @@ framework:
           max_retries: 1
 
     routing:
+      'App\Domain\Events\FolderCreatedEvent': domain_events
       'App\Domain\Events\RemindPasswordRequestedEvent': domain_events
+      'App\Domain\Events\UserRegisteredEvent': domain_events

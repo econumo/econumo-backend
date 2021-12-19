@@ -87,7 +87,6 @@ class AccountService
         }
         $this->accountService->update($accountId, $dto->name, $dto->icon);
         $updatedAt = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dto->updatedAt);
-        // @todo: добавить комментарий, что корректировка
         $transaction = $this->accountService->updateBalance($accountId, $dto->balance, $updatedAt, $this->translator->trans('account.correction.message'));
         $account = $this->accountRepository->get($accountId);
         return $this->updateAccountV1ResultAssembler->assemble($dto, $userId, $account, $transaction);

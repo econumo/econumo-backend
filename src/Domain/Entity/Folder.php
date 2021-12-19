@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Domain\Entity;
 
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Events\FolderCreatedEvent;
+use App\Domain\Traits\EventTrait;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -13,6 +15,8 @@ use Doctrine\Common\Collections\Collection;
 
 class Folder
 {
+    use EventTrait;
+
     private Id $id;
     private string $name;
     private int $position;
@@ -37,6 +41,7 @@ class Folder
         $this->accounts = new ArrayCollection();
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
+        $this->registerEvent(new FolderCreatedEvent($user->getId(), $id));
     }
 
     public function getId(): Id

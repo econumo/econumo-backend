@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Domain\Factory;
@@ -9,5 +10,12 @@ use App\Domain\Entity\ValueObject\Id;
 
 interface AccountFactoryInterface
 {
-    public function create(Id $userId, string $name, AccountType $accountType, Id $currencyId, float $balance, string $icon): Account;
+    public function create(
+        Id $userId,
+        string $name,
+        AccountType $accountType,
+        Id $currencyId,
+        float $balance,
+        string $icon
+    ): Account;
 }

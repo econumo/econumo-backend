@@ -7,6 +7,8 @@ namespace App\Domain\Entity;
 use App\Domain\Entity\ValueObject\Email;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\Identifier;
+use App\Domain\Events\UserRegisteredEvent;
+use App\Domain\Traits\EventTrait;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -15,6 +17,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    use EventTrait;
+
     private Id $id;
     private string $name;
 
@@ -43,6 +47,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->identifier = Identifier::createFromEmail($email)->getValue();
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
+        $this->registerEvent(new UserRegisteredEvent($id));
     }
 
     public function getId(): Id
