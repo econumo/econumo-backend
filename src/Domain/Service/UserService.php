@@ -64,7 +64,8 @@ class UserService implements UserServiceInterface
             throw $exception;
         }
         $this->eventDispatcher->dispatchAll($user->releaseEvents());
-        $this->eventDispatcher->dispatchAll($folder->releaseEvents());
+        // do not send first folder creation event
+//        $this->eventDispatcher->dispatchAll($folder->releaseEvents());
 
         return $user;
     }
