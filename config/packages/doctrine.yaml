@@ -22,6 +22,7 @@ doctrine:
             account_role: App\Infrastructure\Doctrine\Type\AccountRole
             category_type: App\Infrastructure\Doctrine\Type\CategoryType
             transaction_type: App\Infrastructure\Doctrine\Type\TransactionType
+            icon_type: App\Infrastructure\Doctrine\Type\IconType
         server_version: 11
 
     orm:

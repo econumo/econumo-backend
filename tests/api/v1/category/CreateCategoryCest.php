@@ -21,7 +21,8 @@ class CreateCategoryCest
             'id' => '3a2c32a4-45ec-4cb0-9794-a6bef87ba9a4',
             'name' => 'Food',
             'type' => 'expense',
-            'accountId' => '0aaa0450-564e-411e-8018-7003f6dbeb92'
+            'accountId' => '0aaa0450-564e-411e-8018-7003f6dbeb92',
+            'icon' => 'local_offer',
         ]);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
@@ -55,7 +56,8 @@ class CreateCategoryCest
             'id' => '3a2c32a4-45ec-4cb0-9794-a6bef87ba9a4',
             'name' => 'Food',
             'type' => 'expense',
-            'accountId' => '0aaa0450-564e-411e-8018-7003f6dbeb92'
+            'accountId' => '0aaa0450-564e-411e-8018-7003f6dbeb92',
+            'icon' => 'local_offer',
         ]);
         $I->seeResponseMatchesJsonType([
             'data' => [

@@ -15,6 +15,7 @@
             </options>
         </field>
         <field name="type" type="category_type" column="type" nullable="false"/>
+        <field name="icon" type="icon_type" column="icon" nullable="false" />
         <field name="createdAt" type="datetime_immutable" column="created_at" nullable="false"/>
         <field name="updatedAt" type="datetime" column="updated_at" nullable="false"/>
 

@@ -8,6 +8,7 @@ use App\Application\Category\Dto\CreateCategoryV1RequestDto;
 use App\Application\Category\Dto\CreateCategoryV1ResultDto;
 use App\Application\Category\Assembler\CreateCategoryV1ResultAssembler;
 use App\Domain\Entity\ValueObject\CategoryType;
+use App\Domain\Entity\ValueObject\Icon;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Service\AccountAccessServiceInterface;
 use App\Domain\Service\CategoryServiceInterface;
@@ -32,6 +33,7 @@ class CategoryService
         CreateCategoryV1RequestDto $dto,
         Id $userId
     ): CreateCategoryV1ResultDto {
+        $icon = new Icon(!empty($dto->icon) ? $dto->icon : 'local_offer');
         if ($dto->accountId !== null) {
             $accountId = new Id($dto->accountId);
             $this->accountAccessService->checkAddCategory($userId, $accountId);
@@ -39,13 +41,15 @@ class CategoryService
                 $userId,
                 $accountId,
                 $dto->name,
-                CategoryType::createFromAlias($dto->type)
+                CategoryType::createFromAlias($dto->type),
+                $icon
             );
         } else {
             $category = $this->categoryService->createCategory(
                 $userId,
                 $dto->name,
-                CategoryType::createFromAlias($dto->type)
+                CategoryType::createFromAlias($dto->type),
+                $icon
             );
         }
 

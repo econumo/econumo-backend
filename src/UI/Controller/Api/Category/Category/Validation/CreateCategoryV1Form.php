@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Uuid;
 
@@ -34,6 +35,8 @@ class CreateCategoryV1Form extends AbstractType
                 'choices' => ['expense', 'income']
             ])->add('accountId', TextType::class, [
                 'constraints' => [new Uuid()],
+            ])->add('icon', TextType::class, [
+                'constraints' => [new Length(['min' => 2])],
             ]);
     }
 }

@@ -7,7 +7,7 @@ use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Definition(
- *     required={"id", "ownerUserId", "name", "position", "type"}
+ *     required={"id", "ownerUserId", "name", "position", "type", "icon"}
  * )
  */
 class CategoryResultDto
@@ -45,4 +45,11 @@ class CategoryResultDto
      * @SWG\Property(example="expense")
      */
     public string $type;
+
+    /**
+     * Icon
+     * @var string
+     * @SWG\Property(example="local_offer")
+     */
+    public string $icon;
 }

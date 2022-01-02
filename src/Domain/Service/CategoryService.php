@@ -6,6 +6,7 @@ namespace App\Domain\Service;
 
 use App\Domain\Entity\Category;
 use App\Domain\Entity\ValueObject\CategoryType;
+use App\Domain\Entity\ValueObject\Icon;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Factory\CategoryFactoryInterface;
 use App\Domain\Repository\AccountRepositoryInterface;
@@ -27,9 +28,9 @@ class CategoryService implements CategoryServiceInterface
         $this->accountRepository = $accountRepository;
     }
 
-    public function createCategory(Id $userId, string $name, CategoryType $type): Category
+    public function createCategory(Id $userId, string $name, CategoryType $type, Icon $icon): Category
     {
-        $category = $this->categoryFactory->create($userId, $name, $type);
+        $category = $this->categoryFactory->create($userId, $name, $type, $icon);
         $this->categoryRepository->save($category);
 
         return $category;
@@ -39,13 +40,14 @@ class CategoryService implements CategoryServiceInterface
         Id $userId,
         Id $accountId,
         string $name,
-        CategoryType $type
+        CategoryType $type,
+        Icon $icon
     ): Category {
         $account = $this->accountRepository->get($accountId);
         if ($userId->isEqual($account->getUserId())) {
-            return $this->createCategory($userId, $name, $type);
+            return $this->createCategory($userId, $name, $type, $icon);
         }
 
-        return $this->createCategory($account->getUserId(), $name, $type);
+        return $this->createCategory($account->getUserId(), $name, $type, $icon);
     }
 }

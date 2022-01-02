@@ -32,4 +32,9 @@ class CreateCategoryV1RequestDto
      * @SWG\Property(example="0aaa0450-564e-411e-8018-7003f6dbeb92")
      */
     public ?string $accountId = null;
+
+    /**
+     * @SWG\Property(example="local_offer")
+     */
+    public ?string $icon = null;
 }

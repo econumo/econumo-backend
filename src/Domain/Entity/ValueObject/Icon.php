@@ -7,14 +7,14 @@ namespace App\Domain\Entity\ValueObject;
 use DomainException;
 use JsonSerializable;
 
-class Id implements JsonSerializable
+class Icon implements JsonSerializable
 {
     private string $value;
 
     public function __construct(string $value)
     {
         if (empty($value)) {
-            throw new DomainException('Id value must not be empty');
+            throw new DomainException('Icon value must not be empty');
         }
 
         $this->value = $value;

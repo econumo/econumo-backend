@@ -17,6 +17,7 @@ class CategoryToDtoResultAssembler
         $item->name = $category->getName();
         $item->position = $category->getPosition();
         $item->type = $category->getType()->getAlias();
+        $item->icon = $category->getIcon()->getValue();
         return $item;
     }
 }
