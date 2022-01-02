@@ -59,4 +59,33 @@ class Tag
     {
         return $this->isArchived;
     }
+
+    public function updateName(string $name): void
+    {
+        if ($this->name !== $name) {
+            $this->name = $name;
+            $this->updated();
+        }
+    }
+
+    public function archive(): void
+    {
+        if (!$this->isArchived) {
+            $this->isArchived = true;
+            $this->updated();
+        }
+    }
+
+    public function unarchive(): void
+    {
+        if ($this->isArchived) {
+            $this->isArchived = false;
+            $this->updated();
+        }
+    }
+
+    private function updated()
+    {
+        $this->updatedAt = new DateTime();
+    }
 }

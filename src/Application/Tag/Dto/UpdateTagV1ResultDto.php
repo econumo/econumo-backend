@@ -11,7 +11,7 @@ use Swagger\Annotations as SWG;
  *     required={"item"}
  * )
  */
-class CreateTagV1ResultDto
+class UpdateTagV1ResultDto
 {
     /**
      * Tag

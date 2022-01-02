@@ -44,4 +44,16 @@ class TagService implements TagServiceInterface
 
         return $this->createTag($account->getUserId(), $name);
     }
+
+    public function updateTag(Id $tagId, string $name, bool $isArchived): void
+    {
+        $tag = $this->tagRepository->get($tagId);
+        $tag->updateName($name);
+        if ($isArchived) {
+            $tag->archive();
+        } else {
+            $tag->unarchive();
+        }
+        $this->tagRepository->save($tag);
+    }
 }
