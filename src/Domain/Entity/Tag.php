@@ -12,6 +12,7 @@ use DateTimeInterface;
 
 class Tag
 {
+    private const ARCHIVED_POSITION = 1000;
     private Id $id;
     private string $name;
     private int $position;
@@ -68,10 +69,19 @@ class Tag
         }
     }
 
+    public function updatePosition(int $position): void
+    {
+        if ($this->position !== $position) {
+            $this->position = $position;
+            $this->updated();
+        }
+    }
+
     public function archive(): void
     {
         if (!$this->isArchived) {
             $this->isArchived = true;
+            $this->position = self::ARCHIVED_POSITION;
             $this->updated();
         }
     }

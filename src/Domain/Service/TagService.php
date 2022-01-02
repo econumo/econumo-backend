@@ -56,4 +56,22 @@ class TagService implements TagServiceInterface
         }
         $this->tagRepository->save($tag);
     }
+
+    public function orderTags(Id $userId, Id ...$ids): void
+    {
+        $tags = $this->tagRepository->findByUserId($userId);
+        $position = 0;
+        $changed = [];
+        foreach ($ids as $id) {
+            foreach ($tags as $tag) {
+                if ($tag->getId()->isEqual($id)) {
+                    $tag->updatePosition($position++);
+                    $changed[] = $tag;
+                    break;
+                }
+            }
+        }
+
+        $this->tagRepository->save(...$changed);
+    }
 }

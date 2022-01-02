@@ -42,7 +42,7 @@ class RequestFormValidationHelper
         if (!$form->isValid()) {
             $errors = static::getFlatArrayErrors($form->createView());
             throw new ValidationException(
-                'Ошибка заполнения формы',
+                'Form validation error',
                 Response::HTTP_BAD_REQUEST,
                 null,
                 $errors
