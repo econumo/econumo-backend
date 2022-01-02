@@ -6,6 +6,7 @@ namespace App\Domain\Service;
 
 use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\Email;
+use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Exception\UserRegisteredException;
 use App\Domain\Factory\FolderFactoryInterface;
@@ -68,5 +69,12 @@ class UserService implements UserServiceInterface
 //        $this->eventDispatcher->dispatchAll($folder->releaseEvents());
 
         return $user;
+    }
+
+    public function updateName(Id $userId, string $name): void
+    {
+        $user = $this->userRepository->get($userId);
+        $user->updateName($name);
+        $this->userRepository->save($user);
     }
 }

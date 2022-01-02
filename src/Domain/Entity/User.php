@@ -91,6 +91,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->password = $password;
     }
 
+    public function updateName(string $name): void
+    {
+        $this->name = $name;
+    }
+
     /**
      * @see UserInterface
      */
