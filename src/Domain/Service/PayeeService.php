@@ -28,6 +28,13 @@ class PayeeService implements PayeeServiceInterface
 
     public function createPayee(Id $userId, string $name): Payee
     {
+        $payees = $this->payeeRepository->findByUserId($userId);
+        foreach ($payees as $payee) {
+            if (strcasecmp($payee->getName(), $name) === 0) {
+                throw new PayeeAlreadyExistsException();
+            }
+        }
+
         $payee = $this->payeeFactory->create($userId, $name);
         $this->payeeRepository->save($payee);
 
@@ -67,5 +74,23 @@ class PayeeService implements PayeeServiceInterface
     {
         $payee = $this->payeeRepository->get($payeeId);
         $this->payeeRepository->delete($payee);
+    }
+
+    public function orderPayees(Id $userId, Id ...$ids): void
+    {
+        $payees = $this->payeeRepository->findByUserId($userId);
+        $position = 0;
+        $changed = [];
+        foreach ($ids as $id) {
+            foreach ($payees as $payee) {
+                if ($payee->getId()->isEqual($id)) {
+                    $payee->updatePosition($position++);
+                    $changed[] = $payee;
+                    break;
+                }
+            }
+        }
+
+        $this->payeeRepository->save(...$changed);
     }
 }

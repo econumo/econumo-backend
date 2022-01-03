@@ -17,4 +17,6 @@ interface PayeeServiceInterface
     public function updatePayee(Id $payeeId, string $name, bool $isArchived): void;
 
     public function deletePayee(Id $payeeId): void;
+
+    public function orderPayees(Id $userId, Id ...$ids): void;
 }
