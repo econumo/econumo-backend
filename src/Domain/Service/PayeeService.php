@@ -8,6 +8,7 @@ namespace App\Domain\Service;
 
 use App\Domain\Entity\Payee;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Exception\PayeeAlreadyExistsException;
 use App\Domain\Factory\PayeeFactoryInterface;
 use App\Domain\Repository\AccountRepositoryInterface;
 use App\Domain\Repository\PayeeRepositoryInterface;
@@ -41,5 +42,24 @@ class PayeeService implements PayeeServiceInterface
         }
 
         return $this->createPayee($account->getUserId(), $name);
+    }
+
+    public function updatePayee(Id $payeeId, string $name, bool $isArchived): void
+    {
+        $payee = $this->payeeRepository->get($payeeId);
+        $userPayees = $this->payeeRepository->findByUserId($payee->getUserId());
+        foreach ($userPayees as $userPayee) {
+            if (strcasecmp($userPayee->getName(), $name) === 0 && !$userPayee->getId()->isEqual($payeeId)) {
+                throw new PayeeAlreadyExistsException();
+            }
+        }
+
+        $payee->updateName($name);
+        if ($isArchived) {
+            $payee->archive();
+        } else {
+            $payee->unarchive();
+        }
+        $this->payeeRepository->save($payee);
     }
 }

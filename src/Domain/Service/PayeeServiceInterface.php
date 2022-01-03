@@ -13,4 +13,6 @@ interface PayeeServiceInterface
     public function createPayee(Id $userId, string $name): Payee;
 
     public function createPayeeForAccount(Id $userId, Id $accountId, string $name): Payee;
+
+    public function updatePayee(Id $payeeId, string $name, bool $isArchived): void;
 }
