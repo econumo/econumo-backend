@@ -17,6 +17,7 @@ class PayeeToDtoV1ResultAssembler
         $item->name = $payee->getName();
         $item->position = $payee->getPosition();
         $item->ownerUserId = $payee->getUserId()->getValue();
+        $item->isArchived = $payee->isArchived() ? 1 : 0;
         return $item;
     }
 }

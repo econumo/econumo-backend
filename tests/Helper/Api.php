@@ -79,6 +79,7 @@ class Api extends \Codeception\Module
             'ownerUserId' => 'string',
             'name' => 'string',
             'position' => 'integer|null',
+            'isArchived' => 'integer',
         ];
     }
 

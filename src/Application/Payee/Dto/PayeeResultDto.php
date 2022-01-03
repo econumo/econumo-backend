@@ -7,7 +7,7 @@ use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Definition(
- *     required={"id", "ownerUserId", "name", "position"}
+ *     required={"id", "ownerUserId", "name", "position", "isArchived"}
  * )
  */
 class PayeeResultDto
@@ -38,4 +38,11 @@ class PayeeResultDto
      * @SWG\Property(example="0")
      */
     public int $position;
+
+    /**
+     * Is archived payee?
+     * @var int
+     * @SWG\Property(example="0")
+     */
+    public int $isArchived;
 }
