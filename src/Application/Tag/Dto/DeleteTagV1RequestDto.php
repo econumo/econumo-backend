@@ -8,13 +8,13 @@ use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Definition(
- *     required={"ids"}
+ *     required={"id"}
  * )
  */
-class OrderTagListV1RequestDto
+class DeleteTagV1RequestDto
 {
     /**
-     * @SWG\Property(type="array", @SWG\Items(type="string"))
+     * @SWG\Property(example="4b53d029-c1ed-46ad-8d86-1049542f4a7e")
      */
-    public array $ids;
+    public string $id;
 }

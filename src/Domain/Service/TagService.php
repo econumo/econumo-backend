@@ -74,4 +74,10 @@ class TagService implements TagServiceInterface
 
         $this->tagRepository->save(...$changed);
     }
+
+    public function deleteTag(Id $tagId): void
+    {
+        $tag = $this->tagRepository->get($tagId);
+        $this->tagRepository->delete($tag);
+    }
 }

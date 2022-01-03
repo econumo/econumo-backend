@@ -23,16 +23,16 @@
             <join-column name="account_id" referenced-column-name="id" nullable="false"/>
         </many-to-one>
         <many-to-one field="accountRecipient" target-entity="App\Domain\Entity\Account">
-            <join-column name="account_recipient_id" referenced-column-name="id" nullable="true"/>
+            <join-column name="account_recipient_id" referenced-column-name="id" nullable="true" on-delete="SET NULL"/>
         </many-to-one>
         <many-to-one field="category" target-entity="App\Domain\Entity\Category">
-            <join-column name="category_id" referenced-column-name="id" nullable="true"/>
+            <join-column name="category_id" referenced-column-name="id" nullable="true" on-delete="SET NULL"/>
         </many-to-one>
         <many-to-one field="payee" target-entity="App\Domain\Entity\Payee">
-            <join-column name="payee_id" referenced-column-name="id" nullable="true"/>
+            <join-column name="payee_id" referenced-column-name="id" nullable="true" on-delete="SET NULL"/>
         </many-to-one>
         <many-to-one field="tag" target-entity="App\Domain\Entity\Tag">
-            <join-column name="tag_id" referenced-column-name="id" nullable="true"/>
+            <join-column name="tag_id" referenced-column-name="id" nullable="true" on-delete="SET NULL"/>
         </many-to-one>
     </entity>
 </doctrine-mapping>

@@ -18,4 +18,6 @@ interface TagServiceInterface
     public function updateTag(Id $tagId, string $name, bool $isArchived): void;
 
     public function orderTags(Id $userId, Id ...$ids): void;
+
+    public function deleteTag(Id $tagId): void;
 }

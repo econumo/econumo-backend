@@ -22,4 +22,6 @@ interface TagRepositoryInterface
     public function save(Tag ...$tags): void;
 
     public function getReference(Id $id): Tag;
+
+    public function delete(Tag $tag): void;
 }

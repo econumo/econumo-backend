@@ -91,4 +91,9 @@ DQL;
     {
         return $this->getEntityManager()->getReference(Tag::class, $id);
     }
+
+    public function delete(Tag $tag): void
+    {
+        $this->getEntityManager()->remove($tag);
+    }
 }

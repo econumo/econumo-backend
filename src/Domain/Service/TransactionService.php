@@ -92,8 +92,6 @@ class TransactionService implements TransactionServiceInterface
     {
         $this->antiCorruptionService->beginTransaction();
         try {
-            $this->transactionRepository->delete($transaction);
-
             $account = $this->accountRepository->get($transaction->getAccountId());
             $account->rollbackTransaction($transaction);
             $this->accountRepository->save($account);
@@ -102,6 +100,7 @@ class TransactionService implements TransactionServiceInterface
                 $accountRecipient->rollbackTransaction($transaction);
                 $this->accountRepository->save($accountRecipient);
             }
+            $this->transactionRepository->delete($transaction);
             $this->antiCorruptionService->commit();
         } catch (\Throwable $exception) {
             $this->antiCorruptionService->rollback();
