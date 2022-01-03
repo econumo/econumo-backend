@@ -6,11 +6,14 @@ namespace App\Application\Payee;
 
 use App\Application\Exception\ValidationException;
 use App\Application\Payee\Assembler\CreatePayeeV1ResultAssembler;
+use App\Application\Payee\Assembler\UpdatePayeeV1ResultAssembler;
 use App\Application\Payee\Dto\CreatePayeeV1RequestDto;
 use App\Application\Payee\Dto\CreatePayeeV1ResultDto;
+use App\Application\Payee\Dto\DeletePayeeV1RequestDto;
+use App\Application\Payee\Dto\DeletePayeeV1ResultDto;
+use App\Application\Payee\Assembler\DeletePayeeV1ResultAssembler;
 use App\Application\Payee\Dto\UpdatePayeeV1RequestDto;
 use App\Application\Payee\Dto\UpdatePayeeV1ResultDto;
-use App\Application\Payee\Assembler\UpdatePayeeV1ResultAssembler;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\PayeeAlreadyExistsException;
 use App\Domain\Repository\PayeeRepositoryInterface;
@@ -24,19 +27,22 @@ class PayeeService
     private AccountAccessServiceInterface $accountAccessService;
     private UpdatePayeeV1ResultAssembler $updatePayeeV1ResultAssembler;
     private PayeeRepositoryInterface $payeeRepository;
+    private DeletePayeeV1ResultAssembler $deletePayeeV1ResultAssembler;
 
     public function __construct(
         CreatePayeeV1ResultAssembler $createPayeeV1ResultAssembler,
         PayeeServiceInterface $payeeService,
         AccountAccessServiceInterface $accountAccessService,
         UpdatePayeeV1ResultAssembler $updatePayeeV1ResultAssembler,
-        PayeeRepositoryInterface $payeeRepository
+        PayeeRepositoryInterface $payeeRepository,
+        DeletePayeeV1ResultAssembler $deletePayeeV1ResultAssembler
     ) {
         $this->createPayeeV1ResultAssembler = $createPayeeV1ResultAssembler;
         $this->payeeService = $payeeService;
         $this->accountAccessService = $accountAccessService;
         $this->updatePayeeV1ResultAssembler = $updatePayeeV1ResultAssembler;
         $this->payeeRepository = $payeeRepository;
+        $this->deletePayeeV1ResultAssembler = $deletePayeeV1ResultAssembler;
     }
 
     public function createPayee(
@@ -69,5 +75,18 @@ class PayeeService
             throw new ValidationException('Payee with name ' . $dto->name . ' already exists');
         }
         return $this->updatePayeeV1ResultAssembler->assemble($dto);
+    }
+
+    public function deletePayee(
+        DeletePayeeV1RequestDto $dto,
+        Id $userId
+    ): DeletePayeeV1ResultDto {
+        $payeeId = new Id($dto->id);
+        $payee = $this->payeeRepository->get($payeeId);
+        if (!$payee->getUserId()->isEqual($userId)) {
+            throw new ValidationException('Payee is not valid');
+        }
+        $this->payeeService->deletePayee($payeeId);
+        return $this->deletePayeeV1ResultAssembler->assemble($dto);
     }
 }

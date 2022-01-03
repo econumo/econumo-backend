@@ -62,4 +62,10 @@ class PayeeService implements PayeeServiceInterface
         }
         $this->payeeRepository->save($payee);
     }
+
+    public function deletePayee(Id $payeeId): void
+    {
+        $payee = $this->payeeRepository->get($payeeId);
+        $this->payeeRepository->delete($payee);
+    }
 }

@@ -91,4 +91,9 @@ DQL;
     {
         return $this->getEntityManager()->getReference(Payee::class, $id);
     }
+
+    public function delete(Payee $payee): void
+    {
+        $this->getEntityManager()->remove($payee);
+    }
 }
