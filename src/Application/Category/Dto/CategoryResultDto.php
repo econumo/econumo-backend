@@ -7,7 +7,7 @@ use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Definition(
- *     required={"id", "ownerUserId", "name", "position", "type", "icon"}
+ *     required={"id", "ownerUserId", "name", "position", "type", "icon", "isArchived"}
  * )
  */
 class CategoryResultDto
@@ -52,4 +52,11 @@ class CategoryResultDto
      * @SWG\Property(example="local_offer")
      */
     public string $icon;
+
+    /**
+     * Is archived category?
+     * @var int
+     * @SWG\Property(example="0")
+     */
+    public int $isArchived;
 }

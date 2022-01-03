@@ -18,6 +18,7 @@ class CategoryToDtoResultAssembler
         $item->position = $category->getPosition();
         $item->type = $category->getType()->getAlias();
         $item->icon = $category->getIcon()->getValue();
+        $item->isArchived = $category->isArchived() ? 1 : 0;
         return $item;
     }
 }
