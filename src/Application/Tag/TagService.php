@@ -15,6 +15,7 @@ use App\Application\Tag\Assembler\DeleteTagV1ResultAssembler;
 use App\Application\Tag\Dto\UpdateTagV1RequestDto;
 use App\Application\Tag\Dto\UpdateTagV1ResultDto;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Exception\TagAlreadyExistsException;
 use App\Domain\Repository\TagRepositoryInterface;
 use App\Domain\Service\AccountAccessServiceInterface;
 use App\Domain\Service\TagServiceInterface;
@@ -48,12 +49,16 @@ class TagService
         CreateTagV1RequestDto $dto,
         Id $userId
     ): CreateTagV1ResultDto {
-        if ($dto->accountId !== null) {
-            $accountId = new Id($dto->accountId);
-            $this->accountAccessService->checkAddTag($userId, $accountId);
-            $tag = $this->tagService->createTagForAccount($userId, $accountId, $dto->name);
-        } else {
-            $tag = $this->tagService->createTag($userId, $dto->name);
+        try {
+            if ($dto->accountId !== null) {
+                $accountId = new Id($dto->accountId);
+                $this->accountAccessService->checkAddTag($userId, $accountId);
+                $tag = $this->tagService->createTagForAccount($userId, $accountId, $dto->name);
+            } else {
+                $tag = $this->tagService->createTag($userId, $dto->name);
+            }
+        } catch (TagAlreadyExistsException $exception) {
+            throw new ValidationException('Tag with name ' . $dto->name . ' already exists');
         }
 
         return $this->createTagV1ResultAssembler->assemble($dto, $tag);
@@ -68,7 +73,12 @@ class TagService
         if (!$tag->getUserId()->isEqual($userId)) {
             throw new ValidationException('Tag is not valid');
         }
-        $this->tagService->updateTag($tagId, $dto->name, (bool)$dto->isArchived);
+        try {
+            $this->tagService->updateTag($tagId, $dto->name, (bool)$dto->isArchived);
+        } catch (TagAlreadyExistsException $exception) {
+            throw new ValidationException('Tag with name ' . $dto->name . ' already exists');
+        }
+
         return $this->updateTagV1ResultAssembler->assemble($dto);
     }
 
