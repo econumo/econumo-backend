@@ -103,5 +103,6 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
     public function delete(Transaction $transaction): void
     {
         $this->getEntityManager()->remove($transaction);
+        $this->getEntityManager()->flush();
     }
 }

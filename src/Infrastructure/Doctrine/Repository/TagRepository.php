@@ -95,5 +95,6 @@ DQL;
     public function delete(Tag $tag): void
     {
         $this->getEntityManager()->remove($tag);
+        $this->getEntityManager()->flush();
     }
 }

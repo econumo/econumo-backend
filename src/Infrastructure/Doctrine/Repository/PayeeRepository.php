@@ -95,5 +95,6 @@ DQL;
     public function delete(Payee $payee): void
     {
         $this->getEntityManager()->remove($payee);
+        $this->getEntityManager()->flush();
     }
 }
