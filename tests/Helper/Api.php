@@ -70,6 +70,8 @@ class Api extends \Codeception\Module
             'type' => 'string',
             'icon' => 'string',
             'isArchived' => 'integer',
+            'createdAt' => 'string',
+            'updatedAt' => 'string',
         ];
     }
 
@@ -81,6 +83,8 @@ class Api extends \Codeception\Module
             'name' => 'string',
             'position' => 'integer|null',
             'isArchived' => 'integer',
+            'createdAt' => 'string',
+            'updatedAt' => 'string',
         ];
     }
 
@@ -92,6 +96,8 @@ class Api extends \Codeception\Module
             'name' => 'string',
             'position' => 'integer|null',
             'isArchived' => 'integer',
+            'createdAt' => 'string',
+            'updatedAt' => 'string',
         ];
     }
 

@@ -7,7 +7,7 @@ use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Definition(
- *     required={"id", "ownerUserId", "name", "position", "type", "icon", "isArchived"}
+ *     required={"id", "ownerUserId", "name", "position", "type", "icon", "isArchived", "createdAt", "updatedAt"}
  * )
  */
 class CategoryResultDto
@@ -59,4 +59,18 @@ class CategoryResultDto
      * @SWG\Property(example="0")
      */
     public int $isArchived;
+
+    /**
+     * Created at
+     * @var string
+     * @SWG\Property(example="2021-01-01 12:15:00")
+     */
+    public string $createdAt;
+
+    /**
+     * Updated at
+     * @var string
+     * @SWG\Property(example="2021-01-01 12:15:00")
+     */
+    public string $updatedAt;
 }

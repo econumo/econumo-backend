@@ -119,6 +119,16 @@ class Category
         }
     }
 
+    public function getCreatedAt(): DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
     private function updated()
     {
         $this->updatedAt = new DateTime();

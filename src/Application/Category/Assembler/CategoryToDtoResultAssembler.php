@@ -19,6 +19,8 @@ class CategoryToDtoResultAssembler
         $item->type = $category->getType()->getAlias();
         $item->icon = $category->getIcon()->getValue();
         $item->isArchived = $category->isArchived() ? 1 : 0;
+        $item->createdAt = $category->getCreatedAt()->format('Y-m-d H:i:s');
+        $item->updatedAt = $category->getUpdatedAt()->format('Y-m-d H:i:s');
         return $item;
     }
 }
