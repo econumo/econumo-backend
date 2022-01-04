@@ -4,12 +4,17 @@ declare(strict_types=1);
 
 namespace App\Application\Category;
 
+use App\Application\Category\Assembler\CreateCategoryV1ResultAssembler;
 use App\Application\Category\Dto\CreateCategoryV1RequestDto;
 use App\Application\Category\Dto\CreateCategoryV1ResultDto;
-use App\Application\Category\Assembler\CreateCategoryV1ResultAssembler;
+use App\Application\Category\Dto\DeleteCategoryV1RequestDto;
+use App\Application\Category\Dto\DeleteCategoryV1ResultDto;
+use App\Application\Category\Assembler\DeleteCategoryV1ResultAssembler;
+use App\Application\Exception\ValidationException;
 use App\Domain\Entity\ValueObject\CategoryType;
 use App\Domain\Entity\ValueObject\Icon;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Repository\CategoryRepositoryInterface;
 use App\Domain\Service\AccountAccessServiceInterface;
 use App\Domain\Service\CategoryServiceInterface;
 
@@ -18,15 +23,21 @@ class CategoryService
     private CreateCategoryV1ResultAssembler $createCategoryV1ResultAssembler;
     private CategoryServiceInterface $categoryService;
     private AccountAccessServiceInterface $accountAccessService;
+    private DeleteCategoryV1ResultAssembler $deleteCategoryV1ResultAssembler;
+    private CategoryRepositoryInterface $categoryRepository;
 
     public function __construct(
         CreateCategoryV1ResultAssembler $createCategoryV1ResultAssembler,
         CategoryServiceInterface $categoryService,
-        AccountAccessServiceInterface $accountAccessService
+        AccountAccessServiceInterface $accountAccessService,
+        DeleteCategoryV1ResultAssembler $deleteCategoryV1ResultAssembler,
+        CategoryRepositoryInterface $categoryRepository
     ) {
         $this->createCategoryV1ResultAssembler = $createCategoryV1ResultAssembler;
         $this->categoryService = $categoryService;
         $this->accountAccessService = $accountAccessService;
+        $this->deleteCategoryV1ResultAssembler = $deleteCategoryV1ResultAssembler;
+        $this->categoryRepository = $categoryRepository;
     }
 
     public function createCategory(
@@ -54,5 +65,25 @@ class CategoryService
         }
 
         return $this->createCategoryV1ResultAssembler->assemble($dto, $category);
+    }
+
+    public function deleteCategory(
+        DeleteCategoryV1RequestDto $dto,
+        Id $userId
+    ): DeleteCategoryV1ResultDto {
+        $categoryId = new Id($dto->id);
+        $category = $this->categoryRepository->get($categoryId);
+        if (!$category->getUserId()->isEqual($userId)) {
+            throw new ValidationException('Category not found');
+        }
+
+        if ($dto->mode === $dto::MODE_DELETE) {
+            $this->categoryService->deleteCategory($categoryId);
+        } elseif ($dto->mode === $dto::MODE_REPLACE) {
+            $this->categoryService->replaceCategory($categoryId, new Id($dto->replaceId));
+        } else {
+            throw new ValidationException('Unknown action');
+        }
+        return $this->deleteCategoryV1ResultAssembler->assemble($dto);
     }
 }

@@ -24,4 +24,6 @@ interface TransactionRepositoryInterface
     public function get(Id $id): Transaction;
 
     public function delete(Transaction $transaction): void;
+
+    public function replaceCategory(Id $oldCategoryId, Id $newCategoryId): void;
 }

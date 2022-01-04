@@ -22,4 +22,6 @@ interface CategoryRepositoryInterface
     public function save(Category ...$categories): void;
 
     public function getReference(Id $id): Category;
+
+    public function delete(Category $category): void;
 }

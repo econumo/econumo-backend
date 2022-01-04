@@ -14,4 +14,8 @@ interface CategoryServiceInterface
     public function createCategory(Id $userId, string $name, CategoryType $type, Icon $icon): Category;
 
     public function createCategoryForAccount(Id $userId, Id $accountId, string $name, CategoryType $type, Icon $icon): Category;
+
+    public function deleteCategory(Id $categoryId): void;
+
+    public function replaceCategory(Id $categoryId, Id $newCategoryId): void;
 }

@@ -8,24 +8,32 @@ use App\Domain\Entity\Category;
 use App\Domain\Entity\ValueObject\CategoryType;
 use App\Domain\Entity\ValueObject\Icon;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Exception\AccessDeniedException;
 use App\Domain\Factory\CategoryFactoryInterface;
 use App\Domain\Repository\AccountRepositoryInterface;
 use App\Domain\Repository\CategoryRepositoryInterface;
+use App\Domain\Repository\TransactionRepositoryInterface;
 
 class CategoryService implements CategoryServiceInterface
 {
     private CategoryFactoryInterface $categoryFactory;
     private CategoryRepositoryInterface $categoryRepository;
     private AccountRepositoryInterface $accountRepository;
+    private AntiCorruptionServiceInterface $antiCorruptionService;
+    private TransactionRepositoryInterface $transactionRepository;
 
     public function __construct(
         CategoryFactoryInterface $categoryFactory,
         CategoryRepositoryInterface $categoryRepository,
-        AccountRepositoryInterface $accountRepository
+        AccountRepositoryInterface $accountRepository,
+        AntiCorruptionServiceInterface $antiCorruptionService,
+        TransactionRepositoryInterface $transactionRepository
     ) {
         $this->categoryFactory = $categoryFactory;
         $this->categoryRepository = $categoryRepository;
         $this->accountRepository = $accountRepository;
+        $this->antiCorruptionService = $antiCorruptionService;
+        $this->transactionRepository = $transactionRepository;
     }
 
     public function createCategory(Id $userId, string $name, CategoryType $type, Icon $icon): Category
@@ -49,5 +57,30 @@ class CategoryService implements CategoryServiceInterface
         }
 
         return $this->createCategory($account->getUserId(), $name, $type, $icon);
+    }
+
+    public function deleteCategory(Id $categoryId): void
+    {
+        $category = $this->categoryRepository->get($categoryId);
+        $this->categoryRepository->delete($category);
+    }
+
+    public function replaceCategory(Id $categoryId, Id $newCategoryId): void
+    {
+        $category = $this->categoryRepository->get($categoryId);
+        $newCategory = $this->categoryRepository->get($newCategoryId);
+        if (!$category->getUserId()->isEqual($newCategory->getUserId())) {
+            throw new AccessDeniedException();
+        }
+
+        $this->antiCorruptionService->beginTransaction();
+        try {
+            $this->transactionRepository->replaceCategory($categoryId, $newCategoryId);
+            $this->categoryRepository->delete($category);
+            $this->antiCorruptionService->commit();
+        } catch (\Throwable $exception) {
+            $this->antiCorruptionService->rollback();
+            throw $exception;
+        }
     }
 }

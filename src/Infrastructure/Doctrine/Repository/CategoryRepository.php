@@ -94,4 +94,10 @@ DQL;
     {
         return $this->getEntityManager()->getReference(Category::class, $id);
     }
+
+    public function delete(Category $category): void
+    {
+        $this->getEntityManager()->remove($category);
+        $this->getEntityManager()->flush();
+    }
 }

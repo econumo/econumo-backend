@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Doctrine\Repository;
 
 use App\Domain\Entity\Account;
+use App\Domain\Entity\Category;
 use App\Domain\Entity\Transaction;
 use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\Id;
@@ -104,5 +105,16 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
     {
         $this->getEntityManager()->remove($transaction);
         $this->getEntityManager()->flush();
+    }
+
+    public function replaceCategory(Id $oldCategoryId, Id $newCategoryId): void
+    {
+        $builder = $this->createQueryBuilder('t');
+        $builder->update()
+            ->set('t.category', ':newCategory')
+            ->setParameter('newCategory', $this->getEntityManager()->getReference(Category::class, $newCategoryId))
+            ->where('t.category = :oldCategory')
+            ->setParameter('oldCategory', $this->getEntityManager()->getReference(Category::class, $oldCategoryId));
+        $builder->getQuery()->execute();
     }
 }
