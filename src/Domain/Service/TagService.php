@@ -32,7 +32,7 @@ class TagService implements TagServiceInterface
 
     public function createTag(Id $userId, string $name): Tag
     {
-        $tags = $this->tagRepository->findAvailableForUserId($userId);
+        $tags = $this->tagRepository->findByOwnerId($userId);
         foreach ($tags as $tag) {
             if (strcasecmp($tag->getName(), $name) === 0) {
                 throw new TagAlreadyExistsException();
@@ -57,7 +57,7 @@ class TagService implements TagServiceInterface
     public function updateTag(Id $tagId, string $name, bool $isArchived): void
     {
         $tag = $this->tagRepository->get($tagId);
-        $userTags = $this->tagRepository->findAvailableForUserId($tag->getUserId());
+        $userTags = $this->tagRepository->findByOwnerId($tag->getUserId());
         foreach ($userTags as $userTag) {
             if (strcasecmp($userTag->getName(), $name) === 0 && !$userTag->getId()->isEqual($tagId)) {
                 throw new TagAlreadyExistsException();

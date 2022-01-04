@@ -21,4 +21,6 @@ interface CategoryServiceInterface
     public function replaceCategory(Id $categoryId, Id $newCategoryId): void;
 
     public function orderCategories(Id $userId, PositionDto ...$changes): void;
+
+    public function update(Id $categoryId, bool $isArchived, string $name, Icon $icon): void;
 }

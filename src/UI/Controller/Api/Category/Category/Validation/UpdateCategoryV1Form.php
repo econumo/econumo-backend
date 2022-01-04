@@ -6,15 +6,15 @@ namespace App\UI\Controller\Api\Category\Category\Validation;
 
 use App\Infrastructure\Symfony\Form\Constraints\OperationId;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Validator\Constraints\Uuid;
 
-class CreateCategoryV1Form extends AbstractType
+class UpdateCategoryV1Form extends AbstractType
 {
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -29,14 +29,10 @@ class CreateCategoryV1Form extends AbstractType
             ])
             ->add('name', TextType::class, [
                 'constraints' => [new NotBlank(), new Length(['max' => 16])],
-            ])
-            ->add('type', ChoiceType::class, [
-                'constraints' => [new NotBlank()],
-                'choices' => ['expense', 'income']
-            ])->add('accountId', TextType::class, [
-                'constraints' => [new Uuid()],
             ])->add('icon', TextType::class, [
                 'constraints' => [new NotBlank(), new Length(['min' => 2])],
-            ]);
+            ])->add('isArchived', TextType::class, [
+                'constraints' => [new Type('numeric')],
+            ]);;
     }
 }

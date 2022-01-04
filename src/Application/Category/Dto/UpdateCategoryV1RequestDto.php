@@ -8,10 +8,10 @@ use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Definition(
- *     required={"id", "name", "type", "icon"}
+ *     required={"id", "name", "icon", "isArchived"}
  * )
  */
-class CreateCategoryV1RequestDto
+class UpdateCategoryV1RequestDto
 {
     /**
      * @SWG\Property(example="3a2c32a4-45ec-4cb0-9794-a6bef87ba9a4")
@@ -24,17 +24,12 @@ class CreateCategoryV1RequestDto
     public string $name;
 
     /**
-     * @SWG\Property(example="expense")
-     */
-    public string $type;
-
-    /**
-     * @SWG\Property(example="0aaa0450-564e-411e-8018-7003f6dbeb92")
-     */
-    public ?string $accountId = null;
-
-    /**
      * @SWG\Property(example="local_offer")
      */
     public string $icon;
+
+    /**
+     * @SWG\Property(example="0")
+     */
+    public int $isArchived;
 }

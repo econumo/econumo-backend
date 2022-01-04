@@ -8,6 +8,7 @@ use App\Domain\Entity\Category;
 use App\Domain\Entity\ValueObject\CategoryType;
 use App\Domain\Entity\ValueObject\Icon;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Exception\CategoryAlreadyExistsException;
 use App\Domain\Exception\ReplaceCategoryException;
 use App\Domain\Factory\CategoryFactoryInterface;
 use App\Domain\Repository\AccountRepositoryInterface;
@@ -39,6 +40,13 @@ class CategoryService implements CategoryServiceInterface
 
     public function createCategory(Id $userId, string $name, CategoryType $type, Icon $icon): Category
     {
+        $categories = $this->categoryRepository->findByOwnerId($userId);
+        foreach ($categories as $category) {
+            if (strcasecmp($category->getName(), $name) === 0) {
+                throw new CategoryAlreadyExistsException();
+            }
+        }
+
         $category = $this->categoryFactory->create($userId, $name, $type, $icon);
         $this->categoryRepository->save($category);
 
@@ -106,5 +114,25 @@ class CategoryService implements CategoryServiceInterface
             return;
         }
         $this->categoryRepository->save(...$changed);
+    }
+
+    public function update(Id $categoryId, bool $isArchived, string $name, Icon $icon): void
+    {
+        $category = $this->categoryRepository->get($categoryId);
+        $userCategories = $this->categoryRepository->findByOwnerId($category->getUserId());
+        foreach ($userCategories as $userCategory) {
+            if (strcasecmp($userCategory->getName(), $name) === 0 && !$userCategory->getId()->isEqual($categoryId)) {
+                throw new CategoryAlreadyExistsException();
+            }
+        }
+
+        $category->updateName($name);
+        $category->updateIcon($icon);
+        if ($isArchived) {
+            $category->archive();
+        } else {
+            $category->unarchive();
+        }
+        $this->categoryRepository->save($category);
     }
 }

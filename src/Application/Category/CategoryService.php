@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace App\Application\Category;
 
 use App\Application\Category\Assembler\CreateCategoryV1ResultAssembler;
+use App\Application\Category\Assembler\DeleteCategoryV1ResultAssembler;
 use App\Application\Category\Dto\CreateCategoryV1RequestDto;
 use App\Application\Category\Dto\CreateCategoryV1ResultDto;
 use App\Application\Category\Dto\DeleteCategoryV1RequestDto;
 use App\Application\Category\Dto\DeleteCategoryV1ResultDto;
-use App\Application\Category\Assembler\DeleteCategoryV1ResultAssembler;
+use App\Application\Category\Dto\UpdateCategoryV1RequestDto;
+use App\Application\Category\Dto\UpdateCategoryV1ResultDto;
+use App\Application\Category\Assembler\UpdateCategoryV1ResultAssembler;
 use App\Application\Exception\ValidationException;
 use App\Domain\Entity\ValueObject\CategoryType;
 use App\Domain\Entity\ValueObject\Icon;
@@ -25,19 +28,22 @@ class CategoryService
     private AccountAccessServiceInterface $accountAccessService;
     private DeleteCategoryV1ResultAssembler $deleteCategoryV1ResultAssembler;
     private CategoryRepositoryInterface $categoryRepository;
+    private UpdateCategoryV1ResultAssembler $updateCategoryV1ResultAssembler;
 
     public function __construct(
         CreateCategoryV1ResultAssembler $createCategoryV1ResultAssembler,
         CategoryServiceInterface $categoryService,
         AccountAccessServiceInterface $accountAccessService,
         DeleteCategoryV1ResultAssembler $deleteCategoryV1ResultAssembler,
-        CategoryRepositoryInterface $categoryRepository
+        CategoryRepositoryInterface $categoryRepository,
+        UpdateCategoryV1ResultAssembler $updateCategoryV1ResultAssembler
     ) {
         $this->createCategoryV1ResultAssembler = $createCategoryV1ResultAssembler;
         $this->categoryService = $categoryService;
         $this->accountAccessService = $accountAccessService;
         $this->deleteCategoryV1ResultAssembler = $deleteCategoryV1ResultAssembler;
         $this->categoryRepository = $categoryRepository;
+        $this->updateCategoryV1ResultAssembler = $updateCategoryV1ResultAssembler;
     }
 
     public function createCategory(
@@ -85,5 +91,19 @@ class CategoryService
             throw new ValidationException('Unknown action');
         }
         return $this->deleteCategoryV1ResultAssembler->assemble($dto);
+    }
+
+    public function updateCategory(
+        UpdateCategoryV1RequestDto $dto,
+        Id $userId
+    ): UpdateCategoryV1ResultDto {
+        $categoryId = new Id($dto->id);
+        $category = $this->categoryRepository->get($categoryId);
+        if (!$category->getUserId()->isEqual($userId)) {
+            throw new ValidationException('Category not found');
+        }
+
+        $this->categoryService->update($categoryId, (bool)$dto->isArchived, $dto->name, new Icon($dto->icon));
+        return $this->updateCategoryV1ResultAssembler->assemble($dto);
     }
 }

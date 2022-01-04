@@ -29,7 +29,7 @@ class PayeeService implements PayeeServiceInterface
 
     public function createPayee(Id $userId, string $name): Payee
     {
-        $payees = $this->payeeRepository->findAvailableForUserId($userId);
+        $payees = $this->payeeRepository->findByOwnerId($userId);
         foreach ($payees as $payee) {
             if (strcasecmp($payee->getName(), $name) === 0) {
                 throw new PayeeAlreadyExistsException();
@@ -55,7 +55,7 @@ class PayeeService implements PayeeServiceInterface
     public function updatePayee(Id $payeeId, string $name, bool $isArchived): void
     {
         $payee = $this->payeeRepository->get($payeeId);
-        $userPayees = $this->payeeRepository->findAvailableForUserId($payee->getUserId());
+        $userPayees = $this->payeeRepository->findByOwnerId($payee->getUserId());
         foreach ($userPayees as $userPayee) {
             if (strcasecmp($userPayee->getName(), $name) === 0 && !$userPayee->getId()->isEqual($payeeId)) {
                 throw new PayeeAlreadyExistsException();
