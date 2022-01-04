@@ -36,7 +36,7 @@ class CreateCategoryV1Form extends AbstractType
             ])->add('accountId', TextType::class, [
                 'constraints' => [new Uuid()],
             ])->add('icon', TextType::class, [
-                'constraints' => [new NotBlank(), new Length(['min' => 2])],
+                'constraints' => [],
             ]);
     }
 }

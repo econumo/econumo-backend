@@ -8,7 +8,7 @@ use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Definition(
- *     required={"id", "name", "type", "icon"}
+ *     required={"id", "name", "type"}
  * )
  */
 class CreateCategoryV1RequestDto
@@ -36,5 +36,5 @@ class CreateCategoryV1RequestDto
     /**
      * @SWG\Property(example="local_offer")
      */
-    public string $icon;
+    public ?string $icon = null;
 }

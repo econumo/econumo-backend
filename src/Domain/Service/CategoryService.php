@@ -48,6 +48,7 @@ class CategoryService implements CategoryServiceInterface
         }
 
         $category = $this->categoryFactory->create($userId, $name, $type, $icon);
+        $category->updatePosition(count($categories));
         $this->categoryRepository->save($category);
 
         return $category;
