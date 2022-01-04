@@ -64,6 +64,14 @@ DQL;
             ->getResult();
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function findByOwnerId(Id $userId): array
+    {
+        return $this->findBy(['user' => $this->getEntityManager()->getReference(User::class, $userId)]);
+    }
+
     public function get(Id $id): Payee
     {
         /** @var Payee|null $item */

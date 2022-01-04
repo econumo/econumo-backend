@@ -17,6 +17,12 @@ interface CategoryRepositoryInterface
      */
     public function findByUserId(Id $userId): array;
 
+    /**
+     * @param Id $userId
+     * @return Category[]
+     */
+    public function findByOwnerId(Id $userId): array;
+
     public function get(Id $id): Category;
 
     public function save(Category ...$categories): void;

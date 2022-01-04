@@ -13,6 +13,7 @@ use App\Domain\Factory\CategoryFactoryInterface;
 use App\Domain\Repository\AccountRepositoryInterface;
 use App\Domain\Repository\CategoryRepositoryInterface;
 use App\Domain\Repository\TransactionRepositoryInterface;
+use App\Domain\Service\Dto\PositionDto;
 
 class CategoryService implements CategoryServiceInterface
 {
@@ -82,5 +83,25 @@ class CategoryService implements CategoryServiceInterface
             $this->antiCorruptionService->rollback();
             throw $exception;
         }
+    }
+
+    public function orderCategories(Id $userId, PositionDto ...$changes): void
+    {
+        $categories = $this->categoryRepository->findByOwnerId($userId);
+        $changed = [];
+        foreach ($categories as $category) {
+            foreach ($changes as $change) {
+                if ($category->getId()->isEqual($change->getId())) {
+                    $category->updatePosition($change->position);
+                    $changed[] = $category;
+                    break;
+                }
+            }
+        }
+
+        if (!count($changed)) {
+            return;
+        }
+        $this->categoryRepository->save(...$changed);
     }
 }

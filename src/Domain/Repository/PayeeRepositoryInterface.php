@@ -16,6 +16,12 @@ interface PayeeRepositoryInterface
      */
     public function findByUserId(Id $userId): array;
 
+    /**
+     * @param Id $userId
+     * @return Payee[]
+     */
+    public function findByOwnerId(Id $userId): array;
+
     public function get(Id $id): Payee;
 
     public function save(Payee ...$payees): void;

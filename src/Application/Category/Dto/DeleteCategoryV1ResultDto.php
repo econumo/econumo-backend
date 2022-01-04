@@ -8,14 +8,8 @@ use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Definition(
- *     required={"result"}
  * )
  */
 class DeleteCategoryV1ResultDto
 {
-    /**
-     * Id
-     * @SWG\Property(example="This is result")
-     */
-    public string $result;
 }

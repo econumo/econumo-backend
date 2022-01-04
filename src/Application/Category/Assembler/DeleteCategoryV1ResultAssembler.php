@@ -12,9 +12,6 @@ class DeleteCategoryV1ResultAssembler
     public function assemble(
         DeleteCategoryV1RequestDto $dto
     ): DeleteCategoryV1ResultDto {
-        $result = new DeleteCategoryV1ResultDto();
-        $result->result = 'test';
-
-        return $result;
+        return new DeleteCategoryV1ResultDto();
     }
 }
