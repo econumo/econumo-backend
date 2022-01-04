@@ -12,6 +12,7 @@ use App\Domain\Exception\TagAlreadyExistsException;
 use App\Domain\Factory\TagFactoryInterface;
 use App\Domain\Repository\AccountRepositoryInterface;
 use App\Domain\Repository\TagRepositoryInterface;
+use App\Domain\Service\Dto\PositionDto;
 
 class TagService implements TagServiceInterface
 {
@@ -72,21 +73,23 @@ class TagService implements TagServiceInterface
         $this->tagRepository->save($tag);
     }
 
-    public function orderTags(Id $userId, Id ...$ids): void
+    public function orderTags(Id $userId, PositionDto ...$changes): void
     {
         $tags = $this->tagRepository->findByUserId($userId);
-        $position = 0;
         $changed = [];
-        foreach ($ids as $id) {
-            foreach ($tags as $tag) {
-                if ($tag->getId()->isEqual($id)) {
-                    $tag->updatePosition($position++);
+        foreach ($tags as $tag) {
+            foreach ($changes as $change) {
+                if ($tag->getId()->isEqual($change->getId())) {
+                    $tag->updatePosition($change->position);
                     $changed[] = $tag;
                     break;
                 }
             }
         }
 
+        if (!count($changed)) {
+            return;
+        }
         $this->tagRepository->save(...$changed);
     }
 

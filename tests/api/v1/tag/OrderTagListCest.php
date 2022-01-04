@@ -17,7 +17,18 @@ class OrderTagListCest
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn($I);
-        $I->sendPOST($this->url, ['ids' => ['4b53d029-c1ed-46ad-8d86-1049542f4a7e', 'e93abce1-0522-4a34-8dcf-5143769a3a8e']]);
+        $I->sendPOST($this->url, [
+            'changes' => [
+                [
+                    'id' => '4b53d029-c1ed-46ad-8d86-1049542f4a7e',
+                    'position' => 0
+                ],
+                [
+                    'id' => 'e93abce1-0522-4a34-8dcf-5143769a3a8e',
+                    'position' => 1
+                ],
+            ]
+        ]);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
 
@@ -36,7 +47,18 @@ class OrderTagListCest
      */
     public function requestShouldReturn401ResponseCode(ApiTester $I): void
     {
-        $I->sendPOST($this->url, ['ids' => ['4b53d029-c1ed-46ad-8d86-1049542f4a7e', 'e93abce1-0522-4a34-8dcf-5143769a3a8e']]);
+        $I->sendPOST($this->url, [
+            'changes' => [
+                [
+                    'id' => '4b53d029-c1ed-46ad-8d86-1049542f4a7e',
+                    'position' => 0
+                ],
+                [
+                    'id' => 'e93abce1-0522-4a34-8dcf-5143769a3a8e',
+                    'position' => 1
+                ],
+            ]
+        ]);
         $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
     }
 
@@ -46,7 +68,18 @@ class OrderTagListCest
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn($I);
-        $I->sendPOST($this->url, ['ids' => ['4b53d029-c1ed-46ad-8d86-1049542f4a7e', 'e93abce1-0522-4a34-8dcf-5143769a3a8e']]);
+        $I->sendPOST($this->url, [
+            'changes' => [
+                [
+                    'id' => '4b53d029-c1ed-46ad-8d86-1049542f4a7e',
+                    'position' => 0
+                ],
+                [
+                    'id' => 'e93abce1-0522-4a34-8dcf-5143769a3a8e',
+                    'position' => 1
+                ],
+            ]
+        ]);
         $I->seeResponseMatchesJsonType($I->getRootResponseWithItemsJsonType());
         $I->seeResponseMatchesJsonType($I->getTagDtoJsonType(), '$.data.items[0]');
     }

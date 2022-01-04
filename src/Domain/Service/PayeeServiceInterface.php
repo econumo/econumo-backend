@@ -7,6 +7,7 @@ namespace App\Domain\Service;
 
 use App\Domain\Entity\Payee;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Service\Dto\PositionDto;
 
 interface PayeeServiceInterface
 {
@@ -18,5 +19,5 @@ interface PayeeServiceInterface
 
     public function deletePayee(Id $payeeId): void;
 
-    public function orderPayees(Id $userId, Id ...$ids): void;
+    public function orderPayees(Id $userId, PositionDto ...$changes): void;
 }

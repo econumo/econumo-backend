@@ -46,21 +46,10 @@ class PayeeListService
         OrderPayeeListV1RequestDto $dto,
         Id $userId
     ): OrderPayeeListV1ResultDto {
-        $payees = $this->payeeRepository->findByUserId($userId);
-        $orderedList = [];
-        foreach ($dto->ids as $id) {
-            $payeeId = new Id($id);
-            foreach ($payees as $payee) {
-                if ($payee->getId()->isEqual($payeeId)) {
-                    $orderedList[] = $payeeId;
-                    break;
-                }
-            }
-        }
-        if (!count($orderedList)) {
+        if (!count($dto->changes)) {
             throw new ValidationException('Payee list is empty');
         }
-        $this->payeeService->orderPayees($userId, ...$orderedList);
+        $this->payeeService->orderPayees($userId, ...$dto->changes);
         return $this->orderPayeeListV1ResultAssembler->assemble($dto, $userId);
     }
 }

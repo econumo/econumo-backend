@@ -46,21 +46,10 @@ class TagListService
         OrderTagListV1RequestDto $dto,
         Id $userId
     ): OrderTagListV1ResultDto {
-        $tags = $this->tagRepository->findByUserId($userId);
-        $orderedList = [];
-        foreach ($dto->ids as $id) {
-            $tagId = new Id($id);
-            foreach ($tags as $tag) {
-                if ($tag->getId()->isEqual($tagId)) {
-                    $orderedList[] = $tagId;
-                    break;
-                }
-            }
+        if (!count($dto->changes)) {
+            throw new ValidationException('Payee list is empty');
         }
-        if (!count($orderedList)) {
-            throw new ValidationException('tag list is empty');
-        }
-        $this->tagService->orderTags($userId, ...$orderedList);
+        $this->tagService->orderTags($userId, ...$dto->changes);
 
         return $this->orderTagListV1ResultAssembler->assemble($dto, $userId);
     }

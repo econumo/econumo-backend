@@ -8,6 +8,7 @@ namespace App\Domain\Service;
 
 use App\Domain\Entity\Tag;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Service\Dto\PositionDto;
 
 interface TagServiceInterface
 {
@@ -17,7 +18,7 @@ interface TagServiceInterface
 
     public function updateTag(Id $tagId, string $name, bool $isArchived): void;
 
-    public function orderTags(Id $userId, Id ...$ids): void;
+    public function orderTags(Id $userId, PositionDto ...$changes): void;
 
     public function deleteTag(Id $tagId): void;
 }

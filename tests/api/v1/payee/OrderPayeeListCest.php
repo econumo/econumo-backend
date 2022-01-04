@@ -17,7 +17,18 @@ class OrderPayeeListCest
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn($I);
-        $I->sendPOST($this->url, ['ids' => ['1d43b436-46cd-417e-abc4-6ec2a9bf99be', '701ee173-7c7e-4f92-8af7-a27839c663e0']]);
+        $I->sendPOST($this->url, [
+            'changes' => [
+                [
+                    'id' => '1d43b436-46cd-417e-abc4-6ec2a9bf99be',
+                    'position' => 0
+                ],
+                [
+                    'id' => '701ee173-7c7e-4f92-8af7-a27839c663e0',
+                    'position' => 1
+                ],
+            ]
+        ]);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
 
@@ -36,7 +47,18 @@ class OrderPayeeListCest
      */
     public function requestShouldReturn401ResponseCode(ApiTester $I): void
     {
-        $I->sendPOST($this->url, ['ids' => ['1d43b436-46cd-417e-abc4-6ec2a9bf99be', '701ee173-7c7e-4f92-8af7-a27839c663e0']]);
+        $I->sendPOST($this->url, [
+            'changes' => [
+                [
+                    'id' => '1d43b436-46cd-417e-abc4-6ec2a9bf99be',
+                    'position' => 0
+                ],
+                [
+                    'id' => '701ee173-7c7e-4f92-8af7-a27839c663e0',
+                    'position' => 1
+                ],
+            ]
+        ]);
         $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
     }
 
@@ -46,7 +68,18 @@ class OrderPayeeListCest
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn($I);
-        $I->sendPOST($this->url, ['ids' => ['1d43b436-46cd-417e-abc4-6ec2a9bf99be', '701ee173-7c7e-4f92-8af7-a27839c663e0']]);
+        $I->sendPOST($this->url, [
+            'changes' => [
+                [
+                    'id' => '1d43b436-46cd-417e-abc4-6ec2a9bf99be',
+                    'position' => 0
+                ],
+                [
+                    'id' => '701ee173-7c7e-4f92-8af7-a27839c663e0',
+                    'position' => 1
+                ],
+            ]
+        ]);
         $I->seeResponseMatchesJsonType($I->getRootResponseWithItemsJsonType());
         $I->seeResponseMatchesJsonType($I->getPayeeDtoJsonType(), '$.data.items[0]');
     }

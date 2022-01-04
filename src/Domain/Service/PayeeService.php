@@ -12,6 +12,7 @@ use App\Domain\Exception\PayeeAlreadyExistsException;
 use App\Domain\Factory\PayeeFactoryInterface;
 use App\Domain\Repository\AccountRepositoryInterface;
 use App\Domain\Repository\PayeeRepositoryInterface;
+use App\Domain\Service\Dto\PositionDto;
 
 class PayeeService implements PayeeServiceInterface
 {
@@ -76,21 +77,23 @@ class PayeeService implements PayeeServiceInterface
         $this->payeeRepository->delete($payee);
     }
 
-    public function orderPayees(Id $userId, Id ...$ids): void
+    public function orderPayees(Id $userId, PositionDto ...$changes): void
     {
         $payees = $this->payeeRepository->findByUserId($userId);
-        $position = 0;
         $changed = [];
-        foreach ($ids as $id) {
-            foreach ($payees as $payee) {
-                if ($payee->getId()->isEqual($id)) {
-                    $payee->updatePosition($position++);
+        foreach ($payees as $payee) {
+            foreach ($changes as $change) {
+                if ($payee->getId()->isEqual($change->getId())) {
+                    $payee->updatePosition($change->position);
                     $changed[] = $payee;
                     break;
                 }
             }
         }
 
+        if (!count($changed)) {
+            return;
+        }
         $this->payeeRepository->save(...$changed);
     }
 }
