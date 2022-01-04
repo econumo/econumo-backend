@@ -15,7 +15,7 @@ interface CategoryRepositoryInterface
      * @param Id $userId
      * @return Category[]
      */
-    public function findByUserId(Id $userId): array;
+    public function findAvailableForUserId(Id $userId): array;
 
     /**
      * @param Id $userId

@@ -14,7 +14,7 @@ interface PayeeRepositoryInterface
      * @param Id $userId
      * @return Payee[]
      */
-    public function findByUserId(Id $userId): array;
+    public function findAvailableForUserId(Id $userId): array;
 
     /**
      * @param Id $userId

@@ -25,7 +25,7 @@ class OrderPayeeListV1ResultAssembler
         Id $userId
     ): OrderPayeeListV1ResultDto {
         $result = new OrderPayeeListV1ResultDto();
-        $payees = $this->payeeRepository->findByUserId($userId);
+        $payees = $this->payeeRepository->findAvailableForUserId($userId);
         $result->items = [];
         foreach ($payees as $payee) {
             $result->items[] = $this->payeeToDtoV1ResultAssembler->assemble($payee);

@@ -25,7 +25,7 @@ class OrderCategoryListV1ResultAssembler
         Id $userId
     ): OrderCategoryListV1ResultDto {
         $result = new OrderCategoryListV1ResultDto();
-        $categories = $this->categoryRepository->findByUserId($userId);
+        $categories = $this->categoryRepository->findAvailableForUserId($userId);
         $result->items = [];
         foreach ($categories as $category) {
             $result->items[] = $this->categoryToDtoResultAssembler->assemble($category);

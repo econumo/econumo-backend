@@ -15,7 +15,7 @@ interface TagRepositoryInterface
      * @param Id $userId
      * @return Tag[]
      */
-    public function findByUserId(Id $userId): array;
+    public function findAvailableForUserId(Id $userId): array;
 
     /**
      * @param Id $userId

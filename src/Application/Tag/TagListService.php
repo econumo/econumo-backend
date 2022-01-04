@@ -38,7 +38,7 @@ class TagListService
         GetTagListV1RequestDto $dto,
         Id $userId
     ): GetTagListV1ResultDto {
-        $tags = $this->tagRepository->findByUserId($userId);
+        $tags = $this->tagRepository->findAvailableForUserId($userId);
         return $this->getTagListV1ResultAssembler->assemble($dto, $tags);
     }
 

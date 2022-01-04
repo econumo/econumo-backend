@@ -38,7 +38,7 @@ class PayeeListService
         GetPayeeListV1RequestDto $dto,
         Id $userId
     ): GetPayeeListV1ResultDto {
-        $payees = $this->payeeRepository->findByUserId($userId);
+        $payees = $this->payeeRepository->findAvailableForUserId($userId);
         return $this->getPayeeListV1ResultAssembler->assemble($dto, $payees);
     }
 

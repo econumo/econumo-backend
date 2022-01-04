@@ -35,7 +35,7 @@ class TransactionListService
             $this->accountAccessService->checkViewTransactionsAccess($userId, new Id($dto->accountId));
             $transactions = $this->transactionRepository->findByAccountId(new Id($dto->accountId));
         } else {
-            $transactions = $this->transactionRepository->findByUserId($userId);
+            $transactions = $this->transactionRepository->findAvailableForUserId($userId);
         }
         return $this->getTransactionListV1ResultAssembler->assemble($dto, $transactions);
     }

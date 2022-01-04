@@ -25,7 +25,7 @@ class OrderTagListV1ResultAssembler
         Id $userId
     ): OrderTagListV1ResultDto {
         $result = new OrderTagListV1ResultDto();
-        $tags = $this->tagRepository->findByUserId($userId);
+        $tags = $this->tagRepository->findAvailableForUserId($userId);
         $result->items = [];
         foreach ($tags as $tag) {
             $result->items[] = $this->tagToDtoResultAssembler->assemble($tag);

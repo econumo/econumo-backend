@@ -79,7 +79,7 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
         return $item;
     }
 
-    public function findByUserId(Id $userId): array
+    public function findAvailableForUserId(Id $userId): array
     {
         $sharedAccountsQuery = $this->getEntityManager()
             ->createQuery('SELECT IDENTITY(aa.account) as accountId FROM App\Domain\Entity\AccountAccess aa WHERE aa.user = :user')

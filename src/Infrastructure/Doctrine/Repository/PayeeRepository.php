@@ -40,7 +40,7 @@ class PayeeRepository extends ServiceEntityRepository implements PayeeRepository
     /**
      * @inheritDoc
      */
-    public function findByUserId(Id $userId): array
+    public function findAvailableForUserId(Id $userId): array
     {
         $dql =<<<'DQL'
 SELECT u.id FROM App\Domain\Entity\User u

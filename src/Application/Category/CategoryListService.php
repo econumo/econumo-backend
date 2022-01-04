@@ -38,7 +38,7 @@ class CategoryListService
         GetCategoryListV1RequestDto $dto,
         Id $userId
     ): GetCategoryListV1ResultDto {
-        $categories = $this->categoryRepository->findByUserId($userId);
+        $categories = $this->categoryRepository->findAvailableForUserId($userId);
         return $this->getCategoryListV1ResultAssembler->assemble($dto, $categories);
     }
 

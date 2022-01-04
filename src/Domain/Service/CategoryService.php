@@ -8,7 +8,7 @@ use App\Domain\Entity\Category;
 use App\Domain\Entity\ValueObject\CategoryType;
 use App\Domain\Entity\ValueObject\Icon;
 use App\Domain\Entity\ValueObject\Id;
-use App\Domain\Exception\AccessDeniedException;
+use App\Domain\Exception\ReplaceCategoryException;
 use App\Domain\Factory\CategoryFactoryInterface;
 use App\Domain\Repository\AccountRepositoryInterface;
 use App\Domain\Repository\CategoryRepositoryInterface;
@@ -71,7 +71,10 @@ class CategoryService implements CategoryServiceInterface
         $category = $this->categoryRepository->get($categoryId);
         $newCategory = $this->categoryRepository->get($newCategoryId);
         if (!$category->getUserId()->isEqual($newCategory->getUserId())) {
-            throw new AccessDeniedException();
+            throw new ReplaceCategoryException();
+        }
+        if (!$category->getType()->isEqual($newCategory->getType())) {
+            throw new ReplaceCategoryException();
         }
 
         $this->antiCorruptionService->beginTransaction();
