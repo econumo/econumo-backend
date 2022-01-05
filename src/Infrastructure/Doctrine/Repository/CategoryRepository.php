@@ -45,8 +45,8 @@ class CategoryRepository extends ServiceEntityRepository implements CategoryRepo
     public function findAvailableForUserId(Id $userId): array
     {
         $dql =<<<'DQL'
-SELECT IDENTITY(aa.user) as user_id FROM App\Domain\Entity\AccountAccess aa
-JOIN App\Domain\Entity\Account a WITH a = aa.account AND a.user = :user
+SELECT IDENTITY(a.user) as user_id FROM App\Domain\Entity\AccountAccess aa
+JOIN App\Domain\Entity\Account a WITH a = aa.account AND aa.user = :user
 GROUP BY user_id
 DQL;
         $query = $this->getEntityManager()->createQuery($dql)
