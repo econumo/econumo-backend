@@ -80,7 +80,16 @@ class Folder
         $this->accounts->removeElement($account);
     }
 
-    public function belongsTo(Id $userId): bool {
-        return $userId->isEqual($this->getUserId());
+    public function updateName(FolderName $name): void
+    {
+        if (!$this->name->isEqual($name)) {
+            $this->name = $name;
+            $this->updated();
+        }
+    }
+
+    private function updated(): void
+    {
+        $this->updatedAt = new DateTime();
     }
 }

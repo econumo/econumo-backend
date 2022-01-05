@@ -8,8 +8,7 @@ use App\Domain\Entity\Folder;
 use App\Domain\Entity\ValueObject\FolderName;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\FolderAlreadyExistsException;
-use App\Domain\Exception\ForeignFolderRemoveException;
-use App\Domain\Exception\TheOnlyFolderRemoveException;
+use App\Domain\Exception\LastFolderRemoveException;
 use App\Domain\Factory\FolderFactoryInterface;
 use App\Domain\Repository\FolderRepositoryInterface;
 
@@ -39,14 +38,25 @@ final class FolderService implements FolderServiceInterface
         return $folder;
     }
 
-    public function delete(Id $userId, Id $folderId): void
+    public function update(Id $folderId, FolderName $name): void
     {
         $folder = $this->folderRepository->get($folderId);
-        if (!$folder->belongsTo($userId)) {
-            throw new ForeignFolderRemoveException();
+        $userFolders = $this->folderRepository->getByUserId($folder->getUserId());
+        foreach ($userFolders as $userFolder) {
+            if ($userFolder->getName()->isEqual($name)) {
+                throw new FolderAlreadyExistsException();
+            }
         }
-        if (!$this->folderRepository->isUserHasMoreThanOneFolder($userId)) {
-            throw new TheOnlyFolderRemoveException();
+
+        $folder->updateName($name);
+        $this->folderRepository->save($folder);
+    }
+
+    public function delete(Id $folderId): void
+    {
+        $folder = $this->folderRepository->get($folderId);
+        if (!$this->folderRepository->isUserHasMoreThanOneFolder($folder->getUserId())) {
+            throw new LastFolderRemoveException();
         }
         $this->folderRepository->delete($folder);
     }

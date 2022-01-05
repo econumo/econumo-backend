@@ -104,7 +104,7 @@ class Tag
         return $this->updatedAt;
     }
 
-    private function updated()
+    private function updated(): void
     {
         $this->updatedAt = new DateTime();
     }

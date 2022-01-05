@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace _CG_APPROOT_\UI\Controller\Api\_CG_MODULE_\_CG_SUBJECT_\Validation;
+namespace App\UI\Controller\Api\Account\Folder\Validation;
 
+use App\Domain\Entity\ValueObject\FolderName;
 use App\UI\Service\Validator\ValueObjectValidationFactoryInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -12,7 +13,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Uuid;
 
-class _CG_ACTION__CG_SUBJECT__CG_VERSION_Form extends AbstractType
+class UpdateFolderV1Form extends AbstractType
 {
     private ValueObjectValidationFactoryInterface $valueObjectValidationFactory;
 
@@ -30,6 +31,11 @@ class _CG_ACTION__CG_SUBJECT__CG_VERSION_Form extends AbstractType
     {
         $builder->add('id', TextType::class, [
             'constraints' => [new NotBlank(), new Uuid()],
+        ])->add('name', TextType::class, [
+            'constraints' => [
+                new NotBlank(),
+                $this->valueObjectValidationFactory->create(FolderName::class)
+            ],
         ]);
     }
 }

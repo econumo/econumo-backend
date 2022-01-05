@@ -9,12 +9,14 @@ use Doctrine\DBAL\Types\StringType;
 
 class FolderNameType extends StringType
 {
+    use ReflectionValueObjectTrait;
+
     /**
      * @inheritdoc
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        return $value === null ? null : new FolderName($value);
+        return $value === null ? null : $this->getInstance(FolderName::class, $value);
     }
 
     /**

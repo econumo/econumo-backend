@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domain\Exception;
 
-class TheOnlyFolderRemoveException extends DomainException
+class LastFolderRemoveException extends DomainException
 {
 }

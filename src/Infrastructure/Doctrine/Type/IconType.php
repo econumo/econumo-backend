@@ -9,12 +9,14 @@ use Doctrine\DBAL\Types\StringType;
 
 class IconType extends StringType
 {
+    use ReflectionValueObjectTrait;
+
     /**
      * @inheritdoc
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        return $value === null ? null : new Icon($value);
+        return $value === null ? null : $this->getInstance(Icon::class, $value);
     }
 
     /**

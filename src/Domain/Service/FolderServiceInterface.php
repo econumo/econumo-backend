@@ -11,5 +11,7 @@ interface FolderServiceInterface
 {
     public function create(Id $userId, FolderName $name): Folder;
 
-    public function delete(Id $userId, Id $folderId): void;
+    public function update(Id $folderId, FolderName $name): void;
+
+    public function delete(Id $folderId): void;
 }

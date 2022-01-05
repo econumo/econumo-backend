@@ -6,6 +6,7 @@ namespace App\Domain\Service;
 
 use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\Email;
+use App\Domain\Entity\ValueObject\FolderName;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Exception\UserRegisteredException;
@@ -56,7 +57,7 @@ class UserService implements UserServiceInterface
             $user = $this->userFactory->create($name, $email, $password);
             $this->userRepository->save($user);
 
-            $folder = $this->folderFactory->create($user->getId(), $this->translator->trans('account.folder.all_accounts'));
+            $folder = $this->folderFactory->create($user->getId(), new FolderName($this->translator->trans('account.folder.all_accounts')));
             $this->folderRepository->save($folder);
 
             $this->antiCorruptionService->commit();
