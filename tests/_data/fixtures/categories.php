@@ -89,4 +89,15 @@ return [
         'created_at' => '2021-08-12 19:43:09',
         'updated_at' => '2021-08-12 19:43:09',
     ],
+    [
+        'id' => 'd85dcec0-524c-477c-b0b1-438ce9b03e48',
+        'user_id' => '77be9577-147b-4f05-9aa7-91d9b159de5b',
+        'name' => 'Danys category',
+        'position' => 0,
+        'type' => 1,
+        'icon' => 'percent',
+        'is_archived' => 0,
+        'created_at' => '2021-08-12 19:43:09',
+        'updated_at' => '2021-08-12 19:43:09',
+    ],
 ];
