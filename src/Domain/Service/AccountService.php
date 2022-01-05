@@ -45,7 +45,9 @@ class AccountService implements AccountServiceInterface
 
     public function delete(Id $id): void
     {
-        $this->accountRepository->delete($id);
+        $account = $this->accountRepository->get($id);
+        $account->delete();
+        $this->accountRepository->save($account);
     }
 
     public function update(Id $accountId, string $name, string $icon = null): void

@@ -18,6 +18,8 @@ use Doctrine\Persistence\ManagerRegistry;
 use Ramsey\Uuid\Uuid;
 use RuntimeException;
 
+use function Doctrine\ORM\QueryBuilder;
+
 /**
  * @method Account|null find($id, $lockMode = null, $lockVersion = null)
  * @method Account|null findOneBy(array $criteria, array $orderBy = null)
@@ -56,11 +58,15 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
      */
     public function findByUserId(Id $userId): array
     {
-        return $this->createQueryBuilder('a')
+        $builder = $this->createQueryBuilder('a');
+        return $builder
             ->select('a')
             ->leftJoin(AccountAccess::class, 'aa', Join::WITH, 'aa.account = a')
-            ->where('a.user = :user')
-            ->orWhere('aa.user = :user')
+            ->where($builder->expr()->orX(
+                $builder->expr()->eq('a.user', ':user'),
+                $builder->expr()->eq('aa.user', ':user'),
+            ))
+            ->andWhere('a.isDeleted = false')
             ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId))
             ->orderBy('a.position', 'ASC')
             ->getQuery()
@@ -72,6 +78,9 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
         /** @var Account|null $item */
         $item = $this->find($id);
         if ($item === null) {
+            throw new NotFoundException(sprintf('Account with ID %s not found', $id));
+        }
+        if ($item->isDeleted()) {
             throw new NotFoundException(sprintf('Account with ID %s not found', $id));
         }
 

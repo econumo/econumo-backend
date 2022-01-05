@@ -20,6 +20,7 @@ class Account
     private AccountType $type;
     private string $icon;
     private User $user;
+    private bool $isDeleted;
     private DateTimeImmutable $createdAt;
     private DateTimeInterface $updatedAt;
 
@@ -41,6 +42,7 @@ class Account
         $this->type = $type;
         $this->icon = $icon;
         $this->position = 1000;
+        $this->isDeleted = false;
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
     }
@@ -117,11 +119,36 @@ class Account
 
     public function updateName(string $name): void
     {
-        $this->name = $name;
+        if ($this->name !== $name) {
+            $this->name = $name;
+            $this->updated();
+        }
     }
 
     public function updateIcon(string $icon): void
     {
-        $this->icon = $icon;
+        if ($this->icon !== $icon) {
+            $this->icon = $icon;
+            $this->updated();
+        }
+    }
+
+    public function isDeleted(): bool
+    {
+        return $this->isDeleted;
+    }
+
+    public function delete(): void
+    {
+        if (!$this->isDeleted) {
+            $this->isDeleted = true;
+            $this->name = 'deleted account #' . crc32($this->id->getValue());
+            $this->updated();
+        }
+    }
+
+    private function updated(): void
+    {
+        $this->updatedAt = new DateTime();
     }
 }

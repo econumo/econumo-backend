@@ -13,12 +13,12 @@ use App\Application\Account\Dto\DeleteAccountV1ResultDto;
 use App\Application\Account\Dto\UpdateAccountV1RequestDto;
 use App\Application\Account\Dto\UpdateAccountV1ResultDto;
 use App\Application\Account\Assembler\UpdateAccountV1ResultAssembler;
+use App\Application\Exception\AccessDeniedException;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Repository\AccountRepositoryInterface;
 use App\Domain\Service\AccountAccessServiceInterface;
 use App\Domain\Service\AccountServiceInterface;
 use App\Domain\Service\Dto\AccountDto;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AccountService
@@ -70,7 +70,7 @@ class AccountService
     ): DeleteAccountV1ResultDto {
         $accountId = new Id($dto->id);
         if (!$this->accountAccessService->canDeleteAccount($userId, $accountId)) {
-            throw new AccessDeniedHttpException();
+            throw new AccessDeniedException();
         }
 
         $this->accountService->delete($accountId);
@@ -83,7 +83,7 @@ class AccountService
     ): UpdateAccountV1ResultDto {
         $accountId = new Id($dto->id);
         if (!$this->accountAccessService->canUpdateAccount($userId, $accountId)) {
-            throw new AccessDeniedHttpException();
+            throw new AccessDeniedException();
         }
         $this->accountService->update($accountId, $dto->name, $dto->icon);
         $updatedAt = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dto->updatedAt);
