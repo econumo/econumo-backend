@@ -16,6 +16,7 @@ services:
     App\:
         resource: '../src/*'
         exclude:
+            - '../src/Infrastructure/Symfony/Form/ValueObjectValidator.php'
             - '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
             - '../src/Infrastructure/Doctrine/Migrations/**.php'
 

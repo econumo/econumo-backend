@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Factory;
 
 use App\Domain\Entity\Folder;
+use App\Domain\Entity\ValueObject\FolderName;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Repository\FolderRepositoryInterface;
 use App\Domain\Repository\UserRepositoryInterface;
@@ -26,7 +27,7 @@ class FolderFactory implements FolderFactoryInterface
         $this->userRepository = $userRepository;
     }
 
-    public function create(Id $userId, string $name): Folder
+    public function create(Id $userId, FolderName $name): Folder
     {
         return new Folder(
             $this->folderRepository->getNextIdentity(),

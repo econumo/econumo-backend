@@ -13,7 +13,7 @@ class FolderToDtoV1ResultAssembler
     {
         $item = new FolderResultDto();
         $item->id = $folder->getId()->getValue();
-        $item->name = $folder->getName();
+        $item->name = $folder->getName()->getValue();
         $item->position = $folder->getPosition();
 
         return $item;

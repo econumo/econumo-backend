@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Entity;
 
+use App\Domain\Entity\ValueObject\FolderName;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Events\FolderCreatedEvent;
 use App\Domain\Traits\EventTrait;
@@ -18,7 +19,7 @@ class Folder
     use EventTrait;
 
     private Id $id;
-    private string $name;
+    private FolderName $name;
     private int $position;
     private User $user;
     /**
@@ -31,7 +32,7 @@ class Folder
     public function __construct(
         Id $id,
         User $user,
-        string $name,
+        FolderName $name,
         DateTimeInterface $createdAt
     ) {
         $this->id = $id;
@@ -54,7 +55,7 @@ class Folder
         return $this->user->getId();
     }
 
-    public function getName(): string
+    public function getName(): FolderName
     {
         return $this->name;
     }
