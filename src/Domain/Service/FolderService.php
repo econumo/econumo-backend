@@ -11,6 +11,7 @@ use App\Domain\Exception\FolderAlreadyExistsException;
 use App\Domain\Exception\LastFolderRemoveException;
 use App\Domain\Factory\FolderFactoryInterface;
 use App\Domain\Repository\FolderRepositoryInterface;
+use App\Domain\Service\Dto\PositionDto;
 
 final class FolderService implements FolderServiceInterface
 {
@@ -59,5 +60,25 @@ final class FolderService implements FolderServiceInterface
             throw new LastFolderRemoveException();
         }
         $this->folderRepository->delete($folder);
+    }
+
+    public function orderFolders(Id $userId, PositionDto ...$changes): void
+    {
+        $folders = $this->folderRepository->getByUserId($userId);
+        $changed = [];
+        foreach ($folders as $folder) {
+            foreach ($changes as $change) {
+                if ($folder->getId()->isEqual($change->getId())) {
+                    $folder->updatePosition($change->position);
+                    $changed[] = $folder;
+                    break;
+                }
+            }
+        }
+
+        if (!count($changed)) {
+            return;
+        }
+        $this->folderRepository->save(...$changed);
     }
 }

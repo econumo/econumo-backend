@@ -88,6 +88,14 @@ class Folder
         }
     }
 
+    public function updatePosition(int $position): void
+    {
+        if ($this->position !== $position) {
+            $this->position = $position;
+            $this->updated();
+        }
+    }
+
     private function updated(): void
     {
         $this->updatedAt = new DateTime();
