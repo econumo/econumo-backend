@@ -14,7 +14,6 @@ class Account
 {
     private Id $id;
     private string $name;
-    private int $position;
     private Currency $currency;
     private string $balance;
     private AccountType $type;
@@ -41,7 +40,6 @@ class Account
         $this->balance = (string)$balance;
         $this->type = $type;
         $this->icon = $icon;
-        $this->position = 1000;
         $this->isDeleted = false;
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));

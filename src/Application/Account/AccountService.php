@@ -85,7 +85,7 @@ class AccountService
         if (!$this->accountAccessService->canUpdateAccount($userId, $accountId)) {
             throw new AccessDeniedException();
         }
-        $this->accountService->update($accountId, $dto->name, $dto->icon);
+        $this->accountService->update($userId, $accountId, $dto->name, $dto->icon);
         $updatedAt = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dto->updatedAt);
         $transaction = $this->accountService->updateBalance($accountId, $dto->balance, $updatedAt, $this->translator->trans('account.correction.message'));
         $account = $this->accountRepository->get($accountId);

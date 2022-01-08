@@ -11,14 +11,12 @@ use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\AccountRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\ORMInvalidArgumentException;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 use Ramsey\Uuid\Uuid;
 use RuntimeException;
-
-use function Doctrine\ORM\QueryBuilder;
 
 /**
  * @method Account|null find($id, $lockMode = null, $lockVersion = null)
@@ -68,7 +66,6 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
             ))
             ->andWhere('a.isDeleted = false')
             ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId))
-            ->orderBy('a.position', 'ASC')
             ->getQuery()
             ->getResult();
     }

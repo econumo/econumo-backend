@@ -11,7 +11,7 @@ use App\Domain\Entity\ValueObject\Identifier;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\UserRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\ORMInvalidArgumentException;
 use Doctrine\Persistence\ManagerRegistry;
 use Ramsey\Uuid\Uuid;

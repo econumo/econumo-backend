@@ -22,7 +22,8 @@ class GetAccountListCest
             '0aaa0450-564e-411e-8018-7003f6dbeb92',
             '4eec1ee6-1992-4222-b9ab-31ece5eaad5d',
             '5f3834d1-34e8-4f60-a697-004e63854513',
-            '6c7b8af8-2f8a-4d6b-855c-ca6ff26952ff'
+            '6c7b8af8-2f8a-4d6b-855c-ca6ff26952ff',
+            'a62c06a0-d2b5-4564-a09b-703912c01481',
         ];
         sort($expectedIds);
         $I->assertEquals($expectedIds, $actualIds);

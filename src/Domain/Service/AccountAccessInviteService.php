@@ -16,8 +16,10 @@ use App\Domain\Exception\DomainException;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Factory\AccountAccessFactoryInterface;
 use App\Domain\Factory\AccountAccessInviteFactoryInterface;
+use App\Domain\Factory\AccountOptionsFactoryInterface;
 use App\Domain\Repository\AccountAccessInviteRepositoryInterface;
 use App\Domain\Repository\AccountAccessRepositoryInterface;
+use App\Domain\Repository\AccountOptionsRepositoryInterface;
 use App\Domain\Repository\AccountRepositoryInterface;
 use App\Domain\Repository\UserRepositoryInterface;
 
@@ -30,6 +32,8 @@ class AccountAccessInviteService implements AccountAccessInviteServiceInterface
     private AccountAccessFactoryInterface $accountAccessFactory;
     private AccountAccessRepositoryInterface $accountAccessRepository;
     private AntiCorruptionServiceInterface $antiCorruptionService;
+    private AccountOptionsFactoryInterface $accountOptionsFactory;
+    private AccountOptionsRepositoryInterface $accountOptionsRepository;
 
     public function __construct(
         UserRepositoryInterface $userRepository,
@@ -38,7 +42,9 @@ class AccountAccessInviteService implements AccountAccessInviteServiceInterface
         AccountRepositoryInterface $accountRepository,
         AccountAccessFactoryInterface $accountAccessFactory,
         AccountAccessRepositoryInterface $accountAccessRepository,
-        AntiCorruptionServiceInterface $antiCorruptionService
+        AntiCorruptionServiceInterface $antiCorruptionService,
+        AccountOptionsFactoryInterface $accountOptionsFactory,
+        AccountOptionsRepositoryInterface $accountOptionsRepository
     ) {
         $this->userRepository = $userRepository;
         $this->accountAccessInviteRepository = $accountAccessInviteRepository;
@@ -47,6 +53,8 @@ class AccountAccessInviteService implements AccountAccessInviteServiceInterface
         $this->accountAccessFactory = $accountAccessFactory;
         $this->accountAccessRepository = $accountAccessRepository;
         $this->antiCorruptionService = $antiCorruptionService;
+        $this->accountOptionsFactory = $accountOptionsFactory;
+        $this->accountOptionsRepository = $accountOptionsRepository;
     }
 
     public function generate(
@@ -97,6 +105,10 @@ class AccountAccessInviteService implements AccountAccessInviteServiceInterface
             );
             $this->accountAccessRepository->save($access);
             $this->accountAccessInviteRepository->delete($invite);
+
+            $accountOptions = $this->accountOptionsFactory->create($account->getId(), $userId, 0);
+            $this->accountOptionsRepository->save($accountOptions);
+
             $this->antiCorruptionService->commit();
         } catch (\Throwable $exception) {
             $this->antiCorruptionService->rollback();
