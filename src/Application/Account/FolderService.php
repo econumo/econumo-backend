@@ -77,6 +77,6 @@ class FolderService
             throw new AccessDeniedException();
         }
         $this->folderService->update($folder->getId(), new FolderName($dto->name));
-        return $this->updateFolderV1ResultAssembler->assemble($dto);
+        return $this->updateFolderV1ResultAssembler->assemble($dto, $folder->getId());
     }
 }

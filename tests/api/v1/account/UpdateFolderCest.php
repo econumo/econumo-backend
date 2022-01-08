@@ -48,7 +48,9 @@ class UpdateFolderCest
         $I->amAuthenticatedAsJohn($I);
         $I->sendPOST($this->url, ['id' => '1ad16d32-36af-496e-9867-3919436b8d86', 'name' => 'My Accounts']);
         $I->seeResponseMatchesJsonType([
-            'data' => [],
+            'data' => [
+                'item' => $I->getAccountFolderDtoJsonType(),
+            ],
         ]);
     }
 }
