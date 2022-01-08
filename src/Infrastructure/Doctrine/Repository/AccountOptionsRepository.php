@@ -31,7 +31,13 @@ class AccountOptionsRepository extends ServiceEntityRepository implements Accoun
 
     public function getByUserId(Id $userId): array
     {
-        return $this->findBy(['user' => $this->getEntityManager()->getReference(User::class, $userId)]);
+        $builder = $this->createQueryBuilder('ao');
+        return $builder
+            ->where('ao.user = :user')
+            ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId))
+            ->orderBy('ao.position', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 
     public function save(AccountOptions ...$accountOptions): void
@@ -41,7 +47,7 @@ class AccountOptionsRepository extends ServiceEntityRepository implements Accoun
                 $this->getEntityManager()->persist($position);
             }
             $this->getEntityManager()->flush();
-        } catch (ORMException | ORMInvalidArgumentException $e) {
+        } catch (ORMException|ORMInvalidArgumentException $e) {
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
     }
@@ -57,7 +63,9 @@ class AccountOptionsRepository extends ServiceEntityRepository implements Accoun
             'user' => $this->getEntityManager()->getReference(User::class, $userId)
         ]);
         if ($item === null) {
-            throw new NotFoundException(sprintf('AccountOptions for account_id %s user_id %s not found', $accountId, $userId));
+            throw new NotFoundException(
+                sprintf('AccountOptions for account_id %s user_id %s not found', $accountId, $userId)
+            );
         }
 
         return $item;

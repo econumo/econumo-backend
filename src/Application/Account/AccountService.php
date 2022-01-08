@@ -6,13 +6,16 @@ namespace App\Application\Account;
 
 use App\Application\Account\Assembler\CreateAccountV1ResultAssembler;
 use App\Application\Account\Assembler\DeleteAccountV1ResultAssembler;
+use App\Application\Account\Assembler\UpdateAccountV1ResultAssembler;
 use App\Application\Account\Dto\CreateAccountV1RequestDto;
 use App\Application\Account\Dto\CreateAccountV1ResultDto;
 use App\Application\Account\Dto\DeleteAccountV1RequestDto;
 use App\Application\Account\Dto\DeleteAccountV1ResultDto;
+use App\Application\Account\Dto\OrderAccountV1RequestDto;
+use App\Application\Account\Dto\OrderAccountV1ResultDto;
+use App\Application\Account\Assembler\OrderAccountV1ResultAssembler;
 use App\Application\Account\Dto\UpdateAccountV1RequestDto;
 use App\Application\Account\Dto\UpdateAccountV1ResultDto;
-use App\Application\Account\Assembler\UpdateAccountV1ResultAssembler;
 use App\Application\Exception\AccessDeniedException;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Repository\AccountRepositoryInterface;
@@ -30,6 +33,7 @@ class AccountService
     private AccountRepositoryInterface $accountRepository;
     private AccountAccessServiceInterface $accountAccessService;
     private TranslatorInterface $translator;
+    private OrderAccountV1ResultAssembler $orderAccountV1ResultAssembler;
 
     public function __construct(
         CreateAccountV1ResultAssembler $createAccountV1ResultAssembler,
@@ -38,7 +42,8 @@ class AccountService
         UpdateAccountV1ResultAssembler $updateAccountV1ResultAssembler,
         AccountRepositoryInterface $accountRepository,
         AccountAccessServiceInterface $accountAccessService,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        OrderAccountV1ResultAssembler $orderAccountV1ResultAssembler
     ) {
         $this->createAccountV1ResultAssembler = $createAccountV1ResultAssembler;
         $this->accountService = $accountService;
@@ -47,6 +52,7 @@ class AccountService
         $this->accountRepository = $accountRepository;
         $this->accountAccessService = $accountAccessService;
         $this->translator = $translator;
+        $this->orderAccountV1ResultAssembler = $orderAccountV1ResultAssembler;
     }
 
     public function createAccount(
@@ -90,5 +96,17 @@ class AccountService
         $transaction = $this->accountService->updateBalance($accountId, $dto->balance, $updatedAt, $this->translator->trans('account.correction.message'));
         $account = $this->accountRepository->get($accountId);
         return $this->updateAccountV1ResultAssembler->assemble($dto, $userId, $account, $transaction);
+    }
+
+    public function orderAccount(
+        OrderAccountV1RequestDto $dto,
+        Id $userId
+    ): OrderAccountV1ResultDto {
+        $accountId = new Id($dto->id);
+        if (!$this->accountAccessService->isAccessAllowed($userId, $accountId)) {
+            throw new AccessDeniedException();
+        }
+        $this->accountService->order($userId, $accountId, new Id($dto->folderId), $dto->position);
+        return $this->orderAccountV1ResultAssembler->assemble($dto, $userId);
     }
 }

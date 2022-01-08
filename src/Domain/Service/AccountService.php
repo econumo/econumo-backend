@@ -8,10 +8,12 @@ use App\Domain\Entity\Account;
 use App\Domain\Entity\Transaction;
 use App\Domain\Entity\ValueObject\AccountType;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Exception\AccessDeniedException;
 use App\Domain\Factory\AccountFactoryInterface;
 use App\Domain\Factory\AccountOptionsFactoryInterface;
 use App\Domain\Repository\AccountOptionsRepositoryInterface;
 use App\Domain\Repository\AccountRepositoryInterface;
+use App\Domain\Repository\FolderRepositoryInterface;
 use App\Domain\Service\Dto\AccountDto;
 
 class AccountService implements AccountServiceInterface
@@ -22,6 +24,7 @@ class AccountService implements AccountServiceInterface
     private AccountOptionsFactoryInterface $accountOptionsFactory;
     private AccountOptionsRepositoryInterface $accountOptionsRepository;
     private AntiCorruptionServiceInterface $antiCorruptionService;
+    private FolderRepositoryInterface $folderRepository;
 
     public function __construct(
         AccountRepositoryInterface $accountRepository,
@@ -29,7 +32,8 @@ class AccountService implements AccountServiceInterface
         TransactionServiceInterface $transactionService,
         AccountOptionsFactoryInterface $accountOptionsFactory,
         AccountOptionsRepositoryInterface $accountOptionsRepository,
-        AntiCorruptionServiceInterface $antiCorruptionService
+        AntiCorruptionServiceInterface $antiCorruptionService,
+        FolderRepositoryInterface $folderRepository
     ) {
         $this->accountRepository = $accountRepository;
         $this->accountFactory = $accountFactory;
@@ -37,6 +41,7 @@ class AccountService implements AccountServiceInterface
         $this->accountOptionsFactory = $accountOptionsFactory;
         $this->accountOptionsRepository = $accountOptionsRepository;
         $this->antiCorruptionService = $antiCorruptionService;
+        $this->folderRepository = $folderRepository;
     }
 
     public function create(AccountDto $dto): Account
@@ -92,13 +97,73 @@ class AccountService implements AccountServiceInterface
         $this->accountRepository->save($account);
     }
 
-    public function updateBalance(Id $accountId, float $balance, \DateTimeInterface $updatedAt, ?string $comment = ''): ?Transaction
-    {
+    public function updateBalance(
+        Id $accountId,
+        float $balance,
+        \DateTimeInterface $updatedAt,
+        ?string $comment = ''
+    ): ?Transaction {
         $account = $this->accountRepository->get($accountId);
         if ((string)$account->getBalance() === (string)$balance) {
             return null;
         }
 
-        return $this->transactionService->updateBalance($accountId, $account->getBalance() - $balance, $updatedAt, (string) $comment);
+        return $this->transactionService->updateBalance(
+            $accountId,
+            $account->getBalance() - $balance,
+            $updatedAt,
+            (string)$comment
+        );
+    }
+
+    public function order(Id $userId, Id $accountId, Id $folderId, int $position): void
+    {
+        $this->antiCorruptionService->beginTransaction();
+        try {
+            $accountOptions = $this->accountOptionsRepository->getByUserId($userId);
+            $tmpPosition = 0;
+            foreach ($accountOptions as $accountOption) {
+                if ($accountOption->getAccountId()->isEqual($accountId)) {
+                    $accountOption->updatePosition($position);
+                }
+            }
+            for ($i = 0; $i < count($accountOptions); $i++) {
+                if ($accountOptions[$i]->getAccountId()->isEqual($accountId)) {
+                    continue;
+                }
+
+                if ($tmpPosition === $position) {
+                    $tmpPosition++;
+                }
+                $accountOptions[$i]->updatePosition($tmpPosition++);
+            }
+            if (!count($accountOptions)) {
+                return;
+            }
+            $this->accountOptionsRepository->save(...$accountOptions);
+
+            $account = $this->accountRepository->get($accountId);
+            $folders = $this->folderRepository->getByUserId($userId);
+            $folder = null;
+            foreach ($folders as $item) {
+                if ($item->containsAccount($account)) {
+                    $item->removeAccount($account);
+                }
+                if ($item->getId()->isEqual($folderId)) {
+                    $folder = $item;
+                }
+            }
+            if (!$folder->getUserId()->isEqual($userId)) {
+                throw new AccessDeniedException();
+            }
+
+            $account = $this->accountRepository->get($accountId);
+            $folder->addAccount($account);
+            $this->folderRepository->save(...$folders);
+            $this->antiCorruptionService->commit();
+        } catch (\Throwable $exception) {
+            $this->antiCorruptionService->rollback();
+            throw $exception;
+        }
     }
 }

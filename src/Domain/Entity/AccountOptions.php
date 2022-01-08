@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Entity;
 
+use App\Domain\Entity\ValueObject\Id;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -32,6 +33,16 @@ class AccountOptions
     public function getPosition(): int
     {
         return $this->position;
+    }
+
+    public function getAccountId(): Id
+    {
+        return $this->account->getId();
+    }
+
+    public function getUserId(): Id
+    {
+        return $this->user->getId();
     }
 
     public function updatePosition(int $position): void
