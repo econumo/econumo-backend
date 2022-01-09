@@ -15,7 +15,7 @@ interface AccountRepositoryInterface
      * @param Id $userId
      * @return Account[]
      */
-    public function findByUserId(Id $userId): array;
+    public function getAvailableForUserId(Id $userId): array;
 
     public function get(Id $id): Account;
 

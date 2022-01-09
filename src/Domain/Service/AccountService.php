@@ -8,13 +8,15 @@ use App\Domain\Entity\Account;
 use App\Domain\Entity\Transaction;
 use App\Domain\Entity\ValueObject\AccountType;
 use App\Domain\Entity\ValueObject\Id;
-use App\Domain\Exception\AccessDeniedException;
 use App\Domain\Factory\AccountFactoryInterface;
 use App\Domain\Factory\AccountOptionsFactoryInterface;
 use App\Domain\Repository\AccountOptionsRepositoryInterface;
 use App\Domain\Repository\AccountRepositoryInterface;
 use App\Domain\Repository\FolderRepositoryInterface;
 use App\Domain\Service\Dto\AccountDto;
+use App\Domain\Service\Dto\AccountPositionDto;
+use DateTimeInterface;
+use Throwable;
 
 class AccountService implements AccountServiceInterface
 {
@@ -56,7 +58,7 @@ class AccountService implements AccountServiceInterface
                 }
             }
             if ($position === 0) {
-                $position = count($this->accountRepository->findByUserId($dto->userId));
+                $position = count($this->accountRepository->getAvailableForUserId($dto->userId));
             }
 
             $account = $this->accountFactory->create(
@@ -70,9 +72,9 @@ class AccountService implements AccountServiceInterface
             $this->accountRepository->save($account);
 
             $accountOptions = $this->accountOptionsFactory->create($account->getId(), $dto->userId, $position);
-            $this->accountOptionsRepository->save($accountOptions);;
+            $this->accountOptionsRepository->save($accountOptions);
             $this->antiCorruptionService->commit();
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             $this->antiCorruptionService->rollback();
             throw $exception;
         }
@@ -100,7 +102,7 @@ class AccountService implements AccountServiceInterface
     public function updateBalance(
         Id $accountId,
         float $balance,
-        \DateTimeInterface $updatedAt,
+        DateTimeInterface $updatedAt,
         ?string $comment = ''
     ): ?Transaction {
         $account = $this->accountRepository->get($accountId);
@@ -116,49 +118,55 @@ class AccountService implements AccountServiceInterface
         );
     }
 
-    public function order(Id $userId, Id $accountId, Id $folderId, int $position): void
+    public function orderAccounts(Id $userId, AccountPositionDto ...$changes): void
     {
         $this->antiCorruptionService->beginTransaction();
         try {
+            $accounts = $this->accountRepository->getAvailableForUserId($userId);
             $accountOptions = $this->accountOptionsRepository->getByUserId($userId);
-            $tmpPosition = 0;
-            foreach ($accountOptions as $accountOption) {
-                if ($accountOption->getAccountId()->isEqual($accountId)) {
-                    $accountOption->updatePosition($position);
+            $folders = $this->folderRepository->getByUserId($userId);
+
+            $tmpOptions = [];
+            foreach ($changes as $change) {
+                $accountFound = null;
+                foreach ($accounts as $account) {
+                    if ($change->getId()->isEqual($account->getId())) {
+                        $accountFound = $account;
+                        break;
+                    }
                 }
-            }
-            for ($i = 0; $i < count($accountOptions); $i++) {
-                if ($accountOptions[$i]->getAccountId()->isEqual($accountId)) {
+                if (!$accountFound) {
                     continue;
                 }
 
-                if ($tmpPosition === $position) {
-                    $tmpPosition++;
+                foreach ($folders as $folder) {
+                    if (!$change->getFolderId()->isEqual($folder->getId())) {
+                        if ($folder->containsAccount($accountFound)) {
+                            $folder->removeAccount($accountFound);
+                        }
+                    } elseif (!$folder->containsAccount($accountFound)) {
+                        $folder->addAccount($accountFound);
+                    }
                 }
-                $accountOptions[$i]->updatePosition($tmpPosition++);
-            }
-            if (!count($accountOptions)) {
-                return;
-            }
-            $this->accountOptionsRepository->save(...$accountOptions);
 
-            $account = $this->accountRepository->get($accountId);
-            $folders = $this->folderRepository->getByUserId($userId);
-            $folder = null;
-            foreach ($folders as $item) {
-                if ($item->containsAccount($account)) {
-                    $item->removeAccount($account);
+                $optionFound = false;
+                foreach ($accountOptions as $accountOption) {
+                    if ($change->getId()->isEqual($accountOption->getAccountId())) {
+                        $accountOption->updatePosition($change->position);
+                        $optionFound = true;
+                        $tmpOptions[] = $accountOption;
+                        break;
+                    }
                 }
-                if ($item->getId()->isEqual($folderId)) {
-                    $folder = $item;
+                if (!$optionFound) {
+                    $tmpOptions[] = $this->accountOptionsFactory->create(
+                        $change->getId(),
+                        $userId,
+                        $change->position
+                    );
                 }
             }
-            if (!$folder->getUserId()->isEqual($userId)) {
-                throw new AccessDeniedException();
-            }
-
-            $account = $this->accountRepository->get($accountId);
-            $folder->addAccount($account);
+            $this->accountOptionsRepository->save(...$tmpOptions);
             $this->folderRepository->save(...$folders);
             $this->antiCorruptionService->commit();
         } catch (\Throwable $exception) {

@@ -7,6 +7,7 @@ use App\Domain\Entity\Account;
 use App\Domain\Entity\Transaction;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Service\Dto\AccountDto;
+use App\Domain\Service\Dto\AccountPositionDto;
 
 interface AccountServiceInterface
 {
@@ -18,5 +19,5 @@ interface AccountServiceInterface
 
     public function updateBalance(Id $accountId, float $balance, \DateTimeInterface $updatedAt, ?string $comment = ''): ?Transaction;
 
-    public function order(Id $userId, Id $accountId, Id $folderId, int $position): void;
+    public function orderAccounts(Id $userId, AccountPositionDto ...$changes): void;
 }

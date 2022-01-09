@@ -54,7 +54,7 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
     /**
      * @inheritDoc
      */
-    public function findByUserId(Id $userId): array
+    public function getAvailableForUserId(Id $userId): array
     {
         $builder = $this->createQueryBuilder('a');
         return $builder

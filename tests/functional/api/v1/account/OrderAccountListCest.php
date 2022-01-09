@@ -6,7 +6,7 @@ namespace App\Tests\functional\api\v1\account;
 
 use App\Tests\FunctionalTester;
 
-class OrderAccountCest
+class OrderAccountListCest
 {
-    private string $url = '/api/v1/account/order-account';
+    private string $url = '/api/v1/account/order-account-list';
 }

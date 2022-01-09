@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\UI\Controller\Api\Account\Account\Validation;
 
+namespace App\UI\Controller\Api\Account\AccountList\Validation;
+
+use App\Domain\Service\Dto\AccountPositionDto;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -12,11 +14,15 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Validator\Constraints\Uuid;
 
-class OrderAccountV1Form extends AbstractType
+class AccountPositionForm extends AbstractType
 {
+
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(['csrf_protection' => false]);
+        $resolver->setDefaults([
+            'csrf_protection' => false,
+            'data_class' => AccountPositionDto::class
+        ]);
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
