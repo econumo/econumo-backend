@@ -23,6 +23,7 @@ class CreateAccountCest
             'currencyId' => 'fe5d9269-b69c-4841-9c04-136225447eca',
             'balance' => 100.13,
             'icon' => 'savings',
+            'folderId' => '1ad16d32-36af-496e-9867-3919436b8d86'
         ]);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
@@ -39,6 +40,7 @@ class CreateAccountCest
             'currencyId' => '',
             'balance' => 0,
             'icon' => 'no',
+            'folderId' => '1ad16d32-36af-496e-9867-3919436b8d86'
         ]);
         $I->seeResponseCodeIs(HttpCode::BAD_REQUEST);
     }
@@ -64,6 +66,7 @@ class CreateAccountCest
             'currencyId' => 'fe5d9269-b69c-4841-9c04-136225447eca',
             'balance' => 100.13,
             'icon' => 'savings',
+            'folderId' => '1ad16d32-36af-496e-9867-3919436b8d86'
         ]);
         $I->seeResponseMatchesJsonType([
             'data' => [

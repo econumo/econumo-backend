@@ -37,6 +37,9 @@ class CreateAccountV1Form extends AbstractType
             ])
             ->add('icon', TextType::class, [
                 'constraints' => [new NotBlank()],
+            ])
+            ->add('folderId', TextType::class, [
+                'constraints' => [new NotBlank(), new Uuid()],
             ]);
     }
 }

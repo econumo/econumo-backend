@@ -59,6 +59,7 @@ class AccountService
         $accountDto->currencyId = new Id($dto->currencyId);
         $accountDto->balance = $dto->balance;
         $accountDto->icon = $dto->icon;
+        $accountDto->folderId = new Id($dto->folderId);
 
         $account = $this->accountService->create($accountDto);
         return $this->createAccountV1ResultAssembler->assemble($dto, $userId, $account);

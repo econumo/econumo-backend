@@ -8,6 +8,7 @@ use App\Domain\Entity\Account;
 use App\Domain\Entity\Transaction;
 use App\Domain\Entity\ValueObject\AccountType;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Exception\AccessDeniedException;
 use App\Domain\Factory\AccountFactoryInterface;
 use App\Domain\Factory\AccountOptionsFactoryInterface;
 use App\Domain\Repository\AccountOptionsRepositoryInterface;
@@ -73,6 +74,14 @@ class AccountService implements AccountServiceInterface
 
             $accountOptions = $this->accountOptionsFactory->create($account->getId(), $dto->userId, $position);
             $this->accountOptionsRepository->save($accountOptions);
+
+            $folder = $this->folderRepository->get($dto->folderId);
+            if (!$folder->getUserId()->isEqual($dto->userId)) {
+                throw new AccessDeniedException();
+            }
+            $folder->addAccount($account);
+            $this->folderRepository->save($folder);
+
             $this->antiCorruptionService->commit();
         } catch (Throwable $exception) {
             $this->antiCorruptionService->rollback();

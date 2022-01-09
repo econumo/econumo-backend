@@ -37,4 +37,9 @@ class CreateAccountV1RequestDto
      * @SWG\Property(example="wallet")
      */
     public string $icon = '';
+
+    /**
+     * @SWG\Property(example="fe5d9269-b69c-4841-9c04-136225447eca")
+     */
+    public string $folderId;
 }

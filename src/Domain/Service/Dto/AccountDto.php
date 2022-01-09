@@ -17,4 +17,6 @@ class AccountDto
     public Id $currencyId;
 
     public string $icon;
+
+    public ?Id $folderId = null;
 }
