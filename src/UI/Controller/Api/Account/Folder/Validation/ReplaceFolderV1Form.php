@@ -11,7 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Uuid;
 
-class DeleteFolderV1Form extends AbstractType
+class ReplaceFolderV1Form extends AbstractType
 {
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -21,6 +21,8 @@ class DeleteFolderV1Form extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('id', TextType::class, [
+            'constraints' => [new NotBlank(), new Uuid()],
+        ])->add('replaceId', TextType::class, [
             'constraints' => [new NotBlank(), new Uuid()],
         ]);
     }

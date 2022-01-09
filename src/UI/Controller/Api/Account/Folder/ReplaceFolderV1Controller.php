@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\UI\Controller\Api\Account\Folder;
 
 use App\Application\Account\FolderService;
-use App\Application\Account\Dto\DeleteFolderV1RequestDto;
-use App\UI\Controller\Api\Account\Folder\Validation\DeleteFolderV1Form;
+use App\Application\Account\Dto\ReplaceFolderV1RequestDto;
+use App\UI\Controller\Api\Account\Folder\Validation\ReplaceFolderV1Form;
 use App\Application\Exception\ValidationException;
 use App\Domain\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Swagger\Annotations as SWG;
 
-class DeleteFolderV1Controller extends AbstractController
+class ReplaceFolderV1Controller extends AbstractController
 {
     private FolderService $folderService;
     private ValidatorInterface $validator;
@@ -30,7 +30,7 @@ class DeleteFolderV1Controller extends AbstractController
     }
 
     /**
-     * Delete folder
+     * Replace folder
      *
      * @SWG\Tag(name="Account"),
      * @SWG\Tag(name="Need automation"),
@@ -38,7 +38,7 @@ class DeleteFolderV1Controller extends AbstractController
      *     name="payload",
      *     in="body",
      *     required=true,
-     *     @SWG\Schema(ref=@Model(type=\App\Application\Account\Dto\DeleteFolderV1RequestDto::class)),
+     *     @SWG\Schema(ref=@Model(type=\App\Application\Account\Dto\ReplaceFolderV1RequestDto::class)),
      * ),
      * @SWG\Response(
      *     response=200,
@@ -50,7 +50,7 @@ class DeleteFolderV1Controller extends AbstractController
      *             @SWG\Schema(
      *                 @SWG\Property(
      *                     property="data",
-     *                     ref=@Model(type=\App\Application\Account\Dto\DeleteFolderV1ResultDto::class)
+     *                     ref=@Model(type=\App\Application\Account\Dto\ReplaceFolderV1ResultDto::class)
      *                 )
      *             )
      *         }
@@ -59,7 +59,7 @@ class DeleteFolderV1Controller extends AbstractController
      * @SWG\Response(response=400, description="Bad Request", @SWG\Schema(ref="#/definitions/JsonResponseError")),
      * @SWG\Response(response=500, description="Internal Server Error", @SWG\Schema(ref="#/definitions/JsonResponseException")),
      *
-     * @Route("/api/v1/account/delete-folder", methods={"POST"})
+     * @Route("/api/v1/account/replace-folder", methods={"POST"})
      *
      * @param Request $request
      * @return Response
@@ -67,11 +67,11 @@ class DeleteFolderV1Controller extends AbstractController
      */
     public function __invoke(Request $request): Response
     {
-        $dto = new DeleteFolderV1RequestDto();
-        $this->validator->validate(DeleteFolderV1Form::class, $request->request->all(), $dto);
+        $dto = new ReplaceFolderV1RequestDto();
+        $this->validator->validate(ReplaceFolderV1Form::class, $request->request->all(), $dto);
         /** @var User $user */
         $user = $this->getUser();
-        $result = $this->folderService->deleteFolder($dto, $user->getId());
+        $result = $this->folderService->replaceFolder($dto, $user->getId());
 
         return ResponseFactory::createOkResponse($request, $result);
     }

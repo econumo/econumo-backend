@@ -80,6 +80,14 @@ class Folder
         $this->accounts->removeElement($account);
     }
 
+    /**
+     * @return Account[]|ArrayCollection
+     */
+    public function getAccounts()
+    {
+        return $this->accounts;
+    }
+
     public function updateName(FolderName $name): void
     {
         if (!$this->name->isEqual($name)) {

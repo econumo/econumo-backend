@@ -8,13 +8,18 @@ use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Definition(
- *     required={"id"}
+ *     required={"id", "replaceId"}
  * )
  */
-class DeleteFolderV1RequestDto
+class ReplaceFolderV1RequestDto
 {
     /**
      * @SWG\Property(example="0aaa0450-564e-411e-8018-7003f6dbeb92")
      */
     public string $id;
+
+    /**
+     * @SWG\Property(example="0aaa0450-564e-411e-8018-7003f6dbeb92")
+     */
+    public string $replaceId;
 }

@@ -7,6 +7,7 @@ namespace App\Domain\Service;
 use App\Domain\Entity\Folder;
 use App\Domain\Entity\ValueObject\FolderName;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Exception\AccessDeniedException;
 use App\Domain\Exception\FolderAlreadyExistsException;
 use App\Domain\Exception\LastFolderRemoveException;
 use App\Domain\Factory\FolderFactoryInterface;
@@ -17,11 +18,16 @@ final class FolderService implements FolderServiceInterface
 {
     private FolderRepositoryInterface $folderRepository;
     private FolderFactoryInterface $folderFactory;
+    private AntiCorruptionServiceInterface $antiCorruptionService;
 
-    public function __construct(FolderRepositoryInterface $folderRepository, FolderFactoryInterface $folderFactory)
-    {
+    public function __construct(
+        FolderRepositoryInterface $folderRepository,
+        FolderFactoryInterface $folderFactory,
+        AntiCorruptionServiceInterface $antiCorruptionService
+    ) {
         $this->folderRepository = $folderRepository;
         $this->folderFactory = $folderFactory;
+        $this->antiCorruptionService = $antiCorruptionService;
     }
 
     public function create(Id $userId, FolderName $name): Folder
@@ -60,6 +66,30 @@ final class FolderService implements FolderServiceInterface
             throw new LastFolderRemoveException();
         }
         $this->folderRepository->delete($folder);
+    }
+
+    public function replace(Id $folderId, Id $replaceFolderId): void
+    {
+        $folder = $this->folderRepository->get($folderId);
+        $replaceFolder = $this->folderRepository->get($replaceFolderId);
+        if (!$folder->getUserId()->isEqual($replaceFolder->getUserId())) {
+            throw new AccessDeniedException();
+        }
+
+        $this->antiCorruptionService->beginTransaction();
+        try {
+            foreach ($folder->getAccounts() as $account) {
+                if (!$replaceFolder->containsAccount($account)) {
+                    $replaceFolder->addAccount($account);
+                }
+            }
+            $this->folderRepository->delete($folder);
+            $this->folderRepository->save($replaceFolder);
+            $this->antiCorruptionService->commit();
+        } catch (\Throwable $exception) {
+            $this->antiCorruptionService->rollback();
+            throw $exception;
+        }
     }
 
     public function orderFolders(Id $userId, PositionDto ...$changes): void

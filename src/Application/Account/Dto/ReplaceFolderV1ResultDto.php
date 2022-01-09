@@ -8,9 +8,8 @@ use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Definition(
- *     required={}
  * )
  */
-class DeleteFolderV1ResultDto
+class ReplaceFolderV1ResultDto
 {
 }
