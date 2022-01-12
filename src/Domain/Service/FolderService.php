@@ -33,13 +33,18 @@ final class FolderService implements FolderServiceInterface
     public function create(Id $userId, FolderName $name): Folder
     {
         $userFolders = $this->folderRepository->getByUserId($userId);
+        $lastFolderPosition = 0;
         foreach ($userFolders as $userFolder) {
             if ($userFolder->getName()->isEqual($name)) {
                 throw new FolderAlreadyExistsException();
             }
+            if ($userFolder->getPosition() > $lastFolderPosition) {
+                $lastFolderPosition = $userFolder->getPosition();
+            }
         }
 
         $folder = $this->folderFactory->create($userId, $name);
+        $folder->updatePosition($lastFolderPosition + 1);
         $this->folderRepository->save($folder);
 
         return $folder;
@@ -65,7 +70,16 @@ final class FolderService implements FolderServiceInterface
         if (!$this->folderRepository->isUserHasMoreThanOneFolder($folder->getUserId())) {
             throw new LastFolderRemoveException();
         }
-        $this->folderRepository->delete($folder);
+
+        $this->antiCorruptionService->beginTransaction();
+        try {
+            $userId = $folder->getUserId();
+            $this->folderRepository->delete($folder);
+            $this->resetOrderFolders($userId);
+        } catch (\Throwable $exception) {
+            $this->antiCorruptionService->rollback();
+            throw $exception;
+        }
     }
 
     public function replace(Id $folderId, Id $replaceFolderId): void
@@ -75,6 +89,7 @@ final class FolderService implements FolderServiceInterface
         if (!$folder->getUserId()->isEqual($replaceFolder->getUserId())) {
             throw new AccessDeniedException();
         }
+        $userId = $folder->getUserId();
 
         $this->antiCorruptionService->beginTransaction();
         try {
@@ -85,6 +100,8 @@ final class FolderService implements FolderServiceInterface
             }
             $this->folderRepository->delete($folder);
             $this->folderRepository->save($replaceFolder);
+
+            $this->resetOrderFolders($userId);
             $this->antiCorruptionService->commit();
         } catch (\Throwable $exception) {
             $this->antiCorruptionService->rollback();
@@ -110,5 +127,20 @@ final class FolderService implements FolderServiceInterface
             return;
         }
         $this->folderRepository->save(...$changed);
+    }
+
+    private function resetOrderFolders(Id $userId): void
+    {
+        $userFolders = $this->folderRepository->getByUserId($userId);
+        usort($userFolders, function (Folder $a, Folder $b) {
+            if ($a->getPosition() == $b->getPosition()) {
+                return 0;
+            }
+            return ($a->getPosition() < $b->getPosition()) ? -1 : 1;
+        });
+        foreach ($userFolders as $i => $userFolder) {
+            $userFolder->updatePosition($i);
+        }
+        $this->folderRepository->save(...$userFolders);
     }
 }
