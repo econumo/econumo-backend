@@ -5,7 +5,9 @@ namespace App\Infrastructure\Doctrine\Repository;
 
 use App\Domain\Entity\ConnectionInvite;
 use App\Domain\Entity\User;
+use App\Domain\Entity\ValueObject\ConnectionCode;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\ConnectionInviteRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Exception\ORMException;
@@ -49,5 +51,20 @@ class ConnectionInviteRepository extends ServiceEntityRepository implements Conn
     {
         $item->clearCode();
         $this->getEntityManager()->flush();
+    }
+
+    public function getByCode(ConnectionCode $code): ConnectionInvite
+    {
+        /** @var ConnectionInvite|null $item */
+        $item = $this->findOneBy(['code' => $code]);
+        if ($item === null) {
+            throw new NotFoundException(sprintf('ConnectionCode with CODE %s not found', $code));
+        }
+        if ($item->isExpired()) {
+            $this->delete($item);
+            throw new NotFoundException(sprintf('ConnectionCode with CODE %s not found', $code));
+        }
+
+        return $item;
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Entity;
 
 use App\Domain\Entity\ValueObject\ConnectionCode;
+use App\Domain\Entity\ValueObject\Id;
 use DateTime;
 
 class ConnectionInvite
@@ -41,5 +42,15 @@ class ConnectionInvite
     public function getExpiredAt(): ?DateTime
     {
         return $this->expiredAt;
+    }
+
+    public function isExpired(): bool
+    {
+        return $this->expiredAt < new DateTime();
+    }
+
+    public function getUserId(): Id
+    {
+        return $this->user->getId();
     }
 }
