@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\UI\Controller\Api\Connection\UserList\Validation;
+namespace App\UI\Controller\Api\Connection\ConnectionList\Validation;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class GetUserListV1Form extends AbstractType
+class GetConnectionListV1Form extends AbstractType
 {
     public function configureOptions(OptionsResolver $resolver)
     {

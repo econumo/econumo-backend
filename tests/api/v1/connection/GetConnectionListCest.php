@@ -7,9 +7,9 @@ namespace App\Tests\api\v1\connection;
 use App\Tests\ApiTester;
 use Codeception\Util\HttpCode;
 
-class GetUserListCest
+class GetConnectionListCest
 {
-    private string $url = '/api/v1/connection/get-user-list';
+    private string $url = '/api/v1/connection/get-connection-list';
 
     /**
      * @throws \Codeception\Exception\ModuleException
@@ -48,6 +48,7 @@ class GetUserListCest
         $I->amAuthenticatedAsJohn($I);
         $I->sendGET($this->url, []);
         $I->seeResponseMatchesJsonType($I->getRootResponseWithItemsJsonType());
-        $I->seeResponseMatchesJsonType($I->getUserDtoJsonType(), '$.data.items[0]');
+        $I->seeResponseMatchesJsonType($I->getConnectionDtoJsonType(), '$.data.items[0]');
+        $I->seeResponseMatchesJsonType($I->getConnectionAccountAccessDtoJsonType(), '$.data.items[0].sharedAccounts[0]');
     }
 }

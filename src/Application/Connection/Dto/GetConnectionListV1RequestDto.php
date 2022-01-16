@@ -10,6 +10,6 @@ use Swagger\Annotations as SWG;
  * @SWG\Definition(
  * )
  */
-class GetUserListV1RequestDto
+class GetConnectionListV1RequestDto
 {
 }

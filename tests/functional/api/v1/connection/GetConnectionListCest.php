@@ -6,7 +6,7 @@ namespace App\Tests\functional\api\v1\connection;
 
 use App\Tests\FunctionalTester;
 
-class GetUserListCest
+class GetConnectionListCest
 {
-    private string $url = '/api/v1/connection/get-user-list';
+    private string $url = '/api/v1/connection/get-connection-list';
 }

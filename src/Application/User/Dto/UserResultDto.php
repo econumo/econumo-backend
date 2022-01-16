@@ -12,7 +12,6 @@ use Swagger\Annotations as SWG;
  *     required={"id", "avatar", "name", "email"}
  * )
  */
-
 class UserResultDto
 {
     /**
@@ -33,10 +32,4 @@ class UserResultDto
      * @SWG\Property(example="John")
      */
     public string $name;
-
-    /**
-     * User e-mail
-     * @SWG\Property(example="john@snow.test")
-     */
-    public string $email;
 }

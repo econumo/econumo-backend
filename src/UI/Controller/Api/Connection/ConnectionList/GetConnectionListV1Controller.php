@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\UI\Controller\Api\Connection\UserList;
+namespace App\UI\Controller\Api\Connection\ConnectionList;
 
-use App\Application\Connection\UserListService;
-use App\Application\Connection\Dto\GetUserListV1RequestDto;
-use App\UI\Controller\Api\Connection\UserList\Validation\GetUserListV1Form;
+use App\Application\Connection\ConnectionListService;
+use App\Application\Connection\Dto\GetConnectionListV1RequestDto;
+use App\UI\Controller\Api\Connection\ConnectionList\Validation\GetConnectionListV1Form;
 use App\Application\Exception\ValidationException;
 use App\Domain\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,19 +18,19 @@ use Symfony\Component\Routing\Annotation\Route;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Swagger\Annotations as SWG;
 
-class GetUserListV1Controller extends AbstractController
+class GetConnectionListV1Controller extends AbstractController
 {
-    private UserListService $userListService;
+    private ConnectionListService $connectionListService;
     private ValidatorInterface $validator;
 
-    public function __construct(UserListService $userListService, ValidatorInterface $validator)
+    public function __construct(ConnectionListService $connectionListService, ValidatorInterface $validator)
     {
-        $this->userListService = $userListService;
+        $this->connectionListService = $connectionListService;
         $this->validator = $validator;
     }
 
     /**
-     * Get UserList
+     * Get ConnectionList
      *
      * @SWG\Tag(name="Connection"),
      * @SWG\Tag(name="Need automation"),
@@ -51,7 +51,7 @@ class GetUserListV1Controller extends AbstractController
      *             @SWG\Schema(
      *                 @SWG\Property(
      *                     property="data",
-     *                     ref=@Model(type=\App\Application\Connection\Dto\GetUserListV1ResultDto::class)
+     *                     ref=@Model(type=\App\Application\Connection\Dto\GetConnectionListV1ResultDto::class)
      *                 )
      *             )
      *         }
@@ -60,7 +60,7 @@ class GetUserListV1Controller extends AbstractController
      * @SWG\Response(response=400, description="Bad Request", @SWG\Schema(ref="#/definitions/JsonResponseError")),
      * @SWG\Response(response=500, description="Internal Server Error", @SWG\Schema(ref="#/definitions/JsonResponseException")),
      *
-     * @Route("/api/v1/connection/get-user-list", methods={"GET"})
+     * @Route("/api/v1/connection/get-connection-list", methods={"GET"})
      *
      * @param Request $request
      * @return Response
@@ -68,11 +68,11 @@ class GetUserListV1Controller extends AbstractController
      */
     public function __invoke(Request $request): Response
     {
-        $dto = new GetUserListV1RequestDto();
-        $this->validator->validate(GetUserListV1Form::class, $request->query->all(), $dto);
+        $dto = new GetConnectionListV1RequestDto();
+        $this->validator->validate(GetConnectionListV1Form::class, $request->query->all(), $dto);
         /** @var User $user */
         $user = $this->getUser();
-        $result = $this->userListService->getUserList($dto, $user->getId());
+        $result = $this->connectionListService->getConnectionList($dto, $user->getId());
 
         return ResponseFactory::createOkResponse($request, $result);
     }

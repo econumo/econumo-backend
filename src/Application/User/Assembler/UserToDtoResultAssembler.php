@@ -15,7 +15,6 @@ class UserToDtoResultAssembler
         $dto->id = $user->getId()->getValue();
         $dto->name = $user->getName();
         $dto->avatar = $user->getAvatarUrl();
-        $dto->email = $user->getUserIdentifier();
 
         return $dto;
     }

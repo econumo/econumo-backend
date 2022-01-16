@@ -56,7 +56,6 @@ class Api extends \Codeception\Module
             'id' => 'string',
             'name' => 'string',
             'avatar' => 'string',
-            'email' => 'string',
         ];
     }
 
@@ -148,6 +147,23 @@ class Api extends \Codeception\Module
         return [
             'code' => 'string',
             'expiredAt' => 'string',
+        ];
+    }
+
+    public function getConnectionDtoJsonType(): array
+    {
+        return [
+            'user' => $this->getUserDtoJsonType(),
+            'sharedAccounts' => 'array',
+        ];
+    }
+
+    public function getConnectionAccountAccessDtoJsonType(): array
+    {
+        return [
+            'id' => 'string',
+            'ownerUserId' => 'string',
+            'role' => 'string',
         ];
     }
 }
