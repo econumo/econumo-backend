@@ -15,7 +15,9 @@ use App\Application\Connection\Dto\GenerateInviteV1RequestDto;
 use App\Application\Connection\Dto\GenerateInviteV1ResultDto;
 use App\Domain\Entity\ValueObject\ConnectionCode;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Service\Connection\ConnectionAccountServiceInterface;
 use App\Domain\Service\Connection\ConnectionInviteServiceInterface;
+use App\Domain\Service\Connection\ConnectionServiceInterface;
 
 class InviteService
 {
@@ -23,17 +25,23 @@ class InviteService
     private ConnectionInviteServiceInterface $connectionInviteService;
     private DeleteInviteV1ResultAssembler $deleteInviteV1ResultAssembler;
     private AcceptInviteV1ResultAssembler $acceptInviteV1ResultAssembler;
+    private ConnectionServiceInterface $connectionService;
+    private ConnectionAccountServiceInterface $connectionAccountService;
 
     public function __construct(
         GenerateInviteV1ResultAssembler $generateInviteV1ResultAssembler,
         ConnectionInviteServiceInterface $connectionInviteService,
         DeleteInviteV1ResultAssembler $deleteInviteV1ResultAssembler,
-        AcceptInviteV1ResultAssembler $acceptInviteV1ResultAssembler
+        AcceptInviteV1ResultAssembler $acceptInviteV1ResultAssembler,
+        ConnectionServiceInterface $connectionService,
+        ConnectionAccountServiceInterface $connectionAccountService
     ) {
         $this->generateInviteV1ResultAssembler = $generateInviteV1ResultAssembler;
         $this->connectionInviteService = $connectionInviteService;
         $this->deleteInviteV1ResultAssembler = $deleteInviteV1ResultAssembler;
         $this->acceptInviteV1ResultAssembler = $acceptInviteV1ResultAssembler;
+        $this->connectionService = $connectionService;
+        $this->connectionAccountService = $connectionAccountService;
     }
 
     public function generateInvite(
@@ -56,7 +64,9 @@ class InviteService
         AcceptInviteV1RequestDto $dto,
         Id $userId
     ): AcceptInviteV1ResultDto {
+        $sharedWithUserAccess = $this->connectionAccountService->getSharedAccess($userId);
+        $connectedUsers = $this->connectionService->getUserList($userId);
         $this->connectionInviteService->accept($userId, new ConnectionCode($dto->code));
-        return $this->acceptInviteV1ResultAssembler->assemble($dto, $userId);
+        return $this->acceptInviteV1ResultAssembler->assemble($dto, $userId, $sharedWithUserAccess, $connectedUsers);
     }
 }

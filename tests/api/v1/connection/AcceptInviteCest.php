@@ -48,6 +48,7 @@ class AcceptInviteCest
         $I->amAuthenticatedAsJohn($I);
         $I->sendPOST($this->url, ['code' => 'a1234']);
         $I->seeResponseMatchesJsonType($I->getRootResponseWithItemsJsonType());
-        $I->seeResponseMatchesJsonType($I->getUserDtoJsonType(), '$.data.items[0]');
+        $I->seeResponseMatchesJsonType($I->getConnectionDtoJsonType(), '$.data.items[0]');
+        $I->seeResponseMatchesJsonType($I->getConnectionAccountAccessDtoJsonType(), '$.data.items[0].sharedAccounts[0]');
     }
 }
