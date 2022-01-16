@@ -11,21 +11,17 @@ use App\Domain\Repository\UserRepositoryInterface;
 class UserIdToDtoResultAssembler
 {
     private UserRepositoryInterface $userRepository;
+    private UserToDtoResultAssembler $userToDtoResultAssembler;
 
-    public function __construct(UserRepositoryInterface $userRepository)
+    public function __construct(UserRepositoryInterface $userRepository, UserToDtoResultAssembler $userToDtoResultAssembler)
     {
         $this->userRepository = $userRepository;
+        $this->userToDtoResultAssembler = $userToDtoResultAssembler;
     }
 
     public function assemble(Id $userId): UserResultDto
     {
         $user = $this->userRepository->get($userId);
-        $dto = new UserResultDto();
-        $dto->id = $user->getId()->getValue();
-        $dto->name = $user->getName();
-        $dto->avatar = $user->getAvatarUrl();
-        $dto->email = $user->getUserIdentifier();
-
-        return $dto;
+        return $this->userToDtoResultAssembler->assemble($user);
     }
 }

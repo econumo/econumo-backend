@@ -11,4 +11,9 @@ return [
         'code' => null,
         'expired_at' => null,
     ],
+    [
+        'user_id' => '48044d88-5081-11ec-bf63-0242ac130002',
+        'code' => 'a1234',
+        'expired_at' => '2030-01-01 10:00:00',
+    ],
 ];

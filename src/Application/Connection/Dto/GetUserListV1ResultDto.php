@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Connection\Dto;
 
-use App\Application\User\Dto\UserResultDto;
+use App\Domain\Entity\User;
 use Swagger\Annotations as SWG;
 
 /**
@@ -12,10 +12,10 @@ use Swagger\Annotations as SWG;
  *     required={"items"}
  * )
  */
-class AcceptInviteV1ResultDto
+class GetUserListV1ResultDto
 {
     /**
-     * @var UserResultDto[]
+     * @var User[]
      * @SWG\Property()
      */
     public array $items;
