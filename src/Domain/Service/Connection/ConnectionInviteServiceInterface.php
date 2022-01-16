@@ -11,4 +11,6 @@ use App\Domain\Entity\ValueObject\Id;
 interface ConnectionInviteServiceInterface
 {
     public function generate(Id $userId): ConnectionInvite;
+
+    public function delete(Id $userId): void;
 }

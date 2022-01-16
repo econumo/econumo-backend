@@ -32,6 +32,13 @@ tasks:
         cmds:
             - docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app sh
 
+    fast-test:
+        desc: "Run tests without recreating db (you could use arguments here after dash, ex: task tests -- unit)"
+        cmds:
+            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+            - cmd: docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app vendor/bin/codecept run {{.CLI_ARGS}} --steps -v
+              ignore_error: true
+
     test:
         desc: "Run tests (you could use arguments here after dash, ex: task tests -- unit)"
         cmds:

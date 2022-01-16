@@ -38,4 +38,14 @@ class ConnectionInviteService implements ConnectionInviteServiceInterface
         $this->connectionInviteRepository->save($connectionInvite);
         return $connectionInvite;
     }
+
+    public function delete(Id $userId): void
+    {
+        $connectionInvite = $this->connectionInviteRepository->getByUser($userId);
+        if ($connectionInvite === null) {
+            return;
+        }
+        $connectionInvite->clearCode();
+        $this->connectionInviteRepository->save($connectionInvite);
+    }
 }
