@@ -14,4 +14,6 @@ interface ConnectionServiceInterface
      * @return User[]
      */
     public function getUserList(Id $userId): iterable;
+
+    public function delete(Id $userId, Id $connectedUserId): void;
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Connection\Dto;
 
-use App\Domain\Entity\User;
+use App\Application\User\Dto\UserResultDto;
 use Swagger\Annotations as SWG;
 
 /**
@@ -15,7 +15,7 @@ use Swagger\Annotations as SWG;
 class GetUserListV1ResultDto
 {
     /**
-     * @var User[]
+     * @var UserResultDto[]
      * @SWG\Property()
      */
     public array $items;

@@ -144,7 +144,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->connections->add($user);
     }
 
-    public function removeAccount(self $user)
+    public function deleteConnection(self $user)
     {
         $this->connections->removeElement($user);
     }
