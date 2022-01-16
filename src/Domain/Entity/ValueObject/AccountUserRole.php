@@ -7,7 +7,7 @@ namespace App\Domain\Entity\ValueObject;
 use DomainException;
 use JsonSerializable;
 
-final class AccountRole implements JsonSerializable
+final class AccountUserRole implements JsonSerializable
 {
     public const ADMIN = 0;
     public const USER = 1;

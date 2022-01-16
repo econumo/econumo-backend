@@ -19,7 +19,7 @@ doctrine:
         types:
             uuid: App\Infrastructure\Doctrine\Type\UuidType
             account_type: App\Infrastructure\Doctrine\Type\AccountType
-            account_role: App\Infrastructure\Doctrine\Type\AccountRole
+            account_user_role_type: App\Infrastructure\Doctrine\Type\AccountUserRoleType
             category_type: App\Infrastructure\Doctrine\Type\CategoryType
             transaction_type: App\Infrastructure\Doctrine\Type\TransactionType
             icon_type: App\Infrastructure\Doctrine\Type\IconType

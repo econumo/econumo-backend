@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Entity;
 
-use App\Domain\Entity\ValueObject\AccountRole;
+use App\Domain\Entity\ValueObject\AccountUserRole;
 use App\Domain\Entity\ValueObject\Id;
 use DateTime;
 use DateTimeImmutable;
@@ -15,7 +15,7 @@ class AccountAccessInvite
     private Account $account;
     private User $recipient;
     private User $owner;
-    private AccountRole $role;
+    private AccountUserRole $role;
     private string $code;
     private DateTimeImmutable $createdAt;
     private DateTimeInterface $updatedAt;
@@ -24,7 +24,7 @@ class AccountAccessInvite
         Account $account,
         User $recipient,
         User $owner,
-        AccountRole $role,
+        AccountUserRole $role,
         string $code,
         \DateTimeInterface $createdAt
     ) {
@@ -52,7 +52,7 @@ class AccountAccessInvite
         return $this->code;
     }
 
-    public function getRole(): AccountRole
+    public function getRole(): AccountUserRole
     {
         return $this->role;
     }

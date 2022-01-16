@@ -101,4 +101,14 @@ DQL;
 
         return $this->findBy(['account' => $accounts]);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSharedAccessForUser(Id $userId): array
+    {
+        return $this->findBy([
+            'user' => $this->getEntityManager()->getReference(User::class, $userId)
+        ]);
+    }
 }

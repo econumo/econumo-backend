@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Entity;
 
-use App\Domain\Entity\ValueObject\AccountRole;
+use App\Domain\Entity\ValueObject\AccountUserRole;
 use App\Domain\Entity\ValueObject\Id;
 use DateTime;
 use DateTimeImmutable;
@@ -15,14 +15,14 @@ class AccountAccess
     private Id $id;
     private Account $account;
     private User $user;
-    private AccountRole $role;
+    private AccountUserRole $role;
     private DateTimeImmutable $createdAt;
     private DateTimeInterface $updatedAt;
 
     public function __construct(
         Account $account,
         User $user,
-        AccountRole $role,
+        AccountUserRole $role,
         \DateTimeInterface $createdAt
     ) {
         $this->account = $account;
@@ -30,6 +30,11 @@ class AccountAccess
         $this->role = $role;
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
+    }
+
+    public function getAccount(): Account
+    {
+        return $this->account;
     }
 
     public function getAccountId(): Id
@@ -42,7 +47,7 @@ class AccountAccess
         return $this->user->getId();
     }
 
-    public function getRole(): AccountRole
+    public function getRole(): AccountUserRole
     {
         return $this->role;
     }

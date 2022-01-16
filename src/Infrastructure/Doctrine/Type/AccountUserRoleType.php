@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Doctrine\Type;
 
-use App\Domain\Entity\ValueObject\AccountRole as ValueObject;
+use App\Domain\Entity\ValueObject\AccountUserRole as ValueObject;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\SmallIntType;
 
-class AccountRole extends SmallIntType
+class AccountUserRoleType extends SmallIntType
 {
     /**
      * @inheritdoc
@@ -22,6 +22,6 @@ class AccountRole extends SmallIntType
      */
     public function getName(): string
     {
-        return 'account_role';
+        return 'account_user_role_type';
     }
 }

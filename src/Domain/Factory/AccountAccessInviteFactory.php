@@ -7,7 +7,7 @@ namespace App\Domain\Factory;
 
 
 use App\Domain\Entity\AccountAccessInvite;
-use App\Domain\Entity\ValueObject\AccountRole;
+use App\Domain\Entity\ValueObject\AccountUserRole;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Repository\AccountRepositoryInterface;
 use App\Domain\Repository\UserRepositoryInterface;
@@ -30,7 +30,7 @@ class AccountAccessInviteFactory implements AccountAccessInviteFactoryInterface
         $this->userRepository = $userRepository;
     }
 
-    public function create(Id $accountId, Id $recipientId, Id $ownerId, AccountRole $role): AccountAccessInvite
+    public function create(Id $accountId, Id $recipientId, Id $ownerId, AccountUserRole $role): AccountAccessInvite
     {
         return new AccountAccessInvite(
             $this->accountRepository->getReference($accountId),

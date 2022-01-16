@@ -8,7 +8,7 @@ namespace App\Domain\Service;
 
 use App\Domain\Entity\Account;
 use App\Domain\Entity\AccountAccessInvite;
-use App\Domain\Entity\ValueObject\AccountRole;
+use App\Domain\Entity\ValueObject\AccountUserRole;
 use App\Domain\Entity\ValueObject\Email;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\AccountAccessException;
@@ -61,7 +61,7 @@ class AccountAccessInviteService implements AccountAccessInviteServiceInterface
         Id $userId,
         Id $accountId,
         Email $recipientUsername,
-        AccountRole $role
+        AccountUserRole $role
     ): AccountAccessInvite {
         $account = $this->accountRepository->get($accountId);
         $recipient = $this->userRepository->getByEmail($recipientUsername);

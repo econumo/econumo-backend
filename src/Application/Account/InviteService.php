@@ -10,7 +10,7 @@ use App\Application\Account\Dto\AcceptInviteV1RequestDto;
 use App\Application\Account\Dto\AcceptInviteV1ResultDto;
 use App\Application\Account\Dto\GenerateInviteV1RequestDto;
 use App\Application\Account\Dto\GenerateInviteV1ResultDto;
-use App\Domain\Entity\ValueObject\AccountRole;
+use App\Domain\Entity\ValueObject\AccountUserRole;
 use App\Domain\Entity\ValueObject\Email;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Service\AccountAccessInviteServiceInterface;
@@ -44,7 +44,7 @@ class InviteService
             $userId,
             new Id($dto->accountId),
             new Email($dto->recipientUsername),
-            AccountRole::createFromAlias($dto->role)
+            AccountUserRole::createFromAlias($dto->role)
         );
         return $this->generateInviteV1ResultAssembler->assemble($dto, $invite);
     }

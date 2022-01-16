@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\UI\Controller\Api\Account\Invite\Validation;
 
-use App\Domain\Entity\ValueObject\AccountRole;
+use App\Domain\Entity\ValueObject\AccountUserRole;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -30,9 +30,9 @@ class GenerateInviteV1Form extends AbstractType
         ])->add('role', ChoiceType::class, [
             'constraints' => [new NotBlank()],
             'choices' => [
-                AccountRole::MAPPING[AccountRole::ADMIN],
-                AccountRole::MAPPING[AccountRole::USER],
-                AccountRole::MAPPING[AccountRole::GUEST],
+                AccountUserRole::MAPPING[AccountUserRole::ADMIN],
+                AccountUserRole::MAPPING[AccountUserRole::USER],
+                AccountUserRole::MAPPING[AccountUserRole::GUEST],
             ]
         ]);
     }

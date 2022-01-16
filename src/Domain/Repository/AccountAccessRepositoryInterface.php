@@ -33,4 +33,10 @@ interface AccountAccessRepositoryInterface
      * @return AccountAccess[]
      */
     public function getOwnedByUser(Id $userId): array;
+
+    /**
+     * @param Id $userId
+     * @return AccountAccess[]
+     */
+    public function getSharedAccessForUser(Id $userId): array;
 }

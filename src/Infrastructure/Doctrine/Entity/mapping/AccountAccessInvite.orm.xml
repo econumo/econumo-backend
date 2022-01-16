@@ -8,7 +8,7 @@
         <id name="account" association-key="true"/>
         <id name="recipient" association-key="true"/>
 
-        <field name="role" type="account_role" column="role" nullable="false"/>
+        <field name="role" type="account_user_role_type" column="role" nullable="false"/>
         <field name="code" type="string" column="code" length="5" nullable="false">
             <options>
                 <option name="fixed">true</option>
