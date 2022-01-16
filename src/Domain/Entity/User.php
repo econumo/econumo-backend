@@ -12,6 +12,8 @@ use App\Domain\Traits\EventTrait;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -36,6 +38,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The salt
      */
     private string $salt;
+
+    /**
+     * @var ArrayCollection|self[]
+     */
+    private Collection $connections;
+
     private DateTimeImmutable $createdAt;
     private DateTimeInterface $updatedAt;
 
@@ -45,6 +53,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->salt = $salt;
         $this->name = $name;
         $this->identifier = Identifier::createFromEmail($email)->getValue();
+        $this->connections = new ArrayCollection();
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->registerEvent(new UserRegisteredEvent($id));
@@ -119,5 +128,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getAvatarUrl(): string
     {
         return sprintf('https://www.gravatar.com/avatar/%s', md5($this->identifier));
+    }
+
+    public function isUserConnected(self $user): bool
+    {
+        return $this->connections->contains($user);
+    }
+
+    public function connectUser(self $user)
+    {
+        if ($user->getId()->isEqual($this->getId())) {
+            return;
+        }
+
+        $this->connections->add($user);
+    }
+
+    public function removeAccount(self $user)
+    {
+        $this->connections->removeElement($user);
+    }
+
+    /**
+     * @return self[]|ArrayCollection
+     */
+    public function getConnections()
+    {
+        return $this->connections;
     }
 }
