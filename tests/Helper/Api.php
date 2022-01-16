@@ -153,4 +153,12 @@ class Api extends \Codeception\Module
             'recipientName' => 'string'
         ];
     }
+
+    public function getConnectionInviteDtoJsonType(): array
+    {
+        return [
+            'code' => 'string',
+            'expiredAt' => 'string',
+        ];
+    }
 }

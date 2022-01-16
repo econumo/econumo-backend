@@ -32,4 +32,14 @@ class ConnectionInvite
         $this->code = null;
         $this->expiredAt = null;
     }
+
+    public function getCode(): ?ConnectionCode
+    {
+        return $this->code;
+    }
+
+    public function getExpiredAt(): ?DateTime
+    {
+        return $this->expiredAt;
+    }
 }

@@ -17,8 +17,8 @@ interface ConnectionInviteRepositoryInterface
 
     /**
      * @param Id $userId
-     * @return ConnectionInvite
+     * @return ConnectionInvite|null
      * @throws NotFoundException
      */
-    public function getByUser(Id $userId): ConnectionInvite;
+    public function getByUser(Id $userId): ?ConnectionInvite;
 }

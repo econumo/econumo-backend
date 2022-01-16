@@ -38,7 +38,7 @@ class ConnectionInviteRepository extends ServiceEntityRepository implements Conn
         }
     }
 
-    public function getByUser(Id $userId): ConnectionInvite
+    public function getByUser(Id $userId): ?ConnectionInvite
     {
         return $this->findOneBy([
             'user' => $this->getEntityManager()->getReference(User::class, $userId)

@@ -3,7 +3,6 @@
 namespace App\DataFixtures;
 
 
-use App\Domain\Entity\User;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
 class UserConnectionFixtures extends AbstractFixture implements DependentFixtureInterface
@@ -12,6 +11,6 @@ class UserConnectionFixtures extends AbstractFixture implements DependentFixture
 
     public function getDependencies()
     {
-        return [User::class];
+        return [UserFixtures::class];
     }
 }
