@@ -8,18 +8,13 @@ use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Definition(
- *     required={"id", "name"}
+ *     required={"id"}
  * )
  */
-class UpdateTagV1RequestDto
+class UnarchiveTagV1RequestDto
 {
     /**
      * @SWG\Property(example="4b53d029-c1ed-46ad-8d86-1049542f4a7e")
      */
     public string $id;
-
-    /**
-     * @SWG\Property(example="#work")
-     */
-    public string $name;
 }

@@ -81,7 +81,6 @@ class Tag
     {
         if (!$this->isArchived) {
             $this->isArchived = true;
-            $this->position = self::ARCHIVED_POSITION;
             $this->updated();
         }
     }

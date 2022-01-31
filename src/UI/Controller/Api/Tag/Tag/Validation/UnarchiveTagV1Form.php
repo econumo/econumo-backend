@@ -11,7 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Uuid;
 
-class UpdateTagV1Form extends AbstractType
+class UnarchiveTagV1Form extends AbstractType
 {
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -22,8 +22,6 @@ class UpdateTagV1Form extends AbstractType
     {
         $builder->add('id', TextType::class, [
             'constraints' => [new NotBlank(), new Uuid()],
-        ])->add('name', TextType::class, [
-            'constraints' => [new NotBlank()],
         ]);
     }
 }

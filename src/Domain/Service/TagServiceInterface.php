@@ -16,7 +16,7 @@ interface TagServiceInterface
 
     public function createTagForAccount(Id $userId, Id $accountId, string $name): Tag;
 
-    public function updateTag(Id $tagId, string $name, bool $isArchived): void;
+    public function updateTag(Id $tagId, string $name): void;
 
     public function orderTags(Id $userId, PositionDto ...$changes): void;
 

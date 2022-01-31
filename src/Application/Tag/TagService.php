@@ -6,16 +6,19 @@ namespace App\Application\Tag;
 
 use App\Application\Exception\AccessDeniedException;
 use App\Application\Exception\ValidationException;
+use App\Application\Tag\Assembler\ArchiveTagV1ResultAssembler;
 use App\Application\Tag\Assembler\CreateTagV1ResultAssembler;
 use App\Application\Tag\Assembler\DeleteTagV1ResultAssembler;
 use App\Application\Tag\Assembler\UpdateTagV1ResultAssembler;
 use App\Application\Tag\Dto\ArchiveTagV1RequestDto;
 use App\Application\Tag\Dto\ArchiveTagV1ResultDto;
-use App\Application\Tag\Assembler\ArchiveTagV1ResultAssembler;
 use App\Application\Tag\Dto\CreateTagV1RequestDto;
 use App\Application\Tag\Dto\CreateTagV1ResultDto;
 use App\Application\Tag\Dto\DeleteTagV1RequestDto;
 use App\Application\Tag\Dto\DeleteTagV1ResultDto;
+use App\Application\Tag\Dto\UnarchiveTagV1RequestDto;
+use App\Application\Tag\Dto\UnarchiveTagV1ResultDto;
+use App\Application\Tag\Assembler\UnarchiveTagV1ResultAssembler;
 use App\Application\Tag\Dto\UpdateTagV1RequestDto;
 use App\Application\Tag\Dto\UpdateTagV1ResultDto;
 use App\Domain\Entity\ValueObject\Id;
@@ -33,6 +36,7 @@ class TagService
     private TagRepositoryInterface $tagRepository;
     private DeleteTagV1ResultAssembler $deleteTagV1ResultAssembler;
     private ArchiveTagV1ResultAssembler $archiveTagV1ResultAssembler;
+    private UnarchiveTagV1ResultAssembler $unarchiveTagV1ResultAssembler;
 
     public function __construct(
         CreateTagV1ResultAssembler $createTagV1ResultAssembler,
@@ -41,7 +45,8 @@ class TagService
         UpdateTagV1ResultAssembler $updateTagV1ResultAssembler,
         TagRepositoryInterface $tagRepository,
         DeleteTagV1ResultAssembler $deleteTagV1ResultAssembler,
-        ArchiveTagV1ResultAssembler $archiveTagV1ResultAssembler
+        ArchiveTagV1ResultAssembler $archiveTagV1ResultAssembler,
+        UnarchiveTagV1ResultAssembler $unarchiveTagV1ResultAssembler
     ) {
         $this->createTagV1ResultAssembler = $createTagV1ResultAssembler;
         $this->tagService = $tagService;
@@ -50,6 +55,7 @@ class TagService
         $this->tagRepository = $tagRepository;
         $this->deleteTagV1ResultAssembler = $deleteTagV1ResultAssembler;
         $this->archiveTagV1ResultAssembler = $archiveTagV1ResultAssembler;
+        $this->unarchiveTagV1ResultAssembler = $unarchiveTagV1ResultAssembler;
     }
 
     public function createTag(
@@ -81,7 +87,7 @@ class TagService
             throw new AccessDeniedException();
         }
         try {
-            $this->tagService->updateTag($tagId, $dto->name, (bool)$dto->isArchived);
+            $this->tagService->updateTag($tagId, $dto->name);
         } catch (TagAlreadyExistsException $exception) {
             throw new ValidationException('Tag with name ' . $dto->name . ' already exists');
         }
@@ -112,7 +118,21 @@ class TagService
             throw new AccessDeniedException();
         }
 
-        $this->tagService->deleteTag($tagId);
+        $this->tagService->archiveTag($tagId);
         return $this->archiveTagV1ResultAssembler->assemble($dto);
+    }
+
+    public function unarchiveTag(
+        UnarchiveTagV1RequestDto $dto,
+        Id $userId
+    ): UnarchiveTagV1ResultDto {
+        $tagId = new Id($dto->id);
+        $tag = $this->tagRepository->get($tagId);
+        if (!$tag->getUserId()->isEqual($userId)) {
+            throw new AccessDeniedException();
+        }
+
+        $this->tagService->unarchiveTag($tagId);
+        return $this->unarchiveTagV1ResultAssembler->assemble($dto);
     }
 }

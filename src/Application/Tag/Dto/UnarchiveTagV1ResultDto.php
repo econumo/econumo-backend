@@ -10,6 +10,6 @@ use Swagger\Annotations as SWG;
  * @SWG\Definition(
  * )
  */
-class ArchiveTagV1ResultDto
+class UnarchiveTagV1ResultDto
 {
 }

@@ -12,9 +12,6 @@ class ArchiveTagV1ResultAssembler
     public function assemble(
         ArchiveTagV1RequestDto $dto
     ): ArchiveTagV1ResultDto {
-        $result = new ArchiveTagV1ResultDto();
-        $result->result = 'test';
-
-        return $result;
+        return new ArchiveTagV1ResultDto();
     }
 }
