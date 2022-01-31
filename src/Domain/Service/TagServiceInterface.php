@@ -21,4 +21,8 @@ interface TagServiceInterface
     public function orderTags(Id $userId, PositionDto ...$changes): void;
 
     public function deleteTag(Id $tagId): void;
+
+    public function archiveTag(Id $tagId): void;
+
+    public function unarchiveTag(Id $tagId): void;
 }
