@@ -38,5 +38,11 @@ interface AccountAccessRepositoryInterface
      * @param Id $userId
      * @return AccountAccess[]
      */
-    public function getSharedAccessForUser(Id $userId): array;
+    public function getReceivedAccess(Id $userId): array;
+
+    /**
+     * @param Id $userId
+     * @return AccountAccess[]
+     */
+    public function getIssuedAccess(Id $userId): array;
 }

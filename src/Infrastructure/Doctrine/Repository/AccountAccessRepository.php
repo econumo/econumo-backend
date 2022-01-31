@@ -105,10 +105,26 @@ DQL;
     /**
      * @inheritDoc
      */
-    public function getSharedAccessForUser(Id $userId): array
+    public function getReceivedAccess(Id $userId): array
     {
         return $this->findBy([
             'user' => $this->getEntityManager()->getReference(User::class, $userId)
         ]);
+    }
+
+    public function getIssuedAccess(Id $userId): array
+    {
+        $dql = <<<'DQL'
+SELECT a.id FROM App\Domain\Entity\AccountAccess aa
+JOIN App\Domain\Entity\Account a WITH a = aa.account AND a.user = :user
+GROUP BY a.id
+DQL;
+        $query = $this->getEntityManager()->createQuery($dql)
+            ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId));
+        $accounts = array_map(function ($id) {
+            return $this->getEntityManager()->getReference(Account::class, new Id($id));
+        }, array_column($query->getScalarResult(), 'id'));
+
+        return $this->findBy(['account' => $accounts]);
     }
 }

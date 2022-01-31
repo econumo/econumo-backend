@@ -11,35 +11,33 @@ use App\Application\User\Assembler\UserToDtoResultAssembler;
 use App\Domain\Entity\AccountAccess;
 use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\Id;
-use App\Domain\Service\Connection\ConnectionAccountServiceInterface;
 
 class GetConnectionListV1ResultAssembler
 {
     private UserToDtoResultAssembler $userToDtoResultAssembler;
-    private ConnectionAccountServiceInterface $connectionAccountService;
     private AccountAccessToDtoResultAssembler $accountAccessToDtoResultAssembler;
 
     public function __construct(
         UserToDtoResultAssembler $userToDtoResultAssembler,
-        ConnectionAccountServiceInterface $connectionAccountService,
         AccountAccessToDtoResultAssembler $accountAccessToDtoResultAssembler
     ) {
         $this->userToDtoResultAssembler = $userToDtoResultAssembler;
-        $this->connectionAccountService = $connectionAccountService;
         $this->accountAccessToDtoResultAssembler = $accountAccessToDtoResultAssembler;
     }
 
     /**
      * @param GetConnectionListV1RequestDto $dto
      * @param Id $userId
-     * @param AccountAccess[] $sharedWithUserAccounts
+     * @param AccountAccess[] $receivedAccountAccess
+     * @param AccountAccess[] $issuedAccountAccess
      * @param User[] $connectedUsers
      * @return GetConnectionListV1ResultDto
      */
     public function assemble(
         GetConnectionListV1RequestDto $dto,
         Id $userId,
-        array $sharedWithUserAccounts,
+        array $receivedAccountAccess,
+        array $issuedAccountAccess,
         iterable $connectedUsers
     ): GetConnectionListV1ResultDto {
         $result = new GetConnectionListV1ResultDto();
@@ -48,21 +46,32 @@ class GetConnectionListV1ResultAssembler
             $connectionDto = new ConnectionResultDto();
             $connectionDto->user = $this->userToDtoResultAssembler->assemble($connectedUser);
             $connectionDto->sharedAccounts = [];
-            $sharedAccessForConnectedUser = $this->connectionAccountService->getSharedAccess($connectedUser->getId());
-            foreach ($sharedAccessForConnectedUser as $accountAccess) {
-                if ($accountAccess->getUserId()->isEqual($userId)) {
-                    $connectionDto->sharedAccounts[] = $this->accountAccessToDtoResultAssembler->assemble(
-                        $accountAccess
-                    );
-                }
-            }
-            foreach ($sharedWithUserAccounts as $accountAccess) {
+            $sharedAccounts = [];
+            foreach ($receivedAccountAccess as $accountAccess) {
+                $key = $accountAccess->getAccountId()->getValue();
                 if ($accountAccess->getAccount()->getUserId()->isEqual($connectedUser->getId())) {
-                    $connectionDto->sharedAccounts[] = $this->accountAccessToDtoResultAssembler->assemble(
+                    $sharedAccounts[$key] = $this->accountAccessToDtoResultAssembler->assemble(
+                        $accountAccess
+                    );
+                } elseif ($accountAccess->getAccount()->getUserId()->isEqual($userId)) {
+                    $sharedAccounts[$key] = $this->accountAccessToDtoResultAssembler->assemble(
                         $accountAccess
                     );
                 }
             }
+            foreach ($issuedAccountAccess as $accountAccess) {
+                $key = $accountAccess->getAccountId()->getValue();
+                if ($accountAccess->getAccount()->getUserId()->isEqual($connectedUser->getId())) {
+                    $sharedAccounts[$key] = $this->accountAccessToDtoResultAssembler->assemble(
+                        $accountAccess
+                    );
+                } elseif ($accountAccess->getAccount()->getUserId()->isEqual($userId)) {
+                    $sharedAccounts[$key] = $this->accountAccessToDtoResultAssembler->assemble(
+                        $accountAccess
+                    );
+                }
+            }
+            $connectionDto->sharedAccounts = array_values($sharedAccounts);
             $result->items[] = $connectionDto;
         }
 

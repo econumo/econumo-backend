@@ -8,7 +8,6 @@ namespace App\Domain\Service\Connection;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\DomainException;
 use App\Domain\Repository\UserRepositoryInterface;
-use App\Domain\Service\AccountAccessServiceInterface;
 use App\Domain\Service\AntiCorruptionServiceInterface;
 use Throwable;
 
@@ -34,9 +33,9 @@ class ConnectionService implements ConnectionServiceInterface
         return $user->getConnections();
     }
 
-    public function delete(Id $userId, Id $connectedUserId): void
+    public function delete(Id $initiatorUserId, Id $connectedUserId): void
     {
-        $initiator = $this->userRepository->get($userId);
+        $initiator = $this->userRepository->get($initiatorUserId);
         $connectedUser = $this->userRepository->get($connectedUserId);
         if ($initiator->getId()->isEqual($connectedUser->getId())) {
             throw new DomainException('Deleting yourself?');
@@ -44,10 +43,15 @@ class ConnectionService implements ConnectionServiceInterface
 
         $this->antiCorruptionService->beginTransaction();
         try {
-            $sharedAccess = $this->connectionAccountService->getSharedAccess($initiator->getId());
-            foreach ($sharedAccess as $accountAccess) {
+            foreach ($this->connectionAccountService->getReceivedAccountAccess($initiator->getId()) as $accountAccess) {
                 if ($accountAccess->getAccount()->getUserId()->isEqual($connectedUser->getId())) {
-                    $this->connectionAccountService->deleteAccountAccess($initiator->getId(), $accountAccess->getAccountId());
+                    $this->connectionAccountService->deleteAccountAccess($accountAccess->getUserId(), $accountAccess->getAccountId());
+                }
+            }
+
+            foreach ($this->connectionAccountService->getIssuedAccountAccess($initiator->getId()) as $accountAccess) {
+                if ($accountAccess->getUserId()->isEqual($connectedUser->getId())) {
+                    $this->connectionAccountService->deleteAccountAccess($accountAccess->getUserId(), $accountAccess->getAccountId());
                 }
             }
 

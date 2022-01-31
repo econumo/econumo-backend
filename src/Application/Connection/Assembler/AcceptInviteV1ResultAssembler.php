@@ -48,7 +48,7 @@ class AcceptInviteV1ResultAssembler
             $connectionDto = new ConnectionResultDto();
             $connectionDto->user = $this->userToDtoResultAssembler->assemble($connectedUser);
             $connectionDto->sharedAccounts = [];
-            $sharedAccessForConnectedUser = $this->connectionAccountService->getSharedAccess($connectedUser->getId());
+            $sharedAccessForConnectedUser = $this->connectionAccountService->getReceivedAccountAccess($connectedUser->getId());
             foreach ($sharedAccessForConnectedUser as $accountAccess) {
                 if ($accountAccess->getUserId()->isEqual($userId)) {
                     $connectionDto->sharedAccounts[] = $this->accountAccessToDtoResultAssembler->assemble(

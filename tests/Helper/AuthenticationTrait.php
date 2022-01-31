@@ -19,6 +19,11 @@ trait AuthenticationTrait
         $this->amAuthenticatedAsUser('john@snow.test');
     }
 
+    public function amAuthenticatedAsDany(): void
+    {
+        $this->amAuthenticatedAsUser('dany@targarien.test');
+    }
+
     public function amAuthenticatedAsMargo(): void
     {
         $this->amAuthenticatedAsUser('margo@tirrell.test');

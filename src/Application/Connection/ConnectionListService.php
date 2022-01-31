@@ -31,8 +31,9 @@ class ConnectionListService
         GetConnectionListV1RequestDto $dto,
         Id $userId
     ): GetConnectionListV1ResultDto {
-        $sharedWithUserAccess = $this->connectionAccountService->getSharedAccess($userId);
+        $receivedAccountAccess = $this->connectionAccountService->getReceivedAccountAccess($userId);
+        $issuedAccountAccess = $this->connectionAccountService->getIssuedAccountAccess($userId);
         $connectedUsers = $this->connectionService->getUserList($userId);
-        return $this->getConnectionListV1ResultAssembler->assemble($dto, $userId, $sharedWithUserAccess, $connectedUsers);
+        return $this->getConnectionListV1ResultAssembler->assemble($dto, $userId, $receivedAccountAccess, $issuedAccountAccess, $connectedUsers);
     }
 }
