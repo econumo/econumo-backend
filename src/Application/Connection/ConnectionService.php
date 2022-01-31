@@ -28,6 +28,6 @@ class ConnectionService
         Id $userId
     ): DeleteConnectionV1ResultDto {
         $this->connectionService->delete($userId, new Id($dto->id));
-        return $this->deleteConnectionV1ResultAssembler->assemble($dto, $userId);
+        return $this->deleteConnectionV1ResultAssembler->assemble($dto);
     }
 }

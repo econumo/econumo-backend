@@ -18,6 +18,7 @@ use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Repository\AccountRepositoryInterface;
 use App\Domain\Service\AccountAccessServiceInterface;
 use App\Domain\Service\AccountServiceInterface;
+use App\Domain\Service\Connection\ConnectionAccountServiceInterface;
 use App\Domain\Service\Dto\AccountDto;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -30,6 +31,7 @@ class AccountService
     private AccountRepositoryInterface $accountRepository;
     private AccountAccessServiceInterface $accountAccessService;
     private TranslatorInterface $translator;
+    private ConnectionAccountServiceInterface $connectionAccountService;
 
     public function __construct(
         CreateAccountV1ResultAssembler $createAccountV1ResultAssembler,
@@ -38,7 +40,8 @@ class AccountService
         UpdateAccountV1ResultAssembler $updateAccountV1ResultAssembler,
         AccountRepositoryInterface $accountRepository,
         AccountAccessServiceInterface $accountAccessService,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        ConnectionAccountServiceInterface $connectionAccountService
     ) {
         $this->createAccountV1ResultAssembler = $createAccountV1ResultAssembler;
         $this->accountService = $accountService;
@@ -47,6 +50,7 @@ class AccountService
         $this->accountRepository = $accountRepository;
         $this->accountAccessService = $accountAccessService;
         $this->translator = $translator;
+        $this->connectionAccountService = $connectionAccountService;
     }
 
     public function createAccount(
@@ -73,8 +77,13 @@ class AccountService
         if (!$this->accountAccessService->canDeleteAccount($userId, $accountId)) {
             throw new AccessDeniedException();
         }
+        $account = $this->accountRepository->get($accountId);
+        if ($account->getUserId()->isEqual($userId)) {
+            $this->accountService->delete($accountId);
+        } else {
+            $this->connectionAccountService->deleteAccountAccess($userId, $accountId);
+        }
 
-        $this->accountService->delete($accountId);
         return $this->deleteAccountV1ResultAssembler->assemble($dto);
     }
 

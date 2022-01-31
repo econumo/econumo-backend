@@ -30,7 +30,7 @@ class AccountAccessService implements AccountAccessServiceInterface
 
     public function canDeleteAccount(Id $userId, Id $accountId): bool
     {
-        return $this->isOwner($userId, $accountId);
+        return $this->isAccessAllowed($userId, $accountId);
     }
 
     public function canUpdateAccount(Id $userId, Id $accountId): bool
