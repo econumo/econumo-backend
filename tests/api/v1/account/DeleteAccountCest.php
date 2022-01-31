@@ -37,7 +37,7 @@ class DeleteAccountCest
     public function requestShouldReturn403ResponseCode(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, ['id' => 'a62c06a0-d2b5-4564-a09b-703912c01481']);
+        $I->sendPOST($this->url, ['id' => '99ff78ec-5081-11ec-bf63-0242ac130002']);
         $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
     }
 
