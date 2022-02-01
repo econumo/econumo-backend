@@ -40,6 +40,7 @@ class TagService implements TagServiceInterface
         }
 
         $tag = $this->tagFactory->create($userId, $name);
+        $tag->updatePosition(count($tags));
         $this->tagRepository->save($tag);
         return $tag;
     }
