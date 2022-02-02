@@ -103,6 +103,9 @@ final class AccountUserRole implements JsonSerializable, ValueObjectInterface
 
     public static function validate($value): void
     {
+        if (empty($value)) {
+            throw new DomainException('Value cannot be empty');
+        }
         self::createFromAlias($value);
     }
 }
