@@ -10,7 +10,7 @@ class CreateFolderCest
 {
     private string $url = '/api/v1/account/create-folder';
 
-    public function shouldReturnCorrectAccounts(FunctionalTester $I): void
+    public function shouldReturnCreatedFolderFromDB(FunctionalTester $I): void
     {
         $I->amAuthenticatedAsJohn();
         $I->sendPOST($this->url, ['name' => 'Family']);
