@@ -7,6 +7,7 @@ namespace App\Domain\Service\Connection;
 
 
 use App\Domain\Entity\AccountAccess;
+use App\Domain\Entity\ValueObject\AccountUserRole;
 use App\Domain\Entity\ValueObject\Id;
 
 interface ConnectionAccountServiceInterface
@@ -23,5 +24,7 @@ interface ConnectionAccountServiceInterface
      */
     public function getIssuedAccountAccess(Id $userId): array;
 
-    public function deleteAccountAccess(Id $userId, Id $sharedAccountId): void;
+    public function revokeAccountAccess(Id $userId, Id $sharedAccountId): void;
+
+    public function setAccountAccess(Id $userId, Id $sharedAccountId, AccountUserRole $role): void;
 }

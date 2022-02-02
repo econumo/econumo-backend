@@ -7,7 +7,7 @@ namespace App\Domain\Entity\ValueObject;
 use DomainException;
 use JsonSerializable;
 
-final class AccountUserRole implements JsonSerializable
+final class AccountUserRole implements JsonSerializable, ValueObjectInterface
 {
     public const ADMIN = 0;
     public const USER = 1;
@@ -86,7 +86,7 @@ final class AccountUserRole implements JsonSerializable
         return $this->value;
     }
 
-    public function isEqual(self $valueObject): bool
+    public function isEqual(ValueObjectInterface $valueObject): bool
     {
         return $this->value === $valueObject->getValue();
     }
@@ -96,8 +96,13 @@ final class AccountUserRole implements JsonSerializable
         return $this->value;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return (string)$this->value;
+    }
+
+    public static function validate($value): void
+    {
+        self::createFromAlias($value);
     }
 }

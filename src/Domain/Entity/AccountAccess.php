@@ -51,4 +51,17 @@ class AccountAccess
     {
         return $this->role;
     }
+
+    public function updateRole(AccountUserRole $role): void
+    {
+        if (!$this->role->isEqual($role)) {
+            $this->role = $role;
+            $this->updated();
+        }
+    }
+
+    private function updated()
+    {
+        $this->updatedAt = new DateTime();
+    }
 }

@@ -81,7 +81,7 @@ class AccountService
         if ($account->getUserId()->isEqual($userId)) {
             $this->accountService->delete($accountId);
         } else {
-            $this->connectionAccountService->deleteAccountAccess($userId, $accountId);
+            $this->connectionAccountService->revokeAccountAccess($userId, $accountId);
         }
 
         return $this->deleteAccountV1ResultAssembler->assemble($dto);

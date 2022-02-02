@@ -8,7 +8,7 @@ interface ValueObjectInterface
 {
     public static function validate($value): void;
 
-    public function getValue(): string;
+    public function getValue();
 
     public function isEqual(ValueObjectInterface $valueObject): bool;
 

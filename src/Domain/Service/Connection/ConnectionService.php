@@ -45,13 +45,13 @@ class ConnectionService implements ConnectionServiceInterface
         try {
             foreach ($this->connectionAccountService->getReceivedAccountAccess($initiator->getId()) as $accountAccess) {
                 if ($accountAccess->getAccount()->getUserId()->isEqual($connectedUser->getId())) {
-                    $this->connectionAccountService->deleteAccountAccess($accountAccess->getUserId(), $accountAccess->getAccountId());
+                    $this->connectionAccountService->revokeAccountAccess($accountAccess->getUserId(), $accountAccess->getAccountId());
                 }
             }
 
             foreach ($this->connectionAccountService->getIssuedAccountAccess($initiator->getId()) as $accountAccess) {
                 if ($accountAccess->getUserId()->isEqual($connectedUser->getId())) {
-                    $this->connectionAccountService->deleteAccountAccess($accountAccess->getUserId(), $accountAccess->getAccountId());
+                    $this->connectionAccountService->revokeAccountAccess($accountAccess->getUserId(), $accountAccess->getAccountId());
                 }
             }
 
