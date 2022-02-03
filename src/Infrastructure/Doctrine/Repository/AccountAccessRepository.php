@@ -68,10 +68,9 @@ class AccountAccessRepository extends ServiceEntityRepository implements Account
         return $item;
     }
 
-    public function delete(Id $accountId, Id $userId): void
+    public function delete(AccountAccess $accountAccess): void
     {
-        $item = $this->get($accountId, $userId);
-        $this->getEntityManager()->remove($item);
+        $this->getEntityManager()->remove($accountAccess);
         $this->getEntityManager()->flush();
     }
 

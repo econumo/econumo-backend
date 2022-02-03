@@ -16,7 +16,7 @@ class UpdatePasswordCest
      */
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendPOST($this->url, ['oldPassword' => 'pass', 'newPassword' => 'new_pass']);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
@@ -26,7 +26,7 @@ class UpdatePasswordCest
      */
     public function requestShouldReturn400ResponseCode(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendPOST($this->url, ['unexpected_param' => 'test']);
         $I->seeResponseCodeIs(HttpCode::BAD_REQUEST);
     }
@@ -45,7 +45,7 @@ class UpdatePasswordCest
      */
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendPOST($this->url, ['oldPassword' => 'pass', 'newPassword' => 'new_pass']);
         $I->seeResponseMatchesJsonType([
             'data' => [],

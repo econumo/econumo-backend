@@ -16,7 +16,7 @@ class _CG_ACTION__CG_SUBJECT_Cest
      */
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->send_CG_METHOD_($this->url, ['id' => 'test']);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
@@ -26,7 +26,7 @@ class _CG_ACTION__CG_SUBJECT_Cest
      */
     public function requestShouldReturn400ResponseCode(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->send_CG_METHOD_($this->url, ['unexpected_param' => 'test']);
         $I->seeResponseCodeIs(HttpCode::BAD_REQUEST);
     }
@@ -45,7 +45,7 @@ class _CG_ACTION__CG_SUBJECT_Cest
      */
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->send_CG_METHOD_($this->url, ['id' => 'test']);
         $I->seeResponseMatchesJsonType([
             'data' => [

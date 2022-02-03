@@ -16,7 +16,7 @@ class DeleteCategoryCest
      */
     public function requestShouldReturn200ResponseCodeOnDelete(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendPOST($this->url, ['id' => '95587d1d-2c39-4efc-98f3-23c755da44a4', 'mode' => 'delete']);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
@@ -26,7 +26,7 @@ class DeleteCategoryCest
      */
     public function requestShouldReturn200ResponseCodeOnReplace(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendPOST($this->url, ['id' => '95587d1d-2c39-4efc-98f3-23c755da44a4', 'mode' => 'replace', 'replaceId' => 'ed547399-a380-43c9-b164-d8e435e043c9']);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
@@ -36,7 +36,7 @@ class DeleteCategoryCest
      */
     public function requestShouldReturn400ResponseCode(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendPOST($this->url, ['unexpected_param' => 'test']);
         $I->seeResponseCodeIs(HttpCode::BAD_REQUEST);
     }
@@ -55,7 +55,7 @@ class DeleteCategoryCest
      */
     public function requestShouldReturnResponseWithCorrectStructureOnDelete(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendPOST($this->url, ['id' => '95587d1d-2c39-4efc-98f3-23c755da44a4', 'mode' => 'delete']);
         $I->seeResponseMatchesJsonType([
             'data' => [],
@@ -67,7 +67,7 @@ class DeleteCategoryCest
      */
     public function requestShouldReturnResponseWithCorrectStructureOnReplace(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendPOST($this->url, ['id' => '95587d1d-2c39-4efc-98f3-23c755da44a4', 'mode' => 'replace', 'replaceId' => 'ed547399-a380-43c9-b164-d8e435e043c9']);
         $I->seeResponseMatchesJsonType([
             'data' => [],

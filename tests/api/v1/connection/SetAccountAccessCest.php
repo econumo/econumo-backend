@@ -16,7 +16,7 @@ class SetAccountAccessCest
      */
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendPOST($this->url, ['accountId' => '4eec1ee6-1992-4222-b9ab-31ece5eaad5d', 'userId' => '77be9577-147b-4f05-9aa7-91d9b159de5b', 'role' => 'guest']);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
@@ -26,7 +26,7 @@ class SetAccountAccessCest
      */
     public function requestShouldReturn400ResponseCode(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendPOST($this->url, ['unexpected_param' => 'test']);
         $I->seeResponseCodeIs(HttpCode::BAD_REQUEST);
     }
@@ -45,7 +45,7 @@ class SetAccountAccessCest
      */
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendPOST($this->url, ['accountId' => '4eec1ee6-1992-4222-b9ab-31ece5eaad5d', 'userId' => '77be9577-147b-4f05-9aa7-91d9b159de5b', 'role' => 'guest']);
         $I->seeResponseMatchesJsonType([
             'data' => [],

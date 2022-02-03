@@ -16,7 +16,7 @@ class UnarchiveTagCest
      */
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendPOST($this->url, ['id' => '4b53d029-c1ed-46ad-8d86-1049542f4a7e']);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
@@ -26,7 +26,7 @@ class UnarchiveTagCest
      */
     public function requestShouldReturn400ResponseCode(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendPOST($this->url, ['unexpected_param' => 'test']);
         $I->seeResponseCodeIs(HttpCode::BAD_REQUEST);
     }
@@ -45,7 +45,7 @@ class UnarchiveTagCest
      */
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendPOST($this->url, ['id' => '4b53d029-c1ed-46ad-8d86-1049542f4a7e']);
         $I->seeResponseMatchesJsonType([
             'data' => [],

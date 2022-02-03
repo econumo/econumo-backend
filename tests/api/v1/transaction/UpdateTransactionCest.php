@@ -16,7 +16,7 @@ class UpdateTransactionCest
      */
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendPOST($this->url, [
             'id' => '7cb3227d-22dc-4178-aeb4-02a8f815bdbd',
             'type' => 'expense',
@@ -38,7 +38,7 @@ class UpdateTransactionCest
      */
     public function requestShouldReturn400ResponseCode(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendPOST($this->url, ['test' => '7cb3227d-22dc-4178-aeb4-02a8f815bdbd']);
         $I->seeResponseCodeIs(HttpCode::BAD_REQUEST);
     }
@@ -69,7 +69,7 @@ class UpdateTransactionCest
      */
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendPOST($this->url, [
             'id' => '7cb3227d-22dc-4178-aeb4-02a8f815bdbd',
             'type' => 'expense',

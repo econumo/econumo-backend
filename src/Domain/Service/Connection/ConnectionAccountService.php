@@ -46,7 +46,6 @@ class ConnectionAccountService implements ConnectionAccountServiceInterface
         $this->antiCorruptionService->beginTransaction();
         try {
             $accountAccess = $this->accountAccessRepository->get($sharedAccountId, $userId);
-            $this->accountAccessRepository->delete($sharedAccountId, $userId);
             $folders = $this->folderRepository->getByUserId($userId);
             foreach ($folders as $folder) {
                 if ($folder->containsAccount($accountAccess->getAccount())) {
@@ -55,6 +54,7 @@ class ConnectionAccountService implements ConnectionAccountServiceInterface
             }
             $accountOptions = $this->accountOptionsRepository->get($sharedAccountId, $userId);
             $this->accountOptionsRepository->delete($accountOptions);
+            $this->accountAccessRepository->delete($accountAccess);
 
             $this->antiCorruptionService->commit();
         } catch (\Throwable $exception) {

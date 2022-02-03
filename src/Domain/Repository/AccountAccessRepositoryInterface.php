@@ -26,7 +26,7 @@ interface AccountAccessRepositoryInterface
      */
     public function get(Id $accountId, Id $userId): AccountAccess;
 
-    public function delete(Id $accountId, Id $userId): void;
+    public function delete(AccountAccess $accountAccess): void;
 
     /**
      * @param Id $userId

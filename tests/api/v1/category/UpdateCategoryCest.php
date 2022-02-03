@@ -16,7 +16,7 @@ class UpdateCategoryCest
      */
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendPOST($this->url, ['id' => '95587d1d-2c39-4efc-98f3-23c755da44a4', 'name' => 'Amazing food', 'icon' => 'local_offer', 'isArchived' => 1]);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
@@ -26,7 +26,7 @@ class UpdateCategoryCest
      */
     public function requestShouldReturn400ResponseCode(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendPOST($this->url, ['unexpected_param' => 'test']);
         $I->seeResponseCodeIs(HttpCode::BAD_REQUEST);
     }
@@ -45,7 +45,7 @@ class UpdateCategoryCest
      */
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
-        $I->amAuthenticatedAsJohn($I);
+        $I->amAuthenticatedAsJohn();
         $I->sendPOST($this->url, ['id' => '95587d1d-2c39-4efc-98f3-23c755da44a4', 'name' => 'Amazing food', 'icon' => 'local_offer', 'isArchived' => 1]);
         $I->seeResponseMatchesJsonType([
             'data' => [
