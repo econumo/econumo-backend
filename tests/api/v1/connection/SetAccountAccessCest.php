@@ -17,7 +17,7 @@ class SetAccountAccessCest
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn($I);
-        $I->sendPOST($this->url, ['accountId' => '0aaa0450-564e-411e-8018-7003f6dbeb92', 'userId' => 'aff21334-96f0-4fb1-84d8-0223d0280954', 'role' => 'guest']);
+        $I->sendPOST($this->url, ['accountId' => '4eec1ee6-1992-4222-b9ab-31ece5eaad5d', 'userId' => '77be9577-147b-4f05-9aa7-91d9b159de5b', 'role' => 'guest']);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
 
@@ -36,7 +36,7 @@ class SetAccountAccessCest
      */
     public function requestShouldReturn401ResponseCode(ApiTester $I): void
     {
-        $I->sendPOST($this->url, ['accountId' => '0aaa0450-564e-411e-8018-7003f6dbeb92', 'userId' => 'aff21334-96f0-4fb1-84d8-0223d0280954', 'role' => 'guest']);
+        $I->sendPOST($this->url, ['accountId' => '4eec1ee6-1992-4222-b9ab-31ece5eaad5d', 'userId' => '77be9577-147b-4f05-9aa7-91d9b159de5b', 'role' => 'guest']);
         $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
     }
 
@@ -46,7 +46,7 @@ class SetAccountAccessCest
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn($I);
-        $I->sendPOST($this->url, ['accountId' => '0aaa0450-564e-411e-8018-7003f6dbeb92', 'userId' => 'aff21334-96f0-4fb1-84d8-0223d0280954', 'role' => 'guest']);
+        $I->sendPOST($this->url, ['accountId' => '4eec1ee6-1992-4222-b9ab-31ece5eaad5d', 'userId' => '77be9577-147b-4f05-9aa7-91d9b159de5b', 'role' => 'guest']);
         $I->seeResponseMatchesJsonType([
             'data' => [],
         ]);

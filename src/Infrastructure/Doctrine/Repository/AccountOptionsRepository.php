@@ -70,4 +70,10 @@ class AccountOptionsRepository extends ServiceEntityRepository implements Accoun
 
         return $item;
     }
+
+    public function delete(AccountOptions $options): void
+    {
+        $this->getEntityManager()->remove($options);
+        $this->getEntityManager()->flush();
+    }
 }

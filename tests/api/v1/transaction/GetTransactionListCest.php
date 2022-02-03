@@ -27,7 +27,7 @@ class GetTransactionListCest
     public function requestWithAccountIdShouldReturn200ResponseCode(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendGET($this->url, ['accountId' => '0aaa0450-564e-411e-8018-7003f6dbeb92']);
+        $I->sendGET($this->url, ['accountId' => '6c7b8af8-2f8a-4d6b-855c-ca6ff26952ff']);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
 
@@ -67,7 +67,7 @@ class GetTransactionListCest
     public function requestWithAccountIdShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendGET($this->url, ['accountId' => '0aaa0450-564e-411e-8018-7003f6dbeb92']);
+        $I->sendGET($this->url, ['accountId' => '6c7b8af8-2f8a-4d6b-855c-ca6ff26952ff']);
         $I->seeResponseMatchesJsonType($I->getRootResponseWithItemsJsonType());
         $I->seeResponseMatchesJsonType($I->getTransactionDtoJsonType(), '$.data.items[0]');
     }
@@ -78,7 +78,7 @@ class GetTransactionListCest
     public function requestWithAccountIdShouldReturnResponseWithEmptyList(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendGET($this->url, ['accountId' => '4eec1ee6-1992-4222-b9ab-31ece5eaad5d']);
+        $I->sendGET($this->url, ['accountId' => '5f3834d1-34e8-4f60-a697-004e63854513']);
         $I->seeResponseMatchesJsonType($I->getRootResponseWithItemsJsonType());
         $data = $I->grabDataFromResponseByJsonPath('$.data.items[0]');
         $I->assertEmpty($data);

@@ -24,5 +24,7 @@ interface AccountOptionsRepositoryInterface
      */
     public function get(Id $accountId, Id $userId): AccountOptions;
 
+    public function delete(AccountOptions $options): void;
+
     public function save(AccountOptions ...$accountOptions): void;
 }

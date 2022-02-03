@@ -78,4 +78,22 @@ class FolderRepository extends ServiceEntityRepository implements FolderReposito
     {
         return 1 < count($this->getByUserId($userId));
     }
+
+    public function getLastFolder(Id $userId): Folder
+    {
+        $builder = $this->createQueryBuilder('f');
+        /** @var Folder|null $item */
+        $item = $builder
+            ->where('f.user = :user')
+            ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId))
+            ->orderBy('f.position', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getSingleResult();
+        if ($item === null) {
+            throw new NotFoundException('Folder not found');
+        }
+
+        return $item;
+    }
 }

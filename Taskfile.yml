@@ -39,6 +39,13 @@ tasks:
             - cmd: docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app vendor/bin/codecept run {{.CLI_ARGS}} --steps -v
               ignore_error: true
 
+    test-failed:
+        desc: "Run tests without recreating db ONLY failed tests (you could use arguments here after dash, ex: task test -- unit)"
+        cmds:
+            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+            - cmd: docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app vendor/bin/codecept run {{.CLI_ARGS}} --steps -v -g failed
+              ignore_error: true
+
     test:
         desc: "Run tests (you could use arguments here after dash, ex: task test -- unit)"
         cmds:

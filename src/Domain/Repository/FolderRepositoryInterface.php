@@ -17,6 +17,8 @@ interface FolderRepositoryInterface
      */
     public function getByUserId(Id $userId): array;
 
+    public function getLastFolder(Id $userId): Folder;
+
     public function get(Id $id): Folder;
 
     public function save(Folder ...$items): void;

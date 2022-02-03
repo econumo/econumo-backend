@@ -5,7 +5,7 @@ return [
         'id' => '7cb3227d-22dc-4178-aeb4-02a8f815bdbd',
         'user_id' => 'aff21334-96f0-4fb1-84d8-0223d0280954',
         'type' => 0,
-        'account_id' => '0aaa0450-564e-411e-8018-7003f6dbeb92',
+        'account_id' => '6c7b8af8-2f8a-4d6b-855c-ca6ff26952ff',
         'account_recipient_id' => null,
         'amount' => '1350.50',
         'amount_recipient' => null,
