@@ -42,7 +42,6 @@ class GetConnectionListCest
 
     /**
      * @throws \Codeception\Exception\ModuleException
-     * @skip Not working
      */
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
