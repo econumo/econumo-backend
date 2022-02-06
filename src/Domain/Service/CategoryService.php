@@ -136,4 +136,18 @@ class CategoryService implements CategoryServiceInterface
         }
         $this->categoryRepository->save($category);
     }
+
+    public function archive(Id $categoryId): void
+    {
+        $category = $this->categoryRepository->get($categoryId);
+        $category->archive();
+        $this->categoryRepository->save($category);
+    }
+
+    public function unarchive(Id $categoryId): void
+    {
+        $category = $this->categoryRepository->get($categoryId);
+        $category->unarchive();
+        $this->categoryRepository->save($category);
+    }
 }

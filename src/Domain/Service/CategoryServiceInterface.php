@@ -23,4 +23,8 @@ interface CategoryServiceInterface
     public function orderCategories(Id $userId, PositionDto ...$changes): void;
 
     public function update(Id $categoryId, bool $isArchived, string $name, Icon $icon): void;
+
+    public function archive(Id $categoryId): void;
+
+    public function unarchive(Id $categoryId): void;
 }
