@@ -117,7 +117,7 @@ class CategoryService implements CategoryServiceInterface
         $this->categoryRepository->save(...$changed);
     }
 
-    public function update(Id $categoryId, bool $isArchived, string $name, Icon $icon): void
+    public function update(Id $categoryId, string $name, Icon $icon): void
     {
         $category = $this->categoryRepository->get($categoryId);
         $userCategories = $this->categoryRepository->findByOwnerId($category->getUserId());
@@ -129,11 +129,6 @@ class CategoryService implements CategoryServiceInterface
 
         $category->updateName($name);
         $category->updateIcon($icon);
-        if ($isArchived) {
-            $category->archive();
-        } else {
-            $category->unarchive();
-        }
         $this->categoryRepository->save($category);
     }
 

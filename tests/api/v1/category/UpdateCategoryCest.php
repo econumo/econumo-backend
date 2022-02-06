@@ -17,7 +17,7 @@ class UpdateCategoryCest
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, ['id' => '95587d1d-2c39-4efc-98f3-23c755da44a4', 'name' => 'Amazing food', 'icon' => 'local_offer', 'isArchived' => 1]);
+        $I->sendPOST($this->url, ['id' => '95587d1d-2c39-4efc-98f3-23c755da44a4', 'name' => 'Amazing food', 'icon' => 'local_offer']);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
 
@@ -36,7 +36,7 @@ class UpdateCategoryCest
      */
     public function requestShouldReturn401ResponseCode(ApiTester $I): void
     {
-        $I->sendPOST($this->url, ['id' => '95587d1d-2c39-4efc-98f3-23c755da44a4', 'name' => 'Amazing food', 'icon' => 'local_offer', 'isArchived' => 1]);
+        $I->sendPOST($this->url, ['id' => '95587d1d-2c39-4efc-98f3-23c755da44a4', 'name' => 'Amazing food', 'icon' => 'local_offer']);
         $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
     }
 
@@ -46,11 +46,9 @@ class UpdateCategoryCest
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, ['id' => '95587d1d-2c39-4efc-98f3-23c755da44a4', 'name' => 'Amazing food', 'icon' => 'local_offer', 'isArchived' => 1]);
+        $I->sendPOST($this->url, ['id' => '95587d1d-2c39-4efc-98f3-23c755da44a4', 'name' => 'Amazing food', 'icon' => 'local_offer']);
         $I->seeResponseMatchesJsonType([
-            'data' => [
-                'item' => $I->getCategoryDtoJsonType(),
-            ],
+            'data' => [],
         ]);
     }
 }

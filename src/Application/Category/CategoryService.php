@@ -116,7 +116,7 @@ class CategoryService
             throw new AccessDeniedException();
         }
 
-        $this->categoryService->update($categoryId, (bool)$dto->isArchived, $dto->name, new Icon($dto->icon));
+        $this->categoryService->update($categoryId, $dto->name, new Icon($dto->icon));
         return $this->updateCategoryV1ResultAssembler->assemble($dto);
     }
 
