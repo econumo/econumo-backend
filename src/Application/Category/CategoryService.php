@@ -4,16 +4,19 @@ declare(strict_types=1);
 
 namespace App\Application\Category;
 
+use App\Application\Category\Assembler\ArchiveCategoryV1ResultAssembler;
 use App\Application\Category\Assembler\CreateCategoryV1ResultAssembler;
 use App\Application\Category\Assembler\DeleteCategoryV1ResultAssembler;
 use App\Application\Category\Assembler\UpdateCategoryV1ResultAssembler;
 use App\Application\Category\Dto\ArchiveCategoryV1RequestDto;
 use App\Application\Category\Dto\ArchiveCategoryV1ResultDto;
-use App\Application\Category\Assembler\ArchiveCategoryV1ResultAssembler;
 use App\Application\Category\Dto\CreateCategoryV1RequestDto;
 use App\Application\Category\Dto\CreateCategoryV1ResultDto;
 use App\Application\Category\Dto\DeleteCategoryV1RequestDto;
 use App\Application\Category\Dto\DeleteCategoryV1ResultDto;
+use App\Application\Category\Dto\UnarchiveCategoryV1RequestDto;
+use App\Application\Category\Dto\UnarchiveCategoryV1ResultDto;
+use App\Application\Category\Assembler\UnarchiveCategoryV1ResultAssembler;
 use App\Application\Category\Dto\UpdateCategoryV1RequestDto;
 use App\Application\Category\Dto\UpdateCategoryV1ResultDto;
 use App\Application\Exception\AccessDeniedException;
@@ -34,6 +37,7 @@ class CategoryService
     private CategoryRepositoryInterface $categoryRepository;
     private UpdateCategoryV1ResultAssembler $updateCategoryV1ResultAssembler;
     private ArchiveCategoryV1ResultAssembler $archiveCategoryV1ResultAssembler;
+    private UnarchiveCategoryV1ResultAssembler $unarchiveCategoryV1ResultAssembler;
 
     public function __construct(
         CreateCategoryV1ResultAssembler $createCategoryV1ResultAssembler,
@@ -42,7 +46,8 @@ class CategoryService
         DeleteCategoryV1ResultAssembler $deleteCategoryV1ResultAssembler,
         CategoryRepositoryInterface $categoryRepository,
         UpdateCategoryV1ResultAssembler $updateCategoryV1ResultAssembler,
-        ArchiveCategoryV1ResultAssembler $archiveCategoryV1ResultAssembler
+        ArchiveCategoryV1ResultAssembler $archiveCategoryV1ResultAssembler,
+        UnarchiveCategoryV1ResultAssembler $unarchiveCategoryV1ResultAssembler
     ) {
         $this->createCategoryV1ResultAssembler = $createCategoryV1ResultAssembler;
         $this->categoryService = $categoryService;
@@ -51,6 +56,7 @@ class CategoryService
         $this->categoryRepository = $categoryRepository;
         $this->updateCategoryV1ResultAssembler = $updateCategoryV1ResultAssembler;
         $this->archiveCategoryV1ResultAssembler = $archiveCategoryV1ResultAssembler;
+        $this->unarchiveCategoryV1ResultAssembler = $unarchiveCategoryV1ResultAssembler;
     }
 
     public function createCategory(
@@ -126,5 +132,19 @@ class CategoryService
 
         $this->categoryService->archive($categoryId);
         return $this->archiveCategoryV1ResultAssembler->assemble($dto);
+    }
+
+    public function unarchiveCategory(
+        UnarchiveCategoryV1RequestDto $dto,
+        Id $userId
+    ): UnarchiveCategoryV1ResultDto {
+        $categoryId = new Id($dto->id);
+        $category = $this->categoryRepository->get($categoryId);
+        if (!$category->getUserId()->isEqual($userId)) {
+            throw new AccessDeniedException();
+        }
+
+        $this->categoryService->unarchive($categoryId);
+        return $this->unarchiveCategoryV1ResultAssembler->assemble($dto);
     }
 }

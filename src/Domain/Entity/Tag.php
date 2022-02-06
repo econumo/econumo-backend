@@ -12,7 +12,6 @@ use DateTimeInterface;
 
 class Tag
 {
-    private const ARCHIVED_POSITION = 1000;
     private Id $id;
     private string $name;
     private int $position;
