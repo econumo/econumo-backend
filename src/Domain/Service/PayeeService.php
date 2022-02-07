@@ -52,7 +52,7 @@ class PayeeService implements PayeeServiceInterface
         return $this->createPayee($account->getUserId(), $name);
     }
 
-    public function updatePayee(Id $payeeId, string $name, bool $isArchived): void
+    public function updatePayee(Id $payeeId, string $name): void
     {
         $payee = $this->payeeRepository->get($payeeId);
         $userPayees = $this->payeeRepository->findByOwnerId($payee->getUserId());
@@ -63,11 +63,6 @@ class PayeeService implements PayeeServiceInterface
         }
 
         $payee->updateName($name);
-        if ($isArchived) {
-            $payee->archive();
-        } else {
-            $payee->unarchive();
-        }
         $this->payeeRepository->save($payee);
     }
 
@@ -95,5 +90,19 @@ class PayeeService implements PayeeServiceInterface
             return;
         }
         $this->payeeRepository->save(...$changed);
+    }
+
+    public function archivePayee(Id $payeeId): void
+    {
+        $payee = $this->payeeRepository->get($payeeId);
+        $payee->archive();
+        $this->payeeRepository->save($payee);
+    }
+
+    public function unarchivePayee(Id $payeeId): void
+    {
+        $payee = $this->payeeRepository->get($payeeId);
+        $payee->unarchive();
+        $this->payeeRepository->save($payee);
     }
 }

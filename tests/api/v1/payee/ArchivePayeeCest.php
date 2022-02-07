@@ -7,9 +7,9 @@ namespace App\Tests\api\v1\payee;
 use App\Tests\ApiTester;
 use Codeception\Util\HttpCode;
 
-class UpdatePayeeCest
+class ArchivePayeeCest
 {
-    private string $url = '/api/v1/payee/update-payee';
+    private string $url = '/api/v1/payee/archive-payee';
 
     /**
      * @throws \Codeception\Exception\ModuleException
@@ -17,7 +17,7 @@ class UpdatePayeeCest
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, ['id' => '701ee173-7c7e-4f92-8af7-a27839c663e0', 'name' => 'Amazing amazon']);
+        $I->sendPOST($this->url, ['id' => '701ee173-7c7e-4f92-8af7-a27839c663e0']);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
 
@@ -36,7 +36,7 @@ class UpdatePayeeCest
      */
     public function requestShouldReturn401ResponseCode(ApiTester $I): void
     {
-        $I->sendPOST($this->url, ['id' => '701ee173-7c7e-4f92-8af7-a27839c663e0', 'name' => 'Amazing amazon']);
+        $I->sendPOST($this->url, ['id' => '701ee173-7c7e-4f92-8af7-a27839c663e0']);
         $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
     }
 
@@ -46,7 +46,7 @@ class UpdatePayeeCest
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, ['id' => '701ee173-7c7e-4f92-8af7-a27839c663e0', 'name' => 'Amazing amazon']);
+        $I->sendPOST($this->url, ['id' => '701ee173-7c7e-4f92-8af7-a27839c663e0']);
         $I->seeResponseMatchesJsonType([
             'data' => [],
         ]);

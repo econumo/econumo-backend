@@ -8,18 +8,13 @@ use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Definition(
- *     required={"id", "name"}
+ *     required={"id"}
  * )
  */
-class UpdatePayeeV1RequestDto
+class ArchivePayeeV1RequestDto
 {
     /**
      * @SWG\Property(example="701ee173-7c7e-4f92-8af7-a27839c663e0")
      */
     public string $id;
-
-    /**
-     * @SWG\Property(example="Amazon")
-     */
-    public string $name;
 }

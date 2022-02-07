@@ -10,6 +10,6 @@ use Swagger\Annotations as SWG;
  * @SWG\Definition(
  * )
  */
-class UpdatePayeeV1ResultDto
+class ArchivePayeeV1ResultDto
 {
 }

@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace App\Application\Payee;
 
+use App\Application\Exception\AccessDeniedException;
 use App\Application\Exception\ValidationException;
 use App\Application\Payee\Assembler\CreatePayeeV1ResultAssembler;
+use App\Application\Payee\Assembler\DeletePayeeV1ResultAssembler;
 use App\Application\Payee\Assembler\UpdatePayeeV1ResultAssembler;
+use App\Application\Payee\Dto\ArchivePayeeV1RequestDto;
+use App\Application\Payee\Dto\ArchivePayeeV1ResultDto;
+use App\Application\Payee\Assembler\ArchivePayeeV1ResultAssembler;
 use App\Application\Payee\Dto\CreatePayeeV1RequestDto;
 use App\Application\Payee\Dto\CreatePayeeV1ResultDto;
 use App\Application\Payee\Dto\DeletePayeeV1RequestDto;
 use App\Application\Payee\Dto\DeletePayeeV1ResultDto;
-use App\Application\Payee\Assembler\DeletePayeeV1ResultAssembler;
 use App\Application\Payee\Dto\UpdatePayeeV1RequestDto;
 use App\Application\Payee\Dto\UpdatePayeeV1ResultDto;
 use App\Domain\Entity\ValueObject\Id;
@@ -28,6 +32,7 @@ class PayeeService
     private UpdatePayeeV1ResultAssembler $updatePayeeV1ResultAssembler;
     private PayeeRepositoryInterface $payeeRepository;
     private DeletePayeeV1ResultAssembler $deletePayeeV1ResultAssembler;
+    private ArchivePayeeV1ResultAssembler $archivePayeeV1ResultAssembler;
 
     public function __construct(
         CreatePayeeV1ResultAssembler $createPayeeV1ResultAssembler,
@@ -35,7 +40,8 @@ class PayeeService
         AccountAccessServiceInterface $accountAccessService,
         UpdatePayeeV1ResultAssembler $updatePayeeV1ResultAssembler,
         PayeeRepositoryInterface $payeeRepository,
-        DeletePayeeV1ResultAssembler $deletePayeeV1ResultAssembler
+        DeletePayeeV1ResultAssembler $deletePayeeV1ResultAssembler,
+        ArchivePayeeV1ResultAssembler $archivePayeeV1ResultAssembler
     ) {
         $this->createPayeeV1ResultAssembler = $createPayeeV1ResultAssembler;
         $this->payeeService = $payeeService;
@@ -43,6 +49,7 @@ class PayeeService
         $this->updatePayeeV1ResultAssembler = $updatePayeeV1ResultAssembler;
         $this->payeeRepository = $payeeRepository;
         $this->deletePayeeV1ResultAssembler = $deletePayeeV1ResultAssembler;
+        $this->archivePayeeV1ResultAssembler = $archivePayeeV1ResultAssembler;
     }
 
     public function createPayee(
@@ -67,10 +74,10 @@ class PayeeService
         $payeeId = new Id($dto->id);
         $tag = $this->payeeRepository->get($payeeId);
         if (!$tag->getUserId()->isEqual($userId)) {
-            throw new ValidationException('Payee is not valid');
+            throw new AccessDeniedException();
         }
         try {
-            $this->payeeService->updatePayee($payeeId, $dto->name, (bool)$dto->isArchived);
+            $this->payeeService->updatePayee($payeeId, $dto->name);
         } catch (PayeeAlreadyExistsException $exception) {
             throw new ValidationException('Payee with name ' . $dto->name . ' already exists');
         }
@@ -84,9 +91,22 @@ class PayeeService
         $payeeId = new Id($dto->id);
         $payee = $this->payeeRepository->get($payeeId);
         if (!$payee->getUserId()->isEqual($userId)) {
-            throw new ValidationException('Payee is not valid');
+            throw new AccessDeniedException();
         }
         $this->payeeService->deletePayee($payeeId);
         return $this->deletePayeeV1ResultAssembler->assemble($dto);
+    }
+
+    public function archivePayee(
+        ArchivePayeeV1RequestDto $dto,
+        Id $userId
+    ): ArchivePayeeV1ResultDto {
+        $payeeId = new Id($dto->id);
+        $payee = $this->payeeRepository->get($payeeId);
+        if (!$payee->getUserId()->isEqual($userId)) {
+            throw new AccessDeniedException();
+        }
+        $this->payeeService->archivePayee($payeeId);
+        return $this->archivePayeeV1ResultAssembler->assemble($dto);
     }
 }
