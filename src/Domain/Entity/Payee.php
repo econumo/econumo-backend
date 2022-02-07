@@ -11,7 +11,6 @@ use DateTimeInterface;
 
 class Payee
 {
-    private const ARCHIVED_POSITION = 1000;
     private Id $id;
     private string $name;
     private int $position;
@@ -80,7 +79,6 @@ class Payee
     {
         if (!$this->isArchived) {
             $this->isArchived = true;
-            $this->position = self::ARCHIVED_POSITION;
             $this->updated();
         }
     }

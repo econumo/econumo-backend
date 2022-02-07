@@ -37,6 +37,7 @@ class PayeeService implements PayeeServiceInterface
         }
 
         $payee = $this->payeeFactory->create($userId, $name);
+        $payee->updatePosition(count($payees));
         $this->payeeRepository->save($payee);
 
         return $payee;
