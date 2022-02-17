@@ -4,11 +4,16 @@ declare(strict_types=1);
 namespace App\Infrastructure\Doctrine\Repository;
 
 use App\Domain\Entity\Currency;
+use App\Domain\Entity\ValueObject\CurrencyCode;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\CurrencyRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Exception\ORMException;
+use Doctrine\ORM\ORMInvalidArgumentException;
 use Doctrine\Persistence\ManagerRegistry;
+use Ramsey\Uuid\Uuid;
+use RuntimeException;
 
 /**
  * @method Currency|null find($id, $lockMode = null, $lockVersion = null)
@@ -42,8 +47,28 @@ class CurrencyRepository extends ServiceEntityRepository implements CurrencyRepo
         return $this->findAll();
     }
 
+    public function save(Currency ...$items): void
+    {
+        try {
+            foreach ($items as $item) {
+                $this->getEntityManager()->persist($item);
+            }
+            $this->getEntityManager()->flush();
+        } catch (ORMException | ORMInvalidArgumentException $e) {
+            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
     public function getReference(Id $id): Currency
     {
         return $this->getEntityManager()->getReference(Currency::class, $id);
+    }
+
+    public function getNextIdentity(): Id
+    {
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $uuid = Uuid::uuid4();
+
+        return new Id($uuid->toString());
     }
 }

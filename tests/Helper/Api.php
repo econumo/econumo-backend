@@ -137,8 +137,9 @@ class Api extends \Codeception\Module
     {
         return [
             'id' => 'string',
-            'alias' => 'string',
-            'sign' => 'string',
+            'code' => 'string',
+            'symbol' => 'string',
+            'name' => 'string',
         ];
     }
 

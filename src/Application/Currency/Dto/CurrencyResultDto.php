@@ -9,7 +9,7 @@ use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Definition(
- *     required={"id", "alias", "sign"}
+ *     required={"id", "code", "name", "symbol"}
  * )
  */
 class CurrencyResultDto
@@ -22,16 +22,23 @@ class CurrencyResultDto
     public string $id;
 
     /**
-     * Currency alias
+     * Currency code
      * @var string
-     * @SWG\Property(example="RUB")
+     * @SWG\Property(example="USD")
      */
-    public string $alias;
+    public string $code;
 
     /**
-     * Currency signature
+     * Currency
+     * @var string
+     * @SWG\Property(example="United States Dollar")
+     */
+    public string $name;
+
+    /**
+     * Currency symbol
      * @var string
      * @SWG\Property(example="$")
      */
-    public string $sign;
+    public string $symbol;
 }

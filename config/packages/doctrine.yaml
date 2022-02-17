@@ -25,6 +25,7 @@ doctrine:
             icon_type: App\Infrastructure\Doctrine\Type\IconType
             folder_name_type: App\Infrastructure\Doctrine\Type\FolderNameType
             connection_code_type: App\Infrastructure\Doctrine\Type\ConnectionCodeType
+            currency_code_type: App\Infrastructure\Doctrine\Type\CurrencyCodeType
         server_version: 11
 
     orm:

@@ -10,6 +10,8 @@ use App\Domain\Exception\NotFoundException;
 
 interface CurrencyRepositoryInterface
 {
+    public function getNextIdentity(): Id;
+
     /**
      * @param Id $id
      * @return Currency
@@ -23,4 +25,6 @@ interface CurrencyRepositoryInterface
     public function getAll(): array;
 
     public function getReference(Id $id): Currency;
+
+    public function save(Currency ...$items): void;
 }

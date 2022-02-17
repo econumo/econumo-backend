@@ -52,10 +52,6 @@ class GetCurrencyListCest
                 'items' => 'array',
             ],
         ]);
-        $I->seeResponseMatchesJsonType([
-            'id' => 'string',
-            'alias' => 'string',
-            'sign' => 'string',
-        ], '$.data.items[0]');
+        $I->seeResponseMatchesJsonType($I->getCurrencyDtoJsonType(), '$.data.items[0]');
     }
 }

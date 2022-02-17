@@ -13,8 +13,9 @@ class CurrencyToDtoV1ResultAssembler
     {
         $dto = new CurrencyResultDto();
         $dto->id = $currency->getId()->getValue();
-        $dto->alias = $currency->getAlias();
-        $dto->sign = $currency->getSign();
+        $dto->code = $currency->getCode()->getValue();
+        $dto->name = $currency->getName();
+        $dto->symbol = $currency->getSymbol();
         return $dto;
     }
 }
