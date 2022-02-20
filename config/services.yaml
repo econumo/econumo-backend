@@ -20,6 +20,16 @@ services:
             - '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
             - '../src/Infrastructure/Doctrine/Migrations/**.php'
 
+    App\Domain\Service\Currency\CurrencyServiceInterface:
+        class: \App\Domain\Service\Currency\CurrencyService
+        arguments:
+            $baseCurrency: '%env(string:CURRENCY_BASE)%'
+
+    App\Domain\Service\Currency\CurrencyRatesLoaderServiceInterface:
+        class: \App\Infrastructure\OpenExchangeRates\CurrencyRatesLoaderService
+        arguments:
+            $token: '%env(OPEN_EXCHANGE_RATES_TOKEN)%'
+
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
     App\UI\Controller\:

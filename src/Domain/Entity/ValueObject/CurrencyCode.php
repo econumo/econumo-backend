@@ -14,6 +14,13 @@ class CurrencyCode implements ValueObjectInterface, JsonSerializable
 
     private const LENGTH = 3;
 
+    public function __construct(string $value)
+    {
+        $value = trim(strtoupper($value));
+        self::validate($value);
+        $this->value = $value;
+    }
+
     public static function validate($value): void
     {
         if (!is_string($value)) {

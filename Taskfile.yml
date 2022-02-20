@@ -32,6 +32,11 @@ tasks:
         cmds:
             - docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app sh
 
+    run:
+        desc: "Run symfony command"
+        cmds:
+            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app bin/console {{.CLI_ARGS}}
+
     fast-test:
         desc: "Run tests without recreating db (you could use arguments here after dash, ex: task test -- unit)"
         cmds:

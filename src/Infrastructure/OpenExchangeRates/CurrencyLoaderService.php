@@ -13,7 +13,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class CurrencyLoaderService implements CurrencyLoaderServiceInterface
 {
-    private const CURRENCIES_DATASOURCE_URL = 'https://openexchangerates.org/api/currencies.json';
+    private const CURRENCIES_URL = 'https://openexchangerates.org/api/currencies.json';
     private HttpClientInterface $client;
 
     public function __construct(HttpClientInterface $client)
@@ -23,7 +23,7 @@ class CurrencyLoaderService implements CurrencyLoaderServiceInterface
 
     public function loadCurrencies(): array
     {
-        $response = $this->client->request('GET', self::CURRENCIES_DATASOURCE_URL);
+        $response = $this->client->request('GET', self::CURRENCIES_URL);
         $result = [];
         foreach ($response->toArray() as $code => $name) {
             $item = new CurrencyDto();

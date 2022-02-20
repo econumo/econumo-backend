@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Infrastructure\Doctrine\Repository;
@@ -54,7 +55,7 @@ class CurrencyRepository extends ServiceEntityRepository implements CurrencyRepo
                 $this->getEntityManager()->persist($item);
             }
             $this->getEntityManager()->flush();
-        } catch (ORMException | ORMInvalidArgumentException $e) {
+        } catch (ORMException|ORMInvalidArgumentException $e) {
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
     }
@@ -70,5 +71,10 @@ class CurrencyRepository extends ServiceEntityRepository implements CurrencyRepo
         $uuid = Uuid::uuid4();
 
         return new Id($uuid->toString());
+    }
+
+    public function getByCode(CurrencyCode $code): ?Currency
+    {
+        return $this->findOneBy(['code' => $code]);
     }
 }
