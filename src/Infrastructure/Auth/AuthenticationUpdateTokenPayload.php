@@ -25,6 +25,10 @@ class AuthenticationUpdateTokenPayload
         $data['name'] = $user->getName();
         $data['roles'] = $user->getRoles();
         $data['avatar'] = $user->getAvatarUrl();
+        $data['options'] = [];
+        foreach ($user->getOptions() as $option) {
+            $data['options'][$option->getName()] = $option->getValue();
+        }
 
         $event->setData($data);
     }

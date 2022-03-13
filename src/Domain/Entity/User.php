@@ -44,6 +44,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private Collection $connections;
 
+    /**
+     * @var ArrayCollection|UserOption[]
+     */
+    private Collection $options;
+
     private DateTimeImmutable $createdAt;
     private DateTimeInterface $updatedAt;
 
@@ -54,6 +59,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->name = $name;
         $this->identifier = Identifier::createFromEmail($email)->getValue();
         $this->connections = new ArrayCollection();
+        $this->options = new ArrayCollection();
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->registerEvent(new UserRegisteredEvent($id));
@@ -155,5 +161,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getConnections()
     {
         return $this->connections;
+    }
+
+    public function createOption(UserOption $option)
+    {
+        foreach ($this->options as $item) {
+            if ($item->getName() === $option->getName()) {
+                $this->options->removeElement($item);
+            }
+        }
+
+        $this->options->add($option);
+    }
+
+    /**
+     * @return UserOption[]|ArrayCollection
+     */
+    public function getOptions()
+    {
+        return $this->options;
     }
 }

@@ -11,7 +11,7 @@ Basically, if you don't plan to use multicurrency account - probably you don't n
 1. Register new account at [openexchangerates.org](https://openexchangerates.org)
 2. Generate new access token
 3. Put token at `.env` as `OPEN_EXCHANGE_RATES_TOKEN={YOUR_TOKEN}`
-4. Run  `bin/console app:update-currencies` to update list of available currencies
+4. Run  `bin/console app:update-currencies` to update full list of available currencies
 5. Run `bin/console app:update-currency-rates` to update currency rates
 
 If you would like to change base currency - put at `.env` string `CURRENCY_BASE=USD`

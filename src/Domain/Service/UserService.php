@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Service;
 
 use App\Domain\Entity\User;
+use App\Domain\Entity\UserOption;
 use App\Domain\Entity\ValueObject\Email;
 use App\Domain\Entity\ValueObject\FolderName;
 use App\Domain\Entity\ValueObject\Id;
@@ -13,8 +14,10 @@ use App\Domain\Exception\UserRegisteredException;
 use App\Domain\Factory\ConnectionInviteFactoryInterface;
 use App\Domain\Factory\FolderFactoryInterface;
 use App\Domain\Factory\UserFactoryInterface;
+use App\Domain\Factory\UserOptionFactoryInterface;
 use App\Domain\Repository\ConnectionInviteRepositoryInterface;
 use App\Domain\Repository\FolderRepositoryInterface;
+use App\Domain\Repository\UserOptionRepositoryInterface;
 use App\Domain\Repository\UserRepositoryInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -29,6 +32,8 @@ class UserService implements UserServiceInterface
     private TranslatorInterface $translator;
     private ConnectionInviteFactoryInterface $connectionInviteFactory;
     private ConnectionInviteRepositoryInterface $connectionInviteRepository;
+    private UserOptionFactoryInterface $userOptionFactory;
+    private UserOptionRepositoryInterface $userOptionRepository;
 
     public function __construct(
         UserFactoryInterface $userFactory,
@@ -39,7 +44,9 @@ class UserService implements UserServiceInterface
         AntiCorruptionServiceInterface $antiCorruptionService,
         TranslatorInterface $translator,
         ConnectionInviteFactoryInterface $connectionInviteFactory,
-        ConnectionInviteRepositoryInterface $connectionInviteRepository
+        ConnectionInviteRepositoryInterface $connectionInviteRepository,
+        UserOptionFactoryInterface $userOptionFactory,
+        UserOptionRepositoryInterface $userOptionRepository
     ) {
         $this->userFactory = $userFactory;
         $this->userRepository = $userRepository;
@@ -50,6 +57,8 @@ class UserService implements UserServiceInterface
         $this->translator = $translator;
         $this->connectionInviteFactory = $connectionInviteFactory;
         $this->connectionInviteRepository = $connectionInviteRepository;
+        $this->userOptionFactory = $userOptionFactory;
+        $this->userOptionRepository = $userOptionRepository;
     }
 
     public function register(Email $email, string $password, string $name): User
@@ -70,6 +79,11 @@ class UserService implements UserServiceInterface
 
             $connectionInvite = $this->connectionInviteFactory->create($user);
             $this->connectionInviteRepository->save($connectionInvite);
+
+            $this->userOptionRepository->save(
+                $this->userOptionFactory->create($user, UserOption::CURRENCY, UserOption::DEFAULT_CURRENCY),
+                $this->userOptionFactory->create($user, UserOption::REPORT_DAY, UserOption::DEFAULT_REPORT_DAY)
+            );
 
             $this->antiCorruptionService->commit();
         } catch (\Throwable $exception) {
