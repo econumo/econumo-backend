@@ -6,6 +6,7 @@ namespace App\Domain\Service;
 
 use App\Domain\Entity\User;
 use App\Domain\Entity\UserOption;
+use App\Domain\Entity\ValueObject\CurrencyCode;
 use App\Domain\Entity\ValueObject\Email;
 use App\Domain\Entity\ValueObject\FolderName;
 use App\Domain\Entity\ValueObject\Id;
@@ -102,5 +103,13 @@ class UserService implements UserServiceInterface
         $user = $this->userRepository->get($userId);
         $user->updateName($name);
         $this->userRepository->save($user);
+    }
+
+    public function updateCurrency(Id $userId, CurrencyCode $currencyCode): void
+    {
+        $user = $this->userRepository->get($userId);
+        $this->userOptionRepository->save(
+            $this->userOptionFactory->create($user, UserOption::CURRENCY, $currencyCode->getValue())
+        );
     }
 }
