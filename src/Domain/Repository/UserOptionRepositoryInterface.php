@@ -12,5 +12,7 @@ interface UserOptionRepositoryInterface
 
     public function save(UserOption ...$userOptions): void;
 
+    public function delete(UserOption $userOption): void;
+
     public function getReference(Id $id): UserOption;
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Entity;
 
+use App\Domain\Entity\ValueObject\CurrencyCode;
 use App\Domain\Entity\ValueObject\Email;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\Identifier;
@@ -163,7 +164,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->connections;
     }
 
-    public function createOption(UserOption $option)
+    public function createOption(UserOption $option): UserOption
     {
         foreach ($this->options as $item) {
             if ($item->getName() === $option->getName()) {
@@ -172,6 +173,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         $this->options->add($option);
+        return $option;
+    }
+
+    public function getOption(string $name): ?UserOption
+    {
+        foreach ($this->options as $item) {
+            if ($item->getName() === $name) {
+                return $item;
+            }
+        }
+
+        return null;
+    }
+
+    public function deleteOption(string $name): void
+    {
+        foreach ($this->options as $item) {
+            if ($item->getName() === $name) {
+                $this->options->removeElement($item);
+            }
+        }
     }
 
     /**
@@ -180,5 +202,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getOptions()
     {
         return $this->options;
+    }
+
+    public function getCurrency(): CurrencyCode
+    {
+        foreach ($this->options as $option) {
+            if ($option->getName() === UserOption::CURRENCY) {
+                return new CurrencyCode($option->getValue());
+            }
+        }
+
+        return new CurrencyCode(UserOption::DEFAULT_CURRENCY);
     }
 }

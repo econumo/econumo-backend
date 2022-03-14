@@ -30,6 +30,11 @@ services:
         arguments:
             $token: '%env(OPEN_EXCHANGE_RATES_TOKEN)%'
 
+    App\Domain\Service\Currency\CurrencyConvertorInterface:
+        class: \App\Domain\Service\Currency\CurrencyConvertor
+        arguments:
+            $baseCurrency: '%env(string:CURRENCY_BASE)%'
+
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
     App\UI\Controller\:
@@ -48,5 +53,7 @@ services:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 100 }
 
     App\Infrastructure\Auth\AuthenticationUpdateTokenPayload:
+        arguments:
+            $baseCurrency: '%env(string:CURRENCY_BASE)%'
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_created, method: onTokenCreated }

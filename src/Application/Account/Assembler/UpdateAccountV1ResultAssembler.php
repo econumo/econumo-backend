@@ -33,7 +33,7 @@ class UpdateAccountV1ResultAssembler
         $result = new UpdateAccountV1ResultDto();
         $result->item = $this->accountToDtoV1ResultAssembler->assemble($userId, $account);
         if ($transaction) {
-            $result->transaction = $this->transactionToDtoV1ResultAssembler->assemble($transaction);
+            $result->transaction = $this->transactionToDtoV1ResultAssembler->assemble($userId, $transaction);
         }
 
         return $result;

@@ -51,4 +51,10 @@ class UserOptionRepository extends ServiceEntityRepository implements UserOption
     {
         return $this->getEntityManager()->getReference(UserOption::class, $id);
     }
+
+    public function delete(UserOption $userOption): void
+    {
+        $this->getEntityManager()->remove($userOption);
+        $this->getEntityManager()->flush();
+    }
 }

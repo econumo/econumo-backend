@@ -55,6 +55,12 @@ class TransactionResultDto
     public float $amount;
 
     /**
+     * Amount (in user currency)
+     * @SWG\Property(example="100.5")
+     */
+    public float $amountUserCurrency;
+
+    /**
      * Amount recipient
      * @SWG\Property(example="100.5")
      */

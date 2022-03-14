@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Entity;
 
 use App\Domain\Entity\ValueObject\AccountType;
+use App\Domain\Entity\ValueObject\CurrencyCode;
 use App\Domain\Entity\ValueObject\Id;
 use DateTime;
 use DateTimeImmutable;
@@ -68,6 +69,11 @@ class Account
     public function getCurrencyId(): Id
     {
         return $this->currency->getId();
+    }
+
+    public function getCurrencyCode(): CurrencyCode
+    {
+        return $this->currency->getCode();
     }
 
     public function applyTransaction(Transaction $transaction): void

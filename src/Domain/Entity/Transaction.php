@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Entity;
 
+use App\Domain\Entity\ValueObject\CurrencyCode;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\TransactionType;
 use App\Domain\Service\Dto\TransactionDto;
@@ -77,6 +78,11 @@ class Transaction
     public function getAccountId(): Id
     {
         return $this->account->getId();
+    }
+
+    public function getAccountCurrency(): CurrencyCode
+    {
+        return $this->account->getCurrencyCode();
     }
 
     public function getAccountRecipientId(): ?Id

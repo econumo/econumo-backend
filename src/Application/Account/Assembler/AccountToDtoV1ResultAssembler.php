@@ -11,6 +11,7 @@ use App\Domain\Entity\Account;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Repository\AccountOptionsRepositoryInterface;
 use App\Domain\Repository\FolderRepositoryInterface;
+use App\Domain\Service\Currency\CurrencyConvertorInterface;
 
 class AccountToDtoV1ResultAssembler
 {
@@ -19,19 +20,22 @@ class AccountToDtoV1ResultAssembler
     private FolderRepositoryInterface $folderRepository;
     private UserIdToDtoResultAssembler $userIdToDtoResultAssembler;
     private AccountOptionsRepositoryInterface $accountOptionsRepository;
+    private CurrencyConvertorInterface $currencyConvertor;
 
     public function __construct(
         AccountIdToSharedAccessResultAssembler $accountIdToSharedAccessResultAssembler,
         CurrencyIdToDtoV1ResultAssembler $currencyIdToDtoV1ResultAssembler,
         FolderRepositoryInterface $folderRepository,
         UserIdToDtoResultAssembler $userIdToDtoResultAssembler,
-        AccountOptionsRepositoryInterface $accountOptionsRepository
+        AccountOptionsRepositoryInterface $accountOptionsRepository,
+        CurrencyConvertorInterface $currencyConvertor
     ) {
         $this->accountIdToSharedAccessResultAssembler = $accountIdToSharedAccessResultAssembler;
         $this->currencyIdToDtoV1ResultAssembler = $currencyIdToDtoV1ResultAssembler;
         $this->folderRepository = $folderRepository;
         $this->userIdToDtoResultAssembler = $userIdToDtoResultAssembler;
         $this->accountOptionsRepository = $accountOptionsRepository;
+        $this->currencyConvertor = $currencyConvertor;
     }
 
     public function assemble(Id $userId, Account $account): AccountResultDto
@@ -50,6 +54,7 @@ class AccountToDtoV1ResultAssembler
         $item->name = $account->getName();
         $item->currency = $this->currencyIdToDtoV1ResultAssembler->assemble($account->getCurrencyId());
         $item->balance = $account->getBalance();
+        $item->balanceUserCurrency = $this->currencyConvertor->convertForUser($userId, $account->getCurrencyCode(), $account->getBalance());
         $item->type = $account->getType()->getValue();
         $item->icon = $account->getIcon();
         $item->sharedAccess = $this->accountIdToSharedAccessResultAssembler->assemble($account->getId());

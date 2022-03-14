@@ -37,6 +37,6 @@ class TransactionListService
         } else {
             $transactions = $this->transactionRepository->findAvailableForUserId($userId);
         }
-        return $this->getTransactionListV1ResultAssembler->assemble($dto, $transactions);
+        return $this->getTransactionListV1ResultAssembler->assemble($dto, $userId, $transactions);
     }
 }

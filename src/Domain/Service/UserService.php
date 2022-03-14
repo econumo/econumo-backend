@@ -107,9 +107,21 @@ class UserService implements UserServiceInterface
 
     public function updateCurrency(Id $userId, CurrencyCode $currencyCode): void
     {
-        $user = $this->userRepository->get($userId);
-        $this->userOptionRepository->save(
-            $this->userOptionFactory->create($user, UserOption::CURRENCY, $currencyCode->getValue())
-        );
+        $this->antiCorruptionService->beginTransaction();
+        try {
+            $user = $this->userRepository->get($userId);
+            $oldOption = $user->getOption(UserOption::CURRENCY);
+            if ($oldOption) {
+                $this->userOptionRepository->delete($oldOption);
+            }
+
+            $currencyOption = $this->userOptionFactory->create($user, UserOption::CURRENCY, $currencyCode->getValue());
+            $user->createOption($currencyOption);
+            $this->userOptionRepository->save($currencyOption);
+            $this->antiCorruptionService->commit();
+        } catch (\Throwable $exception) {
+            $this->antiCorruptionService->rollback();
+            throw $exception;
+        }
     }
 }

@@ -11,6 +11,13 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 
 class AuthenticationUpdateTokenPayload
 {
+    private string $baseCurrency;
+
+    public function __construct(string $baseCurrency)
+    {
+        $this->baseCurrency = $baseCurrency;
+    }
+
     /**
      * @param AuthenticationSuccessEvent $event
      */
@@ -26,6 +33,9 @@ class AuthenticationUpdateTokenPayload
         $data['name'] = $user->getName();
         $data['roles'] = $user->getRoles();
         $data['avatar'] = $user->getAvatarUrl();
+        $data['server'] = [
+            'base_currency' => $this->baseCurrency
+        ];
         $data['options'] = [];
         foreach ($user->getOptions() as $option) {
             $data['options'][$option->getName()] = $option->getValue();
