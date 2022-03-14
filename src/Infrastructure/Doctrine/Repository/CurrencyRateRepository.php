@@ -36,34 +36,32 @@ class CurrencyRateRepository extends ServiceEntityRepository implements Currency
      */
     public function getAll(?DateTimeInterface $date = null): array
     {
-        $dateBuilder = $this->createQueryBuilder('cr')
-            ->select('cr.publishedAt')
-            ->setMaxResults(1);
         if (!$date) {
-            $dateBuilder->orderBy('cr.publishedAt', 'DESC');
+            $dateBuilder = $this->createQueryBuilder('cr')
+                ->select('cr.publishedAt')
+                ->setMaxResults(1)
+                ->orderBy('cr.publishedAt', 'DESC');
+            $lastDate = $dateBuilder->getQuery()->getSingleScalarResult();
+            if (!$lastDate) {
+                throw new NotFoundException('Currency rates not loaded');
+            }
+            $ratesDate = \DateTime::createFromFormat('Y-m-d', $lastDate);
         } else {
-            $dateBuilder->andWhere('cr.publishedAt <= :date')
+            $dateBuilder = $this->createQueryBuilder('cr')
+                ->select('cr.publishedAt')
+                ->setMaxResults(1)
+                ->orderBy('cr.publishedAt', 'DESC')
+                ->where('cr.publishedAt <= :date')
                 ->setParameter('date', $date);
-        }
-        $lastDate = $dateBuilder->getQuery()->getSingleColumnResult();
-        // --- dump ---
-        echo '<pre>';
-        echo __FILE__ . chr(10);
-        echo __METHOD__ . chr(10);
-        var_dump($lastDate);
-        echo '</pre>';
-        exit;
-        // --- // ---
-
-        $builder = $this->createQueryBuilder('cr');
-        if (!$date) {
-            $builder->orderBy('cr.publishedAt', 'DESC');
-        } else {
-            $builder->andWhere('cr.publishedAt <= :date')
-                ->setParameter('date', $date);
+            $lastDate = $dateBuilder->getQuery()->getSingleScalarResult();
+            $ratesDate = \DateTime::createFromFormat('Y-m-d', $lastDate);
         }
 
-        return $builder->getQuery()->getResult();
+        return $this->createQueryBuilder('cr')
+            ->andWhere('cr.publishedAt = :date')
+            ->setParameter('date', $ratesDate)
+            ->getQuery()
+            ->getResult();
     }
 
     public function get(Id $currencyId, ?DateTimeInterface $date = null): CurrencyRate

@@ -143,6 +143,16 @@ class Api extends \Codeception\Module
         ];
     }
 
+    public function getCurrencyRateDtoJsonType(): array
+    {
+        return [
+            'currencyId' => 'string',
+            'baseCurrencyId' => 'string',
+            'rate' => 'float',
+            'updatedAt' => 'string',
+        ];
+    }
+
     public function getConnectionInviteDtoJsonType(): array
     {
         return [
