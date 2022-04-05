@@ -64,7 +64,27 @@ class CurrencyRateRepository extends ServiceEntityRepository implements Currency
             ->getResult();
     }
 
-    public function get(Id $currencyId, ?DateTimeInterface $date = null): CurrencyRate
+    public function get(Id $currencyId, DateTimeInterface $date): CurrencyRate
+    {
+        try {
+            $builder = $this->createQueryBuilder('cr');
+            $builder->where('cr.currency = :currency')
+                ->setParameter('currency', $this->getEntityManager()->getReference(Currency::class, $currencyId))
+                ->andWhere('cr.publishedAt = :date')
+                ->setParameter('date', $date)
+                ->setMaxResults(1);
+            $item = $builder->getQuery()->getSingleResult();
+            if ($item === null) {
+                throw new NotFoundException(sprintf('Currency with identifier %s not found', $item));
+            }
+
+            return $item;
+        } catch (NoResultException $exception) {
+            throw new NotFoundException(sprintf('Currency with identifier %s not found', $currencyId));
+        }
+    }
+
+    public function getLatest(Id $currencyId, ?DateTimeInterface $date = null): CurrencyRate
     {
         try {
             $builder = $this->createQueryBuilder('cr');
