@@ -2,7 +2,7 @@
 
 ### Currencies 
 
-Econumo use [openexchangerates.org](https://docs.openexchangerates.org/docs/api-introduction) for updating currencies and it's rates.
+Econumo uses [openexchangerates.org](https://docs.openexchangerates.org/docs/api-introduction) for updating currencies and it's rates.
 It's free for econumo needs.
 
 Basically, if you don't plan to use multicurrency account - probably you don't need it to. 

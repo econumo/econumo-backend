@@ -36,7 +36,7 @@ class TransactionToDtoResultAssembler
         ) === null ? null : $transaction->getAccountRecipientId()->getValue();
         $item->amount = $transaction->getAmount();
         $item->amountUserCurrency = $this->currencyConvertor->convertForUser($userId, $transaction->getAccountCurrency(), $transaction->getAmount());
-        $item->amountRecipient = $transaction->getAmount();
+        $item->amountRecipient = $transaction->getAmountRecipient();
         $item->categoryId = $transaction->getCategoryId() === null ? null : $transaction->getCategoryId()->getValue();
         $item->description = $transaction->getDescription();
         $item->payeeId = $transaction->getPayeeId() === null ? null : $transaction->getPayeeId()->getValue();
