@@ -45,7 +45,7 @@ class RequestToDomainDtoAssembler
         $result->account = $this->accountRepository->getReference($result->accountId);
         $result->accountRecipientId = null;
         $result->accountRecipient = null;
-        $result->amountRecipient = null;
+        $result->amountRecipient = $dto->amountRecipient ?? $dto->amount;
         $result->description = $dto->description === null ? '' : $dto->description;
         $result->date = DateTime::createFromFormat('Y-m-d H:i:s', $dto->date);
         $result->categoryId = null;
