@@ -132,6 +132,7 @@ class Api extends \Codeception\Module
             'id' => 'string',
             'name' => 'string',
             'position' => 'integer',
+            'isVisible' => 'integer',
         ];
     }
 

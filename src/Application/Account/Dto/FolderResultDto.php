@@ -33,4 +33,11 @@ class FolderResultDto
      * @SWG\Property(example="1")
      */
     public int $position;
+
+    /**
+     * Visibility
+     * @var int
+     * @SWG\Property(example="0")
+     */
+    public int $isVisible;
 }

@@ -21,6 +21,7 @@ class Folder
     private Id $id;
     private FolderName $name;
     private int $position;
+    private bool $isVisible;
     private User $user;
     /**
      * @var ArrayCollection|Account[]
@@ -39,6 +40,7 @@ class Folder
         $this->user = $user;
         $this->name = $name;
         $this->position = 1000;
+        $this->isVisible = true;
         $this->accounts = new ArrayCollection();
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
@@ -63,6 +65,11 @@ class Folder
     public function getPosition(): int
     {
         return $this->position;
+    }
+
+    public function isVisible(): bool
+    {
+        return $this->isVisible;
     }
 
     public function containsAccount(Account $account): bool
@@ -100,6 +107,22 @@ class Folder
     {
         if ($this->position !== $position) {
             $this->position = $position;
+            $this->updated();
+        }
+    }
+
+    public function makeVisible(): void
+    {
+        if ($this->isVisible === false) {
+            $this->isVisible = true;
+            $this->updated();
+        }
+    }
+
+    public function makeInvisible(): void
+    {
+        if ($this->isVisible === true) {
+            $this->isVisible = false;
             $this->updated();
         }
     }

@@ -15,6 +15,7 @@ class FolderToDtoV1ResultAssembler
         $item->id = $folder->getId()->getValue();
         $item->name = $folder->getName()->getValue();
         $item->position = $folder->getPosition();
+        $item->isVisible = (int)$folder->isVisible();
 
         return $item;
     }
