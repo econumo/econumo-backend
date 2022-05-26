@@ -19,4 +19,8 @@ interface FolderServiceInterface
     public function replace(Id $folderId, Id $replaceFolderId): void;
 
     public function orderFolders(Id $userId, PositionDto ...$changes): void;
+
+    public function hide(Id $folderId): void;
+
+    public function show(Id $folderId): void;
 }

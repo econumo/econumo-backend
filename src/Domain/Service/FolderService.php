@@ -143,4 +143,18 @@ final class FolderService implements FolderServiceInterface
         }
         $this->folderRepository->save(...$userFolders);
     }
+
+    public function hide(Id $folderId): void
+    {
+        $folder = $this->folderRepository->get($folderId);
+        $folder->makeInvisible();
+        $this->folderRepository->save($folder);
+    }
+
+    public function show(Id $folderId): void
+    {
+        $folder = $this->folderRepository->get($folderId);
+        $folder->makeVisible();
+        $this->folderRepository->save($folder);
+    }
 }

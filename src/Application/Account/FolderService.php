@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace App\Application\Account;
 
 use App\Application\Account\Assembler\CreateFolderV1ResultAssembler;
+use App\Application\Account\Assembler\ReplaceFolderV1ResultAssembler;
 use App\Application\Account\Assembler\UpdateFolderV1ResultAssembler;
 use App\Application\Account\Dto\CreateFolderV1RequestDto;
 use App\Application\Account\Dto\CreateFolderV1ResultDto;
+use App\Application\Account\Dto\HideFolderV1RequestDto;
+use App\Application\Account\Dto\HideFolderV1ResultDto;
+use App\Application\Account\Assembler\HideFolderV1ResultAssembler;
 use App\Application\Account\Dto\ReplaceFolderV1RequestDto;
 use App\Application\Account\Dto\ReplaceFolderV1ResultDto;
-use App\Application\Account\Assembler\ReplaceFolderV1ResultAssembler;
 use App\Application\Account\Dto\UpdateFolderV1RequestDto;
 use App\Application\Account\Dto\UpdateFolderV1ResultDto;
 use App\Application\Exception\AccessDeniedException;
@@ -26,19 +29,22 @@ class FolderService
     private UpdateFolderV1ResultAssembler $updateFolderV1ResultAssembler;
     private FolderRepositoryInterface $folderRepository;
     private ReplaceFolderV1ResultAssembler $replaceFolderV1ResultAssembler;
+    private HideFolderV1ResultAssembler $hideFolderV1ResultAssembler;
 
     public function __construct(
         FolderServiceInterface $folderService,
         CreateFolderV1ResultAssembler $createFolderV1ResultAssembler,
         UpdateFolderV1ResultAssembler $updateFolderV1ResultAssembler,
         FolderRepositoryInterface $folderRepository,
-        ReplaceFolderV1ResultAssembler $replaceFolderV1ResultAssembler
+        ReplaceFolderV1ResultAssembler $replaceFolderV1ResultAssembler,
+        HideFolderV1ResultAssembler $hideFolderV1ResultAssembler
     ) {
         $this->folderService = $folderService;
         $this->createFolderV1ResultAssembler = $createFolderV1ResultAssembler;
         $this->updateFolderV1ResultAssembler = $updateFolderV1ResultAssembler;
         $this->folderRepository = $folderRepository;
         $this->replaceFolderV1ResultAssembler = $replaceFolderV1ResultAssembler;
+        $this->hideFolderV1ResultAssembler = $hideFolderV1ResultAssembler;
     }
 
     public function createFolder(
@@ -72,5 +78,31 @@ class FolderService
 
         $this->folderService->replace($folder->getId(), new Id($dto->replaceId));
         return $this->replaceFolderV1ResultAssembler->assemble($dto);
+    }
+
+    public function hideFolder(
+        HideFolderV1RequestDto $dto,
+        Id $userId
+    ): HideFolderV1ResultDto {
+        $folder = $this->folderRepository->get(new Id($dto->id));
+        if (!$folder->getUserId()->isEqual($userId)) {
+            throw new AccessDeniedException();
+        }
+
+        $this->folderService->hide($folder->getId());
+        return $this->hideFolderV1ResultAssembler->assemble($dto);
+    }
+
+    public function showFolder(
+        HideFolderV1RequestDto $dto,
+        Id $userId
+    ): HideFolderV1ResultDto {
+        $folder = $this->folderRepository->get(new Id($dto->id));
+        if (!$folder->getUserId()->isEqual($userId)) {
+            throw new AccessDeniedException();
+        }
+
+        $this->folderService->show($folder->getId());
+//        return $this->hideFolderV1ResultAssembler->assemble($dto);
     }
 }
