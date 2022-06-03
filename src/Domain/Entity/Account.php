@@ -61,11 +61,6 @@ class Account
         return $this->name;
     }
 
-    public function getPosition(): int
-    {
-        return $this->position;
-    }
-
     public function getCurrencyId(): Id
     {
         return $this->currency->getId();
@@ -156,8 +151,8 @@ class Account
     {
         if (!$this->isDeleted) {
             $this->isDeleted = true;
-            $this->name = 'deleted account #' . crc32($this->id->getValue());
             $this->updated();
+            $this->name = sprintf('%s (%s)', $this->name, $this->updatedAt->format('Y-m-d'));
         }
     }
 
