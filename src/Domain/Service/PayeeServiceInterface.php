@@ -7,15 +7,16 @@ namespace App\Domain\Service;
 
 use App\Domain\Entity\Payee;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Entity\ValueObject\PayeeName;
 use App\Domain\Service\Dto\PositionDto;
 
 interface PayeeServiceInterface
 {
-    public function createPayee(Id $userId, string $name): Payee;
+    public function createPayee(Id $userId, PayeeName $name): Payee;
 
-    public function createPayeeForAccount(Id $userId, Id $accountId, string $name): Payee;
+    public function createPayeeForAccount(Id $userId, Id $accountId, PayeeName $name): Payee;
 
-    public function updatePayee(Id $payeeId, string $name): void;
+    public function updatePayee(Id $payeeId, PayeeName $name): void;
 
     public function deletePayee(Id $payeeId): void;
 

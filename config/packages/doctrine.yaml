@@ -28,6 +28,7 @@ doctrine:
             folder_name_type: App\Infrastructure\Doctrine\Type\FolderNameType
             connection_code_type: App\Infrastructure\Doctrine\Type\ConnectionCodeType
             currency_code_type: App\Infrastructure\Doctrine\Type\CurrencyCodeType
+            payee_name_type: App\Infrastructure\Doctrine\Type\PayeeNameType
         server_version: 11
 
     orm:

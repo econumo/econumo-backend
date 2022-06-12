@@ -14,7 +14,7 @@ class PayeeToDtoV1ResultAssembler
     ): PayeeResultDto {
         $item = new PayeeResultDto();
         $item->id = $payee->getId()->getValue();
-        $item->name = $payee->getName();
+        $item->name = $payee->getName()->getValue();
         $item->position = $payee->getPosition();
         $item->ownerUserId = $payee->getUserId()->getValue();
         $item->isArchived = $payee->isArchived() ? 1 : 0;

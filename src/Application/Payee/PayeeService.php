@@ -22,6 +22,7 @@ use App\Application\Payee\Assembler\UnarchivePayeeV1ResultAssembler;
 use App\Application\Payee\Dto\UpdatePayeeV1RequestDto;
 use App\Application\Payee\Dto\UpdatePayeeV1ResultDto;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Entity\ValueObject\PayeeName;
 use App\Domain\Exception\PayeeAlreadyExistsException;
 use App\Domain\Repository\PayeeRepositoryInterface;
 use App\Domain\Service\AccountAccessServiceInterface;
@@ -69,9 +70,9 @@ class PayeeService
         if ($dto->accountId !== null) {
             $accountId = new Id($dto->accountId);
             $this->accountAccessService->checkAddPayee($userId, $accountId);
-            $payee = $this->payeeService->createPayeeForAccount($userId, $accountId, $dto->name);
+            $payee = $this->payeeService->createPayeeForAccount($userId, $accountId, new PayeeName($dto->name));
         } else {
-            $payee = $this->payeeService->createPayee($userId, $dto->name);
+            $payee = $this->payeeService->createPayee($userId, new PayeeName($dto->name));
         }
 
         return $this->createPayeeV1ResultAssembler->assemble($dto, $payee);
@@ -87,7 +88,7 @@ class PayeeService
             throw new AccessDeniedException();
         }
         try {
-            $this->payeeService->updatePayee($payeeId, $dto->name);
+            $this->payeeService->updatePayee($payeeId, new PayeeName($dto->name));
         } catch (PayeeAlreadyExistsException $exception) {
             throw new ValidationException($this->translationService->trans('payee.payee.already_exists', ['name' => $dto->name]));
         }

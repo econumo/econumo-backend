@@ -8,6 +8,7 @@ namespace App\Domain\Service;
 
 use App\Domain\Entity\Payee;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Entity\ValueObject\PayeeName;
 use App\Domain\Exception\PayeeAlreadyExistsException;
 use App\Domain\Factory\PayeeFactoryInterface;
 use App\Domain\Repository\AccountRepositoryInterface;
@@ -27,11 +28,11 @@ class PayeeService implements PayeeServiceInterface
         $this->accountRepository = $accountRepository;
     }
 
-    public function createPayee(Id $userId, string $name): Payee
+    public function createPayee(Id $userId, PayeeName $name): Payee
     {
         $payees = $this->payeeRepository->findByOwnerId($userId);
         foreach ($payees as $payee) {
-            if (strcasecmp($payee->getName(), $name) === 0) {
+            if ($payee->getName()->isEqual($name)) {
                 throw new PayeeAlreadyExistsException();
             }
         }
@@ -43,7 +44,7 @@ class PayeeService implements PayeeServiceInterface
         return $payee;
     }
 
-    public function createPayeeForAccount(Id $userId, Id $accountId, string $name): Payee
+    public function createPayeeForAccount(Id $userId, Id $accountId, PayeeName $name): Payee
     {
         $account = $this->accountRepository->get($accountId);
         if ($userId->isEqual($account->getUserId())) {
@@ -53,12 +54,12 @@ class PayeeService implements PayeeServiceInterface
         return $this->createPayee($account->getUserId(), $name);
     }
 
-    public function updatePayee(Id $payeeId, string $name): void
+    public function updatePayee(Id $payeeId, PayeeName $name): void
     {
         $payee = $this->payeeRepository->get($payeeId);
         $userPayees = $this->payeeRepository->findByOwnerId($payee->getUserId());
         foreach ($userPayees as $userPayee) {
-            if (strcasecmp($userPayee->getName(), $name) === 0 && !$userPayee->getId()->isEqual($payeeId)) {
+            if ($userPayee->getName()->isEqual($name) && !$userPayee->getId()->isEqual($payeeId)) {
                 throw new PayeeAlreadyExistsException();
             }
         }

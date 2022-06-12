@@ -8,8 +8,9 @@ namespace App\Domain\Factory;
 
 use App\Domain\Entity\Payee;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Entity\ValueObject\PayeeName;
 
 interface PayeeFactoryInterface
 {
-    public function create(Id $userId, string $name): Payee;
+    public function create(Id $userId, PayeeName $name): Payee;
 }

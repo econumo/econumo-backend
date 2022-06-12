@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\UI\Controller\Api\Transaction\Transaction\Validation;
 
+use App\Domain\Entity\ValueObject\TransactionType;
 use App\Infrastructure\Symfony\Form\Constraints\OperationId;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -11,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Validator\Constraints\Uuid;
@@ -30,7 +32,11 @@ class UpdateTransactionV1Form extends AbstractType
             ])
             ->add('type', ChoiceType::class, [
                 'constraints' => [new NotBlank()],
-                'choices' => ['expense', 'income', 'transfer']
+                'choices' => [
+                    TransactionType::EXPENSE_ALIAS,
+                    TransactionType::INCOME_ALIAS,
+                    TransactionType::TRANSFER_ALIAS
+                ]
             ])
             ->add('amount', NumberType::class, [
                 'constraints' => [new NotBlank()]
@@ -51,7 +57,7 @@ class UpdateTransactionV1Form extends AbstractType
                 'constraints' => [new NotBlank()]
             ])
             ->add('description', TextType::class, [
-                'constraints' => [new Type('string')]
+                'constraints' => [new Type('string'), new Length(['max' => 4096])]
             ])
             ->add('payeeId', TextType::class, [
                 'constraints' => [new Uuid()]

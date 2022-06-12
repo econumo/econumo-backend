@@ -7,7 +7,7 @@
             table="payees">
         <id name="id" type="uuid" column="id"/>
 
-        <field name="name" type="string" column="name" length="64" nullable="false"/>
+        <field name="name" type="payee_name_type" column="name" length="64" nullable="false"/>
         <field name="position" type="smallint" column="position" nullable="false">
             <options>
                 <option name="unsigned">true</option>

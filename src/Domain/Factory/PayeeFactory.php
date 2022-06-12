@@ -8,6 +8,7 @@ namespace App\Domain\Factory;
 
 use App\Domain\Entity\Payee;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Entity\ValueObject\PayeeName;
 use App\Domain\Repository\PayeeRepositoryInterface;
 use App\Domain\Repository\UserRepositoryInterface;
 use App\Domain\Service\DatetimeServiceInterface;
@@ -28,7 +29,7 @@ class PayeeFactory implements PayeeFactoryInterface
         $this->userRepository = $userRepository;
     }
 
-    public function create(Id $userId, string $name): Payee
+    public function create(Id $userId, PayeeName $name): Payee
     {
         return new Payee(
             $this->payeeRepository->getNextIdentity(),
