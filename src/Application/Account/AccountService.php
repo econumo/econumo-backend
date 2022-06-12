@@ -14,6 +14,8 @@ use App\Application\Account\Dto\DeleteAccountV1ResultDto;
 use App\Application\Account\Dto\UpdateAccountV1RequestDto;
 use App\Application\Account\Dto\UpdateAccountV1ResultDto;
 use App\Application\Exception\AccessDeniedException;
+use App\Domain\Entity\ValueObject\AccountName;
+use App\Domain\Entity\ValueObject\Icon;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Repository\AccountRepositoryInterface;
 use App\Domain\Service\AccountAccessServiceInterface;
@@ -95,7 +97,7 @@ class AccountService
         if (!$this->accountAccessService->canUpdateAccount($userId, $accountId)) {
             throw new AccessDeniedException();
         }
-        $this->accountService->update($userId, $accountId, $dto->name, $dto->icon);
+        $this->accountService->update($userId, $accountId, new AccountName($dto->name), new Icon($dto->icon));
         $updatedAt = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dto->updatedAt);
         $transaction = $this->accountService->updateBalance($accountId, $dto->balance, $updatedAt, $this->translator->trans('account.correction.message'));
         $account = $this->accountRepository->get($accountId);

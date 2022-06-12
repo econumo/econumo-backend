@@ -6,7 +6,9 @@ namespace App\Domain\Service;
 
 use App\Domain\Entity\Account;
 use App\Domain\Entity\Transaction;
+use App\Domain\Entity\ValueObject\AccountName;
 use App\Domain\Entity\ValueObject\AccountType;
+use App\Domain\Entity\ValueObject\Icon;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\AccessDeniedException;
 use App\Domain\Factory\AccountFactoryInterface;
@@ -64,11 +66,11 @@ class AccountService implements AccountServiceInterface
 
             $account = $this->accountFactory->create(
                 $dto->userId,
-                $dto->name,
+                new AccountName($dto->name),
                 new AccountType(AccountType::CREDIT_CARD),
                 $dto->currencyId,
                 $dto->balance,
-                $dto->icon
+                new Icon($dto->icon)
             );
             $this->accountRepository->save($account);
 
@@ -98,7 +100,7 @@ class AccountService implements AccountServiceInterface
         $this->accountRepository->save($account);
     }
 
-    public function update(Id $userId, Id $accountId, string $name, string $icon = null): void
+    public function update(Id $userId, Id $accountId, AccountName $name, Icon $icon = null): void
     {
         $account = $this->accountRepository->get($accountId);
         $account->updateName($name);

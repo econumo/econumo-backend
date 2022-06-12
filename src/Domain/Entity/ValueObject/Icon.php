@@ -7,16 +7,13 @@ namespace App\Domain\Entity\ValueObject;
 use DomainException;
 use JsonSerializable;
 
-class Icon implements JsonSerializable
+class Icon implements ValueObjectInterface, JsonSerializable
 {
     private string $value;
 
     public function __construct(string $value)
     {
-        if (empty($value)) {
-            throw new DomainException('Icon value must not be empty');
-        }
-
+        self::validate($value);
         $this->value = $value;
     }
 
@@ -38,8 +35,15 @@ class Icon implements JsonSerializable
         return $this->value;
     }
 
-    public function isEqual(self $valueObject): bool
+    public function isEqual(ValueObjectInterface $valueObject): bool
     {
         return $this->value === $valueObject->getValue();
+    }
+
+    public static function validate($value): void
+    {
+        if (empty($value)) {
+            throw new DomainException('Icon value must not be empty');
+        }
     }
 }

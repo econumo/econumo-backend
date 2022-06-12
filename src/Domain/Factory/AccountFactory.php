@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Domain\Factory;
 
 use App\Domain\Entity\Account;
+use App\Domain\Entity\ValueObject\AccountName;
 use App\Domain\Entity\ValueObject\AccountType;
+use App\Domain\Entity\ValueObject\Icon;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Repository\AccountRepositoryInterface;
 use App\Domain\Repository\CurrencyRepositoryInterface;
@@ -33,11 +35,11 @@ class AccountFactory implements AccountFactoryInterface
 
     public function create(
         Id $userId,
-        string $name,
+        AccountName $name,
         AccountType $accountType,
         Id $currencyId,
         float $balance,
-        string $icon
+        Icon $icon
     ): Account {
         return new Account(
             $this->accountRepository->getNextIdentity(),

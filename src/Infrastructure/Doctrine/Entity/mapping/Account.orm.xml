@@ -6,10 +6,10 @@
     <entity repository-class="App\Infrastructure\Doctrine\Repository\AccountRepository" name="App\Domain\Entity\Account"
             table="accounts">
         <id name="id" type="uuid" column="id"/>
-        <field name="name" type="string" column="name" length="64" nullable="false"/>
+        <field name="name" type="account_name_type" column="name" length="64" nullable="false"/>
         <field name="balance" type="decimal" column="balance" precision="19" scale="2" nullable="false"/>
         <field name="type" type="account_type" column="type" nullable="false"/>
-        <field name="icon" type="string" column="icon" length="64" nullable="false"/>
+        <field name="icon" type="icon_type" column="icon" length="64" nullable="false"/>
         <field name="isDeleted" type="boolean" column="is_deleted" nullable="false">
             <options>
                 <option name="default">0</option>

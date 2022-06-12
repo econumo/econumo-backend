@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Domain\Entity;
 
+use App\Domain\Entity\ValueObject\AccountName;
 use App\Domain\Entity\ValueObject\AccountType;
 use App\Domain\Entity\ValueObject\CurrencyCode;
+use App\Domain\Entity\ValueObject\Icon;
 use App\Domain\Entity\ValueObject\Id;
 use DateTime;
 use DateTimeImmutable;
@@ -14,11 +16,11 @@ use DateTimeInterface;
 class Account
 {
     private Id $id;
-    private string $name;
+    private AccountName $name;
     private Currency $currency;
     private string $balance;
     private AccountType $type;
-    private string $icon;
+    private Icon $icon;
     private User $user;
     private bool $isDeleted;
     private DateTimeImmutable $createdAt;
@@ -27,11 +29,11 @@ class Account
     public function __construct(
         Id $id,
         User $user,
-        string $name,
+        AccountName $name,
         Currency $currency,
         float $balance,
         AccountType $type,
-        string $icon,
+        Icon $icon,
         DateTimeInterface $createdAt
     ) {
         $this->id = $id;
@@ -56,7 +58,7 @@ class Account
         return $this->user->getId();
     }
 
-    public function getName(): string
+    public function getName(): AccountName
     {
         return $this->name;
     }
@@ -121,22 +123,22 @@ class Account
         return $this->type;
     }
 
-    public function getIcon(): string
+    public function getIcon(): Icon
     {
         return $this->icon;
     }
 
-    public function updateName(string $name): void
+    public function updateName(AccountName $name): void
     {
-        if ($this->name !== $name) {
+        if (!$this->name->isEqual($name)) {
             $this->name = $name;
             $this->updated();
         }
     }
 
-    public function updateIcon(string $icon): void
+    public function updateIcon(Icon $icon): void
     {
-        if ($this->icon !== $icon) {
+        if (!$this->icon->isEqual($icon)) {
             $this->icon = $icon;
             $this->updated();
         }
@@ -152,7 +154,6 @@ class Account
         if (!$this->isDeleted) {
             $this->isDeleted = true;
             $this->updated();
-            $this->name = sprintf('%s (%s)', $this->name, $this->updatedAt->format('Y-m-d'));
         }
     }
 

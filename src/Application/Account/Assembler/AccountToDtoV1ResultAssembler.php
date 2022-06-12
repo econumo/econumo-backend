@@ -51,12 +51,12 @@ class AccountToDtoV1ResultAssembler
                 break;
             }
         }
-        $item->name = $account->getName();
+        $item->name = $account->getName()->getValue();
         $item->currency = $this->currencyIdToDtoV1ResultAssembler->assemble($account->getCurrencyId());
         $item->balance = $account->getBalance();
         $item->balanceUserCurrency = $this->currencyConvertor->convertForUser($userId, $account->getCurrencyCode(), $account->getBalance());
         $item->type = $account->getType()->getValue();
-        $item->icon = $account->getIcon();
+        $item->icon = $account->getIcon()->getValue();
         $item->sharedAccess = $this->accountIdToSharedAccessResultAssembler->assemble($account->getId());
         $options = $this->accountOptionsRepository->get($account->getId(), $userId);
         $item->position = $options->getPosition();
