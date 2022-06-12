@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Factory;
 
 use App\Domain\Entity\Category;
+use App\Domain\Entity\ValueObject\CategoryName;
 use App\Domain\Entity\ValueObject\CategoryType;
 use App\Domain\Entity\ValueObject\Icon;
 use App\Domain\Entity\ValueObject\Id;
@@ -28,7 +29,7 @@ class CategoryFactory implements CategoryFactoryInterface
         $this->categoryRepository = $categoryRepository;
     }
 
-    public function create(Id $userId, string $name, CategoryType $type, Icon $icon): Category
+    public function create(Id $userId, CategoryName $name, CategoryType $type, Icon $icon): Category
     {
         return new Category(
             $this->categoryRepository->getNextIdentity(),

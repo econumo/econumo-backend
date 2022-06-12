@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Service;
 
 use App\Domain\Entity\Category;
+use App\Domain\Entity\ValueObject\CategoryName;
 use App\Domain\Entity\ValueObject\CategoryType;
 use App\Domain\Entity\ValueObject\Icon;
 use App\Domain\Entity\ValueObject\Id;
@@ -38,11 +39,11 @@ class CategoryService implements CategoryServiceInterface
         $this->transactionRepository = $transactionRepository;
     }
 
-    public function createCategory(Id $userId, string $name, CategoryType $type, Icon $icon): Category
+    public function createCategory(Id $userId, CategoryName $name, CategoryType $type, Icon $icon): Category
     {
         $categories = $this->categoryRepository->findByOwnerId($userId);
         foreach ($categories as $category) {
-            if (strcasecmp($category->getName(), $name) === 0) {
+            if ($category->getName()->isEqual($name)) {
                 throw new CategoryAlreadyExistsException();
             }
         }
@@ -57,7 +58,7 @@ class CategoryService implements CategoryServiceInterface
     public function createCategoryForAccount(
         Id $userId,
         Id $accountId,
-        string $name,
+        CategoryName $name,
         CategoryType $type,
         Icon $icon
     ): Category {
@@ -117,12 +118,12 @@ class CategoryService implements CategoryServiceInterface
         $this->categoryRepository->save(...$changed);
     }
 
-    public function update(Id $categoryId, string $name, Icon $icon): void
+    public function update(Id $categoryId, CategoryName $name, Icon $icon): void
     {
         $category = $this->categoryRepository->get($categoryId);
         $userCategories = $this->categoryRepository->findByOwnerId($category->getUserId());
         foreach ($userCategories as $userCategory) {
-            if (strcasecmp($userCategory->getName(), $name) === 0 && !$userCategory->getId()->isEqual($categoryId)) {
+            if ($userCategory->getName()->isEqual($name) && !$userCategory->getId()->isEqual($categoryId)) {
                 throw new CategoryAlreadyExistsException();
             }
         }

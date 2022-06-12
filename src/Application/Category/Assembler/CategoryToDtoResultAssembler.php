@@ -14,7 +14,7 @@ class CategoryToDtoResultAssembler
         $item = new CategoryResultDto();
         $item->id = $category->getId()->getValue();
         $item->ownerUserId = $category->getUserId()->getValue();
-        $item->name = $category->getName();
+        $item->name = $category->getName()->getValue();
         $item->position = $category->getPosition();
         $item->type = $category->getType()->getAlias();
         $item->icon = $category->getIcon()->getValue();

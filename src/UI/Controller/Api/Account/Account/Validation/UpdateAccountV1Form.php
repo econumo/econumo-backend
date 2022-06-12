@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\DateTime;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Uuid;
 
@@ -37,7 +38,11 @@ class UpdateAccountV1Form extends AbstractType
                 'constraints' => [new NotBlank(), new Uuid()],
             ])
             ->add('name', TextType::class, [
-                'constraints' => [new NotBlank(), $this->valueObjectValidationFactory->create(AccountName::class)],
+                'constraints' => [
+                    new NotBlank(),
+                    new Length(['max' => AccountName::MAX_LENGTH, 'min' => AccountName::MIN_LENGTH]),
+                    $this->valueObjectValidationFactory->create(AccountName::class)
+                ]
             ])
             ->add('balance', NumberType::class, [
                 'constraints' => [new NotBlank()],

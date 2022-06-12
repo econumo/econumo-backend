@@ -21,6 +21,7 @@ use App\Application\Category\Dto\UpdateCategoryV1RequestDto;
 use App\Application\Category\Dto\UpdateCategoryV1ResultDto;
 use App\Application\Exception\AccessDeniedException;
 use App\Application\Exception\ValidationException;
+use App\Domain\Entity\ValueObject\CategoryName;
 use App\Domain\Entity\ValueObject\CategoryType;
 use App\Domain\Entity\ValueObject\Icon;
 use App\Domain\Entity\ValueObject\Id;
@@ -74,14 +75,14 @@ class CategoryService
             $category = $this->categoryService->createCategoryForAccount(
                 $userId,
                 $accountId,
-                $dto->name,
+                new CategoryName($dto->name),
                 CategoryType::createFromAlias($dto->type),
                 $icon
             );
         } else {
             $category = $this->categoryService->createCategory(
                 $userId,
-                $dto->name,
+                new CategoryName($dto->name),
                 CategoryType::createFromAlias($dto->type),
                 $icon
             );
@@ -120,7 +121,7 @@ class CategoryService
             throw new AccessDeniedException();
         }
 
-        $this->categoryService->update($categoryId, $dto->name, new Icon($dto->icon));
+        $this->categoryService->update($categoryId, new CategoryName($dto->name), new Icon($dto->icon));
         return $this->updateCategoryV1ResultAssembler->assemble($dto);
     }
 

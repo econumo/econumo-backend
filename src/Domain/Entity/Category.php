@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Entity;
 
+use App\Domain\Entity\ValueObject\CategoryName;
 use App\Domain\Entity\ValueObject\CategoryType;
 use App\Domain\Entity\ValueObject\Icon;
 use App\Domain\Entity\ValueObject\Id;
@@ -14,7 +15,7 @@ use DateTimeInterface;
 class Category
 {
     private Id $id;
-    private string $name;
+    private CategoryName $name;
     private int $position;
     private CategoryType $type;
     private User $user;
@@ -26,7 +27,7 @@ class Category
     public function __construct(
         Id $id,
         User $user,
-        string $name,
+        CategoryName $name,
         CategoryType $type,
         Icon $icon,
         DateTimeInterface $createdAt
@@ -47,7 +48,7 @@ class Category
         return $this->id;
     }
 
-    public function getName(): string
+    public function getName(): CategoryName
     {
         return $this->name;
     }
@@ -77,9 +78,9 @@ class Category
         return $this->isArchived;
     }
 
-    public function updateName(string $name): void
+    public function updateName(CategoryName $name): void
     {
-        if ($this->name !== $name) {
+        if (!$this->name->isEqual($name)) {
             $this->name = $name;
             $this->updated();
         }
