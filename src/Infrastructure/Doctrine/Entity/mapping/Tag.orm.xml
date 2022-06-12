@@ -7,7 +7,7 @@
             table="tags">
         <id name="id" type="uuid" column="id"/>
 
-        <field name="name" type="string" column="name" length="64" nullable="false"/>
+        <field name="name" type="tag_name_type" column="name" length="64" nullable="false"/>
         <field name="position" type="smallint" column="position" nullable="false">
             <options>
                 <option name="unsigned">1</option>

@@ -13,7 +13,7 @@ class TagToDtoResultAssembler
     {
         $item = new TagResultDto();
         $item->id = $tag->getId()->getValue();
-        $item->name = $tag->getName();
+        $item->name = $tag->getName()->getValue();
         $item->position = $tag->getPosition();
         $item->ownerUserId = $tag->getUserId()->getValue();
         $item->isArchived = $tag->isArchived() ? 1 : 0;

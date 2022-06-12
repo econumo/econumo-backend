@@ -8,6 +8,7 @@ namespace App\Domain\Factory;
 
 use App\Domain\Entity\Tag;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Entity\ValueObject\TagName;
 use App\Domain\Repository\TagRepositoryInterface;
 use App\Domain\Repository\UserRepositoryInterface;
 use App\Domain\Service\DatetimeServiceInterface;
@@ -28,7 +29,7 @@ class TagFactory implements TagFactoryInterface
         $this->userRepository = $userRepository;
     }
 
-    public function create(Id $userId, string $name): Tag
+    public function create(Id $userId, TagName $name): Tag
     {
         return new Tag(
             $this->tagRepository->getNextIdentity(),

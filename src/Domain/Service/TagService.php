@@ -8,6 +8,7 @@ namespace App\Domain\Service;
 
 use App\Domain\Entity\Tag;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Entity\ValueObject\TagName;
 use App\Domain\Exception\TagAlreadyExistsException;
 use App\Domain\Factory\TagFactoryInterface;
 use App\Domain\Repository\AccountRepositoryInterface;
@@ -30,11 +31,11 @@ class TagService implements TagServiceInterface
         $this->accountRepository = $accountRepository;
     }
 
-    public function createTag(Id $userId, string $name): Tag
+    public function createTag(Id $userId, TagName $name): Tag
     {
         $tags = $this->tagRepository->findByOwnerId($userId);
         foreach ($tags as $tag) {
-            if (strcasecmp($tag->getName(), $name) === 0) {
+            if ($tag->getName()->isEqual($name)) {
                 throw new TagAlreadyExistsException();
             }
         }
@@ -45,7 +46,7 @@ class TagService implements TagServiceInterface
         return $tag;
     }
 
-    public function createTagForAccount(Id $userId, Id $accountId, string $name): Tag
+    public function createTagForAccount(Id $userId, Id $accountId, TagName $name): Tag
     {
         $account = $this->accountRepository->get($accountId);
         if ($userId->isEqual($account->getUserId())) {
@@ -55,12 +56,12 @@ class TagService implements TagServiceInterface
         return $this->createTag($account->getUserId(), $name);
     }
 
-    public function updateTag(Id $tagId, string $name): void
+    public function updateTag(Id $tagId, TagName $name): void
     {
         $tag = $this->tagRepository->get($tagId);
         $userTags = $this->tagRepository->findByOwnerId($tag->getUserId());
         foreach ($userTags as $userTag) {
-            if (strcasecmp($userTag->getName(), $name) === 0 && !$userTag->getId()->isEqual($tagId)) {
+            if ($userTag->getName()->isEqual($name) && !$userTag->getId()->isEqual($tagId)) {
                 throw new TagAlreadyExistsException();
             }
         }

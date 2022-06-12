@@ -22,6 +22,7 @@ use App\Application\Tag\Assembler\UnarchiveTagV1ResultAssembler;
 use App\Application\Tag\Dto\UpdateTagV1RequestDto;
 use App\Application\Tag\Dto\UpdateTagV1ResultDto;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Entity\ValueObject\TagName;
 use App\Domain\Exception\TagAlreadyExistsException;
 use App\Domain\Repository\TagRepositoryInterface;
 use App\Domain\Service\AccountAccessServiceInterface;
@@ -70,9 +71,9 @@ class TagService
             if ($dto->accountId !== null) {
                 $accountId = new Id($dto->accountId);
                 $this->accountAccessService->checkAddTag($userId, $accountId);
-                $tag = $this->tagService->createTagForAccount($userId, $accountId, $dto->name);
+                $tag = $this->tagService->createTagForAccount($userId, $accountId, new TagName($dto->name));
             } else {
-                $tag = $this->tagService->createTag($userId, $dto->name);
+                $tag = $this->tagService->createTag($userId, new TagName($dto->name));
             }
         } catch (TagAlreadyExistsException $exception) {
             throw new ValidationException($this->translationService->trans('tag.tag.already_exists', ['name' => $dto->name]));
@@ -91,7 +92,7 @@ class TagService
             throw new AccessDeniedException();
         }
         try {
-            $this->tagService->updateTag($tagId, $dto->name);
+            $this->tagService->updateTag($tagId, new TagName($dto->name));
         } catch (TagAlreadyExistsException $exception) {
             throw new ValidationException($this->translationService->trans('tag.tag.already_exists', ['name' => $dto->name]));
         }

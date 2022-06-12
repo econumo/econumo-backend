@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Entity;
 
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Entity\ValueObject\TagName;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -13,7 +14,7 @@ use DateTimeInterface;
 class Tag
 {
     private Id $id;
-    private string $name;
+    private TagName $name;
     private int $position;
     private User $user;
     private bool $isArchived;
@@ -23,7 +24,7 @@ class Tag
     public function __construct(
         Id $id,
         User $user,
-        string $name,
+        TagName $name,
         DateTimeInterface $createdAt
     ) {
         $this->id = $id;
@@ -40,7 +41,7 @@ class Tag
         return $this->id;
     }
 
-    public function getName(): string
+    public function getName(): TagName
     {
         return $this->name;
     }
@@ -60,9 +61,9 @@ class Tag
         return $this->isArchived;
     }
 
-    public function updateName(string $name): void
+    public function updateName(TagName $name): void
     {
-        if ($this->name !== $name) {
+        if (!$this->name->isEqual($name)) {
             $this->name = $name;
             $this->updated();
         }
