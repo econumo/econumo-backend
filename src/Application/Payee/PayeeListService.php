@@ -14,6 +14,7 @@ use App\Application\Payee\Assembler\OrderPayeeListV1ResultAssembler;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Repository\PayeeRepositoryInterface;
 use App\Domain\Service\PayeeServiceInterface;
+use App\Domain\Service\Translation\TranslationServiceInterface;
 
 class PayeeListService
 {
@@ -21,17 +22,20 @@ class PayeeListService
     private PayeeRepositoryInterface $payeeRepository;
     private OrderPayeeListV1ResultAssembler $orderPayeeListV1ResultAssembler;
     private PayeeServiceInterface $payeeService;
+    private TranslationServiceInterface $translationService;
 
     public function __construct(
         GetPayeeListV1ResultAssembler $getPayeeListV1ResultAssembler,
         PayeeRepositoryInterface $payeeRepository,
         OrderPayeeListV1ResultAssembler $orderPayeeListV1ResultAssembler,
-        PayeeServiceInterface $payeeService
+        PayeeServiceInterface $payeeService,
+        TranslationServiceInterface $translationService
     ) {
         $this->getPayeeListV1ResultAssembler = $getPayeeListV1ResultAssembler;
         $this->payeeRepository = $payeeRepository;
         $this->orderPayeeListV1ResultAssembler = $orderPayeeListV1ResultAssembler;
         $this->payeeService = $payeeService;
+        $this->translationService = $translationService;
     }
 
     public function getPayeeList(
@@ -47,7 +51,7 @@ class PayeeListService
         Id $userId
     ): OrderPayeeListV1ResultDto {
         if (!count($dto->changes)) {
-            throw new ValidationException('Payee list is empty');
+            throw new ValidationException($this->translationService->trans('payee.payee_list.empty_list'));
         }
         $this->payeeService->orderPayees($userId, ...$dto->changes);
         return $this->orderPayeeListV1ResultAssembler->assemble($dto, $userId);

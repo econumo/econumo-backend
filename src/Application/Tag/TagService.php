@@ -26,6 +26,7 @@ use App\Domain\Exception\TagAlreadyExistsException;
 use App\Domain\Repository\TagRepositoryInterface;
 use App\Domain\Service\AccountAccessServiceInterface;
 use App\Domain\Service\TagServiceInterface;
+use App\Domain\Service\Translation\TranslationServiceInterface;
 
 class TagService
 {
@@ -37,6 +38,7 @@ class TagService
     private DeleteTagV1ResultAssembler $deleteTagV1ResultAssembler;
     private ArchiveTagV1ResultAssembler $archiveTagV1ResultAssembler;
     private UnarchiveTagV1ResultAssembler $unarchiveTagV1ResultAssembler;
+    private TranslationServiceInterface $translationService;
 
     public function __construct(
         CreateTagV1ResultAssembler $createTagV1ResultAssembler,
@@ -46,7 +48,8 @@ class TagService
         TagRepositoryInterface $tagRepository,
         DeleteTagV1ResultAssembler $deleteTagV1ResultAssembler,
         ArchiveTagV1ResultAssembler $archiveTagV1ResultAssembler,
-        UnarchiveTagV1ResultAssembler $unarchiveTagV1ResultAssembler
+        UnarchiveTagV1ResultAssembler $unarchiveTagV1ResultAssembler,
+        TranslationServiceInterface $translationService
     ) {
         $this->createTagV1ResultAssembler = $createTagV1ResultAssembler;
         $this->tagService = $tagService;
@@ -56,6 +59,7 @@ class TagService
         $this->deleteTagV1ResultAssembler = $deleteTagV1ResultAssembler;
         $this->archiveTagV1ResultAssembler = $archiveTagV1ResultAssembler;
         $this->unarchiveTagV1ResultAssembler = $unarchiveTagV1ResultAssembler;
+        $this->translationService = $translationService;
     }
 
     public function createTag(
@@ -71,7 +75,7 @@ class TagService
                 $tag = $this->tagService->createTag($userId, $dto->name);
             }
         } catch (TagAlreadyExistsException $exception) {
-            throw new ValidationException('Tag with name ' . $dto->name . ' already exists');
+            throw new ValidationException($this->translationService->trans('tag.tag.already_exists', ['name' => $dto->name]));
         }
 
         return $this->createTagV1ResultAssembler->assemble($dto, $tag);
@@ -89,7 +93,7 @@ class TagService
         try {
             $this->tagService->updateTag($tagId, $dto->name);
         } catch (TagAlreadyExistsException $exception) {
-            throw new ValidationException('Tag with name ' . $dto->name . ' already exists');
+            throw new ValidationException($this->translationService->trans('tag.tag.already_exists', ['name' => $dto->name]));
         }
 
         return $this->updateTagV1ResultAssembler->assemble($dto);

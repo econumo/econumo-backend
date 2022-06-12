@@ -3,3 +3,34 @@ account:
     message: Корректировка баланса
   folder:
     all_accounts: Все счета
+  folder_list:
+    no_folders: Нет папок для счетов
+  account_list:
+    empty_list: Счетов не найдено
+  account:
+    not_available: Счёт недоступен
+category:
+  category_list:
+    no_categories: Категорий не найдено
+  category:
+    not_found: Категория не найдена
+    action:
+      unknown_action: Неизвестное действие
+payee:
+  payee_list:
+    empty_list: Список контрагентов пуст
+  payee:
+    already_exists: Контрагент уже существует
+tag:
+  tag_list:
+    empty_list: Список тегов пуст
+  tag:
+    already_exists: Тег уже существует
+transaction:
+  transaction:
+    not_available: Транзакция недоступна
+user:
+  password:
+    not_correct: Неверный пароль
+  user:
+    already_exists: Уже зарегистрирован

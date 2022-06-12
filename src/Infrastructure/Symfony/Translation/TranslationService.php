@@ -1,0 +1,26 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Infrastructure\Symfony\Translation;
+
+use App\Domain\Service\Translation\TranslationServiceInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
+
+class TranslationService implements TranslationServiceInterface
+{
+    private TranslatorInterface $translator;
+
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function trans(string $id, array $parameters = [], string $domain = null, string $locale = null): string
+    {
+        return $this->translator->trans($id, $parameters, $domain, $locale);
+    }
+}

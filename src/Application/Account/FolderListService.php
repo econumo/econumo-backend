@@ -14,6 +14,7 @@ use App\Application\Exception\ValidationException;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Repository\FolderRepositoryInterface;
 use App\Domain\Service\FolderServiceInterface;
+use App\Domain\Service\Translation\TranslationServiceInterface;
 
 class FolderListService
 {
@@ -21,17 +22,20 @@ class FolderListService
     private FolderRepositoryInterface $folderRepository;
     private OrderFolderListV1ResultAssembler $orderFolderListV1ResultAssembler;
     private FolderServiceInterface $folderService;
+    private TranslationServiceInterface $translationService;
 
     public function __construct(
         GetFolderListV1ResultAssembler $getFolderListV1ResultAssembler,
         FolderRepositoryInterface $folderRepository,
         OrderFolderListV1ResultAssembler $orderFolderListV1ResultAssembler,
-        FolderServiceInterface $folderService
+        FolderServiceInterface $folderService,
+        TranslationServiceInterface $translationService
     ) {
         $this->getFolderListV1ResultAssembler = $getFolderListV1ResultAssembler;
         $this->folderRepository = $folderRepository;
         $this->orderFolderListV1ResultAssembler = $orderFolderListV1ResultAssembler;
         $this->folderService = $folderService;
+        $this->translationService = $translationService;
     }
 
     public function getFolderList(
@@ -47,7 +51,7 @@ class FolderListService
         Id $userId
     ): OrderFolderListV1ResultDto {
         if (!count($dto->changes)) {
-            throw new ValidationException('Folder list is empty');
+            throw new ValidationException($this->translationService->trans('account.folder_list.empty_list'));
         }
         $this->folderService->orderFolders($userId, ...$dto->changes);
         return $this->orderFolderListV1ResultAssembler->assemble($dto, $userId);

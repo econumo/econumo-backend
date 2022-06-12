@@ -20,6 +20,7 @@ use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Repository\TransactionRepositoryInterface;
 use App\Domain\Service\AccountAccessServiceInterface;
 use App\Domain\Service\TransactionServiceInterface;
+use App\Domain\Service\Translation\TranslationServiceInterface;
 
 class TransactionService
 {
@@ -31,6 +32,7 @@ class TransactionService
     private AccountAccessServiceInterface $accountAccessService;
     private UpdateTransactionV1ResultAssembler $updateTransactionV1ResultAssembler;
     private UpdateTransactionRequestToDomainDtoAssembler $updateTransactionRequestToDomainDtoAssembler;
+    private TranslationServiceInterface $translationService;
 
     public function __construct(
         CreateTransactionV1ResultAssembler $createTransactionV1ResultAssembler,
@@ -40,7 +42,8 @@ class TransactionService
         TransactionRepositoryInterface $transactionRepository,
         AccountAccessServiceInterface $accountAccessService,
         UpdateTransactionV1ResultAssembler $updateTransactionV1ResultAssembler,
-        UpdateTransactionRequestToDomainDtoAssembler $updateTransactionRequestToDomainDtoAssembler
+        UpdateTransactionRequestToDomainDtoAssembler $updateTransactionRequestToDomainDtoAssembler,
+        TranslationServiceInterface $translationService
     ) {
         $this->createTransactionV1ResultAssembler = $createTransactionV1ResultAssembler;
         $this->requestToDomainDtoAssembler = $requestToDomainDtoAssembler;
@@ -50,6 +53,7 @@ class TransactionService
         $this->accountAccessService = $accountAccessService;
         $this->updateTransactionV1ResultAssembler = $updateTransactionV1ResultAssembler;
         $this->updateTransactionRequestToDomainDtoAssembler = $updateTransactionRequestToDomainDtoAssembler;
+        $this->translationService = $translationService;
     }
 
     public function createTransaction(
@@ -58,7 +62,7 @@ class TransactionService
     ): CreateTransactionV1ResultDto {
         $accountId = new Id($dto->accountId);
         if (!$this->accountAccessService->canAddTransaction($userId, $accountId)) {
-            throw new ValidationException(sprintf('Account %s not available', $dto->accountId));
+            throw new ValidationException($this->translationService->trans('account.account.not_available', ['id' => $dto->accountId]));
         }
 
         $transactionDto = $this->requestToDomainDtoAssembler->assemble($dto, $userId);
@@ -73,7 +77,7 @@ class TransactionService
     ): DeleteTransactionV1ResultDto {
         $transaction = $this->transactionRepository->get(new Id($dto->id));
         if (!$this->accountAccessService->canDeleteTransaction($userId, $transaction->getAccountId())) {
-            throw new ValidationException(sprintf('Transaction %s not available', $dto->id));
+            throw new ValidationException($this->translationService->trans('transaction.transaction.not_available', ['id' => $dto->id]));
         }
 
         $this->transactionService->deleteTransaction($transaction);
@@ -86,7 +90,7 @@ class TransactionService
     ): UpdateTransactionV1ResultDto {
         $accountId = new Id($dto->accountId);
         if (!$this->accountAccessService->canUpdateTransaction($userId, $accountId)) {
-            throw new ValidationException(sprintf('Account %s not available', $dto->accountId));
+            throw new ValidationException($this->translationService->trans('account.account.not_available', ['id' => $dto->accountId]));
         }
 
         $transactionDto = $this->updateTransactionRequestToDomainDtoAssembler->assemble($dto, $userId);

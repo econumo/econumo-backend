@@ -16,6 +16,7 @@ use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Exception\UserPasswordNotValidException;
 use App\Domain\Service\PasswordUserRequestServiceInterface;
+use App\Domain\Service\Translation\TranslationServiceInterface;
 use App\Domain\Service\User\UserPasswordServiceInterface;
 
 class PasswordService
@@ -24,17 +25,20 @@ class PasswordService
     private PasswordUserRequestServiceInterface $passwordUserRequestService;
     private UpdatePasswordV1ResultAssembler $updatePasswordV1ResultAssembler;
     private UserPasswordServiceInterface $userPasswordService;
+    private TranslationServiceInterface $translationService;
 
     public function __construct(
         RemindPasswordV1ResultAssembler $remindPasswordV1ResultAssembler,
         PasswordUserRequestServiceInterface $passwordUserRequestService,
         UpdatePasswordV1ResultAssembler $updatePasswordV1ResultAssembler,
-        UserPasswordServiceInterface $userPasswordService
+        UserPasswordServiceInterface $userPasswordService,
+        TranslationServiceInterface $translationService
     ) {
         $this->remindPasswordV1ResultAssembler = $remindPasswordV1ResultAssembler;
         $this->passwordUserRequestService = $passwordUserRequestService;
         $this->updatePasswordV1ResultAssembler = $updatePasswordV1ResultAssembler;
         $this->userPasswordService = $userPasswordService;
+        $this->translationService = $translationService;
     }
 
     public function remindPassword(
@@ -55,7 +59,7 @@ class PasswordService
         try {
             $this->userPasswordService->changePassword($userId, $dto->oldPassword, $dto->newPassword);
         } catch (UserPasswordNotValidException $exception) {
-            throw new ValidationException('Password is not valid');
+            throw new ValidationException($this->translationService->trans('user.password.not_correct'));
         }
 
         return $this->updatePasswordV1ResultAssembler->assemble($dto);

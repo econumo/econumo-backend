@@ -27,6 +27,7 @@ use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Repository\CategoryRepositoryInterface;
 use App\Domain\Service\AccountAccessServiceInterface;
 use App\Domain\Service\CategoryServiceInterface;
+use App\Domain\Service\Translation\TranslationServiceInterface;
 
 class CategoryService
 {
@@ -38,6 +39,7 @@ class CategoryService
     private UpdateCategoryV1ResultAssembler $updateCategoryV1ResultAssembler;
     private ArchiveCategoryV1ResultAssembler $archiveCategoryV1ResultAssembler;
     private UnarchiveCategoryV1ResultAssembler $unarchiveCategoryV1ResultAssembler;
+    private TranslationServiceInterface $translationService;
 
     public function __construct(
         CreateCategoryV1ResultAssembler $createCategoryV1ResultAssembler,
@@ -47,7 +49,8 @@ class CategoryService
         CategoryRepositoryInterface $categoryRepository,
         UpdateCategoryV1ResultAssembler $updateCategoryV1ResultAssembler,
         ArchiveCategoryV1ResultAssembler $archiveCategoryV1ResultAssembler,
-        UnarchiveCategoryV1ResultAssembler $unarchiveCategoryV1ResultAssembler
+        UnarchiveCategoryV1ResultAssembler $unarchiveCategoryV1ResultAssembler,
+        TranslationServiceInterface $translationService
     ) {
         $this->createCategoryV1ResultAssembler = $createCategoryV1ResultAssembler;
         $this->categoryService = $categoryService;
@@ -57,6 +60,7 @@ class CategoryService
         $this->updateCategoryV1ResultAssembler = $updateCategoryV1ResultAssembler;
         $this->archiveCategoryV1ResultAssembler = $archiveCategoryV1ResultAssembler;
         $this->unarchiveCategoryV1ResultAssembler = $unarchiveCategoryV1ResultAssembler;
+        $this->translationService = $translationService;
     }
 
     public function createCategory(
@@ -93,7 +97,7 @@ class CategoryService
         $categoryId = new Id($dto->id);
         $category = $this->categoryRepository->get($categoryId);
         if (!$category->getUserId()->isEqual($userId)) {
-            throw new ValidationException('Category not found');
+            throw new ValidationException($this->translationService->trans('category.category.not_found'));
         }
 
         if ($dto->mode === $dto::MODE_DELETE) {
@@ -101,7 +105,7 @@ class CategoryService
         } elseif ($dto->mode === $dto::MODE_REPLACE) {
             $this->categoryService->replaceCategory($categoryId, new Id($dto->replaceId));
         } else {
-            throw new ValidationException('Unknown action');
+            throw new ValidationException($this->translationService->trans('category.category.action.unknown_action'));
         }
         return $this->deleteCategoryV1ResultAssembler->assemble($dto);
     }

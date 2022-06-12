@@ -14,6 +14,7 @@ use App\Application\Tag\Assembler\OrderTagListV1ResultAssembler;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Repository\TagRepositoryInterface;
 use App\Domain\Service\TagServiceInterface;
+use App\Domain\Service\Translation\TranslationServiceInterface;
 
 class TagListService
 {
@@ -21,17 +22,20 @@ class TagListService
     private TagRepositoryInterface $tagRepository;
     private OrderTagListV1ResultAssembler $orderTagListV1ResultAssembler;
     private TagServiceInterface $tagService;
+    private TranslationServiceInterface $translationService;
 
     public function __construct(
         GetTagListV1ResultAssembler $getTagListV1ResultAssembler,
         TagRepositoryInterface $tagRepository,
         OrderTagListV1ResultAssembler $orderTagListV1ResultAssembler,
-        TagServiceInterface $tagService
+        TagServiceInterface $tagService,
+        TranslationServiceInterface $translationService
     ) {
         $this->getTagListV1ResultAssembler = $getTagListV1ResultAssembler;
         $this->tagRepository = $tagRepository;
         $this->orderTagListV1ResultAssembler = $orderTagListV1ResultAssembler;
         $this->tagService = $tagService;
+        $this->translationService = $translationService;
     }
 
     public function getTagList(
@@ -47,7 +51,7 @@ class TagListService
         Id $userId
     ): OrderTagListV1ResultDto {
         if (!count($dto->changes)) {
-            throw new ValidationException('Payee list is empty');
+            throw new ValidationException($this->translationService->trans('tag.tag_list.empty_list'));
         }
         $this->tagService->orderTags($userId, ...$dto->changes);
 

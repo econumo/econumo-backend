@@ -20,7 +20,7 @@ use App\Domain\Repository\ConnectionInviteRepositoryInterface;
 use App\Domain\Repository\FolderRepositoryInterface;
 use App\Domain\Repository\UserOptionRepositoryInterface;
 use App\Domain\Repository\UserRepositoryInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use App\Domain\Service\Translation\TranslationServiceInterface;
 
 class UserService implements UserServiceInterface
 {
@@ -30,7 +30,7 @@ class UserService implements UserServiceInterface
     private FolderFactoryInterface $folderFactory;
     private FolderRepositoryInterface $folderRepository;
     private AntiCorruptionServiceInterface $antiCorruptionService;
-    private TranslatorInterface $translator;
+    private TranslationServiceInterface $translator;
     private ConnectionInviteFactoryInterface $connectionInviteFactory;
     private ConnectionInviteRepositoryInterface $connectionInviteRepository;
     private UserOptionFactoryInterface $userOptionFactory;
@@ -43,7 +43,7 @@ class UserService implements UserServiceInterface
         FolderFactoryInterface $folderFactory,
         FolderRepositoryInterface $folderRepository,
         AntiCorruptionServiceInterface $antiCorruptionService,
-        TranslatorInterface $translator,
+        TranslationServiceInterface $translator,
         ConnectionInviteFactoryInterface $connectionInviteFactory,
         ConnectionInviteRepositoryInterface $connectionInviteRepository,
         UserOptionFactoryInterface $userOptionFactory,

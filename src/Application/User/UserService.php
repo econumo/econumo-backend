@@ -12,6 +12,7 @@ use App\Application\User\Dto\LogoutUserV1ResultDto;
 use App\Application\User\Assembler\LogoutUserV1ResultAssembler;
 use App\Domain\Entity\ValueObject\Email;
 use App\Domain\Exception\UserRegisteredException;
+use App\Domain\Service\Translation\TranslationServiceInterface;
 use App\Domain\Service\UserServiceInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -26,19 +27,22 @@ class UserService
     private LogoutUserV1ResultAssembler $logoutUserV1ResultAssembler;
     private JWTTokenManagerInterface $authToken;
     private UserServiceInterface $userService;
+    private TranslationServiceInterface $translationService;
 
     public function __construct(
         LoginUserV1ResultAssembler $loginUserV1ResultAssembler,
         LogoutUserV1ResultAssembler $logoutUserV1ResultAssembler,
         JWTTokenManagerInterface $authToken,
         RegisterUserV1ResultAssembler $registerUserV1ResultAssembler,
-        UserServiceInterface $userService
+        UserServiceInterface $userService,
+        TranslationServiceInterface $translationService
     ) {
         $this->loginUserV1ResultAssembler = $loginUserV1ResultAssembler;
         $this->logoutUserV1ResultAssembler = $logoutUserV1ResultAssembler;
         $this->authToken = $authToken;
         $this->registerUserV1ResultAssembler = $registerUserV1ResultAssembler;
         $this->userService = $userService;
+        $this->translationService = $translationService;
     }
 
     public function loginUser(
@@ -61,7 +65,7 @@ class UserService
             $user = $this->userService->register(new Email($dto->email), $dto->password, $dto->name);
             return $this->registerUserV1ResultAssembler->assemble($dto, $user);
         } catch (UserRegisteredException $exception) {
-            throw new ValidationException('User already registered', 400, $exception);
+            throw new ValidationException($this->translationService->trans('user.user.already_exists'), 400, $exception);
         }
     }
 }

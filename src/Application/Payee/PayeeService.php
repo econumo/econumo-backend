@@ -26,6 +26,7 @@ use App\Domain\Exception\PayeeAlreadyExistsException;
 use App\Domain\Repository\PayeeRepositoryInterface;
 use App\Domain\Service\AccountAccessServiceInterface;
 use App\Domain\Service\PayeeServiceInterface;
+use App\Domain\Service\Translation\TranslationServiceInterface;
 
 class PayeeService
 {
@@ -37,6 +38,7 @@ class PayeeService
     private DeletePayeeV1ResultAssembler $deletePayeeV1ResultAssembler;
     private ArchivePayeeV1ResultAssembler $archivePayeeV1ResultAssembler;
     private UnarchivePayeeV1ResultAssembler $unarchivePayeeV1ResultAssembler;
+    private TranslationServiceInterface $translationService;
 
     public function __construct(
         CreatePayeeV1ResultAssembler $createPayeeV1ResultAssembler,
@@ -46,7 +48,8 @@ class PayeeService
         PayeeRepositoryInterface $payeeRepository,
         DeletePayeeV1ResultAssembler $deletePayeeV1ResultAssembler,
         ArchivePayeeV1ResultAssembler $archivePayeeV1ResultAssembler,
-        UnarchivePayeeV1ResultAssembler $unarchivePayeeV1ResultAssembler
+        UnarchivePayeeV1ResultAssembler $unarchivePayeeV1ResultAssembler,
+        TranslationServiceInterface $translationService
     ) {
         $this->createPayeeV1ResultAssembler = $createPayeeV1ResultAssembler;
         $this->payeeService = $payeeService;
@@ -56,6 +59,7 @@ class PayeeService
         $this->deletePayeeV1ResultAssembler = $deletePayeeV1ResultAssembler;
         $this->archivePayeeV1ResultAssembler = $archivePayeeV1ResultAssembler;
         $this->unarchivePayeeV1ResultAssembler = $unarchivePayeeV1ResultAssembler;
+        $this->translationService = $translationService;
     }
 
     public function createPayee(
@@ -85,7 +89,7 @@ class PayeeService
         try {
             $this->payeeService->updatePayee($payeeId, $dto->name);
         } catch (PayeeAlreadyExistsException $exception) {
-            throw new ValidationException('Payee with name ' . $dto->name . ' already exists');
+            throw new ValidationException($this->translationService->trans('payee.payee.already_exists', ['name' => $dto->name]));
         }
         return $this->updatePayeeV1ResultAssembler->assemble($dto);
     }

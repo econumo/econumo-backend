@@ -14,6 +14,7 @@ use App\Application\Exception\ValidationException;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Repository\AccountRepositoryInterface;
 use App\Domain\Service\AccountServiceInterface;
+use App\Domain\Service\Translation\TranslationServiceInterface;
 
 class AccountListService
 {
@@ -21,17 +22,20 @@ class AccountListService
     private AccountRepositoryInterface $accountRepository;
     private OrderAccountListV1ResultAssembler $orderAccountListV1ResultAssembler;
     private AccountServiceInterface $accountService;
+    private TranslationServiceInterface $translationService;
 
     public function __construct(
         GetAccountListV1ResultAssembler $getAccountListV1ResultAssembler,
         AccountRepositoryInterface $accountRepository,
         OrderAccountListV1ResultAssembler $orderAccountListV1ResultAssembler,
-        AccountServiceInterface $accountService
+        AccountServiceInterface $accountService,
+        TranslationServiceInterface $translationService
     ) {
         $this->getAccountListV1ResultAssembler = $getAccountListV1ResultAssembler;
         $this->accountRepository = $accountRepository;
         $this->orderAccountListV1ResultAssembler = $orderAccountListV1ResultAssembler;
         $this->accountService = $accountService;
+        $this->translationService = $translationService;
     }
 
     public function getAccountList(
@@ -47,7 +51,7 @@ class AccountListService
         Id $userId
     ): OrderAccountListV1ResultDto {
         if (!count($dto->changes)) {
-            throw new ValidationException('Account list is empty');
+            throw new ValidationException($this->translationService->trans('account.account_list.empty_list'));
         }
         $this->accountService->orderAccounts($userId, ...$dto->changes);
         return $this->orderAccountListV1ResultAssembler->assemble($dto, $userId);
