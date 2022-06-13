@@ -20,10 +20,4 @@ interface CurrencyRateServiceInterface
      * @return array|CurrencyRate[]
      */
     public function getLatestCurrencyRates(): array;
-
-    /**
-     * @param DateTimeInterface $lastUpdate
-     * @return CurrencyRate[]
-     */
-    public function getChanged(DateTimeInterface $lastUpdate): array;
 }

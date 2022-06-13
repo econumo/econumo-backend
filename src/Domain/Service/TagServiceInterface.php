@@ -27,11 +27,4 @@ interface TagServiceInterface
     public function archiveTag(Id $tagId): void;
 
     public function unarchiveTag(Id $tagId): void;
-
-    /**
-     * @param Id $userId
-     * @param DateTimeInterface $lastUpdate
-     * @return Tag[]
-     */
-    public function getChanged(Id $userId, DateTimeInterface $lastUpdate): array;
 }

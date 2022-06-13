@@ -23,11 +23,4 @@ interface AccountServiceInterface
     public function updateBalance(Id $accountId, float $balance, \DateTimeInterface $updatedAt, ?string $comment = ''): ?Transaction;
 
     public function orderAccounts(Id $userId, AccountPositionDto ...$changes): void;
-
-    /**
-     * @param Id $userId
-     * @param DateTimeInterface $lastUpdate
-     * @return Account[]
-     */
-    public function getChanged(Id $userId, DateTimeInterface $lastUpdate): array;
 }

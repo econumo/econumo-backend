@@ -18,11 +18,4 @@ interface TransactionServiceInterface
     public function deleteTransaction(Transaction $transaction): void;
 
     public function updateBalance(Id $accountId, float $correction, \DateTimeInterface $updatedAt, string $comment = ''): Transaction;
-
-    /**
-     * @param Id $userId
-     * @param DateTimeInterface $lastUpdate
-     * @return Transaction[]
-     */
-    public function getChanged(Id $userId, DateTimeInterface $lastUpdate): array;
 }

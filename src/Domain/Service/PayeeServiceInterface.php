@@ -26,11 +26,4 @@ interface PayeeServiceInterface
     public function archivePayee(Id $payeeId): void;
 
     public function unarchivePayee(Id $payeeId): void;
-
-    /**
-     * @param Id $userId
-     * @param DateTimeInterface $lastUpdate
-     * @return Payee[]
-     */
-    public function getChanged(Id $userId, DateTimeInterface $lastUpdate): array;
 }

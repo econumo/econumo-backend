@@ -15,10 +15,4 @@ interface CurrencyServiceInterface
      * @return Currency[]
      */
     public function getAvailableCurrencies(): array;
-
-    /**
-     * @param DateTimeInterface $lastUpdate
-     * @return Currency[]
-     */
-    public function getChanged(DateTimeInterface $lastUpdate): array;
 }

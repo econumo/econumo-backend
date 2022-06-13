@@ -24,11 +24,4 @@ interface FolderServiceInterface
     public function hide(Id $folderId): void;
 
     public function show(Id $folderId): void;
-
-    /**
-     * @param Id $userId
-     * @param DateTimeInterface $lastUpdate
-     * @return Folder[]
-     */
-    public function getChanged(Id $userId, DateTimeInterface $lastUpdate): array;
 }
