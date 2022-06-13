@@ -185,4 +185,17 @@ class AccountService implements AccountServiceInterface
             throw $exception;
         }
     }
+
+    public function getChanged(Id $userId, DateTimeInterface $lastUpdate): array
+    {
+        $accounts = $this->accountRepository->getAvailableForUserId($userId);
+        $result = [];
+        foreach ($accounts as $account) {
+            if ($account->getUpdatedAt() > $lastUpdate) {
+                $result[] = $account;
+            }
+        }
+
+        return $result;
+    }
 }

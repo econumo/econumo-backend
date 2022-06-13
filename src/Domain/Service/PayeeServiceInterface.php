@@ -9,6 +9,7 @@ use App\Domain\Entity\Payee;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\PayeeName;
 use App\Domain\Service\Dto\PositionDto;
+use DateTimeInterface;
 
 interface PayeeServiceInterface
 {
@@ -25,4 +26,11 @@ interface PayeeServiceInterface
     public function archivePayee(Id $payeeId): void;
 
     public function unarchivePayee(Id $payeeId): void;
+
+    /**
+     * @param Id $userId
+     * @param DateTimeInterface $lastUpdate
+     * @return Payee[]
+     */
+    public function getChanged(Id $userId, DateTimeInterface $lastUpdate): array;
 }

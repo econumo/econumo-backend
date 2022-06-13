@@ -127,6 +127,11 @@ class Folder
         }
     }
 
+    public function getUpdatedAt(): DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
     private function updated(): void
     {
         $this->updatedAt = new DateTime();

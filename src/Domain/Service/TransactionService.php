@@ -10,6 +10,7 @@ use App\Domain\Factory\TransactionFactoryInterface;
 use App\Domain\Repository\AccountRepositoryInterface;
 use App\Domain\Repository\TransactionRepositoryInterface;
 use App\Domain\Service\Dto\TransactionDto;
+use DateTimeInterface;
 
 class TransactionService implements TransactionServiceInterface
 {
@@ -126,5 +127,10 @@ class TransactionService implements TransactionServiceInterface
         }
 
         return $transaction;
+    }
+
+    public function getChanged(Id $userId, DateTimeInterface $lastUpdate): array
+    {
+        return $this->transactionRepository->findChanges($userId, $lastUpdate);
     }
 }

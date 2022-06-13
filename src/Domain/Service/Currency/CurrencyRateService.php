@@ -7,6 +7,7 @@ namespace App\Domain\Service\Currency;
 
 use App\Domain\Entity\CurrencyRate;
 use App\Domain\Repository\CurrencyRateRepositoryInterface;
+use DateTimeInterface;
 
 class CurrencyRateService implements CurrencyRateServiceInterface
 {
@@ -31,5 +32,18 @@ class CurrencyRateService implements CurrencyRateServiceInterface
     public function getLatestCurrencyRates(): array
     {
         return $this->currencyRateRepository->getAll();
+    }
+
+    public function getChanged(DateTimeInterface $lastUpdate): array
+    {
+        $currencyRates = $this->getLatestCurrencyRates();
+        $result = [];
+        foreach ($currencyRates as $currencyRate) {
+            if ($currencyRate->getPublishedAt() > $lastUpdate) {
+                $result[] = $currencyRate;
+            }
+        }
+
+        return $result;
     }
 }

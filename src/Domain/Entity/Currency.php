@@ -49,4 +49,9 @@ class Currency
             return $this->code->getValue();
         }
     }
+
+    public function getCreatedAt(): DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
 }

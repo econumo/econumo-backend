@@ -9,6 +9,7 @@ namespace App\Domain\Service\Currency;
 use App\Domain\Entity\Currency;
 use App\Domain\Entity\ValueObject\CurrencyCode;
 use App\Domain\Repository\CurrencyRepositoryInterface;
+use DateTimeInterface;
 
 class CurrencyService implements CurrencyServiceInterface
 {
@@ -31,5 +32,18 @@ class CurrencyService implements CurrencyServiceInterface
     public function getAvailableCurrencies(): array
     {
         return $this->currencyRepository->getAll();
+    }
+
+    public function getChanged(DateTimeInterface $lastUpdate): array
+    {
+        $currencies = $this->currencyRepository->getAll();
+        $result = [];
+        foreach ($currencies as $currency) {
+            if ($currency->getCreatedAt() > $lastUpdate) {
+                $result[] = $currency;
+            }
+        }
+
+        return $result;
     }
 }

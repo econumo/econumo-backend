@@ -4,13 +4,19 @@ declare(strict_types=1);
 
 namespace App\Application\Currency\Assembler;
 
-use App\Application\Currency\Dto\CurrencyRateResultDto;
 use App\Application\Currency\Dto\GetCurrencyRateListV1RequestDto;
 use App\Application\Currency\Dto\GetCurrencyRateListV1ResultDto;
 use App\Domain\Entity\CurrencyRate;
 
 class GetCurrencyRateListV1ResultAssembler
 {
+    private CurrencyRateToDtoV1ResultAssembler $currencyRateToDtoV1ResultAssembler;
+
+    public function __construct(CurrencyRateToDtoV1ResultAssembler $currencyRateToDtoV1ResultAssembler)
+    {
+        $this->currencyRateToDtoV1ResultAssembler = $currencyRateToDtoV1ResultAssembler;
+    }
+
     /**
      * @param GetCurrencyRateListV1RequestDto $dto
      * @param array|CurrencyRate[] $currencyRates
@@ -23,12 +29,7 @@ class GetCurrencyRateListV1ResultAssembler
         $result = new GetCurrencyRateListV1ResultDto();
         $result->items = [];
         foreach ($currencyRates as $currencyRate) {
-            $item = new CurrencyRateResultDto();
-            $item->currencyId = $currencyRate->getCurrency()->getId()->getValue();
-            $item->baseCurrencyId = $currencyRate->getBaseCurrency()->getId()->getValue();
-            $item->rate = $currencyRate->getRate();
-            $item->updatedAt = $currencyRate->getPublishedAt()->format('Y-m-d H:i:s');
-            $result->items[] = $item;
+            $result->items[] = $this->currencyRateToDtoV1ResultAssembler->assemble($currencyRate);
         }
 
         return $result;

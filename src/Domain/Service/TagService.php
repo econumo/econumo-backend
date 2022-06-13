@@ -14,6 +14,7 @@ use App\Domain\Factory\TagFactoryInterface;
 use App\Domain\Repository\AccountRepositoryInterface;
 use App\Domain\Repository\TagRepositoryInterface;
 use App\Domain\Service\Dto\PositionDto;
+use DateTimeInterface;
 
 class TagService implements TagServiceInterface
 {
@@ -108,5 +109,18 @@ class TagService implements TagServiceInterface
         $tag = $this->tagRepository->get($tagId);
         $tag->unarchive();
         $this->tagRepository->save($tag);
+    }
+
+    public function getChanged(Id $userId, DateTimeInterface $lastUpdate): array
+    {
+        $tags = $this->tagRepository->findAvailableForUserId($userId);
+        $result = [];
+        foreach ($tags as $tag) {
+            if ($tag->getUpdatedAt() > $lastUpdate) {
+                $result[] = $tag;
+            }
+        }
+
+        return $result;
     }
 }

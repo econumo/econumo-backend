@@ -6,6 +6,7 @@ namespace App\Domain\Repository;
 
 use App\Domain\Entity\Transaction;
 use App\Domain\Entity\ValueObject\Id;
+use DateTimeInterface;
 
 interface TransactionRepositoryInterface
 {
@@ -19,7 +20,18 @@ interface TransactionRepositoryInterface
 
     public function save(Transaction ...$transactions): void;
 
+    /**
+     * @param Id $userId
+     * @return Transaction[]
+     */
     public function findAvailableForUserId(Id $userId): array;
+
+    /**
+     * @param Id $userId
+     * @param DateTimeInterface $lastUpdate
+     * @return Transaction[]
+     */
+    public function findChanges(Id $userId, DateTimeInterface $lastUpdate): array;
 
     public function get(Id $id): Transaction;
 

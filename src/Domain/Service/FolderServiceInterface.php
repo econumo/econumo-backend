@@ -7,6 +7,7 @@ use App\Domain\Entity\Folder;
 use App\Domain\Entity\ValueObject\FolderName;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Service\Dto\PositionDto;
+use DateTimeInterface;
 
 interface FolderServiceInterface
 {
@@ -23,4 +24,11 @@ interface FolderServiceInterface
     public function hide(Id $folderId): void;
 
     public function show(Id $folderId): void;
+
+    /**
+     * @param Id $userId
+     * @param DateTimeInterface $lastUpdate
+     * @return Folder[]
+     */
+    public function getChanged(Id $userId, DateTimeInterface $lastUpdate): array;
 }

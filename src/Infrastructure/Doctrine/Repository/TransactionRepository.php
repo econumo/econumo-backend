@@ -11,6 +11,7 @@ use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\TransactionRepositoryInterface;
+use DateTimeInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\ORMInvalidArgumentException;
@@ -116,5 +117,29 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
             ->where('t.category = :oldCategory')
             ->setParameter('oldCategory', $this->getEntityManager()->getReference(Category::class, $oldCategoryId));
         $builder->getQuery()->execute();
+    }
+
+    public function findChanges(Id $userId, DateTimeInterface $lastUpdate): array
+    {
+        $sharedAccountsQuery = $this->getEntityManager()
+            ->createQuery('SELECT IDENTITY(aa.account) as accountId FROM App\Domain\Entity\AccountAccess aa WHERE aa.user = :user')
+            ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId));
+        $sharedIds = array_column($sharedAccountsQuery->getScalarResult(), 'accountId');
+
+        $accountsQuery = $this->getEntityManager()
+            ->createQuery('SELECT a.id FROM App\Domain\Entity\Account a WHERE a.user = :user')
+            ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId));
+        $userAccountIds = array_column($accountsQuery->getScalarResult(), 'id');
+        $accounts = array_map(function ($id) {
+            return $this->getEntityManager()->getReference(Account::class, new Id($id));
+        }, array_unique(array_merge($sharedIds, $userAccountIds)));
+
+        $query = $this->createQueryBuilder('t')
+            ->where('t.account IN(:accounts) OR t.accountRecipient IN(:accounts)')
+            ->andWhere('t.updatedAt > :lastUpdate')
+            ->setParameter('accounts', $accounts)
+            ->setParameter('lastUpdate', $lastUpdate);
+
+        return $query->getQuery()->getResult();
     }
 }

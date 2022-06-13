@@ -16,6 +16,7 @@ use App\Domain\Repository\AccountRepositoryInterface;
 use App\Domain\Repository\CategoryRepositoryInterface;
 use App\Domain\Repository\TransactionRepositoryInterface;
 use App\Domain\Service\Dto\PositionDto;
+use DateTimeInterface;
 
 class CategoryService implements CategoryServiceInterface
 {
@@ -145,5 +146,18 @@ class CategoryService implements CategoryServiceInterface
         $category = $this->categoryRepository->get($categoryId);
         $category->unarchive();
         $this->categoryRepository->save($category);
+    }
+
+    public function getChanged(Id $userId, DateTimeInterface $lastUpdate): array
+    {
+        $categories = $this->categoryRepository->findAvailableForUserId($userId);
+        $result = [];
+        foreach ($categories as $category) {
+            if ($category->getUpdatedAt() > $lastUpdate) {
+                $result[] = $category;
+            }
+        }
+
+        return $result;
     }
 }

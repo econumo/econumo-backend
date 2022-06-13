@@ -240,6 +240,11 @@ class Transaction
         }
     }
 
+    public function getUpdatedAt(): DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
     public function update(TransactionDto $dto): void
     {
         $this->updateType($dto->type);

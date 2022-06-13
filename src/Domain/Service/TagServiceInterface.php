@@ -10,6 +10,7 @@ use App\Domain\Entity\Tag;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\TagName;
 use App\Domain\Service\Dto\PositionDto;
+use DateTimeInterface;
 
 interface TagServiceInterface
 {
@@ -26,4 +27,11 @@ interface TagServiceInterface
     public function archiveTag(Id $tagId): void;
 
     public function unarchiveTag(Id $tagId): void;
+
+    /**
+     * @param Id $userId
+     * @param DateTimeInterface $lastUpdate
+     * @return Tag[]
+     */
+    public function getChanged(Id $userId, DateTimeInterface $lastUpdate): array;
 }

@@ -14,6 +14,7 @@ use App\Domain\Factory\PayeeFactoryInterface;
 use App\Domain\Repository\AccountRepositoryInterface;
 use App\Domain\Repository\PayeeRepositoryInterface;
 use App\Domain\Service\Dto\PositionDto;
+use DateTimeInterface;
 
 class PayeeService implements PayeeServiceInterface
 {
@@ -106,5 +107,18 @@ class PayeeService implements PayeeServiceInterface
         $payee = $this->payeeRepository->get($payeeId);
         $payee->unarchive();
         $this->payeeRepository->save($payee);
+    }
+
+    public function getChanged(Id $userId, DateTimeInterface $lastUpdate): array
+    {
+        $payees = $this->payeeRepository->findAvailableForUserId($userId);
+        $result = [];
+        foreach ($payees as $payee) {
+            if ($payee->getUpdatedAt() > $lastUpdate) {
+                $result[] = $payee;
+            }
+        }
+
+        return $result;
     }
 }

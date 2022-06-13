@@ -13,6 +13,7 @@ use App\Domain\Exception\LastFolderRemoveException;
 use App\Domain\Factory\FolderFactoryInterface;
 use App\Domain\Repository\FolderRepositoryInterface;
 use App\Domain\Service\Dto\PositionDto;
+use DateTimeInterface;
 
 final class FolderService implements FolderServiceInterface
 {
@@ -156,5 +157,18 @@ final class FolderService implements FolderServiceInterface
         $folder = $this->folderRepository->get($folderId);
         $folder->makeVisible();
         $this->folderRepository->save($folder);
+    }
+
+    public function getChanged(Id $userId, DateTimeInterface $lastUpdate): array
+    {
+        $folders = $this->folderRepository->getByUserId($userId);
+        $result = [];
+        foreach ($folders as $folder) {
+            if ($folder->getUpdatedAt() > $lastUpdate) {
+                $result[] = $folder;
+            }
+        }
+
+        return $result;
     }
 }

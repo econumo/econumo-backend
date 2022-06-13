@@ -10,6 +10,7 @@ use App\Domain\Entity\ValueObject\CategoryType;
 use App\Domain\Entity\ValueObject\Icon;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Service\Dto\PositionDto;
+use DateTimeInterface;
 
 interface CategoryServiceInterface
 {
@@ -28,4 +29,11 @@ interface CategoryServiceInterface
     public function archive(Id $categoryId): void;
 
     public function unarchive(Id $categoryId): void;
+
+    /**
+     * @param Id $userId
+     * @param DateTimeInterface $lastUpdate
+     * @return Category[]
+     */
+    public function getChanged(Id $userId, DateTimeInterface $lastUpdate): array;
 }

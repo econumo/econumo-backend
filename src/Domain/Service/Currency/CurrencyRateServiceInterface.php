@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace App\Domain\Service\Currency;
 
 use App\Domain\Entity\CurrencyRate;
+use DateTimeInterface;
 
 interface CurrencyRateServiceInterface
 {
@@ -19,4 +20,10 @@ interface CurrencyRateServiceInterface
      * @return array|CurrencyRate[]
      */
     public function getLatestCurrencyRates(): array;
+
+    /**
+     * @param DateTimeInterface $lastUpdate
+     * @return CurrencyRate[]
+     */
+    public function getChanged(DateTimeInterface $lastUpdate): array;
 }
