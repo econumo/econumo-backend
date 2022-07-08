@@ -29,7 +29,7 @@ class CurrencyRatesUpdateService implements CurrencyRatesUpdateServiceInterface
         $this->currencyRateFactory = $currencyRateFactory;
     }
 
-    public function updateCurrencyRates(CurrencyRateDto ...$currencyRates): void
+    public function updateCurrencyRates(CurrencyRateDto ...$currencyRates): int
     {
         $currencies = $this->currencyRepository->getAll();
 
@@ -55,6 +55,8 @@ class CurrencyRatesUpdateService implements CurrencyRatesUpdateServiceInterface
         if (count($forUpdate)) {
             $this->currencyRateRepository->save(...$forUpdate);
         }
+
+        return count($forUpdate);
     }
 
     /**

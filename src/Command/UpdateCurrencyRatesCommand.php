@@ -41,8 +41,8 @@ class UpdateCurrencyRatesCommand extends Command
         $date = DateTimeImmutable::createFromFormat('Y-m-d', $input->getArgument('date'));
         $currencyRates = $this->currencyRatesLoaderService->loadCurrencyRates($date);
         $io->info(sprintf('Loaded %d currency rates', count($currencyRates)));
-        $this->currencyRatesUpdateService->updateCurrencyRates(...$currencyRates);
-        $io->success('Currency rates loaded');
+        $updatedCnt = $this->currencyRatesUpdateService->updateCurrencyRates(...$currencyRates);
+        $io->success(sprintf('Updated %d currency rates', $updatedCnt));
 
         return Command::SUCCESS;
     }

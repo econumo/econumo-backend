@@ -8,5 +8,5 @@ use App\Domain\Service\Dto\CurrencyRateDto;
 
 interface CurrencyRatesUpdateServiceInterface
 {
-    public function updateCurrencyRates(CurrencyRateDto ...$currencyRates): void;
+    public function updateCurrencyRates(CurrencyRateDto ...$currencyRates): int;
 }
