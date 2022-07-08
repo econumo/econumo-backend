@@ -75,12 +75,12 @@ class CurrencyRateRepository extends ServiceEntityRepository implements Currency
                 ->setMaxResults(1);
             $item = $builder->getQuery()->getSingleResult();
             if ($item === null) {
-                throw new NotFoundException(sprintf('Currency with identifier %s not found', $item));
+                throw new NotFoundException(sprintf('Currency with identifier (%s, %s) not found', $currencyId->getValue(), $date->format('Y-m-d')));
             }
 
             return $item;
         } catch (NoResultException $exception) {
-            throw new NotFoundException(sprintf('Currency with identifier %s not found', $currencyId));
+            throw new NotFoundException(sprintf('Currency with identifier (%s, %s) not found', $currencyId->getValue(), $date->format('Y-m-d')));
         }
     }
 

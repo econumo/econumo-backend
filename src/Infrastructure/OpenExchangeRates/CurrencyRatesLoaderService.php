@@ -47,13 +47,15 @@ class CurrencyRatesLoaderService implements CurrencyRatesLoaderServiceInterface
         $result = [];
         $data = $response->toArray();
         $updatedAt = \DateTimeImmutable::createFromFormat('U', (string)$data['timestamp']);
+        $currencyRateDate = \DateTime::createFromFormat('Y-m-d', $updatedAt->format('Y-m-d'));
+        $currencyRateDate->setTime(0, 0, 0, 0);
         $baseCode = new CurrencyCode($data['base']);
         foreach ($data['rates'] as $code => $rate) {
             $item = new CurrencyRateDto();
             $item->code = new CurrencyCode($code);
             $item->base = $baseCode;
             $item->rate = (float)$rate;
-            $item->date = $updatedAt;
+            $item->date = $currencyRateDate;
             $result[] = $item;
         }
 
