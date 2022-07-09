@@ -3,7 +3,6 @@
     "license": "proprietary",
     "require": {
         "php": "^7.4.0",
-        "ext-ctype": "*",
         "ext-curl": "*",
         "ext-iconv": "*",
         "ext-json": "*",
