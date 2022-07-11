@@ -8,19 +8,15 @@ use App\Application\Transaction\Dto\TransactionResultDto;
 use App\Application\User\Assembler\UserIdToDtoResultAssembler;
 use App\Domain\Entity\Transaction;
 use App\Domain\Entity\ValueObject\Id;
-use App\Domain\Service\Currency\CurrencyConvertorInterface;
 
 class TransactionToDtoResultAssembler
 {
     private UserIdToDtoResultAssembler $userIdToDtoResultAssembler;
-    private CurrencyConvertorInterface $currencyConvertor;
 
     public function __construct(
-        UserIdToDtoResultAssembler $userIdToDtoResultAssembler,
-        CurrencyConvertorInterface $currencyConvertor
+        UserIdToDtoResultAssembler $userIdToDtoResultAssembler
     ) {
         $this->userIdToDtoResultAssembler = $userIdToDtoResultAssembler;
-        $this->currencyConvertor = $currencyConvertor;
     }
 
     public function assemble(
@@ -35,7 +31,6 @@ class TransactionToDtoResultAssembler
         $item->accountRecipientId = $transaction->getAccountRecipientId(
         ) === null ? null : $transaction->getAccountRecipientId()->getValue();
         $item->amount = $transaction->getAmount();
-        $item->amountUserCurrency = $this->currencyConvertor->convertForUser($userId, $transaction->getAccountCurrency(), $transaction->getAmount());
         $item->amountRecipient = $transaction->getAmountRecipient() ?? $transaction->getAmount();
         $item->categoryId = $transaction->getCategoryId() === null ? null : $transaction->getCategoryId()->getValue();
         $item->description = $transaction->getDescription();

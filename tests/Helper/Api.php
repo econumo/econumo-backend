@@ -41,7 +41,6 @@ class Api extends \Codeception\Module
             'accountId' => 'string',
             'accountRecipientId' => 'string|null',
             'amount' => 'float|integer',
-            'amountUserCurrency' => 'float|integer',
             'amountRecipient' => 'float|integer|null',
             'categoryId' => 'string|null',
             'description' => 'string',
