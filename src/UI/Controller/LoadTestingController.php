@@ -14,7 +14,7 @@ class LoadTestingController extends AbstractController
     /**
      * Check controller
      *
-     * @Route("/_/load-testing", methods={"POST"})
+     * @Route("/_/load-testing", methods={"GET"})
      *
      * @param Request $request
      * @return Response
