@@ -4,4 +4,4 @@ ekino_new_relic:
     api_key: "%env(NEWRELIC_API_KEY)%"
     api_host: "%env(NEWRELIC_API_HOST)%"
     exceptions: true
-    deprecations: true
+    deprecations: false
