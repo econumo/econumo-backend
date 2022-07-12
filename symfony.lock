@@ -156,6 +156,19 @@
     "egulias/email-validator": {
         "version": "3.2"
     },
+    "ekino/newrelic-bundle": {
+        "version": "2.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "2.0",
+            "ref": "c6535bb5fa418c5180be1b5c219e277d5f5a9998"
+        },
+        "files": [
+            "config/packages/ekino_new_relic.yaml",
+            "config/packages/prod/ekino_new_relic.yaml"
+        ]
+    },
     "exsyst/swagger": {
         "version": "v0.4.1"
     },
