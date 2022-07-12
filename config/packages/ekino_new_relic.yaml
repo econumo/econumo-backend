@@ -2,5 +2,6 @@ ekino_new_relic:
     enabled: false
     application_name: "%env(NEWRELIC_APP_NAME)%"
     api_key: "%env(NEWRELIC_API_KEY)%"
+    api_host: "%env(NEWRELIC_API_HOST)%"
     exceptions: true
     deprecations: true
