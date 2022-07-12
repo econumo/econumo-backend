@@ -60,13 +60,6 @@ class AccountResultDto
     public float $balance;
 
     /**
-     * Current balance (in default user currency)
-     * @var float
-     * @SWG\Property(example="13.07")
-     */
-    public float $balanceUserCurrency;
-
-    /**
      * Account type
      * @var int
      * @SWG\Property(example="1")

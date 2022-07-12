@@ -110,7 +110,6 @@ class Api extends \Codeception\Module
             'position' => 'integer',
             'currency' => $this->getCurrencyDtoJsonType(),
             'balance' => 'float|integer',
-            'balanceUserCurrency' => 'float|integer',
             'type' => 'integer',
             'icon' => 'string',
             'sharedAccess' => 'array',
