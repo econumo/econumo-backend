@@ -34,15 +34,11 @@ jobs:
 
             -   uses: actions/checkout@v3
 
-            -   name: Build APP image
-                if: success()
-                run: |
-                    docker pull ${DOCKER_IMAGE} || true
-                    docker build --cache-from ${DOCKER_IMAGE_APP} --tag ${DOCKER_IMAGE_APP} --target prod -f build/docker/app/Dockerfile .
-
             -   name: Test APP image
                 if: success()
                 run: |
+                    docker pull ${DOCKER_IMAGE_APP} || true
+                    docker build --cache-from ${DOCKER_IMAGE_APP} --tag ${DOCKER_IMAGE_APP} --target stage -f build/docker/app/Dockerfile .
                     docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:database:create --if-not-exists --env=test
                     docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:migration:migrate -n --env=test
                     docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:fixtures:load --purge-with-truncate -n --env=test
@@ -52,10 +48,15 @@ jobs:
                     QASE_TOKEN: ${APP_QASE_TOKEN}
                     QASE_PROJECT: ${APP_QASE_PROJECT}
 
+            -   name: Build APP image
+                if: success()
+                run: |
+                    docker build --cache-from ${DOCKER_IMAGE_APP} --tag ${DOCKER_IMAGE_APP} --target prod -f build/docker/app/Dockerfile .
+
             -   name: Build NGINX image
                 if: success()
                 run: |
-                    docker pull ${DOCKER_IMAGE_NGINX_LATEST} || true
+                    docker pull ${DOCKER_IMAGE_NGINX} || true
                     docker build --cache-from ${DOCKER_IMAGE_NGINX} --tag ${DOCKER_IMAGE_NGINX} -f build/docker/nginx/Dockerfile .
 
 #            -   name: Push DOCKER images
