@@ -46,7 +46,7 @@ jobs:
                     docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:database:create --if-not-exists --env=test
                     docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:migration:migrate -n --env=test
                     docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:fixtures:load --purge-with-truncate -n --env=test
-                    docker run --network="host" --add-host=db:127.0.0.1 --env QASE_ENABLE=${QASE_ENABLE} --env QASE_TOKEN=${QASE_TOKEN} --env QASE_PROJECT=${QASE_PROJECT} ${DOCKER_IMAGE_APP} vendor/bin/codecept run --env=test
+                    docker run --network="host" --add-host=db:127.0.0.1 --env QASE_ENABLE=${QASE_ENABLE} --env QASE_TOKEN=${QASE_TOKEN} --env QASE_PROJECT=${QASE_PROJECT} ${DOCKER_IMAGE_APP} vendor/bin/codecept run
                 env:
                     QASE_ENABLE: "true"
                     QASE_TOKEN: ${APP_QASE_TOKEN}
