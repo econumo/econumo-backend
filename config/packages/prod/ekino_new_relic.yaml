@@ -1,2 +1,2 @@
 ekino_new_relic:
-    enabled: true
+    enabled: '%env(bool:NEWRELIC_ENABLED)%'

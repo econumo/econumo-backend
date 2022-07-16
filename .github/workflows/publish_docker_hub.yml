@@ -1,0 +1,65 @@
+name: "Build and publish to Docker Hub"
+on:
+    push:
+        branches:
+            - master
+
+jobs:
+    build_and_deploy:
+        name: Build and publish to Docker Hub
+        runs-on: ubuntu-latest
+        env:
+            DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}
+            DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+            DOCKER_IMAGE_APP: 'econumo/api-backend:latest'
+            DOCKER_IMAGE_NGINX: 'econumo/nginx-backend:latest'
+            APP_QASE_PROJECT: 'EA'
+            APP_QASE_TOKEN: ${{ secrets.APP_QASE_TOKEN }}
+
+        services:
+            postgresql:
+                image: postgres:11
+                env:
+                    POSTGRES_USER: postgres
+                    POSTGRES_PASSWORD: postgres
+                    POSTGRES_DB: db_test
+                ports:
+                    - 5432:5432
+                # needed because the postgres container does not provide a healthcheck
+                options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+        steps:
+            -   name: Docker login
+                run: docker login -u "${DOCKER_LOGIN}" -p "${DOCKER_PASSWORD}"
+
+            -   uses: actions/checkout@v3
+
+            -   name: Build APP image
+                if: success()
+                run: |
+                    docker pull ${DOCKER_IMAGE} || true
+                    docker build --cache-from ${DOCKER_IMAGE_APP} --tag ${DOCKER_IMAGE_APP} --target prod -f build/docker/app/Dockerfile .
+
+            -   name: Test APP image
+                if: success()
+                run: |
+                    docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:database:create --if-not-exists --env=test
+                    docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:migration:migrate -n --env=test
+                    docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:fixtures:load --purge-with-truncate -n --env=test
+                    docker run --network="host" --add-host=db:127.0.0.1 --env QASE_ENABLE=${QASE_ENABLE} --env QASE_TOKEN=${QASE_TOKEN} --env QASE_PROJECT=${QASE_PROJECT} ${DOCKER_IMAGE_APP} vendor/bin/codecept run --env=test
+                env:
+                    QASE_ENABLE: "true"
+                    QASE_TOKEN: ${APP_QASE_TOKEN}
+                    QASE_PROJECT: ${APP_QASE_PROJECT}
+
+            -   name: Build NGINX image
+                if: success()
+                run: |
+                    docker pull ${DOCKER_IMAGE_NGINX_LATEST} || true
+                    docker build --cache-from ${DOCKER_IMAGE_NGINX} --tag ${DOCKER_IMAGE_NGINX} -f build/docker/nginx/Dockerfile .
+
+#            -   name: Push DOCKER images
+#                if: success()
+#                run: |
+#                    docker push ${DOCKER_IMAGE_APP}
+#                    docker push ${DOCKER_IMAGE_NGINX}

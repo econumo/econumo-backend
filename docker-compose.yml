@@ -3,10 +3,51 @@ version: '3.5'
 
 services:
     nginx:
+        build:
+            context: .
+            dockerfile: ./build/docker/nginx/Dockerfile
         ports:
-            - ${DOCKER_COMPOSE_PORT_NGINX}:80
+            - "8082:80"
+        volumes:
+            - ./public:/var/www/public:cached
         depends_on:
             - app
 
     app:
+        build:
+            context: .
+            dockerfile: ./build/docker/app/Dockerfile
+            target: dev
         working_dir: /var/www
+        depends_on:
+            - db
+        volumes:
+            - .:/var/www:cached
+            - ./var/:/var/www/var:delegated
+        ports:
+            - "8084:9000"
+        environment:
+            - APP_ENV=${APP_ENV}
+            - COMPOSER_MEMORY_LIMIT=-1
+            - PHP_DISPLAY_ERRORS=1
+            - PHP_ERROR_REPORTING=32767
+            - PHP_IDE_CONFIG=serverName=econumo
+            - PHP_XDEBUG_REMOTE_HOST=docker.for.mac.localhost
+
+    db:
+        build:
+            context: .
+            dockerfile: ./build/docker/postgres/Dockerfile
+        ports:
+            - "8083:5432"
+        volumes:
+            - db-data:/var/lib/postgresql/data
+        environment:
+            - POSTGRES_HOST=${DATABASE_HOST}
+            - POSTGRES_PORT=${DATABASE_PORT}
+            - POSTGRES_USER=${DATABASE_USER}
+            - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+            - POSTGRES_DB=${DATABASE_NAME}
+
+volumes:
+    db-data:

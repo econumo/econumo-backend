@@ -5,9 +5,9 @@ tasks:
     up:
         desc: "Run application"
         cmds:
-            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+            - docker-compose -f docker-compose.yml up -d
             - task: composer-install
-            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app bin/console doctrine:migrations:migrate -n
+            - docker-compose -f docker-compose.yml exec -uwww-data app bin/console doctrine:migrations:migrate -n
 
     restart:
         desc: "Restart application"
@@ -19,52 +19,52 @@ tasks:
     rebuild:
         desc: "Restart application"
         cmds:
-            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build --remove-orphans
-            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app composer install
-            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app bin/console doctrine:migrations:migrate -n
+            - docker-compose -f docker-compose.yml up -d --build --remove-orphans
+            - docker-compose -f docker-compose.yml exec -uwww-data app composer install
+            - docker-compose -f docker-compose.yml exec -uwww-data app bin/console doctrine:migrations:migrate -n
 
     down:
         desc: "Stop application"
         cmds:
-            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml down --remove-orphans
+            - docker-compose -f docker-compose.yml down --remove-orphans
     sh:
         desc: "Jump into application container"
         cmds:
-            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app sh
+            - docker-compose -f docker-compose.yml exec -uwww-data app sh
 
     run:
         desc: "Run symfony command"
         cmds:
-            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app bin/console {{.CLI_ARGS}}
+            - docker-compose -f docker-compose.yml exec -uwww-data app bin/console {{.CLI_ARGS}}
 
     fast-test:
         desc: "Run tests without recreating db (you could use arguments here after dash, ex: task test -- unit)"
         cmds:
-            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
-            - cmd: docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app vendor/bin/codecept run {{.CLI_ARGS}} --steps -v
+            - docker-compose -f docker-compose.yml up -d
+            - cmd: docker-compose -f docker-compose.yml exec -uwww-data app vendor/bin/codecept run {{.CLI_ARGS}} --steps -v
               ignore_error: true
 
     test-failed:
         desc: "Run tests without recreating db ONLY failed tests (you could use arguments here after dash, ex: task test -- unit)"
         cmds:
-            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
-            - cmd: docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app vendor/bin/codecept run {{.CLI_ARGS}} --steps -v -g failed
+            - docker-compose -f docker-compose.yml up -d
+            - cmd: docker-compose -f docker-compose.yml exec -uwww-data app vendor/bin/codecept run {{.CLI_ARGS}} --steps -v -g failed
               ignore_error: true
 
     test:
         desc: "Run tests (you could use arguments here after dash, ex: task test -- unit)"
         cmds:
-            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
-            - cmd: docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app bin/console doctrine:database:drop --force --env=test -vvv
+            - docker-compose -f docker-compose.yml up -d
+            - cmd: docker-compose -f docker-compose.yml exec -uwww-data app bin/console doctrine:database:drop --force --env=test -vvv
               ignore_error: true
-            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app bin/console doctrine:database:create --if-not-exists --env=test -vvv
-            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app bin/console doctrine:migration:migrate -n --env=test -vvv
-            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app bin/console doctrine:fixtures:load --purge-with-truncate -n --env=test -vvv
-            - cmd: docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app vendor/bin/codecept run {{.CLI_ARGS}} --steps -v
+            - docker-compose -f docker-compose.yml exec -uwww-data app bin/console doctrine:database:create --if-not-exists --env=test -vvv
+            - docker-compose -f docker-compose.yml exec -uwww-data app bin/console doctrine:migration:migrate -n --env=test -vvv
+            - docker-compose -f docker-compose.yml exec -uwww-data app bin/console doctrine:fixtures:load --purge-with-truncate -n --env=test -vvv
+            - cmd: docker-compose -f docker-compose.yml exec -uwww-data app vendor/bin/codecept run {{.CLI_ARGS}} --steps -v
               ignore_error: true
 
     composer-install:
         cmds:
-            - docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec -uwww-data app composer install
+            - docker-compose -f docker-compose.yml exec -uwww-data app composer install
         status:
             - test -d vendor
