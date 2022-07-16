@@ -30,7 +30,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 
 
-FROM dev as stage
+FROM dev as test
 
 COPY composer.json composer.lock symfony.lock /var/www/
 RUN composer install --no-scripts --prefer-dist --no-autoloader
@@ -40,7 +40,7 @@ RUN composer dump-autoload --optimize
 RUN chown www-data:www-data /var/www/ -R
 
 
-FROM stage as prod
+FROM test as prod
 
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 

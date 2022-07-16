@@ -10,9 +10,9 @@ jobs:
         name: Run tests
         runs-on: ubuntu-latest
         env:
-            DOCKER_REGISTRY: 'docker.pkg.github.com'
-            DOCKER_LOGIN: ${{ github.actor }}
-            DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+            DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}
+            DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+            DOCKER_IMAGE_APP: "econumo/api-backend:latest"
 
         services:
             postgresql:
@@ -20,38 +20,27 @@ jobs:
                 env:
                     POSTGRES_USER: postgres
                     POSTGRES_PASSWORD: postgres
-                    POSTGRES_DB: db
+                    POSTGRES_DB: db_test
                 ports:
                     - 5432:5432
-                # needed because the postgres container does not provide a healthcheck
                 options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
         steps:
-            -   uses: actions/checkout@v3
-
-            -   name: Prepare env
-                run: |
-                    repo=$(echo "${{ github.repository }}" | awk -F / '{print $2}')
-                    prefix="${DOCKER_REGISTRY}/${{ github.repository }}"
-                    suffix=${{ github.run_id }}
-                    echo "DOCKER_IMAGE_APP=$(echo "${prefix}/${repo}_app:${suffix}")" >> $GITHUB_ENV
-                    echo "DOCKER_IMAGE_APP_LATEST=$(echo "${prefix}/${repo}_app:latest")" >> $GITHUB_ENV
-                shell: bash
-
             -   name: Docker login
-                run: docker login -u "${DOCKER_LOGIN}" -p "${DOCKER_PASSWORD}" "${DOCKER_REGISTRY}"
+                run: docker login -u "${DOCKER_LOGIN}" -p "${DOCKER_PASSWORD}"
 
-            -   name: Build APP image
-                if: success()
-                run: |
-                    docker pull ${DOCKER_IMAGE_APP_LATEST} || true
-                    docker build --cache-from ${DOCKER_IMAGE_APP_LATEST} --tag ${DOCKER_IMAGE_APP} --target stage -f build/docker/app/Dockerfile .
+            -   uses: actions/checkout@v3
 
             -   name: Test APP image
                 if: success()
                 run: |
-                    docker run --network="host" --env DATABASE_USER=postgres --env DATABASE_PASSWORD=postgres --env DATABASE_NAME=db --env DATABASE_HOST=localhost --env DATABASE_PORT=5432 ${DOCKER_IMAGE_APP} bin/console doctrine:database:create --if-not-exists
-                    docker run --network="host" --env DATABASE_USER=postgres --env DATABASE_PASSWORD=postgres --env DATABASE_NAME=db --env DATABASE_HOST=localhost --env DATABASE_PORT=5432 ${DOCKER_IMAGE_APP} bin/console doctrine:migration:migrate -n
-                    docker run --network="host" --env DATABASE_USER=postgres --env DATABASE_PASSWORD=postgres --env DATABASE_NAME=db --env DATABASE_HOST=localhost --env DATABASE_PORT=5432 ${DOCKER_IMAGE_APP} bin/console doctrine:fixtures:load --purge-with-truncate -n
-                    docker run --network="host" --env DATABASE_USER=postgres --env DATABASE_PASSWORD=postgres --env DATABASE_NAME=db --env DATABASE_HOST=localhost --env DATABASE_PORT=5432 ${DOCKER_IMAGE_APP} vendor/bin/codecept build
-                    docker run --network="host" --env DATABASE_USER=postgres --env DATABASE_PASSWORD=postgres --env DATABASE_NAME=db --env DATABASE_HOST=localhost --env DATABASE_PORT=5432 ${DOCKER_IMAGE_APP} vendor/bin/codecept run
+                    docker pull ${DOCKER_IMAGE_APP} || true
+                    docker build --cache-from ${DOCKER_IMAGE_APP} --tag ${DOCKER_IMAGE_APP} --target test -f build/docker/app/Dockerfile .
+                    docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:database:create --if-not-exists --env=test
+                    docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:migration:migrate -n --env=test
+                    docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:fixtures:load --purge-with-truncate -n --env=test
+                    docker run --network="host" --add-host=db:127.0.0.1 --env QASE_ENABLE=${QASE_ENABLE} --env QASE_TOKEN=${QASE_TOKEN} --env QASE_PROJECT=${QASE_PROJECT} ${DOCKER_IMAGE_APP} vendor/bin/codecept run
+                env:
+                    QASE_ENABLE: "false"
+                    QASE_TOKEN: ${{ secrets.APP_QASE_TOKEN }}
+                    QASE_PROJECT: "EA"

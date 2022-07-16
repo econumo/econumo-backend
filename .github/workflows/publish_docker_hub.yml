@@ -11,10 +11,8 @@ jobs:
         env:
             DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}
             DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-            DOCKER_IMAGE_APP: 'econumo/api-backend:latest'
-            DOCKER_IMAGE_NGINX: 'econumo/nginx-backend:latest'
-            APP_QASE_PROJECT: 'EA'
-            APP_QASE_TOKEN: ${{ secrets.APP_QASE_TOKEN }}
+            DOCKER_IMAGE_APP: "econumo/api-backend:latest"
+            DOCKER_IMAGE_NGINX: "econumo/nginx-backend:latest"
 
         services:
             postgresql:
@@ -37,15 +35,15 @@ jobs:
                 if: success()
                 run: |
                     docker pull ${DOCKER_IMAGE_APP} || true
-                    docker build --cache-from ${DOCKER_IMAGE_APP} --tag ${DOCKER_IMAGE_APP} --target stage -f build/docker/app/Dockerfile .
+                    docker build --cache-from ${DOCKER_IMAGE_APP} --tag ${DOCKER_IMAGE_APP} --target test -f build/docker/app/Dockerfile .
                     docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:database:create --if-not-exists --env=test
                     docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:migration:migrate -n --env=test
                     docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:fixtures:load --purge-with-truncate -n --env=test
                     docker run --network="host" --add-host=db:127.0.0.1 --env QASE_ENABLE=${QASE_ENABLE} --env QASE_TOKEN=${QASE_TOKEN} --env QASE_PROJECT=${QASE_PROJECT} ${DOCKER_IMAGE_APP} vendor/bin/codecept run
                 env:
                     QASE_ENABLE: "true"
-                    QASE_TOKEN: ${APP_QASE_TOKEN}
-                    QASE_PROJECT: ${APP_QASE_PROJECT}
+                    QASE_TOKEN: ${{ secrets.APP_QASE_TOKEN }}
+                    QASE_PROJECT: "EA"
 
             -   name: Build APP image
                 if: success()
