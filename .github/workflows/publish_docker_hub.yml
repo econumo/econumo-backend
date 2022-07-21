@@ -12,7 +12,6 @@ jobs:
             DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}
             DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
             DOCKER_IMAGE_APP: "econumo/api-backend:latest"
-            DOCKER_IMAGE_NGINX: "econumo/nginx-backend:latest"
 
         services:
             postgresql:
@@ -50,14 +49,7 @@ jobs:
                 run: |
                     docker build --cache-from ${DOCKER_IMAGE_APP} --tag ${DOCKER_IMAGE_APP} --target prod -f build/docker/app/Dockerfile .
 
-            -   name: Build NGINX image
-                if: success()
-                run: |
-                    docker pull ${DOCKER_IMAGE_NGINX} || true
-                    docker build --cache-from ${DOCKER_IMAGE_NGINX} --tag ${DOCKER_IMAGE_NGINX} -f build/docker/nginx/Dockerfile .
-
-            -   name: Push DOCKER images
+            -   name: Push DOCKER image
                 if: success()
                 run: |
                     docker push ${DOCKER_IMAGE_APP}
-                    docker push ${DOCKER_IMAGE_NGINX}

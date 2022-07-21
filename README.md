@@ -1,4 +1,11 @@
-# Econumo backend
+# Econumo API-backend
+
+## How to use self-hosted version
+
+1. Copy `docker-compose.example.yml` to your server
+2. Replace `<FIXME>` with your variables
+3. Run `docker-composer up -d`
+4. Open in web-browser url `http://localhost:8080` and check frag "self-hosted" with value `http://localhost:8082` (it's API url)
 
 ### Currencies 
 
