@@ -28,7 +28,7 @@ COPY build/docker/app/configs /
 # composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-ENTRYPOINT ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisord.conf"]
+CMD ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisord.conf"]
 
 
 FROM dev as test

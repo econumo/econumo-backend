@@ -24,9 +24,7 @@ services:
             - PHP_XDEBUG_REMOTE_HOST=docker.for.mac.localhost
 
     db:
-        build:
-            context: .
-            dockerfile: ./build/docker/postgres/Dockerfile
+        image: postgres:11-alpine
         ports:
             - "8083:5432"
         volumes:
