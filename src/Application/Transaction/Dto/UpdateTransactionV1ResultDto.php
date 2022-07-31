@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Application\Transaction\Dto;
 
 use App\Application\Account\Dto\AccountResultDto;
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 /**
- * @SWG\Definition(
+ * @OA\Schema(
  *     required={"item", "accounts"}
  * )
  */
@@ -16,13 +16,13 @@ class UpdateTransactionV1ResultDto
 {
     /**
      * Transaction
-     * @SWG\Property()
+     * @OA\Property()
      */
     public TransactionResultDto $item;
 
     /**
      * @var AccountResultDto[]
-     * @SWG\Property()
+     * @OA\Property()
      */
     public array $accounts = [];
 }

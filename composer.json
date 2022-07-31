@@ -13,7 +13,7 @@
         "doctrine/orm": "^2.7",
         "ekino/newrelic-bundle": "^2.4",
         "lexik/jwt-authentication-bundle": "^2.6",
-        "nelmio/api-doc-bundle": "^3.6",
+        "nelmio/api-doc-bundle": "^4.9",
         "nelmio/cors-bundle": "^2.0",
         "psr/event-dispatcher": "^1.0",
         "psr/log": "^1.1",

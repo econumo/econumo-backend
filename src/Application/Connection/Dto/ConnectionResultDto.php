@@ -6,10 +6,10 @@ declare(strict_types=1);
 namespace App\Application\Connection\Dto;
 
 use App\Application\User\Dto\UserResultDto;
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 /**
- * @SWG\Definition(
+ * @OA\Schema(
  *     required={"user", "accountAccess"}
  * )
  */
@@ -17,13 +17,13 @@ class ConnectionResultDto
 {
     /**
      * @var UserResultDto
-     * @SWG\Property()
+     * @OA\Property()
      */
     public UserResultDto $user;
 
     /**
      * @var AccountAccessResultDto[]
-     * @SWG\Property()
+     * @OA\Property()
      */
     public array $sharedAccounts;
 }

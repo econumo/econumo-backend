@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Application\Tag\Dto;
 
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 /**
- * @SWG\Definition(
+ * @OA\Schema(
  * )
  */
 class DeleteTagV1ResultDto

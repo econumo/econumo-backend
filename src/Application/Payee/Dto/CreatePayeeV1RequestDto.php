@@ -4,27 +4,27 @@ declare(strict_types=1);
 
 namespace App\Application\Payee\Dto;
 
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 /**
- * @SWG\Definition(
+ * @OA\Schema(
  *     required={"id", "name"}
  * )
  */
 class CreatePayeeV1RequestDto
 {
     /**
-     * @SWG\Property(example="123")
+     * @OA\Property(example="123")
      */
     public string $id;
 
     /**
-     * @SWG\Property(example="Amazon")
+     * @OA\Property(example="Amazon")
      */
     public string $name;
 
     /**
-     * @SWG\Property(example="0aaa0450-564e-411e-8018-7003f6dbeb92")
+     * @OA\Property(example="0aaa0450-564e-411e-8018-7003f6dbeb92")
      */
     public ?string $accountId = null;
 }

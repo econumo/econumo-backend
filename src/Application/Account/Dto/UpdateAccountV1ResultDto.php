@@ -6,22 +6,22 @@ namespace App\Application\Account\Dto;
 
 use App\Application\Account\Dto\AccountResultDto;
 use App\Application\Transaction\Dto\TransactionResultDto;
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 /**
- * @SWG\Definition(
+ * @OA\Schema(
  *     required={"item"}
  * )
  */
 class UpdateAccountV1ResultDto
 {
     /**
-     * @SWG\Property()
+     * @OA\Property()
      */
     public AccountResultDto $item;
 
     /**
-     * @SWG\Property()
+     * @OA\Property()
      */
     public ?TransactionResultDto $transaction = null;
 }

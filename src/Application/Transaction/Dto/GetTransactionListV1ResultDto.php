@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Application\Transaction\Dto;
 
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 /**
- * @SWG\Definition(
+ * @OA\Schema(
  *     required={"items"}
  * )
  */
@@ -15,7 +15,7 @@ class GetTransactionListV1ResultDto
 {
     /**
      * @var TransactionResultDto[]
-     * @SWG\Property()
+     * @OA\Property()
      */
     public array $items = [];
 }

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Application\Account\Dto;
 
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 /**
- * @SWG\Definition(
+ * @OA\Schema(
  *     required={"items"}
  * )
  */
@@ -15,7 +15,7 @@ class OrderFolderListV1ResultDto
 {
     /**
      * @var FolderResultDto[]
-     * @SWG\Property()
+     * @OA\Property()
      */
     public array $items = [];
 }

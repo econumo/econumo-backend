@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Application\User\Dto;
 
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 /**
- * @SWG\Definition(
+ * @OA\Schema(
  *     required={"currency"}
  * )
  */
 class UpdateCurrencyV1RequestDto
 {
     /**
-     * @SWG\Property(example="USD")
+     * @OA\Property(example="USD")
      */
     public string $currency;
 }

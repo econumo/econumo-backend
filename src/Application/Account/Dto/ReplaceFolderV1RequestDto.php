@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace App\Application\Account\Dto;
 
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 /**
- * @SWG\Definition(
+ * @OA\Schema(
  *     required={"id", "replaceId"}
  * )
  */
 class ReplaceFolderV1RequestDto
 {
     /**
-     * @SWG\Property(example="0aaa0450-564e-411e-8018-7003f6dbeb92")
+     * @OA\Property(example="0aaa0450-564e-411e-8018-7003f6dbeb92")
      */
     public string $id;
 
     /**
-     * @SWG\Property(example="0aaa0450-564e-411e-8018-7003f6dbeb92")
+     * @OA\Property(example="0aaa0450-564e-411e-8018-7003f6dbeb92")
      */
     public string $replaceId;
 }

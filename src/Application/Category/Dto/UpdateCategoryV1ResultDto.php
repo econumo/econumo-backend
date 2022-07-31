@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Application\Category\Dto;
 
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 /**
- * @SWG\Definition(
+ * @OA\Schema(
  * )
  */
 class UpdateCategoryV1ResultDto

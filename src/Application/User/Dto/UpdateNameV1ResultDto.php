@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Application\User\Dto;
 
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 /**
- * @SWG\Definition(
+ * @OA\Schema(
  *     required={"token"}
  * )
  */
@@ -15,7 +15,7 @@ class UpdateNameV1ResultDto
 {
     /**
      * Id
-     * @SWG\Property(example="jwt-token")
+     * @OA\Property(example="jwt-token")
      */
     public string $token;
 }

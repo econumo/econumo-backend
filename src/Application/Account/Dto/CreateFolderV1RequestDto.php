@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Application\Account\Dto;
 
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 /**
- * @SWG\Definition(
+ * @OA\Schema(
  *     required={"name"}
  * )
  */
 class CreateFolderV1RequestDto
 {
     /**
-     * @SWG\Property(example="Savings")
+     * @OA\Property(example="Savings")
      */
     public string $name;
 }

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Application\User\Dto;
 
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 /**
- * @SWG\Definition(
+ * @OA\Schema(
  *     required={"username", "password"}
  * )
  */
@@ -15,13 +15,13 @@ class LoginUserV1RequestDto
 {
     /**
      * @var string
-     * @SWG\Property(example="username")
+     * @OA\Property(example="username")
      */
     public string $username;
 
     /**
      * @var string
-     * @SWG\Property(example="password")
+     * @OA\Property(example="password")
      */
     public string $password;
 }

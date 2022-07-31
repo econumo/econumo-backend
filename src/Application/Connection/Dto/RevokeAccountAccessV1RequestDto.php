@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace App\Application\Connection\Dto;
 
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 /**
- * @SWG\Definition(
+ * @OA\Schema(
  *     required={"accountId", "userId"}
  * )
  */
 class RevokeAccountAccessV1RequestDto
 {
     /**
-     * @SWG\Property(example="0aaa0450-564e-411e-8018-7003f6dbeb92")
+     * @OA\Property(example="0aaa0450-564e-411e-8018-7003f6dbeb92")
      */
     public string $accountId;
 
     /**
-     * @SWG\Property(example="aff21334-96f0-4fb1-84d8-0223d0280954")
+     * @OA\Property(example="aff21334-96f0-4fb1-84d8-0223d0280954")
      */
     public string $userId;
 }

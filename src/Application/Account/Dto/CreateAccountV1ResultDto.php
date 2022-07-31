@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Application\Account\Dto;
 
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 /**
- * @SWG\Definition(
+ * @OA\Schema(
  *     required={"item"}
  * )
  */
 class CreateAccountV1ResultDto
 {
     /**
-     * @SWG\Property()
+     * @OA\Property()
      */
     public AccountResultDto $item;
 }

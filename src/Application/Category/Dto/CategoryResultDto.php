@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\Application\Category\Dto;
 
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 /**
- * @SWG\Definition(
+ * @OA\Schema(
  *     required={"id", "ownerUserId", "name", "position", "type", "icon", "isArchived", "createdAt", "updatedAt"}
  * )
  */
@@ -15,62 +15,62 @@ class CategoryResultDto
     /**
      * Id
      * @var string
-     * @SWG\Property(example="1b8559ac-4c77-47e4-a95c-1530a5274ab7")
+     * @OA\Property(example="1b8559ac-4c77-47e4-a95c-1530a5274ab7")
      */
     public string $id;
 
     /**
      * Owner user id
-     * @SWG\Property(example="f680553f-6b40-407d-a528-5123913be0aa")
+     * @OA\Property(example="f680553f-6b40-407d-a528-5123913be0aa")
      */
     public string $ownerUserId;
 
     /**
      * Name
      * @var string
-     * @SWG\Property(example="Taxes")
+     * @OA\Property(example="Taxes")
      */
     public string $name;
 
     /**
      * Position
      * @var int
-     * @SWG\Property(example="0")
+     * @OA\Property(example="0")
      */
     public int $position;
 
     /**
      * Category type
      * @var string
-     * @SWG\Property(example="expense")
+     * @OA\Property(example="expense")
      */
     public string $type;
 
     /**
      * Icon
      * @var string
-     * @SWG\Property(example="local_offer")
+     * @OA\Property(example="local_offer")
      */
     public string $icon;
 
     /**
      * Is archived category?
      * @var int
-     * @SWG\Property(example="0")
+     * @OA\Property(example="0")
      */
     public int $isArchived;
 
     /**
      * Created at
      * @var string
-     * @SWG\Property(example="2021-01-01 12:15:00")
+     * @OA\Property(example="2021-01-01 12:15:00")
      */
     public string $createdAt;
 
     /**
      * Updated at
      * @var string
-     * @SWG\Property(example="2021-01-01 12:15:00")
+     * @OA\Property(example="2021-01-01 12:15:00")
      */
     public string $updatedAt;
 }

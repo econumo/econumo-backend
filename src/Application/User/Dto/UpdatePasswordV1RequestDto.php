@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace App\Application\User\Dto;
 
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 /**
- * @SWG\Definition(
+ * @OA\Schema(
  *     required={"oldPassword", "newPassword"}
  * )
  */
 class UpdatePasswordV1RequestDto
 {
     /**
-     * @SWG\Property(example="pass")
+     * @OA\Property(example="pass")
      */
     public string $oldPassword;
 
     /**
-     * @SWG\Property(example="new_pass")
+     * @OA\Property(example="new_pass")
      */
     public string $newPassword;
 }

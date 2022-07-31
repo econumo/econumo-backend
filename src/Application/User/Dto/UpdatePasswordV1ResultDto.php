@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Application\User\Dto;
 
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 /**
- * @SWG\Definition(
+ * @OA\Schema(
  * )
  */
 class UpdatePasswordV1ResultDto

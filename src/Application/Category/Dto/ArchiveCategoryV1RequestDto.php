@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Application\Category\Dto;
 
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 /**
- * @SWG\Definition(
+ * @OA\Schema(
  *     required={"id"}
  * )
  */
 class ArchiveCategoryV1RequestDto
 {
     /**
-     * @SWG\Property(example="95587d1d-2c39-4efc-98f3-23c755da44a4")
+     * @OA\Property(example="95587d1d-2c39-4efc-98f3-23c755da44a4")
      */
     public string $id;
 }

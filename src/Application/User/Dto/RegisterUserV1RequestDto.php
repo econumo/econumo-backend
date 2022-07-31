@@ -4,27 +4,27 @@ declare(strict_types=1);
 
 namespace App\Application\User\Dto;
 
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 /**
- * @SWG\Definition(
+ * @OA\Schema(
  *     required={"email", "password"}
  * )
  */
 class RegisterUserV1RequestDto
 {
     /**
-     * @SWG\Property(example="john@snow.test")
+     * @OA\Property(example="john@snow.test")
      */
     public string $email;
 
     /**
-     * @SWG\Property(example="pass")
+     * @OA\Property(example="pass")
      */
     public string $password;
 
     /**
-     * @SWG\Property(example="John")
+     * @OA\Property(example="John")
      */
     public string $name;
 }

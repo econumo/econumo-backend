@@ -17,7 +17,7 @@ use App\UI\Service\Validator\ValidatorInterface;
 use App\UI\Service\Response\ResponseFactory;
 use Symfony\Component\Routing\Annotation\Route;
 use Nelmio\ApiDocBundle\Annotation\Model;
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 class CreateTagV1Controller extends AbstractController
 {
@@ -38,23 +38,17 @@ class CreateTagV1Controller extends AbstractController
     /**
      * Create Tag
      *
-     * @SWG\Tag(name="Tag"),
-     * @SWG\Tag(name="Need automation"),
-     * @SWG\Parameter(
-     *     name="payload",
-     *     in="body",
-     *     required=true,
-     *     @SWG\Schema(ref=@Model(type=\App\Application\Tag\Dto\CreateTagV1RequestDto::class)),
-     * ),
-     * @SWG\Response(
+     * @OA\Tag(name="Tag"),
+     * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\Application\Tag\Dto\CreateTagV1RequestDto::class))),
+     * @OA\Response(
      *     response=200,
      *     description="OK",
-     *     @SWG\Schema(
+     *     @OA\JsonContent(
      *         type="object",
      *         allOf={
-     *             @SWG\Schema(ref="#/definitions/JsonResponseOk"),
-     *             @SWG\Schema(
-     *                 @SWG\Property(
+     *             @OA\Schema(ref="#/components/schemas/JsonResponseOk"),
+     *             @OA\Schema(
+     *                 @OA\Property(
      *                     property="data",
      *                     ref=@Model(type=\App\Application\Tag\Dto\CreateTagV1ResultDto::class)
      *                 )
@@ -62,8 +56,9 @@ class CreateTagV1Controller extends AbstractController
      *         }
      *     )
      * ),
-     * @SWG\Response(response=400, description="Bad Request", @SWG\Schema(ref="#/definitions/JsonResponseError")),
-     * @SWG\Response(response=500, description="Internal Server Error", @SWG\Schema(ref="#/definitions/JsonResponseException")),
+     * @OA\Response(response=400, description="Bad Request", @OA\JsonContent(ref="#/components/schemas/JsonResponseError")),
+     * @OA\Response(response=401, description="Unauthorized", @OA\JsonContent(ref="#/components/schemas/JsonResponseUnauthorized")),
+     * @OA\Response(response=500, description="Internal Server Error", @OA\JsonContent(ref="#/components/schemas/JsonResponseException")),
      *
      * @Route("/api/v1/tag/create-tag", methods={"POST"})
      *

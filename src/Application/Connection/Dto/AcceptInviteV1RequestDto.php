@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Application\Connection\Dto;
 
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 /**
- * @SWG\Definition(
+ * @OA\Schema(
  *     required={"code"}
  * )
  */
 class AcceptInviteV1RequestDto
 {
     /**
-     * @SWG\Property(example="2b345")
+     * @OA\Property(example="2b345")
      */
     public string $code;
 }

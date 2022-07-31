@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Application\Tag\Dto;
 
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 /**
- * @SWG\Definition(
+ * @OA\Schema(
  *     required={"item"}
  * )
  */
@@ -15,7 +15,7 @@ class UpdateTagV1ResultDto
 {
     /**
      * Tag
-     * @SWG\Property()
+     * @OA\Property()
      */
     public TagResultDto $item;
 }

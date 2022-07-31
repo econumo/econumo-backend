@@ -169,9 +169,6 @@
             "config/packages/prod/ekino_new_relic.yaml"
         ]
     },
-    "exsyst/swagger": {
-        "version": "v0.4.1"
-    },
     "flow/jsonpath": {
         "version": "0.5.0"
     },

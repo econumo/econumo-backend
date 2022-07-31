@@ -16,7 +16,7 @@ use App\UI\Service\Validator\ValidatorInterface;
 use App\UI\Service\Response\ResponseFactory;
 use Symfony\Component\Routing\Annotation\Route;
 use Nelmio\ApiDocBundle\Annotation\Model;
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 class _CG_ACTION__CG_SUBJECT__CG_VERSION_Controller extends AbstractController
 {
@@ -32,24 +32,23 @@ class _CG_ACTION__CG_SUBJECT__CG_VERSION_Controller extends AbstractController
     /**
      * _CG_ACTION_ _CG_SUBJECT_
      *
-     * @SWG\Tag(name="_CG_MODULE_"),
-     * @SWG\Tag(name="Need automation"),
-     * @SWG\Parameter(
+     * @OA\Tag(name="_CG_MODULE_"),
+     * @OA\Parameter(
      *     name="id",
      *     in="query",
      *     required=true,
-     *     type="string",
+     *     @OA\Schema(type="string"),
      *     description="ID чего-либо",
      * ),
-     * @SWG\Response(
+     * @OA\Response(
      *     response=200,
      *     description="OK",
-     *     @SWG\Schema(
+     *     @OA\JsonContent(
      *         type="object",
      *         allOf={
-     *             @SWG\Schema(ref="#/definitions/JsonResponseOk"),
-     *             @SWG\Schema(
-     *                 @SWG\Property(
+     *             @OA\Schema(ref="#/components/schemas/JsonResponseOk"),
+     *             @OA\Schema(
+     *                 @OA\Property(
      *                     property="data",
      *                     ref=@Model(type=\_CG_APPROOT_\Application\_CG_MODULE_\Dto\_CG_ACTION__CG_SUBJECT__CG_VERSION_ResultDto::class)
      *                 )
@@ -57,8 +56,9 @@ class _CG_ACTION__CG_SUBJECT__CG_VERSION_Controller extends AbstractController
      *         }
      *     )
      * ),
-     * @SWG\Response(response=400, description="Bad Request", @SWG\Schema(ref="#/definitions/JsonResponseError")),
-     * @SWG\Response(response=500, description="Internal Server Error", @SWG\Schema(ref="#/definitions/JsonResponseException")),
+     * @OA\Response(response=400, description="Bad Request", @OA\JsonContent(ref="#/components/schemas/JsonResponseError")),
+     * @OA\Response(response=401, description="Unauthorized", @OA\JsonContent(ref="#/components/schemas/JsonResponseUnauthorized")),
+     * @OA\Response(response=500, description="Internal Server Error", @OA\JsonContent(ref="#/components/schemas/JsonResponseException")),
      *
      * @Route("_CG_URL_", methods={"_CG_METHOD_"})
      *

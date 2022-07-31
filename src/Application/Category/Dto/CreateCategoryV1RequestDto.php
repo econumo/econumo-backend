@@ -4,37 +4,37 @@ declare(strict_types=1);
 
 namespace App\Application\Category\Dto;
 
-use Swagger\Annotations as SWG;
+use OpenApi\Annotations as OA;
 
 /**
- * @SWG\Definition(
+ * @OA\Schema(
  *     required={"id", "name", "type"}
  * )
  */
 class CreateCategoryV1RequestDto
 {
     /**
-     * @SWG\Property(example="3a2c32a4-45ec-4cb0-9794-a6bef87ba9a4")
+     * @OA\Property(example="3a2c32a4-45ec-4cb0-9794-a6bef87ba9a4")
      */
     public string $id;
 
     /**
-     * @SWG\Property(example="Food")
+     * @OA\Property(example="Food")
      */
     public string $name;
 
     /**
-     * @SWG\Property(example="expense")
+     * @OA\Property(example="expense")
      */
     public string $type;
 
     /**
-     * @SWG\Property(example="0aaa0450-564e-411e-8018-7003f6dbeb92")
+     * @OA\Property(example="0aaa0450-564e-411e-8018-7003f6dbeb92")
      */
     public ?string $accountId = null;
 
     /**
-     * @SWG\Property(example="local_offer")
+     * @OA\Property(example="local_offer")
      */
     public ?string $icon = null;
 }
