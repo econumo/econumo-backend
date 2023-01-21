@@ -49,7 +49,7 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 RUN composer clear-cache && \
     rm /var/www/.env.* && \
     rm /usr/local/bin/composer && \
-    apk del git && \
+    apk del git
 #    pecl uninstall xdebug && \
 #    rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
 #    rm /usr/local/etc/php-fpm.d/xdebug.ini
