@@ -56,7 +56,7 @@ RUN chown www-data:www-data /var/www/var/ -R
 # cleanup
 RUN composer clear-cache && \
     rm /var/www/.env.* && \
-    rm /usr/local/bin/composer && \
+#    rm /usr/local/bin/composer && \
     apk del git
 #    pecl uninstall xdebug && \
 #    rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \

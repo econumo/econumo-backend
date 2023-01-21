@@ -53,7 +53,6 @@ class HealthCheckController extends AbstractController
             $response['exchange_rates'] = (bool)$this->currencyExchangeStatusService->getUsage();
         } catch (\Exception $e) {
             $response['exchange_rates'] = false;
-            $status = false;
         }
 
         return new JsonResponse($response, $status ? Response::HTTP_OK : Response::HTTP_INTERNAL_SERVER_ERROR);
