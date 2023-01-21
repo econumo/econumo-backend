@@ -14,8 +14,8 @@ RUN apk add --update nginx supervisor git postgresql-dev \
     docker-php-ext-configure opcache --enable-opcache && \
     docker-php-ext-configure pdo_pgsql --with-pdo-pgsql && \
 #    docker-php-ext-configure mbstring --enable-mbstring && \
-    pecl install xdebug && \
-    docker-php-ext-enable xdebug && \
+#    pecl install xdebug && \
+#    docker-php-ext-enable xdebug && \
     docker-php-ext-install -j$(nproc) bcmath opcache json curl pdo_pgsql && \
     apk del -f .build-deps && \
     rm -rf /tmp/* /var/cache/apk/*
@@ -50,6 +50,6 @@ RUN composer clear-cache && \
     rm /var/www/.env.* && \
     rm /usr/local/bin/composer && \
     apk del git && \
-    pecl uninstall xdebug && \
-    rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
-    rm /usr/local/etc/php-fpm.d/xdebug.ini
+#    pecl uninstall xdebug && \
+#    rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
+#    rm /usr/local/etc/php-fpm.d/xdebug.ini
