@@ -30,11 +30,15 @@ jobs:
 
             -   uses: actions/checkout@v3
 
-            -   name: Test APP image
+            -   name: Build APP image for testing
                 if: success()
                 run: |
                     docker pull ${DOCKER_IMAGE_APP} || true
                     docker build --cache-from ${DOCKER_IMAGE_APP} --tag ${DOCKER_IMAGE_APP} --target test -f build/docker/app/Dockerfile .
+
+            -   name: Test APP image
+                if: success()
+                run: |
                     docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:database:create --if-not-exists --env=test
                     docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:migration:migrate -n --env=test
                     docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:fixtures:load --purge-with-truncate -n --env=test
@@ -44,12 +48,12 @@ jobs:
                     QASE_TOKEN: ${{ secrets.APP_QASE_TOKEN }}
                     QASE_PROJECT: "EA"
 
-            -   name: Build APP image
+            -   name: Build APP image for publishing
                 if: success()
                 run: |
                     docker build --cache-from ${DOCKER_IMAGE_APP} --tag ${DOCKER_IMAGE_APP} --target prod -f build/docker/app/Dockerfile .
 
-            -   name: Push DOCKER image
+            -   name: Publish DOCKER image
                 if: success()
                 run: |
                     docker push ${DOCKER_IMAGE_APP}
