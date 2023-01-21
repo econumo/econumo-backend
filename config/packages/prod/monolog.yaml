@@ -2,12 +2,15 @@
 monolog:
     handlers:
         main:
-            action_level: info
-        nested:
             level: error
-        deprecation:
-            level: error
+            action_level: error
+            handler: prod
+            include_stacktraces: true
+        prod:
+            type: stream
         deprecation_filter:
-            max_level: info
-        http_api_exceptions:
-            level: error
+            handler: black_hole
+#        http_api_exceptions:
+#            level: error
+        black_hole:
+            type: "null"

@@ -15,6 +15,7 @@ doctrine:
         host: '%env(resolve:DATABASE_HOST)%'
         dbname: '%env(resolve:DATABASE_NAME)%'
         port: '%env(resolve:DATABASE_PORT)%'
+        sslmode: '%env(resolve:DATABASE_SSL_MODE)%'
         charset: 'utf8'
         types:
             uuid: App\Infrastructure\Doctrine\Type\UuidType

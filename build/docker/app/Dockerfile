@@ -4,6 +4,7 @@ EXPOSE 80 9000
 
 ENV PHP_DISPLAY_ERRORS 0
 ENV PHP_ERROR_REPORTING 22527
+ENV COMPOSER_ALLOW_SUPERUSER 1
 
 WORKDIR /var/www/
 
@@ -38,12 +39,19 @@ RUN composer install --no-scripts --prefer-dist --no-autoloader
 COPY . /var/www
 # Finish composer
 RUN composer dump-autoload --optimize
+# Install assets
+RUN bin/console assets:install public && \
+    bin/console nelmio:apidoc:dump
 RUN chown www-data:www-data /var/www/ -R
 
 
 FROM test as prod
 
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+
+# Warmup cache
+RUN rm -rf /var/www/var/cache/* && bin/console cache:warmup --env=prod
+RUN chown www-data:www-data /var/www/var/ -R
 
 # cleanup
 RUN composer clear-cache && \
