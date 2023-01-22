@@ -92,7 +92,7 @@ class TagService implements TagServiceInterface
             return;
         }
 
-        $this->tagRepository->save($changed);
+        $this->tagRepository->save(...$changed);
     }
 
     public function deleteTag(Id $tagId): void

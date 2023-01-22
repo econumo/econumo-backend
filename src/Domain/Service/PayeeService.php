@@ -96,7 +96,7 @@ class PayeeService implements PayeeServiceInterface
             return;
         }
 
-        $this->payeeRepository->save($changed);
+        $this->payeeRepository->save(...$changed);
     }
 
     public function archivePayee(Id $payeeId): void
