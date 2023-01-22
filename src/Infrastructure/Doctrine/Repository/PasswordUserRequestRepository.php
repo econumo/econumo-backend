@@ -52,7 +52,7 @@ class PasswordUserRequestRepository extends ServiceEntityRepository implements P
     public function getByCode(string $code): PasswordUserRequest
     {
         $item = $this->findOneBy(['code' => $code]);
-        if (!$item instanceof \App\Domain\Entity\PasswordUserRequest) {
+        if (!$item instanceof PasswordUserRequest) {
             throw new NotFoundException(sprintf('PasswordUserRequest with ID %s not found', $code));
         }
 

@@ -48,7 +48,7 @@ class AccountAccessInviteRepository extends ServiceEntityRepository implements A
             'account' => $this->getEntityManager()->getReference(Account::class, $accountId),
             'recipient' => $this->getEntityManager()->getReference(User::class, $recipientId)
         ]);
-        if (!$item instanceof \App\Domain\Entity\AccountAccessInvite) {
+        if (!$item instanceof AccountAccessInvite) {
             throw new NotFoundException('AccountAccessInvite not found');
         }
 
@@ -69,7 +69,7 @@ class AccountAccessInviteRepository extends ServiceEntityRepository implements A
                 'code' => $code
             ]
         );
-        if (!$item instanceof \App\Domain\Entity\AccountAccessInvite) {
+        if (!$item instanceof AccountAccessInvite) {
             throw new NotFoundException('AccountAccessInvite not found');
         }
 

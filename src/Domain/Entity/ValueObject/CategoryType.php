@@ -65,9 +65,9 @@ final class CategoryType implements JsonSerializable
 
     public function getAlias(): string
     {
-        if ($this->value == self::INCOME) {
+        if ($this->value === self::INCOME) {
             return 'income';
-        } elseif ($this->value == self::EXPENSE) {
+        } elseif ($this->value === self::EXPENSE) {
             return 'expense';
         }
 

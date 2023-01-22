@@ -28,7 +28,7 @@ class OperationIdRepository extends ServiceEntityRepository
     public function get(Id $id): OperationId
     {
         $item = $this->find($id);
-        if (!$item instanceof \App\Infrastructure\Doctrine\Entity\OperationId) {
+        if (!$item instanceof OperationId) {
             throw new NotFoundException(sprintf('OperationId %s not found', $id));
         }
 

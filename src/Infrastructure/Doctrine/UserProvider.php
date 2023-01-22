@@ -86,7 +86,7 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
         // 2. update the $user object with $user->setPassword($newHashedPassword);
     }
 
-    public function loadUserByUsername(string $username): \Symfony\Component\Security\Core\User\UserInterface
+    public function loadUserByUsername(string $username): UserInterface
     {
         return $this->loadUserByIdentifier($username);
     }

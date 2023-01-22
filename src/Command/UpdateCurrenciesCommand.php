@@ -55,7 +55,7 @@ class UpdateCurrenciesCommand extends Command
         }
 
         $io->info(sprintf('Loaded %d currencies', count($filtered)));
-        $this->currencyUpdateService->updateCurrencies($filtered);
+        $this->currencyUpdateService->updateCurrencies(...$filtered);
         $io->success('Currencies updated');
 
         return Command::SUCCESS;

@@ -71,7 +71,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function loadByIdentifier(Identifier $identifier): User
     {
         $user = $this->findOneBy(['identifier' => $identifier->getValue()]);
-        if (!$user instanceof \App\Domain\Entity\User) {
+        if (!$user instanceof User) {
             throw new NotFoundException(sprintf('User with identifier %s not found', $identifier));
         }
 
@@ -81,7 +81,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function get(Id $id): User
     {
         $item = $this->find($id);
-        if (!$item instanceof \App\Domain\Entity\User) {
+        if (!$item instanceof User) {
             throw new NotFoundException(sprintf('User with ID %s not found', $id));
         }
 
@@ -91,7 +91,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function getByEmail(Email $email): User
     {
         $user = $this->findOneBy(['identifier' => $email->getValue()]);
-        if (!$user instanceof \App\Domain\Entity\User) {
+        if (!$user instanceof User) {
             throw new NotFoundException(sprintf('User with email %s not found', $email));
         }
 

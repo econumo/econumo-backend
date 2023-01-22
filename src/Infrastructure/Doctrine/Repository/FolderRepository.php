@@ -10,6 +10,7 @@ use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\FolderRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\ORMInvalidArgumentException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -48,7 +49,7 @@ class FolderRepository extends ServiceEntityRepository implements FolderReposito
     public function get(Id $id): Folder
     {
         $item = $this->find($id);
-        if (!$item instanceof \App\Domain\Entity\Folder) {
+        if (!$item instanceof Folder) {
             throw new NotFoundException(sprintf('Folder with ID %s not found', $id));
         }
 
@@ -85,11 +86,11 @@ class FolderRepository extends ServiceEntityRepository implements FolderReposito
         $item = $builder
             ->where('f.user = :user')
             ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId))
-            ->orderBy('f.position', \Doctrine\Common\Collections\Criteria::DESC)
+            ->orderBy('f.position', Criteria::DESC)
             ->setMaxResults(1)
             ->getQuery()
             ->getSingleResult();
-        if (!$item instanceof \App\Domain\Entity\Folder) {
+        if (!$item instanceof Folder) {
             throw new NotFoundException('Folder not found');
         }
 

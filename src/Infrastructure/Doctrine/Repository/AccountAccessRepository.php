@@ -11,6 +11,7 @@ use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\AccountAccessRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\ORMInvalidArgumentException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -50,7 +51,7 @@ class AccountAccessRepository extends ServiceEntityRepository implements Account
         return $this->createQueryBuilder('a')
             ->andWhere('a.user = :user')
             ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId))
-            ->orderBy('a.position', \Doctrine\Common\Collections\Criteria::ASC)
+            ->orderBy('a.position', Criteria::ASC)
             ->getQuery()
             ->getResult();
     }
@@ -94,7 +95,7 @@ GROUP BY a.id
 DQL;
         $query = $this->getEntityManager()->createQuery($dql)
             ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId));
-        $accounts = array_map(function ($id): ?\App\Domain\Entity\Account {
+        $accounts = array_map(function ($id): ?Account {
             return $this->getEntityManager()->getReference(Account::class, new Id($id));
         }, array_column($query->getScalarResult(), 'id'));
 
