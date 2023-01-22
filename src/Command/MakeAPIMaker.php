@@ -22,7 +22,7 @@ class MakeAPIMaker extends AbstractMaker
         return 'make:api';
     }
 
-    public function configureCommand(Command $command, InputConfiguration $inputConf)
+    public function configureCommand(Command $command, InputConfiguration $inputConf): void
     {
         $command
             ->setDescription('Generate base structure for API')
@@ -73,7 +73,7 @@ HELP);
 
         if (
             !preg_match(
-                '!^/api/(?P<version>v\d+)/(?P<module>[a-z0-9\-]+)/(?P<action>[a-z0-9]+)-(?P<subject>[a-z0-9\-]+)$!i',
+                '#^/api/(?P<version>v\d+)/(?P<module>[a-z0-9\-]+)/(?P<action>[a-z0-9]+)-(?P<subject>[a-z0-9\-]+)$#i',
                 $url,
                 $matches,
             )
@@ -83,11 +83,11 @@ HELP);
 
         $module = implode(
             '',
-            array_map(function ($item) {
+            array_map(static function ($item) : string {
                 return ucfirst(strtolower($item));
             }, explode('-', $matches['module'])),
         );
-        $subject = implode('', array_map(function(string $item) {
+        $subject = implode('', array_map(static function (string $item) : string {
             return ucfirst(strtolower($item));
         }, explode('-', $matches['subject'])));
         $action = ucfirst(strtolower($matches['action']));
@@ -180,12 +180,14 @@ HELP);
             if ($dryRun) {
                 continue;
             }
+
             if ($delete) {
                 try {
                     $filesystem->remove($path);
-                } catch (\Throwable $exception) {
-                    $io->write($exception->getMessage());
+                } catch (\Throwable $throwable) {
+                    $io->write($throwable->getMessage());
                 }
+
                 continue;
             }
 
@@ -199,12 +201,13 @@ HELP);
             if ($filesystem->exists($path)) {
                 $filesystem->remove($path);
             }
+
             $filesystem->touch($path);
             $filesystem->appendToFile($path, $content);
         }
     }
 
-    public function configureDependencies(DependencyBuilder $dependencies)
+    public function configureDependencies(DependencyBuilder $dependencies): void
     {
         $dependencies->addClassDependency(Command::class, 'console');
     }

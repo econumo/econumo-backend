@@ -8,8 +8,13 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class CurrencyExchangeUsageService
 {
+    /**
+     * @var string
+     */
     private const CURRENCIES_URL = 'https://openexchangerates.org/api/usage.json';
+
     private HttpClientInterface $client;
+
     private string $token;
 
     public function __construct(HttpClientInterface $client, string $token)

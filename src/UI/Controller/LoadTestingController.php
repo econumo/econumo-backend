@@ -20,7 +20,7 @@ class LoadTestingController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function __invoke(Request $request): Response
+    public function __invoke(): Response
     {
         sleep(1);
         return new JsonResponse(['success' => true]);

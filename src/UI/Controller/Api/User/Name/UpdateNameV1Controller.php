@@ -21,6 +21,7 @@ use OpenApi\Annotations as OA;
 class UpdateNameV1Controller extends AbstractController
 {
     private NameService $nameService;
+
     private ValidatorInterface $validator;
 
     public function __construct(NameService $nameService, ValidatorInterface $validator)

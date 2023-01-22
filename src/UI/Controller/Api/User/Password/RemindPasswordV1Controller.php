@@ -20,6 +20,7 @@ use OpenApi\Annotations as OA;
 class RemindPasswordV1Controller extends AbstractController
 {
     private PasswordService $passwordService;
+
     private ValidatorInterface $validator;
 
     public function __construct(PasswordService $passwordService, ValidatorInterface $validator)

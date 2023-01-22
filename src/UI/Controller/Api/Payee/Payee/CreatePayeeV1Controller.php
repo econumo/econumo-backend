@@ -22,7 +22,9 @@ use OpenApi\Annotations as OA;
 class CreatePayeeV1Controller extends AbstractController
 {
     private PayeeService $payeeService;
+
     private ValidatorInterface $validator;
+
     private OperationServiceInterface $operationService;
 
     public function __construct(

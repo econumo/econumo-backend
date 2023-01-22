@@ -21,6 +21,7 @@ use OpenApi\Annotations as OA;
 class ArchiveTagV1Controller extends AbstractController
 {
     private TagService $tagService;
+
     private ValidatorInterface $validator;
 
     public function __construct(TagService $tagService, ValidatorInterface $validator)

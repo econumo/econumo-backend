@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 class DatabaseTransactionService implements AntiCorruptionServiceInterface
 {
     private EntityManagerInterface $entityManager;
+
     private bool $started = false;
 
     public function __construct(EntityManagerInterface $entityManager)
@@ -22,6 +23,7 @@ class DatabaseTransactionService implements AntiCorruptionServiceInterface
         if ($this->started) {
             return;
         }
+
         $this->entityManager->beginTransaction();
         $this->started = true;
     }

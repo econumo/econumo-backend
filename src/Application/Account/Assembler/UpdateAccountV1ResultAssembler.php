@@ -14,6 +14,7 @@ use App\Domain\Entity\ValueObject\Id;
 class UpdateAccountV1ResultAssembler
 {
     private AccountToDtoV1ResultAssembler $accountToDtoV1ResultAssembler;
+
     private TransactionToDtoResultAssembler $transactionToDtoV1ResultAssembler;
 
     public function __construct(
@@ -32,7 +33,7 @@ class UpdateAccountV1ResultAssembler
     ): UpdateAccountV1ResultDto {
         $result = new UpdateAccountV1ResultDto();
         $result->item = $this->accountToDtoV1ResultAssembler->assemble($userId, $account);
-        if ($transaction) {
+        if ($transaction !== null) {
             $result->transaction = $this->transactionToDtoV1ResultAssembler->assemble($userId, $transaction);
         }
 

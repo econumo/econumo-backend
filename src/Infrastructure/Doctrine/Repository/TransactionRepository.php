@@ -13,6 +13,7 @@ use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\TransactionRepositoryInterface;
 use DateTimeInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\ORMInvalidArgumentException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -49,7 +50,7 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
             ->where('t.account = :account')
             ->orWhere('t.accountRecipient = :account')
             ->setParameter('account', $this->getEntityManager()->getReference(Account::class, $accountId))
-            ->orderBy('t.spentAt', 'DESC')
+            ->orderBy('t.spentAt', Criteria::DESC)
             ->getQuery()
             ->getResult();
     }
@@ -60,6 +61,7 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
             foreach ($transactions as $transaction) {
                 $this->getEntityManager()->persist($transaction);
             }
+
             $this->getEntityManager()->flush();
         } catch (ORMException | ORMInvalidArgumentException $e) {
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
@@ -71,9 +73,8 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
      */
     public function get(Id $id): Transaction
     {
-        /** @var Transaction|null $item */
         $item = $this->find($id);
-        if ($item === null) {
+        if (!$item instanceof Transaction) {
             throw new NotFoundException(sprintf('Transaction with ID %s not found', $id));
         }
 
@@ -91,7 +92,7 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
             ->createQuery('SELECT a.id FROM App\Domain\Entity\Account a WHERE a.user = :user')
             ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId));
         $userAccountIds = array_column($accountsQuery->getScalarResult(), 'id');
-        $accounts = array_map(function ($id) {
+        $accounts = array_map(function ($id): ?Account {
             return $this->getEntityManager()->getReference(Account::class, new Id($id));
         }, array_unique(array_merge($sharedIds, $userAccountIds)));
 
@@ -130,7 +131,7 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
             ->createQuery('SELECT a.id FROM App\Domain\Entity\Account a WHERE a.user = :user')
             ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId));
         $userAccountIds = array_column($accountsQuery->getScalarResult(), 'id');
-        $accounts = array_map(function ($id) {
+        $accounts = array_map(function ($id): ?Account {
             return $this->getEntityManager()->getReference(Account::class, new Id($id));
         }, array_unique(array_merge($sharedIds, $userAccountIds)));
 

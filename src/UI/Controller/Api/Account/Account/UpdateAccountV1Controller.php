@@ -21,6 +21,7 @@ use OpenApi\Annotations as OA;
 class UpdateAccountV1Controller extends AbstractController
 {
     private AccountService $accountService;
+
     private ValidatorInterface $validator;
 
     public function __construct(AccountService $accountService, ValidatorInterface $validator)

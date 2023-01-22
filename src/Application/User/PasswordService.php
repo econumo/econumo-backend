@@ -22,9 +22,13 @@ use App\Domain\Service\User\UserPasswordServiceInterface;
 class PasswordService
 {
     private RemindPasswordV1ResultAssembler $remindPasswordV1ResultAssembler;
+
     private PasswordUserRequestServiceInterface $passwordUserRequestService;
+
     private UpdatePasswordV1ResultAssembler $updatePasswordV1ResultAssembler;
+
     private UserPasswordServiceInterface $userPasswordService;
+
     private TranslationServiceInterface $translationService;
 
     public function __construct(
@@ -46,9 +50,10 @@ class PasswordService
     ): RemindPasswordV1ResultDto {
         try {
             $this->passwordUserRequestService->remindPassword(new Email($dto->username));
-        } catch (NotFoundException $exception) {
+        } catch (NotFoundException $notFoundException) {
             // hide error from user
         }
+
         return $this->remindPasswordV1ResultAssembler->assemble($dto);
     }
 
@@ -58,7 +63,7 @@ class PasswordService
     ): UpdatePasswordV1ResultDto {
         try {
             $this->userPasswordService->changePassword($userId, $dto->oldPassword, $dto->newPassword);
-        } catch (UserPasswordNotValidException $exception) {
+        } catch (UserPasswordNotValidException $userPasswordNotValidException) {
             throw new ValidationException($this->translationService->trans('user.password.not_correct'));
         }
 

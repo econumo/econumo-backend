@@ -10,6 +10,7 @@ use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\PayeeRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\ORMInvalidArgumentException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -51,14 +52,14 @@ DQL;
             ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId));
         $ids = array_column($query->getScalarResult(), 'user_id');
         $ids[] = $userId->getValue();
-        $users = array_map(function ($id) {
+        $users = array_map(function ($id): ?User {
             return $this->getEntityManager()->getReference(User::class, new Id($id));
         }, array_unique($ids));
 
         return $this->createQueryBuilder('c')
             ->andWhere('c.user IN(:users)')
             ->setParameter('users', $users)
-            ->orderBy('c.position', 'ASC')
+            ->orderBy('c.position', Criteria::ASC)
             ->getQuery()
             ->getResult();
     }
@@ -73,9 +74,8 @@ DQL;
 
     public function get(Id $id): Payee
     {
-        /** @var Payee|null $item */
         $item = $this->find($id);
-        if ($item === null) {
+        if (!$item instanceof Payee) {
             throw new NotFoundException(sprintf('Payee with ID %s not found', $id));
         }
 
@@ -88,6 +88,7 @@ DQL;
             foreach ($payees as $payee) {
                 $this->getEntityManager()->persist($payee);
             }
+
             $this->getEntityManager()->flush();
         } catch (ORMException | ORMInvalidArgumentException $e) {
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);

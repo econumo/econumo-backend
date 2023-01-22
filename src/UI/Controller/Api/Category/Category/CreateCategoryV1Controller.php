@@ -22,7 +22,9 @@ use OpenApi\Annotations as OA;
 class CreateCategoryV1Controller extends AbstractController
 {
     private CategoryService $categoryService;
+
     private ValidatorInterface $validator;
+
     private OperationServiceInterface $operationService;
 
     public function __construct(

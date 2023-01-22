@@ -14,6 +14,9 @@ class Kernel extends BaseKernel
 {
     use MicroKernelTrait;
 
+    /**
+     * @var string
+     */
     private const CONFIG_EXTS = '.{php,xml,yaml,yml}';
 
     public function registerBundles(): iterable
@@ -36,6 +39,7 @@ class Kernel extends BaseKernel
         $container->addResource(new FileResource($this->getProjectDir().'/config/bundles.php'));
         $container->setParameter('container.dumper.inline_class_loader', \PHP_VERSION_ID < 70400 || $this->debug);
         $container->setParameter('container.dumper.inline_factories', true);
+
         $confDir = $this->getProjectDir().'/config';
 
         $loader->load($confDir.'/{packages}/*'.self::CONFIG_EXTS, 'glob');

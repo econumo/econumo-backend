@@ -13,6 +13,7 @@ class TagNameType extends StringType
 
     /**
      * @inheritdoc
+     * @return TagName|null
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {

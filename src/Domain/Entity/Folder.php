@@ -19,15 +19,22 @@ class Folder
     use EventTrait;
 
     private Id $id;
+
     private FolderName $name;
-    private int $position;
-    private bool $isVisible;
+
+    private int $position = 1000;
+
+    private bool $isVisible = true;
+
     private User $user;
+
     /**
      * @var ArrayCollection|Account[]
      */
     private Collection $accounts;
+
     private DateTimeImmutable $createdAt;
+
     private DateTimeInterface $updatedAt;
 
     public function __construct(
@@ -39,8 +46,6 @@ class Folder
         $this->id = $id;
         $this->user = $user;
         $this->name = $name;
-        $this->position = 1000;
-        $this->isVisible = true;
         $this->accounts = new ArrayCollection();
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
@@ -77,12 +82,12 @@ class Folder
         return $this->accounts->contains($account);
     }
 
-    public function addAccount(Account $account)
+    public function addAccount(Account $account): void
     {
         $this->accounts->add($account);
     }
 
-    public function removeAccount(Account $account)
+    public function removeAccount(Account $account): void
     {
         $this->accounts->removeElement($account);
     }
@@ -113,7 +118,7 @@ class Folder
 
     public function makeVisible(): void
     {
-        if ($this->isVisible === false) {
+        if (!$this->isVisible) {
             $this->isVisible = true;
             $this->updated();
         }
@@ -121,7 +126,7 @@ class Folder
 
     public function makeInvisible(): void
     {
-        if ($this->isVisible === true) {
+        if ($this->isVisible) {
             $this->isVisible = false;
             $this->updated();
         }

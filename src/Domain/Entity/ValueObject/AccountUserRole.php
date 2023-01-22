@@ -9,9 +9,24 @@ use JsonSerializable;
 
 final class AccountUserRole implements JsonSerializable, ValueObjectInterface
 {
+    /**
+     * @var int
+     */
     public const ADMIN = 0;
+
+    /**
+     * @var int
+     */
     public const USER = 1;
+
+    /**
+     * @var int
+     */
     public const GUEST = 2;
+
+    /**
+     * @var string[]
+     */
     public const MAPPING = [
         self::ADMIN => 'admin',
         self::USER => 'user',
@@ -50,6 +65,7 @@ final class AccountUserRole implements JsonSerializable, ValueObjectInterface
         if (!self::isValid($value)) {
             throw new DomainException(sprintf('AccountRole %d not exists', $value));
         }
+
         $this->value = $value;
     }
 
@@ -106,6 +122,7 @@ final class AccountUserRole implements JsonSerializable, ValueObjectInterface
         if (empty($value)) {
             throw new DomainException('Value cannot be empty');
         }
+
         self::createFromAlias($value);
     }
 }

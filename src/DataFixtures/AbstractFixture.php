@@ -28,7 +28,7 @@ abstract class AbstractFixture extends Fixture
      * @throws \Doctrine\DBAL\DBALException
      * @throws Exception
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         foreach ($this->getDataForInsert() as $data) {
             $this->connection->insert(
@@ -59,7 +59,7 @@ abstract class AbstractFixture extends Fixture
             $this->dataFile = sprintf('tests/_data/fixtures/%s.php', $this->tableName);
         }
 
-        if (file_exists($this->dataFile) === false) {
+        if (!file_exists($this->dataFile)) {
             throw new Exception(sprintf('File "%s" not exists', $this->dataFile));
         }
 

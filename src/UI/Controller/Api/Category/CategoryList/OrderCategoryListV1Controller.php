@@ -21,6 +21,7 @@ use OpenApi\Annotations as OA;
 class OrderCategoryListV1Controller extends AbstractController
 {
     private CategoryListService $categoryListService;
+
     private ValidatorInterface $validator;
 
     public function __construct(CategoryListService $categoryListService, ValidatorInterface $validator)

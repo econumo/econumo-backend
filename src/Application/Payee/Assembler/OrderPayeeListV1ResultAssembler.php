@@ -12,6 +12,7 @@ use App\Domain\Repository\PayeeRepositoryInterface;
 class OrderPayeeListV1ResultAssembler
 {
     private PayeeRepositoryInterface $payeeRepository;
+
     private PayeeToDtoV1ResultAssembler $payeeToDtoV1ResultAssembler;
 
     public function __construct(PayeeRepositoryInterface $payeeRepository, PayeeToDtoV1ResultAssembler $payeeToDtoV1ResultAssembler)

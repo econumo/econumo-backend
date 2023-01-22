@@ -21,6 +21,7 @@ use OpenApi\Annotations as OA;
 class UpdatePayeeV1Controller extends AbstractController
 {
     private PayeeService $payeeService;
+
     private ValidatorInterface $validator;
 
     public function __construct(PayeeService $payeeService, ValidatorInterface $validator)

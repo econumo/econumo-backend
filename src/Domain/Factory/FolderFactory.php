@@ -14,7 +14,9 @@ use App\Domain\Service\DatetimeServiceInterface;
 class FolderFactory implements FolderFactoryInterface
 {
     private DatetimeServiceInterface $datetimeService;
+
     private FolderRepositoryInterface $folderRepository;
+
     private UserRepositoryInterface $userRepository;
 
     public function __construct(

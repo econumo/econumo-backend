@@ -13,6 +13,7 @@ use App\Domain\Service\Connection\ConnectionServiceInterface;
 class ConnectionService
 {
     private DeleteConnectionV1ResultAssembler $deleteConnectionV1ResultAssembler;
+
     private ConnectionServiceInterface $connectionService;
 
     public function __construct(

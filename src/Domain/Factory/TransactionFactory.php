@@ -19,11 +19,17 @@ use App\Domain\Service\Dto\TransactionDto;
 class TransactionFactory implements TransactionFactoryInterface
 {
     private DatetimeServiceInterface $datetimeService;
+
     private TransactionRepositoryInterface $transactionRepository;
+
     private AccountRepositoryInterface $accountRepository;
+
     private UserRepositoryInterface $userRepository;
+
     private CategoryRepositoryInterface $categoryRepository;
+
     private PayeeRepositoryInterface $payeeRepository;
+
     private TagRepositoryInterface $tagRepository;
 
     public function __construct(
@@ -51,15 +57,15 @@ class TransactionFactory implements TransactionFactoryInterface
             $this->userRepository->getReference($dto->userId),
             $dto->type,
             $this->accountRepository->getReference($dto->accountId),
-            (!$dto->categoryId ? null : $this->categoryRepository->getReference($dto->categoryId)),
+            ($dto->categoryId === null ? null : $this->categoryRepository->getReference($dto->categoryId)),
             $dto->amount,
             $dto->date,
             $this->datetimeService->getCurrentDatetime(),
-            (!$dto->accountRecipientId ? null : $this->accountRepository->getReference($dto->accountRecipientId)),
+            ($dto->accountRecipientId === null ? null : $this->accountRepository->getReference($dto->accountRecipientId)),
             $dto->amountRecipient,
             $dto->description,
-            (!$dto->payeeId ? null : $this->payeeRepository->getReference($dto->payeeId)),
-            (!$dto->tagId ? null :  $this->tagRepository->getReference($dto->tagId)),
+            ($dto->payeeId === null ? null : $this->payeeRepository->getReference($dto->payeeId)),
+            ($dto->tagId === null ? null :  $this->tagRepository->getReference($dto->tagId)),
         );
     }
 

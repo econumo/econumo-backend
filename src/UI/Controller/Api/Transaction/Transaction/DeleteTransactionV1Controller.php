@@ -20,6 +20,7 @@ use OpenApi\Annotations as OA;
 class DeleteTransactionV1Controller extends AbstractController
 {
     private TransactionService $transactionService;
+
     private ValidatorInterface $validator;
 
     public function __construct(TransactionService $transactionService, ValidatorInterface $validator)

@@ -8,7 +8,7 @@ class AccountAccessFixtures extends AbstractFixture implements DependentFixtureI
 {
     public string $tableName = 'account_access';
 
-    public function getDependencies()
+    public function getDependencies(): array
     {
         return [UserFixtures::class, AccountFixtures::class];
     }

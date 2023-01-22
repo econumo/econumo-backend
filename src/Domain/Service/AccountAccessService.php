@@ -13,6 +13,7 @@ use App\Domain\Repository\AccountRepositoryInterface;
 class AccountAccessService implements AccountAccessServiceInterface
 {
     private AccountAccessRepositoryInterface $accountAccessRepository;
+
     private AccountRepositoryInterface $accountRepository;
 
     public function __construct(
@@ -66,11 +67,7 @@ class AccountAccessService implements AccountAccessServiceInterface
     private function isOwner(Id $userId, Id $accountId): bool
     {
         $account = $this->accountRepository->get($accountId);
-        if ($account->getUserId()->isEqual($userId)) {
-            return true;
-        }
-
-        return false;
+        return $account->getUserId()->isEqual($userId);
     }
 
     private function isAdmin(Id $userId, Id $accountId): bool
@@ -82,7 +79,7 @@ class AccountAccessService implements AccountAccessServiceInterface
 
         try {
             $access = $this->accountAccessRepository->get($accountId, $userId);
-        } catch (NotFoundException $exception) {
+        } catch (NotFoundException $notFoundException) {
             return false;
         }
 
@@ -98,7 +95,7 @@ class AccountAccessService implements AccountAccessServiceInterface
 
         try {
             $access = $this->accountAccessRepository->get($accountId, $userId);
-        } catch (NotFoundException $exception) {
+        } catch (NotFoundException $notFoundException) {
             return false;
         }
 
@@ -114,7 +111,7 @@ class AccountAccessService implements AccountAccessServiceInterface
 
         try {
             $this->accountAccessRepository->get($accountId, $userId);
-        } catch (NotFoundException $exception) {
+        } catch (NotFoundException $notFoundException) {
             return false;
         }
 

@@ -21,7 +21,7 @@ class RequestFormValidationHelper
         $values = [];
         /** @var FormView $subView */
         foreach ($formView->vars['form']->children as $subView) {
-            if (count($subView->children)) {
+            if ($subView->children !== []) {
                 $values = array_merge($values, static::getFlatArrayErrors($subView));
             } elseif (!empty($subView->vars['errors'])) {
                 foreach ($subView->vars['errors'] as $error) {
@@ -30,6 +30,7 @@ class RequestFormValidationHelper
                 }
             }
         }
+
         return $values;
     }
 

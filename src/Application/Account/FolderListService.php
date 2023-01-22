@@ -19,9 +19,13 @@ use App\Domain\Service\Translation\TranslationServiceInterface;
 class FolderListService
 {
     private GetFolderListV1ResultAssembler $getFolderListV1ResultAssembler;
+
     private FolderRepositoryInterface $folderRepository;
+
     private OrderFolderListV1ResultAssembler $orderFolderListV1ResultAssembler;
+
     private FolderServiceInterface $folderService;
+
     private TranslationServiceInterface $translationService;
 
     public function __construct(
@@ -50,9 +54,10 @@ class FolderListService
         OrderFolderListV1RequestDto $dto,
         Id $userId
     ): OrderFolderListV1ResultDto {
-        if (!count($dto->changes)) {
+        if ($dto->changes === []) {
             throw new ValidationException($this->translationService->trans('account.folder_list.empty_list'));
         }
+
         $this->folderService->orderFolders($userId, ...$dto->changes);
         return $this->orderFolderListV1ResultAssembler->assemble($dto, $userId);
     }

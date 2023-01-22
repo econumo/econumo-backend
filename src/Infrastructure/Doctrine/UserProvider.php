@@ -37,8 +37,8 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
     {
         try {
             return $this->userRepository->loadByIdentifier(new Identifier($identifier));
-        } catch (NotFoundException $exception) {
-            $ex = new UserNotFoundException($exception->getMessage(), $exception->getCode(), $exception);
+        } catch (NotFoundException $notFoundException) {
+            $ex = new UserNotFoundException($notFoundException->getMessage(), $notFoundException->getCode(), $notFoundException);
             $ex->setUserIdentifier($identifier);
             throw $ex;
         }
@@ -71,7 +71,7 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
     /**
      * Tells Symfony to use this provider for this User class.
      */
-    public function supportsClass(string $class)
+    public function supportsClass(string $class): bool
     {
         return User::class === $class || is_subclass_of($class, User::class);
     }
@@ -86,7 +86,7 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
         // 2. update the $user object with $user->setPassword($newHashedPassword);
     }
 
-    public function loadUserByUsername(string $username)
+    public function loadUserByUsername(string $username): UserInterface
     {
         return $this->loadUserByIdentifier($username);
     }

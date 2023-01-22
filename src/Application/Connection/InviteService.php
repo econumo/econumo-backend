@@ -22,10 +22,15 @@ use App\Domain\Service\Connection\ConnectionServiceInterface;
 class InviteService
 {
     private GenerateInviteV1ResultAssembler $generateInviteV1ResultAssembler;
+
     private ConnectionInviteServiceInterface $connectionInviteService;
+
     private DeleteInviteV1ResultAssembler $deleteInviteV1ResultAssembler;
+
     private AcceptInviteV1ResultAssembler $acceptInviteV1ResultAssembler;
+
     private ConnectionServiceInterface $connectionService;
+
     private ConnectionAccountServiceInterface $connectionAccountService;
 
     public function __construct(

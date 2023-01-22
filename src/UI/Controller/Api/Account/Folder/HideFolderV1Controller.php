@@ -21,6 +21,7 @@ use OpenApi\Annotations as OA;
 class HideFolderV1Controller extends AbstractController
 {
     private FolderService $folderService;
+
     private ValidatorInterface $validator;
 
     public function __construct(FolderService $folderService, ValidatorInterface $validator)

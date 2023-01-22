@@ -25,15 +25,25 @@ use App\Domain\Service\Translation\TranslationServiceInterface;
 class UserService implements UserServiceInterface
 {
     private UserFactoryInterface $userFactory;
+
     private UserRepositoryInterface $userRepository;
+
     private EventDispatcherInterface $eventDispatcher;
+
     private FolderFactoryInterface $folderFactory;
+
     private FolderRepositoryInterface $folderRepository;
+
     private AntiCorruptionServiceInterface $antiCorruptionService;
+
     private TranslationServiceInterface $translator;
+
     private ConnectionInviteFactoryInterface $connectionInviteFactory;
+
     private ConnectionInviteRepositoryInterface $connectionInviteRepository;
+
     private UserOptionFactoryInterface $userOptionFactory;
+
     private UserOptionRepositoryInterface $userOptionRepository;
 
     public function __construct(
@@ -67,7 +77,7 @@ class UserService implements UserServiceInterface
         try {
             $this->userRepository->getByEmail($email);
             throw new UserRegisteredException();
-        } catch (NotFoundException $exception) {
+        } catch (NotFoundException $notFoundException) {
         }
 
         $this->antiCorruptionService->beginTransaction();
@@ -87,10 +97,11 @@ class UserService implements UserServiceInterface
             );
 
             $this->antiCorruptionService->commit();
-        } catch (\Throwable $exception) {
+        } catch (\Throwable $throwable) {
             $this->antiCorruptionService->rollback();
-            throw $exception;
+            throw $throwable;
         }
+
         $this->eventDispatcher->dispatchAll($user->releaseEvents());
         // do not send first folder creation event
 //        $this->eventDispatcher->dispatchAll($folder->releaseEvents());
@@ -102,6 +113,7 @@ class UserService implements UserServiceInterface
     {
         $user = $this->userRepository->get($userId);
         $user->updateName($name);
+
         $this->userRepository->save($user);
     }
 
@@ -111,7 +123,7 @@ class UserService implements UserServiceInterface
         try {
             $user = $this->userRepository->get($userId);
             $oldOption = $user->getOption(UserOption::CURRENCY);
-            if ($oldOption) {
+            if ($oldOption !== null) {
                 $this->userOptionRepository->delete($oldOption);
             }
 
@@ -119,9 +131,9 @@ class UserService implements UserServiceInterface
             $user->createOption($currencyOption);
             $this->userOptionRepository->save($currencyOption);
             $this->antiCorruptionService->commit();
-        } catch (\Throwable $exception) {
+        } catch (\Throwable $throwable) {
             $this->antiCorruptionService->rollback();
-            throw $exception;
+            throw $throwable;
         }
     }
 }

@@ -9,7 +9,7 @@ class UserConnectionFixtures extends AbstractFixture implements DependentFixture
 {
     public string $tableName = 'user_connections';
 
-    public function getDependencies()
+    public function getDependencies(): array
     {
         return [UserFixtures::class];
     }

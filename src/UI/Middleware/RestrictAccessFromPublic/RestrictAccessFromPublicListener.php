@@ -14,7 +14,7 @@ class RestrictAccessFromPublicListener implements EventSubscriberInterface
     /**
      * @inheritDoc
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             KernelEvents::CONTROLLER => 'onKernelController',
@@ -29,7 +29,7 @@ class RestrictAccessFromPublicListener implements EventSubscriberInterface
         if (!$controller instanceof AccessibleFromPublicInterface) {
             $isRequestFromPublic = (bool)$event->getRequest()->headers->get('x-pub', '0');
 
-            if ($isRequestFromPublic === true) {
+            if ($isRequestFromPublic) {
                 throw new AccessDeniedHttpException('This method is not accessible from public');
             }
         }

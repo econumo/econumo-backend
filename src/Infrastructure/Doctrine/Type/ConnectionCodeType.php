@@ -13,6 +13,7 @@ class ConnectionCodeType extends StringType
 
     /**
      * @inheritdoc
+     * @return ConnectionCode|null
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {

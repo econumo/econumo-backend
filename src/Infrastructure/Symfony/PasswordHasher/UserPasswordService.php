@@ -15,6 +15,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class UserPasswordService implements UserPasswordServiceInterface
 {
     private UserPasswordHasherInterface $passwordHasher;
+
     private UserRepositoryInterface $userRepository;
 
     public function __construct(UserPasswordHasherInterface $passwordHasher, UserRepositoryInterface $userRepository)
@@ -29,6 +30,7 @@ class UserPasswordService implements UserPasswordServiceInterface
         if (!$this->passwordHasher->isPasswordValid($user, $oldPassword)) {
             throw new UserPasswordNotValidException();
         }
+
         $this->updatePassword($userId, $newPassword);
     }
 
@@ -36,6 +38,7 @@ class UserPasswordService implements UserPasswordServiceInterface
     {
         $user = $this->userRepository->get($userId);
         $user->updatePassword($this->passwordHasher->hashPassword($user, $password));
+
         $this->userRepository->save($user);
     }
 }

@@ -11,6 +11,7 @@ use App\Domain\Repository\CategoryRepositoryInterface;
 class CategoryIdToDtoResultAssembler
 {
     private CategoryRepositoryInterface $categoryRepository;
+
     private CategoryToDtoResultAssembler $categoryToDtoResultAssembler;
 
     public function __construct(

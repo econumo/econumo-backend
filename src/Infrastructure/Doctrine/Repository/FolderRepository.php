@@ -10,6 +10,7 @@ use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\FolderRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\ORMInvalidArgumentException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -47,9 +48,8 @@ class FolderRepository extends ServiceEntityRepository implements FolderReposito
 
     public function get(Id $id): Folder
     {
-        /** @var Folder|null $item */
         $item = $this->find($id);
-        if ($item === null) {
+        if (!$item instanceof Folder) {
             throw new NotFoundException(sprintf('Folder with ID %s not found', $id));
         }
 
@@ -62,6 +62,7 @@ class FolderRepository extends ServiceEntityRepository implements FolderReposito
             foreach ($items as $item) {
                 $this->getEntityManager()->persist($item);
             }
+
             $this->getEntityManager()->flush();
         } catch (ORMException | ORMInvalidArgumentException $e) {
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
@@ -82,15 +83,14 @@ class FolderRepository extends ServiceEntityRepository implements FolderReposito
     public function getLastFolder(Id $userId): Folder
     {
         $builder = $this->createQueryBuilder('f');
-        /** @var Folder|null $item */
         $item = $builder
             ->where('f.user = :user')
             ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId))
-            ->orderBy('f.position', 'DESC')
+            ->orderBy('f.position', Criteria::DESC)
             ->setMaxResults(1)
             ->getQuery()
             ->getSingleResult();
-        if ($item === null) {
+        if (!$item instanceof Folder) {
             throw new NotFoundException('Folder not found');
         }
 

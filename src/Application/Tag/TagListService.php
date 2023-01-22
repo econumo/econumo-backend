@@ -19,9 +19,13 @@ use App\Domain\Service\Translation\TranslationServiceInterface;
 class TagListService
 {
     private GetTagListV1ResultAssembler $getTagListV1ResultAssembler;
+
     private TagRepositoryInterface $tagRepository;
+
     private OrderTagListV1ResultAssembler $orderTagListV1ResultAssembler;
+
     private TagServiceInterface $tagService;
+
     private TranslationServiceInterface $translationService;
 
     public function __construct(
@@ -50,9 +54,10 @@ class TagListService
         OrderTagListV1RequestDto $dto,
         Id $userId
     ): OrderTagListV1ResultDto {
-        if (!count($dto->changes)) {
+        if ($dto->changes === []) {
             throw new ValidationException($this->translationService->trans('tag.tag_list.empty_list'));
         }
+
         $this->tagService->orderTags($userId, ...$dto->changes);
 
         return $this->orderTagListV1ResultAssembler->assemble($dto, $userId);

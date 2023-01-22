@@ -21,6 +21,7 @@ use OpenApi\Annotations as OA;
 class GetTransactionListV1Controller extends AbstractController
 {
     private TransactionListService $transactionListService;
+
     private ValidatorInterface $validator;
 
     public function __construct(TransactionListService $transactionListService, ValidatorInterface $validator)

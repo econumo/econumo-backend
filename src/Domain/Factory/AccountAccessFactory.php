@@ -14,7 +14,9 @@ use App\Domain\Service\DatetimeServiceInterface;
 class AccountAccessFactory implements AccountAccessFactoryInterface
 {
     private DatetimeServiceInterface $datetimeService;
+
     private AccountRepositoryInterface $accountRepository;
+
     private UserRepositoryInterface $userRepository;
 
     public function __construct(

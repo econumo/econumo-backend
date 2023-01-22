@@ -13,7 +13,9 @@ use App\Domain\Service\DatetimeServiceInterface;
 class PasswordUserRequestFactory implements PasswordUserRequestFactoryInterface
 {
     private DatetimeServiceInterface $datetimeService;
+
     private PasswordUserRequestRepositoryInterface $passwordUserRequestRepository;
+
     private UserRepositoryInterface $userRepository;
 
     public function __construct(

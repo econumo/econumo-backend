@@ -16,7 +16,9 @@ use App\Domain\Service\DatetimeServiceInterface;
 class CategoryFactory implements CategoryFactoryInterface
 {
     private DatetimeServiceInterface $datetimeService;
+
     private UserRepositoryInterface $userRepository;
+
     private CategoryRepositoryInterface $categoryRepository;
 
     public function __construct(

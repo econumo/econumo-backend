@@ -8,7 +8,7 @@ class CurrencyRateFixtures extends AbstractFixture implements DependentFixtureIn
 {
     public string $tableName = 'currency_rates';
 
-    public function getDependencies()
+    public function getDependencies(): array
     {
         return [CurrencyFixtures::class];
     }

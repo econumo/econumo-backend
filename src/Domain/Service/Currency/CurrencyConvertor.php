@@ -14,7 +14,9 @@ use App\Domain\Repository\UserRepositoryInterface;
 class CurrencyConvertor implements CurrencyConvertorInterface
 {
     private CurrencyCode $baseCurrency;
+
     private UserRepositoryInterface $userRepository;
+
     private CurrencyRateRepositoryInterface $currencyRateRepository;
 
     public function __construct(
@@ -45,7 +47,7 @@ class CurrencyConvertor implements CurrencyConvertorInterface
         if (!$originalCurrency->isEqual($this->baseCurrency)) {
             foreach ($rates as $rate) {
                 if ($rate->getCurrency()->getCode()->isEqual($originalCurrency)) {
-                    $result = $result / $rate->getRate();
+                    $result /= $rate->getRate();
                     break;
                 }
             }
@@ -54,7 +56,7 @@ class CurrencyConvertor implements CurrencyConvertorInterface
         if (!$resultCurrency->isEqual($this->baseCurrency)) {
             foreach ($rates as $rate) {
                 if ($rate->getCurrency()->getCode()->isEqual($resultCurrency)) {
-                    $result = $result * $rate->getRate();
+                    $result *= $rate->getRate();
                     break;
                 }
             }

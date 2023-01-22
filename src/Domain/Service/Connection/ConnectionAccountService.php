@@ -19,10 +19,15 @@ use App\Domain\Service\AntiCorruptionServiceInterface;
 class ConnectionAccountService implements ConnectionAccountServiceInterface
 {
     private AccountAccessRepositoryInterface $accountAccessRepository;
+
     private AccountAccessFactoryInterface $accountAccessFactory;
+
     private FolderRepositoryInterface $folderRepository;
+
     private AntiCorruptionServiceInterface $antiCorruptionService;
+
     private AccountOptionsFactoryInterface $accountOptionsFactory;
+
     private AccountOptionsRepositoryInterface $accountOptionsRepository;
 
     public function __construct(
@@ -52,14 +57,15 @@ class ConnectionAccountService implements ConnectionAccountServiceInterface
                     $folder->removeAccount($accountAccess->getAccount());
                 }
             }
+
             $accountOptions = $this->accountOptionsRepository->get($sharedAccountId, $userId);
             $this->accountOptionsRepository->delete($accountOptions);
             $this->accountAccessRepository->delete($accountAccess);
 
             $this->antiCorruptionService->commit();
-        } catch (\Throwable $exception) {
+        } catch (\Throwable $throwable) {
             $this->antiCorruptionService->rollback();
-            throw $exception;
+            throw $throwable;
         }
     }
 
@@ -85,7 +91,7 @@ class ConnectionAccountService implements ConnectionAccountServiceInterface
         try {
             try {
                 $accountAccess = $this->accountAccessRepository->get($sharedAccountId, $userId);
-            } catch (NotFoundException $exception) {
+            } catch (NotFoundException $notFoundException) {
                 $accountAccess = $this->accountAccessFactory->create($sharedAccountId, $userId, $role);
 
                 $accountOptions = $this->accountOptionsRepository->getByUserId($userId);
@@ -95,6 +101,7 @@ class ConnectionAccountService implements ConnectionAccountServiceInterface
                         $position = $accountOption->getPosition();
                     }
                 }
+
                 $accountOptions = $this->accountOptionsFactory->create($sharedAccountId, $userId, ++$position);
                 $this->accountOptionsRepository->save($accountOptions);
 
@@ -102,12 +109,13 @@ class ConnectionAccountService implements ConnectionAccountServiceInterface
                 $folder->addAccount($accountAccess->getAccount());
                 $this->folderRepository->save($folder);
             }
+
             $accountAccess->updateRole($role);
             $this->accountAccessRepository->save($accountAccess);
             $this->antiCorruptionService->commit();
-        } catch (\Throwable $exception) {
+        } catch (\Throwable $throwable) {
             $this->antiCorruptionService->rollback();
-            throw $exception;
+            throw $throwable;
         }
     }
 }

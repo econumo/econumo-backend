@@ -16,7 +16,9 @@ use App\Domain\Service\Dto\CurrencyRateDto;
 class CurrencyRatesUpdateService implements CurrencyRatesUpdateServiceInterface
 {
     private CurrencyRateRepositoryInterface $currencyRateRepository;
+
     private CurrencyRepositoryInterface $currencyRepository;
+
     private CurrencyRateFactoryInterface $currencyRateFactory;
 
     public function __construct(
@@ -46,13 +48,13 @@ class CurrencyRatesUpdateService implements CurrencyRatesUpdateServiceInterface
                 if ($this->currencyRateRepository->get($item->getCurrency()->getId(), $item->getPublishedAt())) {
                     continue;
                 }
-            } catch (NotFoundException $exception) {
+            } catch (NotFoundException $notFoundException) {
             }
 
             $forUpdate[] = $item;
         }
 
-        if (count($forUpdate)) {
+        if ($forUpdate !== []) {
             $this->currencyRateRepository->save(...$forUpdate);
         }
 

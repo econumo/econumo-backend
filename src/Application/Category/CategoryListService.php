@@ -19,9 +19,13 @@ use App\Domain\Service\Translation\TranslationServiceInterface;
 class CategoryListService
 {
     private GetCategoryListV1ResultAssembler $getCategoryListV1ResultAssembler;
+
     private CategoryRepositoryInterface $categoryRepository;
+
     private OrderCategoryListV1ResultAssembler $orderCategoryListV1ResultAssembler;
+
     private CategoryServiceInterface $categoryService;
+
     private TranslationServiceInterface $translationService;
 
     public function __construct(
@@ -50,7 +54,7 @@ class CategoryListService
         OrderCategoryListV1RequestDto $dto,
         Id $userId
     ): OrderCategoryListV1ResultDto {
-        if (!count($dto->changes)) {
+        if ($dto->changes === []) {
             throw new ValidationException($this->translationService->trans('category.category_list.empty_list'));
         }
         $this->categoryService->orderCategories($userId, ...$dto->changes);

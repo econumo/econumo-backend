@@ -14,7 +14,9 @@ use App\Domain\Service\Connection\ConnectionServiceInterface;
 class ConnectionListService
 {
     private GetConnectionListV1ResultAssembler $getConnectionListV1ResultAssembler;
+
     private ConnectionServiceInterface $connectionService;
+
     private ConnectionAccountServiceInterface $connectionAccountService;
 
     public function __construct(

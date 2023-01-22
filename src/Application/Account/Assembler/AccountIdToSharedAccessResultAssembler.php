@@ -14,6 +14,7 @@ use App\Domain\Repository\AccountAccessRepositoryInterface;
 class AccountIdToSharedAccessResultAssembler
 {
     private AccountAccessRepositoryInterface $accountAccessRepository;
+
     private UserIdToDtoResultAssembler $userIdToDtoResultAssembler;
 
     public function __construct(AccountAccessRepositoryInterface $accountAccessRepository, UserIdToDtoResultAssembler $userIdToDtoResultAssembler)

@@ -9,12 +9,39 @@ use JsonSerializable;
 
 final class TransactionType implements JsonSerializable
 {
+    /**
+     * @var int
+     */
     public const EXPENSE = 0;
+
+    /**
+     * @var int
+     */
     public const INCOME = 1;
+
+    /**
+     * @var int
+     */
     public const TRANSFER = 2;
+
+    /**
+     * @var string
+     */
     public const EXPENSE_ALIAS = 'expense';
+
+    /**
+     * @var string
+     */
     public const INCOME_ALIAS = 'income';
+
+    /**
+     * @var string
+     */
     public const TRANSFER_ALIAS = 'transfer';
+
+    /**
+     * @var array<string, int>
+     */
     private const MAPPING = [
         self::EXPENSE_ALIAS => self::EXPENSE,
         self::INCOME_ALIAS => self::INCOME,
@@ -29,6 +56,7 @@ final class TransactionType implements JsonSerializable
         if (!array_key_exists($alias, self::MAPPING)) {
             throw new DomainException(sprintf('TransactionType %d not exists', $alias));
         }
+
         return new self(self::MAPPING[$alias]);
     }
 
@@ -37,6 +65,7 @@ final class TransactionType implements JsonSerializable
         if (!self::isValid($value)) {
             throw new DomainException(sprintf('TransactionType %d not exists', $value));
         }
+
         $this->value = $value;
     }
 

@@ -12,6 +12,7 @@ use App\Domain\Service\DatetimeServiceInterface;
 class UserOptionFactory implements UserOptionFactoryInterface
 {
     private UserOptionRepositoryInterface $userOptionRepository;
+
     private DatetimeServiceInterface $datetimeService;
 
     public function __construct(

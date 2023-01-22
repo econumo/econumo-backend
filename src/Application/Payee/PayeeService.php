@@ -32,13 +32,21 @@ use App\Domain\Service\Translation\TranslationServiceInterface;
 class PayeeService
 {
     private CreatePayeeV1ResultAssembler $createPayeeV1ResultAssembler;
+
     private PayeeServiceInterface $payeeService;
+
     private AccountAccessServiceInterface $accountAccessService;
+
     private UpdatePayeeV1ResultAssembler $updatePayeeV1ResultAssembler;
+
     private PayeeRepositoryInterface $payeeRepository;
+
     private DeletePayeeV1ResultAssembler $deletePayeeV1ResultAssembler;
+
     private ArchivePayeeV1ResultAssembler $archivePayeeV1ResultAssembler;
+
     private UnarchivePayeeV1ResultAssembler $unarchivePayeeV1ResultAssembler;
+
     private TranslationServiceInterface $translationService;
 
     public function __construct(
@@ -87,11 +95,13 @@ class PayeeService
         if (!$tag->getUserId()->isEqual($userId)) {
             throw new AccessDeniedException();
         }
+
         try {
             $this->payeeService->updatePayee($payeeId, new PayeeName($dto->name));
-        } catch (PayeeAlreadyExistsException $exception) {
+        } catch (PayeeAlreadyExistsException $payeeAlreadyExistsException) {
             throw new ValidationException($this->translationService->trans('payee.payee.already_exists', ['name' => $dto->name]));
         }
+
         return $this->updatePayeeV1ResultAssembler->assemble($dto);
     }
 
@@ -104,6 +114,7 @@ class PayeeService
         if (!$payee->getUserId()->isEqual($userId)) {
             throw new AccessDeniedException();
         }
+
         $this->payeeService->deletePayee($payeeId);
         return $this->deletePayeeV1ResultAssembler->assemble($dto);
     }
@@ -117,6 +128,7 @@ class PayeeService
         if (!$payee->getUserId()->isEqual($userId)) {
             throw new AccessDeniedException();
         }
+
         $this->payeeService->archivePayee($payeeId);
         return $this->archivePayeeV1ResultAssembler->assemble($dto);
     }
@@ -130,6 +142,7 @@ class PayeeService
         if (!$payee->getUserId()->isEqual($userId)) {
             throw new AccessDeniedException();
         }
+
         $this->payeeService->unarchivePayee($payeeId);
         return $this->unarchivePayeeV1ResultAssembler->assemble($dto);
     }

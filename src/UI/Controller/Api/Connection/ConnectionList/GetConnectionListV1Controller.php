@@ -21,6 +21,7 @@ use OpenApi\Annotations as OA;
 class GetConnectionListV1Controller extends AbstractController
 {
     private ConnectionListService $connectionListService;
+
     private ValidatorInterface $validator;
 
     public function __construct(ConnectionListService $connectionListService, ValidatorInterface $validator)

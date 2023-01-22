@@ -8,7 +8,7 @@ class AccountFixtures extends AbstractFixture implements DependentFixtureInterfa
 {
     public string $tableName = 'accounts';
 
-    public function getDependencies()
+    public function getDependencies(): array
     {
         return [UserFixtures::class, CurrencyFixtures::class];
     }

@@ -15,6 +15,7 @@ use Symfony\Component\Intl\Exception\MissingResourceException;
 class CurrencyFactory implements CurrencyFactoryInterface
 {
     private CurrencyRepositoryInterface $currencyRepository;
+
     private DatetimeServiceInterface $datetimeService;
 
     public function __construct(
@@ -29,9 +30,10 @@ class CurrencyFactory implements CurrencyFactoryInterface
     {
         try {
             $symbol = Currencies::getSymbol($code->getValue());
-        } catch (MissingResourceException $exception) {
+        } catch (MissingResourceException $missingResourceException) {
             $symbol = $code->getValue();
         }
+
         return new Currency(
             $this->currencyRepository->getNextIdentity(),
             $code,

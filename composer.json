@@ -41,7 +41,7 @@
         "zenstruck/schedule-bundle": "*"
     },
     "require-dev": {
-        "codeception/codeception": "^4.1",
+        "codeception/codeception": "^4.2",
         "codeception/module-asserts": "^1.2",
         "codeception/module-doctrine2": "^1.0",
         "codeception/module-rest": "^1.2",

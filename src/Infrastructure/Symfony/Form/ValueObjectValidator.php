@@ -34,12 +34,13 @@ class ValueObjectValidator
     {
         try {
             $this->valueObject::validate($value);
-        } catch (\DomainException $exception) {
-            if ($this->translator) {
-                $message = $this->translator->trans($exception->getMessage());
+        } catch (\DomainException $domainException) {
+            if ($this->translator !== null) {
+                $message = $this->translator->trans($domainException->getMessage());
             } else {
-                $message = $exception->getMessage();
+                $message = $domainException->getMessage();
             }
+
             $context->buildViolation($message)
                 ->atPath($context->getPropertyPath())
                 ->addViolation();

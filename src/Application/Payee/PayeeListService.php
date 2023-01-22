@@ -19,9 +19,13 @@ use App\Domain\Service\Translation\TranslationServiceInterface;
 class PayeeListService
 {
     private GetPayeeListV1ResultAssembler $getPayeeListV1ResultAssembler;
+
     private PayeeRepositoryInterface $payeeRepository;
+
     private OrderPayeeListV1ResultAssembler $orderPayeeListV1ResultAssembler;
+
     private PayeeServiceInterface $payeeService;
+
     private TranslationServiceInterface $translationService;
 
     public function __construct(
@@ -50,9 +54,10 @@ class PayeeListService
         OrderPayeeListV1RequestDto $dto,
         Id $userId
     ): OrderPayeeListV1ResultDto {
-        if (!count($dto->changes)) {
+        if ($dto->changes === []) {
             throw new ValidationException($this->translationService->trans('payee.payee_list.empty_list'));
         }
+
         $this->payeeService->orderPayees($userId, ...$dto->changes);
         return $this->orderPayeeListV1ResultAssembler->assemble($dto, $userId);
     }

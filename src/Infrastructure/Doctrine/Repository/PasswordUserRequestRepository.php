@@ -42,6 +42,7 @@ class PasswordUserRequestRepository extends ServiceEntityRepository implements P
             foreach ($items as $item) {
                 $this->getEntityManager()->persist($item);
             }
+
             $this->getEntityManager()->flush();
         } catch (ORMException | ORMInvalidArgumentException $e) {
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
@@ -50,9 +51,8 @@ class PasswordUserRequestRepository extends ServiceEntityRepository implements P
 
     public function getByCode(string $code): PasswordUserRequest
     {
-        /** @var PasswordUserRequest|null $item */
         $item = $this->findOneBy(['code' => $code]);
-        if ($item === null) {
+        if (!$item instanceof PasswordUserRequest) {
             throw new NotFoundException(sprintf('PasswordUserRequest with ID %s not found', $code));
         }
 

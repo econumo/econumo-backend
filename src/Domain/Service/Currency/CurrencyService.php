@@ -14,6 +14,7 @@ use DateTimeInterface;
 class CurrencyService implements CurrencyServiceInterface
 {
     private string $baseCurrency;
+
     private CurrencyRepositoryInterface $currencyRepository;
 
     public function __construct(

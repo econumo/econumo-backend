@@ -13,10 +13,15 @@ use DateTimeInterface;
 class AccountAccess
 {
     private Id $id;
+
     private Account $account;
+
     private User $user;
+
     private AccountUserRole $role;
+
     private DateTimeImmutable $createdAt;
+
     private DateTimeInterface $updatedAt;
 
     public function __construct(
@@ -60,7 +65,7 @@ class AccountAccess
         }
     }
 
-    private function updated()
+    private function updated(): void
     {
         $this->updatedAt = new DateTime();
     }

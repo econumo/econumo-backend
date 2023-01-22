@@ -19,5 +19,5 @@ class OrderCategoryListV1RequestDto
      * @var PositionDto[]
      * @OA\Property(type="array", @OA\Items(type="object", ref=@Model(type=\App\Domain\Service\Dto\PositionDto::class)))
      */
-    public array $changes;
+    public array $changes = [];
 }

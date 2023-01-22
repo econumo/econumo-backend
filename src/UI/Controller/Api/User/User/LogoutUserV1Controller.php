@@ -20,6 +20,7 @@ use OpenApi\Annotations as OA;
 class LogoutUserV1Controller extends AbstractController
 {
     private UserService $userService;
+
     private ValidatorInterface $validator;
 
     public function __construct(UserService $userService, ValidatorInterface $validator)

@@ -18,7 +18,9 @@ use DateTimeInterface;
 final class FolderService implements FolderServiceInterface
 {
     private FolderRepositoryInterface $folderRepository;
+
     private FolderFactoryInterface $folderFactory;
+
     private AntiCorruptionServiceInterface $antiCorruptionService;
 
     public function __construct(
@@ -39,6 +41,7 @@ final class FolderService implements FolderServiceInterface
             if ($userFolder->getName()->isEqual($name)) {
                 throw new FolderAlreadyExistsException();
             }
+
             if ($userFolder->getPosition() > $lastFolderPosition) {
                 $lastFolderPosition = $userFolder->getPosition();
             }
@@ -46,6 +49,7 @@ final class FolderService implements FolderServiceInterface
 
         $folder = $this->folderFactory->create($userId, $name);
         $folder->updatePosition($lastFolderPosition + 1);
+
         $this->folderRepository->save($folder);
 
         return $folder;
@@ -77,9 +81,9 @@ final class FolderService implements FolderServiceInterface
             $userId = $folder->getUserId();
             $this->folderRepository->delete($folder);
             $this->resetOrderFolders($userId);
-        } catch (\Throwable $exception) {
+        } catch (\Throwable $throwable) {
             $this->antiCorruptionService->rollback();
-            throw $exception;
+            throw $throwable;
         }
     }
 
@@ -90,6 +94,7 @@ final class FolderService implements FolderServiceInterface
         if (!$folder->getUserId()->isEqual($replaceFolder->getUserId())) {
             throw new AccessDeniedException();
         }
+
         $userId = $folder->getUserId();
 
         $this->antiCorruptionService->beginTransaction();
@@ -99,14 +104,15 @@ final class FolderService implements FolderServiceInterface
                     $replaceFolder->addAccount($account);
                 }
             }
+
             $this->folderRepository->delete($folder);
             $this->folderRepository->save($replaceFolder);
 
             $this->resetOrderFolders($userId);
             $this->antiCorruptionService->commit();
-        } catch (\Throwable $exception) {
+        } catch (\Throwable $throwable) {
             $this->antiCorruptionService->rollback();
-            throw $exception;
+            throw $throwable;
         }
     }
 
@@ -124,24 +130,23 @@ final class FolderService implements FolderServiceInterface
             }
         }
 
-        if (!count($changed)) {
+        if ($changed === []) {
             return;
         }
+
         $this->folderRepository->save(...$changed);
     }
 
     private function resetOrderFolders(Id $userId): void
     {
         $userFolders = $this->folderRepository->getByUserId($userId);
-        usort($userFolders, function (Folder $a, Folder $b) {
-            if ($a->getPosition() == $b->getPosition()) {
-                return 0;
-            }
-            return ($a->getPosition() < $b->getPosition()) ? -1 : 1;
+        usort($userFolders, static function (Folder $a, Folder $b) : int {
+            return $a->getPosition() <=> $b->getPosition();
         });
         foreach ($userFolders as $i => $userFolder) {
             $userFolder->updatePosition($i);
         }
+
         $this->folderRepository->save(...$userFolders);
     }
 
@@ -149,6 +154,7 @@ final class FolderService implements FolderServiceInterface
     {
         $folder = $this->folderRepository->get($folderId);
         $folder->makeInvisible();
+
         $this->folderRepository->save($folder);
     }
 
@@ -156,6 +162,7 @@ final class FolderService implements FolderServiceInterface
     {
         $folder = $this->folderRepository->get($folderId);
         $folder->makeVisible();
+
         $this->folderRepository->save($folder);
     }
 

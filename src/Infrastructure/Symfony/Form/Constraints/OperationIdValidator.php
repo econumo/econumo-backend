@@ -23,7 +23,7 @@ class OperationIdValidator extends ConstraintValidator
      * @param mixed $value
      * @param Constraint|OperationId $constraint
      */
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         if (empty($value)) {
             $this->context->buildViolation($constraint->formatErrorMessage)->addViolation();
@@ -37,7 +37,7 @@ class OperationIdValidator extends ConstraintValidator
                     ->setParameter('{{ string }}', $value)
                     ->addViolation();
             }
-        } catch (OperationObjectLockedException $exception) {
+        } catch (OperationObjectLockedException $operationObjectLockedException) {
             $this->context->buildViolation($constraint->lockedMessage)
                 ->setParameter('{{ string }}', $value)
                 ->addViolation();

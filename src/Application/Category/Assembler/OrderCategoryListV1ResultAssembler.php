@@ -12,6 +12,7 @@ use App\Domain\Repository\CategoryRepositoryInterface;
 class OrderCategoryListV1ResultAssembler
 {
     private CategoryRepositoryInterface $categoryRepository;
+
     private CategoryToDtoResultAssembler $categoryToDtoResultAssembler;
 
     public function __construct(CategoryRepositoryInterface $categoryRepository, CategoryToDtoResultAssembler $categoryToDtoResultAssembler)

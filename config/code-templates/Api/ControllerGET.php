@@ -21,6 +21,7 @@ use OpenApi\Annotations as OA;
 class _CG_ACTION__CG_SUBJECT__CG_VERSION_Controller extends AbstractController
 {
     private _CG_SUBJECT_Service $_CG_SUBJECT_LCFIRST_Service;
+
     private ValidatorInterface $validator;
 
     public function __construct(_CG_SUBJECT_Service $_CG_SUBJECT_LCFIRST_Service, ValidatorInterface $validator)

@@ -16,7 +16,9 @@ use App\Domain\Service\Connection\ConnectionAccountServiceInterface;
 class AcceptInviteV1ResultAssembler
 {
     private UserToDtoResultAssembler $userToDtoResultAssembler;
+
     private ConnectionAccountServiceInterface $connectionAccountService;
+
     private AccountAccessToDtoResultAssembler $accountAccessToDtoResultAssembler;
 
     public function __construct(
@@ -56,6 +58,7 @@ class AcceptInviteV1ResultAssembler
                     );
                 }
             }
+
             foreach ($sharedWithUserAccounts as $accountAccess) {
                 if ($accountAccess->getAccount()->getUserId()->isEqual($connectedUser->getId())) {
                     $connectionDto->sharedAccounts[] = $this->accountAccessToDtoResultAssembler->assemble(
@@ -63,6 +66,7 @@ class AcceptInviteV1ResultAssembler
                     );
                 }
             }
+
             $result->items[] = $connectionDto;
         }
 

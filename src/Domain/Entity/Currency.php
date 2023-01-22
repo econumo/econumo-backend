@@ -14,8 +14,11 @@ use Symfony\Component\Intl\Exception\MissingResourceException;
 class Currency
 {
     private Id $id;
+
     private CurrencyCode $code;
+
     private string $symbol;
+
     private DateTimeImmutable $createdAt;
 
     public function __construct(Id $id, CurrencyCode $code, string $symbol, DateTimeInterface $createdAt)
@@ -45,7 +48,7 @@ class Currency
     {
         try {
             return Currencies::getName($this->code->getValue());
-        } catch (MissingResourceException $exception) {
+        } catch (MissingResourceException $missingResourceException) {
             return $this->code->getValue();
         }
     }

@@ -16,8 +16,11 @@ use App\Domain\Service\AntiCorruptionServiceInterface;
 class ConnectionInviteService implements ConnectionInviteServiceInterface
 {
     private ConnectionInviteFactoryInterface $connectionInviteFactory;
+
     private ConnectionInviteRepositoryInterface $connectionInviteRepository;
+
     private UserRepositoryInterface $userRepository;
+
     private AntiCorruptionServiceInterface $antiCorruptionService;
 
     public function __construct(
@@ -35,9 +38,10 @@ class ConnectionInviteService implements ConnectionInviteServiceInterface
     public function generate(Id $userId): ConnectionInvite
     {
         $connectionInvite = $this->connectionInviteRepository->getByUser($userId);
-        if ($connectionInvite === null) {
+        if (!$connectionInvite instanceof ConnectionInvite) {
             $connectionInvite = $this->connectionInviteFactory->create($this->userRepository->getReference($userId));
         }
+
         $connectionInvite->generateNewCode();
         $this->connectionInviteRepository->save($connectionInvite);
         return $connectionInvite;
@@ -46,9 +50,10 @@ class ConnectionInviteService implements ConnectionInviteServiceInterface
     public function delete(Id $userId): void
     {
         $connectionInvite = $this->connectionInviteRepository->getByUser($userId);
-        if ($connectionInvite === null) {
+        if (!$connectionInvite instanceof ConnectionInvite) {
             return;
         }
+
         $connectionInvite->clearCode();
         $this->connectionInviteRepository->save($connectionInvite);
     }
@@ -73,9 +78,9 @@ class ConnectionInviteService implements ConnectionInviteServiceInterface
             $this->connectionInviteRepository->save($connectionInvite);
 
             $this->antiCorruptionService->commit();
-        } catch (\Throwable $exception) {
+        } catch (\Throwable $throwable) {
             $this->antiCorruptionService->rollback();
-            throw $exception;
+            throw $throwable;
         }
     }
 }

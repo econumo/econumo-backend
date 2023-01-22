@@ -9,10 +9,29 @@ use JsonSerializable;
 
 final class CategoryType implements JsonSerializable
 {
+    /**
+     * @var int
+     */
     public const EXPENSE = 0;
+
+    /**
+     * @var int
+     */
     public const INCOME = 1;
+
+    /**
+     * @var string
+     */
     public const EXPENSE_ALIAS = 'expense';
+
+    /**
+     * @var string
+     */
     public const INCOME_ALIAS = 'income';
+
+    /**
+     * @var array<string, int>
+     */
     private const MAPPING = [
         self::EXPENSE_ALIAS => self::EXPENSE,
         self::INCOME_ALIAS => self::INCOME
@@ -26,6 +45,7 @@ final class CategoryType implements JsonSerializable
         if (!array_key_exists($alias, self::MAPPING)) {
             throw new DomainException(sprintf('CategoryType %d not exists', $alias));
         }
+
         return new self(self::MAPPING[$alias]);
     }
 
@@ -34,6 +54,7 @@ final class CategoryType implements JsonSerializable
         if (!self::isValid($value)) {
             throw new DomainException(sprintf('CategoryType %d not exists', $value));
         }
+
         $this->value = $value;
     }
 
@@ -44,12 +65,12 @@ final class CategoryType implements JsonSerializable
 
     public function getAlias(): string
     {
-        switch ($this->value) {
-            case self::INCOME:
-                return 'income';
-            case self::EXPENSE:
-                return 'expense';
+        if ($this->value === self::INCOME) {
+            return 'income';
+        } elseif ($this->value === self::EXPENSE) {
+            return 'expense';
         }
+
         throw new DomainException(sprintf('Alias for CategoryType %d not exists', $this->value));
     }
 

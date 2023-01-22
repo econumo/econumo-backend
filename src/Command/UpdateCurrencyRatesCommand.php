@@ -16,8 +16,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class UpdateCurrencyRatesCommand extends Command
 {
     protected static $defaultName = 'app:update-currency-rates';
+
     protected static $defaultDescription = 'Load and update currency rates';
+
     private CurrencyRatesLoaderServiceInterface $currencyRatesLoaderService;
+
     private CurrencyRatesUpdateServiceInterface $currencyRatesUpdateService;
 
     public function __construct(

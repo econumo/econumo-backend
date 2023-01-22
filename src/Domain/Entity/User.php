@@ -23,6 +23,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     use EventTrait;
 
     private Id $id;
+
     private string $name;
 
     /**
@@ -51,6 +52,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $options;
 
     private DateTimeImmutable $createdAt;
+
     private DateTimeInterface $updatedAt;
 
     public function __construct(Id $id, string $salt, string $name, Email $email, DateTimeInterface $createdAt)
@@ -114,6 +116,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @see UserInterface
+     * @return string
      */
     public function getSalt()
     {
@@ -123,7 +126,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see UserInterface
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
     }
 
@@ -142,7 +145,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->connections->contains($user);
     }
 
-    public function connectUser(self $user)
+    public function connectUser(self $user): void
     {
         if ($user->getId()->isEqual($this->getId())) {
             return;
@@ -151,7 +154,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->connections->add($user);
     }
 
-    public function deleteConnection(self $user)
+    public function deleteConnection(self $user): void
     {
         $this->connections->removeElement($user);
     }

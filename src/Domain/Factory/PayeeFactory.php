@@ -16,7 +16,9 @@ use App\Domain\Service\DatetimeServiceInterface;
 class PayeeFactory implements PayeeFactoryInterface
 {
     private DatetimeServiceInterface $datetimeService;
+
     private PayeeRepositoryInterface $payeeRepository;
+
     private UserRepositoryInterface $userRepository;
 
     public function __construct(

@@ -21,6 +21,7 @@ use OpenApi\Annotations as OA;
 class LoginUserV1Controller extends AbstractController
 {
     private UserService $userService;
+
     private ValidatorInterface $validator;
 
     public function __construct(UserService $userService, ValidatorInterface $validator)
@@ -69,6 +70,7 @@ class LoginUserV1Controller extends AbstractController
         if ($user === null) {
             throw new AccessDeniedHttpException('Auth failed');
         }
+
         $result = $this->userService->loginUser($user);
 
         return ResponseFactory::createOkResponse($request, $result);

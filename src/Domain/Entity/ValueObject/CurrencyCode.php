@@ -12,6 +12,9 @@ class CurrencyCode implements ValueObjectInterface, JsonSerializable
 {
     use ValueObjectTrait;
 
+    /**
+     * @var int
+     */
     private const LENGTH = 3;
 
     public function __construct(string $value)

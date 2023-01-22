@@ -12,6 +12,7 @@ use App\Domain\Repository\AccountRepositoryInterface;
 class OrderAccountListV1ResultAssembler
 {
     private AccountRepositoryInterface $accountRepository;
+
     private AccountToDtoV1ResultAssembler $accountToDtoV1ResultAssembler;
 
     public function __construct(

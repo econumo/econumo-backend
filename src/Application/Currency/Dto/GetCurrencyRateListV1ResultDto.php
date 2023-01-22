@@ -17,5 +17,5 @@ class GetCurrencyRateListV1ResultDto
      * @var CurrencyRateResultDto[]
      * @OA\Property()
      */
-    public array $items;
+    public array $items = [];
 }

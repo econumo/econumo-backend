@@ -9,6 +9,7 @@ use App\Domain\Entity\ValueObject\Id;
 final class FolderCreatedEvent
 {
     private Id $userId;
+
     private Id $folderId;
 
     public function __construct(Id $userId, Id $folderId)

@@ -11,6 +11,7 @@ class CategoryType extends SmallIntType
 {
     /**
      * @inheritdoc
+     * @return ValueObject|null
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {

@@ -27,9 +27,8 @@ class OperationIdRepository extends ServiceEntityRepository
 
     public function get(Id $id): OperationId
     {
-        /** @var OperationId|null $item */
         $item = $this->find($id);
-        if ($item === null) {
+        if (!$item instanceof OperationId) {
             throw new NotFoundException(sprintf('OperationId %s not found', $id));
         }
 
@@ -42,6 +41,7 @@ class OperationIdRepository extends ServiceEntityRepository
             foreach ($items as $item) {
                 $this->getEntityManager()->persist($item);
             }
+
             $this->getEntityManager()->flush();
         } catch (ORMException | ORMInvalidArgumentException $e) {
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
