@@ -1,2 +1,4 @@
 framework:
-    lock: '%env(LOCK_DSN)%'
+    lock:
+        local_lock: 'flock'
+        remote_lock: '%env(DATABASE_URL)%'

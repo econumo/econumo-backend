@@ -8,14 +8,7 @@ parameters:
 
 doctrine:
     dbal:
-        # configure these for your database server
-        driver: 'pdo_pgsql'
-        user: '%env(resolve:DATABASE_USER)%'
-        password: '%env(resolve:DATABASE_PASSWORD)%'
-        host: '%env(resolve:DATABASE_HOST)%'
-        dbname: '%env(resolve:DATABASE_NAME)%'
-        port: '%env(resolve:DATABASE_PORT)%'
-        sslmode: '%env(resolve:DATABASE_SSL_MODE)%'
+        url: '%env(resolve:DATABASE_URL)%'
         charset: 'utf8'
         types:
             uuid: App\Infrastructure\Doctrine\Type\UuidType

@@ -8,7 +8,7 @@ ENV COMPOSER_ALLOW_SUPERUSER 1
 
 WORKDIR /var/www/
 
-RUN apk add --update nginx supervisor git postgresql-dev \
+RUN apk add --update nginx supervisor git busybox-suid postgresql-dev \
     && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS curl-dev && \
 #    apk add libzip-dev libonig-dev && \
     docker-php-ext-configure bcmath --enable-bcmath && \
@@ -19,7 +19,7 @@ RUN apk add --update nginx supervisor git postgresql-dev \
 #    docker-php-ext-enable xdebug && \
     docker-php-ext-install -j$(nproc) bcmath opcache json curl pdo_pgsql && \
     apk del -f .build-deps && \
-    rm -rf /tmp/* /var/cache/apk/*
+    rm -rf /tmp/* /var/cache/apk/* \
 
 RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 
