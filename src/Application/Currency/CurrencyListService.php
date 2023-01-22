@@ -13,6 +13,7 @@ use App\Domain\Repository\CurrencyRepositoryInterface;
 class CurrencyListService
 {
     private GetCurrencyListV1ResultAssembler $getCurrencyListV1ResultAssembler;
+
     private CurrencyRepositoryInterface $currencyRepository;
 
     public function __construct(

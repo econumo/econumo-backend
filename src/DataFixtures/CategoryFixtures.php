@@ -8,7 +8,7 @@ class CategoryFixtures extends AbstractFixture implements DependentFixtureInterf
 {
     public string $tableName = 'categories';
 
-    public function getDependencies()
+    public function getDependencies(): array
     {
         return [UserFixtures::class];
     }

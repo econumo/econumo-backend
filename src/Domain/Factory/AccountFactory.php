@@ -17,8 +17,11 @@ use App\Domain\Service\DatetimeServiceInterface;
 class AccountFactory implements AccountFactoryInterface
 {
     private AccountRepositoryInterface $accountRepository;
+
     private DatetimeServiceInterface $datetimeService;
+
     private CurrencyRepositoryInterface $currencyRepository;
+
     private UserRepositoryInterface $userRepository;
 
     public function __construct(

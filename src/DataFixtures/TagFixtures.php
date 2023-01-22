@@ -8,7 +8,7 @@ class TagFixtures extends AbstractFixture implements DependentFixtureInterface
 {
     public string $tableName = 'tags';
 
-    public function getDependencies()
+    public function getDependencies(): array
     {
         return [UserFixtures::class];
     }

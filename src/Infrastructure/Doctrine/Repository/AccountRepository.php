@@ -45,6 +45,7 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
             foreach ($accounts as $account) {
                 $this->getEntityManager()->persist($account);
             }
+
             $this->getEntityManager()->flush();
         } catch (ORMException | ORMInvalidArgumentException $e) {
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
@@ -72,11 +73,11 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
 
     public function get(Id $id): Account
     {
-        /** @var Account|null $item */
         $item = $this->find($id);
-        if ($item === null) {
+        if (!$item instanceof Account) {
             throw new NotFoundException(sprintf('Account with ID %s not found', $id));
         }
+
         if ($item->isDeleted()) {
             throw new NotFoundException(sprintf('Account with ID %s not found', $id));
         }

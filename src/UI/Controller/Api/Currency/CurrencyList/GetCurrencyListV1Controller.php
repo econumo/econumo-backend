@@ -21,6 +21,7 @@ use OpenApi\Annotations as OA;
 class GetCurrencyListV1Controller extends AbstractController
 {
     private CurrencyListService $currencyListService;
+
     private ValidatorInterface $validator;
 
     public function __construct(CurrencyListService $currencyListService, ValidatorInterface $validator)

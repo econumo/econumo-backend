@@ -15,6 +15,7 @@ use App\Domain\Entity\ValueObject\Id;
 class GetConnectionListV1ResultAssembler
 {
     private UserToDtoResultAssembler $userToDtoResultAssembler;
+
     private AccountAccessToDtoResultAssembler $accountAccessToDtoResultAssembler;
 
     public function __construct(
@@ -59,6 +60,7 @@ class GetConnectionListV1ResultAssembler
                     );
                 }
             }
+
             foreach ($issuedAccountAccess as $accountAccess) {
                 $key = $accountAccess->getAccountId()->getValue();
                 if ($accountAccess->getAccount()->getUserId()->isEqual($connectedUser->getId())) {
@@ -71,6 +73,7 @@ class GetConnectionListV1ResultAssembler
                     );
                 }
             }
+
             $connectionDto->sharedAccounts = array_values($sharedAccounts);
             $result->items[] = $connectionDto;
         }

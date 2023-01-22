@@ -11,6 +11,7 @@ use App\Domain\Repository\TagRepositoryInterface;
 class TagIdToDtoResultAssembler
 {
     private TagRepositoryInterface $tagRepository;
+
     private TagToDtoResultAssembler $tagToDtoResultAssembler;
 
     public function __construct(TagRepositoryInterface $tagRepository, TagToDtoResultAssembler $tagToDtoResultAssembler)

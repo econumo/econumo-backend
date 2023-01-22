@@ -41,6 +41,7 @@ class UserOptionRepository extends ServiceEntityRepository implements UserOption
             foreach ($userOptions as $userOption) {
                 $this->getEntityManager()->persist($userOption);
             }
+
             $this->getEntityManager()->flush();
         } catch (ORMException | ORMInvalidArgumentException $e) {
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);

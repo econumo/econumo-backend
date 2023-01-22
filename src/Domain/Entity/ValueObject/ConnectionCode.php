@@ -12,6 +12,9 @@ class ConnectionCode implements ValueObjectInterface, JsonSerializable
 {
     use ValueObjectTrait;
 
+    /**
+     * @var int
+     */
     private const LENGTH = 5;
 
     public static function validate($value): void
@@ -30,7 +33,7 @@ class ConnectionCode implements ValueObjectInterface, JsonSerializable
     {
         $code = substr(md5(uniqid('', true)), 0, self::LENGTH);
         $result = '';
-        for ($i = 0; $i < strlen($code); $i++) {
+        for ($i = 0; $i < strlen($code); ++$i) {
             $result .= (random_int(0, 1) === 1 ? strtoupper($code[$i]) : $code[$i]);
         }
 

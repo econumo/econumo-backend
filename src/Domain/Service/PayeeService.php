@@ -19,7 +19,9 @@ use DateTimeInterface;
 class PayeeService implements PayeeServiceInterface
 {
     private PayeeFactoryInterface $payeeFactory;
+
     private PayeeRepositoryInterface $payeeRepository;
+
     private AccountRepositoryInterface $accountRepository;
 
     public function __construct(PayeeFactoryInterface $payeeFactory, PayeeRepositoryInterface $payeeRepository, AccountRepositoryInterface $accountRepository)
@@ -40,6 +42,7 @@ class PayeeService implements PayeeServiceInterface
 
         $payee = $this->payeeFactory->create($userId, $name);
         $payee->updatePosition(count($payees));
+
         $this->payeeRepository->save($payee);
 
         return $payee;
@@ -89,16 +92,18 @@ class PayeeService implements PayeeServiceInterface
             }
         }
 
-        if (!count($changed)) {
+        if ($changed === []) {
             return;
         }
-        $this->payeeRepository->save(...$changed);
+
+        $this->payeeRepository->save($changed);
     }
 
     public function archivePayee(Id $payeeId): void
     {
         $payee = $this->payeeRepository->get($payeeId);
         $payee->archive();
+
         $this->payeeRepository->save($payee);
     }
 
@@ -106,6 +111,7 @@ class PayeeService implements PayeeServiceInterface
     {
         $payee = $this->payeeRepository->get($payeeId);
         $payee->unarchive();
+
         $this->payeeRepository->save($payee);
     }
 

@@ -17,5 +17,5 @@ class GetFolderListV1ResultDto
      * @var FolderResultDto[]
      * @OA\Property()
      */
-    public array $items;
+    public array $items = [];
 }

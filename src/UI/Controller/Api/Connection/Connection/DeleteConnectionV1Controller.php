@@ -21,6 +21,7 @@ use OpenApi\Annotations as OA;
 class DeleteConnectionV1Controller extends AbstractController
 {
     private ConnectionService $connectionService;
+
     private ValidatorInterface $validator;
 
     public function __construct(ConnectionService $connectionService, ValidatorInterface $validator)

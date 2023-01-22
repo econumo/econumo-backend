@@ -13,6 +13,7 @@ class AccountNameType extends StringType
 
     /**
      * @inheritdoc
+     * @return AccountName|null
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {

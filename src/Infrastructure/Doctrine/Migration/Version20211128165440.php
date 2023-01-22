@@ -20,7 +20,7 @@ final class Version20211128165440 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
+        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', "Migration can only be executed safely on 'postgresql'.");
 
         $this->addSql('ALTER TABLE payees ADD CONSTRAINT FK_971FAB26A76ED395 FOREIGN KEY (user_id) REFERENCES users (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('CREATE INDEX IDX_971FAB26A76ED395 ON payees (user_id)');
@@ -29,7 +29,7 @@ final class Version20211128165440 extends AbstractMigration
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
+        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', "Migration can only be executed safely on 'postgresql'.");
 
         $this->addSql('ALTER TABLE payees DROP CONSTRAINT FK_971FAB26A76ED395');
         $this->addSql('DROP INDEX IDX_971FAB26A76ED395');

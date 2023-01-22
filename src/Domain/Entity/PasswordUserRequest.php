@@ -17,10 +17,15 @@ class PasswordUserRequest
     use EventTrait;
 
     private Id $id;
+
     private User $user;
+
     private ?string $code;
+
     private DateTimeImmutable $createdAt;
+
     private DateTimeInterface $updatedAt;
+
     private DateTimeInterface $expiredAt;
 
     public function __construct(

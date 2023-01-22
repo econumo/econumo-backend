@@ -35,6 +35,7 @@ class AccountAccessRepository extends ServiceEntityRepository implements Account
             foreach ($items as $item) {
                 $this->getEntityManager()->persist($item);
             }
+
             $this->getEntityManager()->flush();
         } catch (ORMException | ORMInvalidArgumentException $e) {
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
@@ -49,19 +50,18 @@ class AccountAccessRepository extends ServiceEntityRepository implements Account
         return $this->createQueryBuilder('a')
             ->andWhere('a.user = :user')
             ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId))
-            ->orderBy('a.position', 'ASC')
+            ->orderBy('a.position', \Doctrine\Common\Collections\Criteria::ASC)
             ->getQuery()
             ->getResult();
     }
 
     public function get(Id $accountId, Id $userId): AccountAccess
     {
-        /** @var AccountAccess|null $item */
         $item = $this->findOneBy([
             'account' => $this->getEntityManager()->getReference(Account::class, $accountId),
             'user' => $this->getEntityManager()->getReference(User::class, $userId)
         ]);
-        if ($item === null) {
+        if (!$item instanceof AccountAccess) {
             throw new NotFoundException('AccountAccess not found');
         }
 
@@ -94,7 +94,7 @@ GROUP BY a.id
 DQL;
         $query = $this->getEntityManager()->createQuery($dql)
             ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId));
-        $accounts = array_map(function ($id) {
+        $accounts = array_map(function ($id): ?\App\Domain\Entity\Account {
             return $this->getEntityManager()->getReference(Account::class, new Id($id));
         }, array_column($query->getScalarResult(), 'id'));
 
@@ -120,7 +120,7 @@ GROUP BY a.id
 DQL;
         $query = $this->getEntityManager()->createQuery($dql)
             ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId));
-        $accounts = array_map(function ($id) {
+        $accounts = array_map(function ($id): ?Account {
             return $this->getEntityManager()->getReference(Account::class, new Id($id));
         }, array_column($query->getScalarResult(), 'id'));
 

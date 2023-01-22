@@ -9,7 +9,14 @@ use JsonSerializable;
 
 final class AccountType implements JsonSerializable
 {
+    /**
+     * @var int
+     */
     public const CASH = 1;
+
+    /**
+     * @var int
+     */
     public const CREDIT_CARD = 2;
 
     private int $value;
@@ -19,6 +26,7 @@ final class AccountType implements JsonSerializable
         if (!self::isValid($value)) {
             throw new DomainException(sprintf('AccountType %d not exists', $value));
         }
+
         $this->value = $value;
     }
 

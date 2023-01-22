@@ -11,6 +11,7 @@ use App\Domain\Repository\UserRepositoryInterface;
 class UserIdToDtoResultAssembler
 {
     private UserRepositoryInterface $userRepository;
+
     private UserToDtoResultAssembler $userToDtoResultAssembler;
 
     public function __construct(UserRepositoryInterface $userRepository, UserToDtoResultAssembler $userToDtoResultAssembler)

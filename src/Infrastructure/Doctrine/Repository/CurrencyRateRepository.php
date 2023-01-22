@@ -11,6 +11,7 @@ use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\CurrencyRateRepositoryInterface;
 use DateTimeInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\ORMInvalidArgumentException;
@@ -36,21 +37,22 @@ class CurrencyRateRepository extends ServiceEntityRepository implements Currency
      */
     public function getAll(?DateTimeInterface $date = null): array
     {
-        if (!$date) {
+        if ($date === null) {
             $dateBuilder = $this->createQueryBuilder('cr')
                 ->select('cr.publishedAt')
                 ->setMaxResults(1)
-                ->orderBy('cr.publishedAt', 'DESC');
+                ->orderBy('cr.publishedAt', Criteria::DESC);
             $lastDate = $dateBuilder->getQuery()->getSingleScalarResult();
             if (!$lastDate) {
                 throw new NotFoundException('Currency rates not loaded');
             }
+
             $ratesDate = \DateTime::createFromFormat('Y-m-d', $lastDate);
         } else {
             $dateBuilder = $this->createQueryBuilder('cr')
                 ->select('cr.publishedAt')
                 ->setMaxResults(1)
-                ->orderBy('cr.publishedAt', 'DESC')
+                ->orderBy('cr.publishedAt', Criteria::DESC)
                 ->where('cr.publishedAt <= :date')
                 ->setParameter('date', $date);
             $lastDate = $dateBuilder->getQuery()->getSingleScalarResult();
@@ -79,7 +81,7 @@ class CurrencyRateRepository extends ServiceEntityRepository implements Currency
             }
 
             return $item;
-        } catch (NoResultException $exception) {
+        } catch (NoResultException $noResultException) {
             throw new NotFoundException(sprintf('Currency with identifier (%s, %s) not found', $currencyId->getValue(), $date->format('Y-m-d')));
         }
     }
@@ -91,19 +93,20 @@ class CurrencyRateRepository extends ServiceEntityRepository implements Currency
             $builder->where('cr.currency = :currency')
                 ->setParameter('currency', $this->getEntityManager()->getReference(Currency::class, $currencyId))
                 ->setMaxResults(1);
-            if (!$date) {
-                $builder->orderBy('cr.publishedAt', 'DESC');
+            if ($date === null) {
+                $builder->orderBy('cr.publishedAt', Criteria::DESC);
             } else {
                 $builder->andWhere('cr.publishedAt <= :date')
                     ->setParameter('date', $date);
             }
+
             $item = $builder->getQuery()->getSingleResult();
             if ($item === null) {
                 throw new NotFoundException(sprintf('Currency with identifier %s not found', $item));
             }
 
             return $item;
-        } catch (NoResultException $exception) {
+        } catch (NoResultException $noResultException) {
             throw new NotFoundException(sprintf('Currency with identifier %s not found', $currencyId));
         }
     }
@@ -114,6 +117,7 @@ class CurrencyRateRepository extends ServiceEntityRepository implements Currency
             foreach ($items as $item) {
                 $this->getEntityManager()->persist($item);
             }
+
             $this->getEntityManager()->flush();
         } catch (ORMException | ORMInvalidArgumentException $e) {
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);

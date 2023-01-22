@@ -12,9 +12,13 @@ use DateTimeInterface;
 class AccountOptions
 {
     private Account $account;
+
     private User $user;
+
     private int $position;
+
     private DateTimeImmutable $createdAt;
+
     private DateTimeInterface $updatedAt;
 
     public function __construct(

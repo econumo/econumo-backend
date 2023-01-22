@@ -9,7 +9,7 @@ class ConnectionInviteFixtures extends AbstractFixture implements DependentFixtu
 {
     public string $tableName = 'user_connections_invites';
 
-    public function getDependencies()
+    public function getDependencies(): array
     {
         return [UserFixtures::class];
     }

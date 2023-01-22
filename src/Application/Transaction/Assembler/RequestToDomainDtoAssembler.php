@@ -17,8 +17,11 @@ use DateTime;
 class RequestToDomainDtoAssembler
 {
     private AccountRepositoryInterface $accountRepository;
+
     private CategoryRepositoryInterface $categoryRepository;
+
     private TagRepositoryInterface $tagRepository;
+
     private PayeeRepositoryInterface $payeeRepository;
 
     public function __construct(
@@ -46,7 +49,7 @@ class RequestToDomainDtoAssembler
         $result->accountRecipientId = null;
         $result->accountRecipient = null;
         $result->amountRecipient = $dto->amountRecipient ?? $dto->amount;
-        $result->description = $dto->description === null ? '' : $dto->description;
+        $result->description = $dto->description ?? '';
         $result->date = DateTime::createFromFormat('Y-m-d H:i:s', $dto->date);
         $result->categoryId = null;
         $result->category = null;
@@ -59,6 +62,7 @@ class RequestToDomainDtoAssembler
             if ($dto->amountRecipient !== null) {
                 $result->amountRecipient = $dto->amountRecipient;
             }
+
             if ($dto->accountRecipientId !== null) {
                 $result->accountRecipientId = new Id($dto->accountRecipientId);
                 $result->accountRecipient = $this->accountRepository->getReference($result->accountRecipientId);
@@ -70,6 +74,7 @@ class RequestToDomainDtoAssembler
                 $result->payeeId = new Id($dto->payeeId);
                 $result->payee = $this->payeeRepository->getReference($result->payeeId);
             }
+
             if ($dto->tagId !== null) {
                 $result->tagId = new Id($dto->tagId);
                 $result->tag = $this->tagRepository->getReference($result->tagId);

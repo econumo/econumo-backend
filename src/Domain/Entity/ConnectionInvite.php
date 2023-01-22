@@ -10,16 +10,20 @@ use DateTime;
 
 class ConnectionInvite
 {
+    /**
+     * @var string
+     */
     private const INVITE_LIFETIME = '+5 minutes';
+
     private User $user;
-    private ?ConnectionCode $code;
-    private ?DateTime $expiredAt;
+
+    private ?ConnectionCode $code = null;
+
+    private ?DateTime $expiredAt = null;
 
     public function __construct(User $user)
     {
         $this->user = $user;
-        $this->code = null;
-        $this->expiredAt = null;
     }
 
     public function generateNewCode(): void

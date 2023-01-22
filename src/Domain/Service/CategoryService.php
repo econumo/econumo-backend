@@ -21,9 +21,13 @@ use DateTimeInterface;
 class CategoryService implements CategoryServiceInterface
 {
     private CategoryFactoryInterface $categoryFactory;
+
     private CategoryRepositoryInterface $categoryRepository;
+
     private AccountRepositoryInterface $accountRepository;
+
     private AntiCorruptionServiceInterface $antiCorruptionService;
+
     private TransactionRepositoryInterface $transactionRepository;
 
     public function __construct(
@@ -51,6 +55,7 @@ class CategoryService implements CategoryServiceInterface
 
         $category = $this->categoryFactory->create($userId, $name, $type, $icon);
         $category->updatePosition(count($categories));
+
         $this->categoryRepository->save($category);
 
         return $category;
@@ -84,6 +89,7 @@ class CategoryService implements CategoryServiceInterface
         if (!$category->getUserId()->isEqual($newCategory->getUserId())) {
             throw new ReplaceCategoryException();
         }
+
         if (!$category->getType()->isEqual($newCategory->getType())) {
             throw new ReplaceCategoryException();
         }
@@ -93,9 +99,9 @@ class CategoryService implements CategoryServiceInterface
             $this->transactionRepository->replaceCategory($categoryId, $newCategoryId);
             $this->categoryRepository->delete($category);
             $this->antiCorruptionService->commit();
-        } catch (\Throwable $exception) {
+        } catch (\Throwable $throwable) {
             $this->antiCorruptionService->rollback();
-            throw $exception;
+            throw $throwable;
         }
     }
 
@@ -113,9 +119,10 @@ class CategoryService implements CategoryServiceInterface
             }
         }
 
-        if (!count($changed)) {
+        if ($changed === []) {
             return;
         }
+
         $this->categoryRepository->save(...$changed);
     }
 
@@ -131,6 +138,7 @@ class CategoryService implements CategoryServiceInterface
 
         $category->updateName($name);
         $category->updateIcon($icon);
+
         $this->categoryRepository->save($category);
     }
 
@@ -138,6 +146,7 @@ class CategoryService implements CategoryServiceInterface
     {
         $category = $this->categoryRepository->get($categoryId);
         $category->archive();
+
         $this->categoryRepository->save($category);
     }
 
@@ -145,6 +154,7 @@ class CategoryService implements CategoryServiceInterface
     {
         $category = $this->categoryRepository->get($categoryId);
         $category->unarchive();
+
         $this->categoryRepository->save($category);
     }
 

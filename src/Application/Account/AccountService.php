@@ -27,12 +27,19 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class AccountService
 {
     private CreateAccountV1ResultAssembler $createAccountV1ResultAssembler;
+
     private DeleteAccountV1ResultAssembler $deleteAccountV1ResultAssembler;
+
     private AccountServiceInterface $accountService;
+
     private UpdateAccountV1ResultAssembler $updateAccountV1ResultAssembler;
+
     private AccountRepositoryInterface $accountRepository;
+
     private AccountAccessServiceInterface $accountAccessService;
+
     private TranslatorInterface $translator;
+
     private ConnectionAccountServiceInterface $connectionAccountService;
 
     public function __construct(
@@ -79,6 +86,7 @@ class AccountService
         if (!$this->accountAccessService->canDeleteAccount($userId, $accountId)) {
             throw new AccessDeniedException();
         }
+
         $account = $this->accountRepository->get($accountId);
         if ($account->getUserId()->isEqual($userId)) {
             $this->accountService->delete($accountId);
@@ -97,6 +105,7 @@ class AccountService
         if (!$this->accountAccessService->canUpdateAccount($userId, $accountId)) {
             throw new AccessDeniedException();
         }
+
         $this->accountService->update($userId, $accountId, new AccountName($dto->name), new Icon($dto->icon));
         $updatedAt = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dto->updatedAt);
         $transaction = $this->accountService->updateBalance($accountId, $dto->balance, $updatedAt, $this->translator->trans('account.correction.message'));

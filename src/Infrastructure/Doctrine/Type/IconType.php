@@ -13,6 +13,7 @@ class IconType extends StringType
 
     /**
      * @inheritdoc
+     * @return Icon|null
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {

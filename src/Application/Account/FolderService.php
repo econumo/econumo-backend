@@ -28,11 +28,17 @@ use App\Domain\Service\FolderServiceInterface;
 class FolderService
 {
     private FolderServiceInterface $folderService;
+
     private CreateFolderV1ResultAssembler $createFolderV1ResultAssembler;
+
     private UpdateFolderV1ResultAssembler $updateFolderV1ResultAssembler;
+
     private FolderRepositoryInterface $folderRepository;
+
     private ReplaceFolderV1ResultAssembler $replaceFolderV1ResultAssembler;
+
     private HideFolderV1ResultAssembler $hideFolderV1ResultAssembler;
+
     private ShowFolderV1ResultAssembler $showFolderV1ResultAssembler;
 
     public function __construct(
@@ -69,6 +75,7 @@ class FolderService
         if (!$folder->getUserId()->isEqual($userId)) {
             throw new AccessDeniedException();
         }
+
         $this->folderService->update($folder->getId(), new FolderName($dto->name));
         return $this->updateFolderV1ResultAssembler->assemble($dto, $folder->getId());
     }

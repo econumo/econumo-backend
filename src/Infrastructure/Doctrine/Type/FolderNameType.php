@@ -13,6 +13,7 @@ class FolderNameType extends StringType
 
     /**
      * @inheritdoc
+     * @return FolderName|null
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {

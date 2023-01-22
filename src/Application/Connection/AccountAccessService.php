@@ -19,8 +19,11 @@ use App\Domain\Service\Connection\ConnectionAccountServiceInterface;
 class AccountAccessService
 {
     private SetAccountAccessV1ResultAssembler $setAccountAccessV1ResultAssembler;
+
     private ConnectionAccountServiceInterface $connectionAccountService;
+
     private AccountAccessServiceInterface $accountAccessService;
+
     private RevokeAccountAccessV1ResultAssembler $revokeAccountAccessV1ResultAssembler;
 
     public function __construct(
@@ -58,6 +61,7 @@ class AccountAccessService
         if (!$this->accountAccessService->canUpdateAccount($userId, $accountId)) {
             throw new AccessDeniedException();
         }
+
         $affectedUserId = new Id($dto->userId);
         $this->connectionAccountService->revokeAccountAccess($affectedUserId, $accountId);
         return $this->revokeAccountAccessV1ResultAssembler->assemble($dto);

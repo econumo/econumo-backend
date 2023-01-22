@@ -16,8 +16,11 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 class CurrencyService
 {
     private UpdateCurrencyV1ResultAssembler $updateCurrencyV1ResultAssembler;
+
     private UserServiceInterface $userService;
+
     private JWTTokenManagerInterface $authToken;
+
     private UserRepositoryInterface $userRepository;
 
     public function __construct(

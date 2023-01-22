@@ -15,9 +15,13 @@ use App\Domain\Repository\FolderRepositoryInterface;
 class AccountToDtoV1ResultAssembler
 {
     private AccountIdToSharedAccessResultAssembler $accountIdToSharedAccessResultAssembler;
+
     private CurrencyIdToDtoV1ResultAssembler $currencyIdToDtoV1ResultAssembler;
+
     private FolderRepositoryInterface $folderRepository;
+
     private UserIdToDtoResultAssembler $userIdToDtoResultAssembler;
+
     private AccountOptionsRepositoryInterface $accountOptionsRepository;
 
     public function __construct(
@@ -47,6 +51,7 @@ class AccountToDtoV1ResultAssembler
                 break;
             }
         }
+
         $item->name = $account->getName()->getValue();
         $item->currency = $this->currencyIdToDtoV1ResultAssembler->assemble($account->getCurrencyId());
         $item->balance = $account->getBalance();

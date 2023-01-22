@@ -9,6 +9,7 @@ use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\CategoryRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\ORMInvalidArgumentException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -50,14 +51,14 @@ DQL;
             ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId));
         $ids = array_column($query->getScalarResult(), 'user_id');
         $ids[] = $userId->getValue();
-        $users = array_map(function ($id) {
+        $users = array_map(function ($id): ?User {
             return $this->getEntityManager()->getReference(User::class, new Id($id));
         }, array_unique($ids));
 
         $builder = $this->createQueryBuilder('c')
             ->where('c.user IN(:users)')
             ->setParameter('users', $users)
-            ->orderBy('c.position', 'ASC');
+            ->orderBy('c.position', Criteria::ASC);
         return $builder
             ->getQuery()
             ->getResult();
@@ -73,9 +74,8 @@ DQL;
 
     public function get(Id $id): Category
     {
-        /** @var Category|null $item */
         $item = $this->find($id);
-        if ($item === null) {
+        if (!$item instanceof Category) {
             throw new NotFoundException(sprintf('Category with ID %s not found', $id));
         }
 
@@ -88,6 +88,7 @@ DQL;
             foreach ($categories as $category) {
                 $this->getEntityManager()->persist($category);
             }
+
             $this->getEntityManager()->flush();
         } catch (ORMException | ORMInvalidArgumentException $e) {
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);

@@ -26,13 +26,21 @@ use App\Domain\Repository\UserRepositoryInterface;
 class AccountAccessInviteService implements AccountAccessInviteServiceInterface
 {
     private UserRepositoryInterface $userRepository;
+
     private AccountAccessInviteRepositoryInterface $accountAccessInviteRepository;
+
     private AccountAccessInviteFactoryInterface $accountAccessInviteFactory;
+
     private AccountRepositoryInterface $accountRepository;
+
     private AccountAccessFactoryInterface $accountAccessFactory;
+
     private AccountAccessRepositoryInterface $accountAccessRepository;
+
     private AntiCorruptionServiceInterface $antiCorruptionService;
+
     private AccountOptionsFactoryInterface $accountOptionsFactory;
+
     private AccountOptionsRepositoryInterface $accountOptionsRepository;
 
     public function __construct(
@@ -68,14 +76,16 @@ class AccountAccessInviteService implements AccountAccessInviteServiceInterface
         if ($userId->isEqual($recipient->getId())) {
             throw new AccountAccessException('Access for yourself is prohibited');
         }
+
         $this->antiCorruptionService->beginTransaction();
         try {
             try {
                 $oldInvite = $this->accountAccessInviteRepository->get($accountId, $recipient->getId());
                 $this->accountAccessInviteRepository->delete($oldInvite);
-            } catch (NotFoundException $exception) {
+            } catch (NotFoundException $notFoundException) {
                 // do nothing
             }
+
             $invite = $this->accountAccessInviteFactory->create(
                 $accountId,
                 $recipient->getId(),
@@ -84,9 +94,9 @@ class AccountAccessInviteService implements AccountAccessInviteServiceInterface
             );
             $this->accountAccessInviteRepository->save($invite);
             $this->antiCorruptionService->commit();
-        } catch (\Throwable $exception) {
+        } catch (\Throwable $throwable) {
             $this->antiCorruptionService->rollback();
-            throw $exception;
+            throw $throwable;
         }
 
         return $invite;
@@ -110,9 +120,9 @@ class AccountAccessInviteService implements AccountAccessInviteServiceInterface
             $this->accountOptionsRepository->save($accountOptions);
 
             $this->antiCorruptionService->commit();
-        } catch (\Throwable $exception) {
+        } catch (\Throwable $throwable) {
             $this->antiCorruptionService->rollback();
-            throw $exception;
+            throw $throwable;
         }
 
         return $account;

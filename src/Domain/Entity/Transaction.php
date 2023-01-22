@@ -15,18 +15,31 @@ use DateTimeInterface;
 class Transaction
 {
     private Id $id;
+
     private User $user;
+
     private TransactionType $type;
+
     private Account $account;
+
     private ?Account $accountRecipient;
+
     private string $amount;
+
     private ?string $amountRecipient;
+
     private ?Category $category;
+
     private string $description;
+
     private ?Payee $payee;
+
     private ?Tag $tag;
+
     private DateTimeImmutable $createdAt;
+
     private DateTimeInterface $updatedAt;
+
     private DateTimeInterface $spentAt;
 
     public function __construct(

@@ -25,13 +25,21 @@ use App\Domain\Service\Translation\TranslationServiceInterface;
 class TransactionService
 {
     private CreateTransactionV1ResultAssembler $createTransactionV1ResultAssembler;
+
     private RequestToDomainDtoAssembler $requestToDomainDtoAssembler;
+
     private TransactionServiceInterface $transactionService;
+
     private DeleteTransactionV1ResultAssembler $deleteTransactionV1ResultAssembler;
+
     private TransactionRepositoryInterface $transactionRepository;
+
     private AccountAccessServiceInterface $accountAccessService;
+
     private UpdateTransactionV1ResultAssembler $updateTransactionV1ResultAssembler;
+
     private UpdateTransactionRequestToDomainDtoAssembler $updateTransactionRequestToDomainDtoAssembler;
+
     private TranslationServiceInterface $translationService;
 
     public function __construct(

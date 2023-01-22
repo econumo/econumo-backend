@@ -11,9 +11,13 @@ use DateTimeInterface;
 class CurrencyRate
 {
     private Id $id;
+
     private Currency $currency;
+
     private Currency $baseCurrency;
+
     private string $rate;
+
     private DateTimeImmutable $publishedAt;
 
     public function __construct(

@@ -13,11 +13,17 @@ use DateTimeInterface;
 class AccountAccessInvite
 {
     private Account $account;
+
     private User $recipient;
+
     private User $owner;
+
     private AccountUserRole $role;
+
     private string $code;
+
     private DateTimeImmutable $createdAt;
+
     private DateTimeInterface $updatedAt;
 
     public function __construct(

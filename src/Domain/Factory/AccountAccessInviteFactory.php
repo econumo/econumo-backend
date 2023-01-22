@@ -16,7 +16,9 @@ use App\Domain\Service\DatetimeServiceInterface;
 class AccountAccessInviteFactory implements AccountAccessInviteFactoryInterface
 {
     private DatetimeServiceInterface $datetimeService;
+
     private AccountRepositoryInterface $accountRepository;
+
     private UserRepositoryInterface $userRepository;
 
     public function __construct(
@@ -37,7 +39,7 @@ class AccountAccessInviteFactory implements AccountAccessInviteFactoryInterface
             $this->userRepository->getReference($recipientId),
             $this->userRepository->getReference($ownerId),
             $role,
-            str_pad((string)mt_rand(0, 99999), 5, '0', STR_PAD_LEFT),
+            str_pad((string)random_int(0, 99999), 5, '0', STR_PAD_LEFT),
             $this->datetimeService->getCurrentDatetime()
         );
     }

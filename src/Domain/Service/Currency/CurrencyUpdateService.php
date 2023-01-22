@@ -13,6 +13,7 @@ use App\Domain\Service\Dto\CurrencyDto;
 class CurrencyUpdateService implements CurrencyUpdateServiceInterface
 {
     private CurrencyRepositoryInterface $currencyRepository;
+
     private CurrencyFactoryInterface $currencyFactory;
 
     public function __construct(
@@ -35,11 +36,13 @@ class CurrencyUpdateService implements CurrencyUpdateServiceInterface
                     break;
                 }
             }
+
             if (!$found) {
                 $newCurrencies[] = $this->currencyFactory->create($currencyDto->code);
             }
         }
-        if (!count($newCurrencies)) {
+
+        if ($newCurrencies === []) {
             return;
         }
 

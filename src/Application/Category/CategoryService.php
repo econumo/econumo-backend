@@ -33,13 +33,21 @@ use App\Domain\Service\Translation\TranslationServiceInterface;
 class CategoryService
 {
     private CreateCategoryV1ResultAssembler $createCategoryV1ResultAssembler;
+
     private CategoryServiceInterface $categoryService;
+
     private AccountAccessServiceInterface $accountAccessService;
+
     private DeleteCategoryV1ResultAssembler $deleteCategoryV1ResultAssembler;
+
     private CategoryRepositoryInterface $categoryRepository;
+
     private UpdateCategoryV1ResultAssembler $updateCategoryV1ResultAssembler;
+
     private ArchiveCategoryV1ResultAssembler $archiveCategoryV1ResultAssembler;
+
     private UnarchiveCategoryV1ResultAssembler $unarchiveCategoryV1ResultAssembler;
+
     private TranslationServiceInterface $translationService;
 
     public function __construct(
@@ -68,7 +76,7 @@ class CategoryService
         CreateCategoryV1RequestDto $dto,
         Id $userId
     ): CreateCategoryV1ResultDto {
-        $icon = new Icon(!empty($dto->icon) ? $dto->icon : 'local_offer');
+        $icon = new Icon(empty($dto->icon) ? 'local_offer' : $dto->icon);
         if ($dto->accountId !== null) {
             $accountId = new Id($dto->accountId);
             $this->accountAccessService->checkAddCategory($userId, $accountId);
@@ -108,6 +116,7 @@ class CategoryService
         } else {
             throw new ValidationException($this->translationService->trans('category.category.action.unknown_action'));
         }
+
         return $this->deleteCategoryV1ResultAssembler->assemble($dto);
     }
 

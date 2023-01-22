@@ -27,12 +27,19 @@ use App\Domain\Entity\ValueObject\Id;
 class GetChangesListV1ResultAssembler
 {
     private FolderToDtoV1ResultAssembler $folderToDtoV1ResultAssembler;
+
     private AccountToDtoV1ResultAssembler $accountToDtoV1ResultAssembler;
+
     private CategoryToDtoResultAssembler $categoryToDtoResultAssembler;
+
     private TagToDtoResultAssembler $tagToDtoResultAssembler;
+
     private PayeeToDtoV1ResultAssembler $payeeToDtoV1ResultAssembler;
+
     private CurrencyToDtoV1ResultAssembler $currencyToDtoV1ResultAssembler;
+
     private CurrencyRateToDtoV1ResultAssembler $currencyRateToDtoV1ResultAssembler;
+
     private TransactionToDtoResultAssembler $transactionToDtoResultAssembler;
 
     public function __construct(
@@ -88,34 +95,42 @@ class GetChangesListV1ResultAssembler
         foreach ($folders as $item) {
             $result->folders[] = $this->folderToDtoV1ResultAssembler->assemble($item);
         }
+
         $result->accounts = [];
         foreach ($accounts as $item) {
             $result->accounts[] = $this->accountToDtoV1ResultAssembler->assemble($userId, $item);
         }
+
         $result->categories = [];
         foreach ($categories as $item) {
             $result->categories[] = $this->categoryToDtoResultAssembler->assemble($item);
         }
+
         $result->tags = [];
         foreach ($tags as $item) {
             $result->tags[] = $this->tagToDtoResultAssembler->assemble($item);
         }
+
         $result->payees = [];
         foreach ($payees as $item) {
             $result->payees[] = $this->payeeToDtoV1ResultAssembler->assemble($item);
         }
+
         $result->currencies = [];
         foreach ($currencies as $item) {
             $result->currencies[] = $this->currencyToDtoV1ResultAssembler->assemble($item);
         }
+
         $result->currencyRates = [];
         foreach ($currencyRates as $item) {
             $result->currencyRates[] = $this->currencyRateToDtoV1ResultAssembler->assemble($item);
         }
+
         $result->transactions = [];
         foreach ($transactions as $item) {
             $result->transactions[] = $this->transactionToDtoResultAssembler->assemble($userId, $item);
         }
+
         $result->connections = [];
 
         return $result;

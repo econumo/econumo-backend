@@ -8,7 +8,7 @@ class FolderFixtures extends AbstractFixture implements DependentFixtureInterfac
 {
     public string $tableName = 'folders';
 
-    public function getDependencies()
+    public function getDependencies(): array
     {
         return [UserFixtures::class];
     }

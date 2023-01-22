@@ -14,7 +14,9 @@ use App\Domain\Service\AccountAccessServiceInterface;
 class TransactionListService
 {
     private GetTransactionListV1ResultAssembler $getTransactionListV1ResultAssembler;
+
     private TransactionRepositoryInterface $transactionRepository;
+
     private AccountAccessServiceInterface $accountAccessService;
 
     public function __construct(
@@ -37,6 +39,7 @@ class TransactionListService
         } else {
             $transactions = $this->transactionRepository->findAvailableForUserId($userId);
         }
+
         return $this->getTransactionListV1ResultAssembler->assemble($dto, $userId, $transactions);
     }
 }

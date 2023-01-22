@@ -19,9 +19,13 @@ use App\Domain\Service\Translation\TranslationServiceInterface;
 class AccountListService
 {
     private GetAccountListV1ResultAssembler $getAccountListV1ResultAssembler;
+
     private AccountRepositoryInterface $accountRepository;
+
     private OrderAccountListV1ResultAssembler $orderAccountListV1ResultAssembler;
+
     private AccountServiceInterface $accountService;
+
     private TranslationServiceInterface $translationService;
 
     public function __construct(
@@ -50,7 +54,7 @@ class AccountListService
         OrderAccountListV1RequestDto $dto,
         Id $userId
     ): OrderAccountListV1ResultDto {
-        if (!count($dto->changes)) {
+        if ($dto->changes === []) {
             throw new ValidationException($this->translationService->trans('account.account_list.empty_list'));
         }
         $this->accountService->orderAccounts($userId, ...$dto->changes);

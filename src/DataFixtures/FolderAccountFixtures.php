@@ -8,7 +8,7 @@ class FolderAccountFixtures extends AbstractFixture implements DependentFixtureI
 {
     public string $tableName = 'folder_accounts';
 
-    public function getDependencies()
+    public function getDependencies(): array
     {
         return [FolderFixtures::class, AccountFixtures::class];
     }

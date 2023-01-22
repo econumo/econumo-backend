@@ -11,6 +11,7 @@ class UuidType extends GuidType
 {
     /**
      * @inheritdoc
+     * @return Id|null
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {

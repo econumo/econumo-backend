@@ -24,11 +24,17 @@ use Throwable;
 class AccountService implements AccountServiceInterface
 {
     private AccountRepositoryInterface $accountRepository;
+
     private AccountFactoryInterface $accountFactory;
+
     private TransactionServiceInterface $transactionService;
+
     private AccountOptionsFactoryInterface $accountOptionsFactory;
+
     private AccountOptionsRepositoryInterface $accountOptionsRepository;
+
     private AntiCorruptionServiceInterface $antiCorruptionService;
+
     private FolderRepositoryInterface $folderRepository;
 
     public function __construct(
@@ -60,6 +66,7 @@ class AccountService implements AccountServiceInterface
                     $position = $option->getPosition();
                 }
             }
+
             if ($position === 0) {
                 $position = count($this->accountRepository->getAvailableForUserId($dto->userId));
             }
@@ -81,13 +88,14 @@ class AccountService implements AccountServiceInterface
             if (!$folder->getUserId()->isEqual($dto->userId)) {
                 throw new AccessDeniedException();
             }
+
             $folder->addAccount($account);
             $this->folderRepository->save($folder);
 
             $this->antiCorruptionService->commit();
-        } catch (Throwable $exception) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback();
-            throw $exception;
+            throw $throwable;
         }
 
         return $account;
@@ -97,6 +105,7 @@ class AccountService implements AccountServiceInterface
     {
         $account = $this->accountRepository->get($id);
         $account->delete();
+
         $this->accountRepository->save($account);
     }
 
@@ -107,6 +116,7 @@ class AccountService implements AccountServiceInterface
         if ($icon !== null) {
             $account->updateIcon($icon);
         }
+
         $this->accountRepository->save($account);
     }
 
@@ -146,7 +156,8 @@ class AccountService implements AccountServiceInterface
                         break;
                     }
                 }
-                if (!$accountFound) {
+
+                if (!$accountFound instanceof Account) {
                     continue;
                 }
 
@@ -169,6 +180,7 @@ class AccountService implements AccountServiceInterface
                         break;
                     }
                 }
+
                 if (!$optionFound) {
                     $tmpOptions[] = $this->accountOptionsFactory->create(
                         $change->getId(),
@@ -180,9 +192,9 @@ class AccountService implements AccountServiceInterface
             $this->accountOptionsRepository->save(...$tmpOptions);
             $this->folderRepository->save(...$folders);
             $this->antiCorruptionService->commit();
-        } catch (\Throwable $exception) {
+        } catch (\Throwable $throwable) {
             $this->antiCorruptionService->rollback();
-            throw $exception;
+            throw $throwable;
         }
     }
 

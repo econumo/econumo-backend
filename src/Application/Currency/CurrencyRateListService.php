@@ -13,6 +13,7 @@ use App\Domain\Service\Currency\CurrencyRateServiceInterface;
 class CurrencyRateListService
 {
     private GetCurrencyRateListV1ResultAssembler $getCurrencyRateListV1ResultAssembler;
+
     private CurrencyRateServiceInterface $currencyRateService;
 
     public function __construct(

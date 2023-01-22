@@ -11,6 +11,7 @@ use App\Domain\Repository\PayeeRepositoryInterface;
 class PayeeIdToDtoV1ResultAssembler
 {
     private PayeeRepositoryInterface $payeeRepository;
+
     private PayeeToDtoV1ResultAssembler $payeeToDtoV1ResultAssembler;
 
     public function __construct(

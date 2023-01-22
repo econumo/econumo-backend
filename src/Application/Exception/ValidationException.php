@@ -14,7 +14,7 @@ class ValidationException extends ApplicationException
     /**
      * @var array
      */
-    protected $errors;
+    protected $errors = [];
 
     /**
      * ValidationException constructor.

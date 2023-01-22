@@ -13,12 +13,12 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class UpdateNameV1Form extends AbstractType
 {
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(['csrf_protection' => false]);
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('name', TextType::class, [
             'constraints' => [new NotBlank(), new Length(['min' => 3, 'max' => '20'])],

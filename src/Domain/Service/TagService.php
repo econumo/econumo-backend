@@ -19,7 +19,9 @@ use DateTimeInterface;
 class TagService implements TagServiceInterface
 {
     private TagFactoryInterface $tagFactory;
+
     private TagRepositoryInterface $tagRepository;
+
     private AccountRepositoryInterface $accountRepository;
 
     public function __construct(
@@ -43,6 +45,7 @@ class TagService implements TagServiceInterface
 
         $tag = $this->tagFactory->create($userId, $name);
         $tag->updatePosition(count($tags));
+
         $this->tagRepository->save($tag);
         return $tag;
     }
@@ -85,10 +88,11 @@ class TagService implements TagServiceInterface
             }
         }
 
-        if (!count($changed)) {
+        if ($changed === []) {
             return;
         }
-        $this->tagRepository->save(...$changed);
+
+        $this->tagRepository->save($changed);
     }
 
     public function deleteTag(Id $tagId): void
@@ -101,6 +105,7 @@ class TagService implements TagServiceInterface
     {
         $tag = $this->tagRepository->get($tagId);
         $tag->archive();
+
         $this->tagRepository->save($tag);
     }
 
@@ -108,6 +113,7 @@ class TagService implements TagServiceInterface
     {
         $tag = $this->tagRepository->get($tagId);
         $tag->unarchive();
+
         $this->tagRepository->save($tag);
     }
 

@@ -32,13 +32,21 @@ use App\Domain\Service\Translation\TranslationServiceInterface;
 class TagService
 {
     private CreateTagV1ResultAssembler $createTagV1ResultAssembler;
+
     private TagServiceInterface $tagService;
+
     private AccountAccessServiceInterface $accountAccessService;
+
     private UpdateTagV1ResultAssembler $updateTagV1ResultAssembler;
+
     private TagRepositoryInterface $tagRepository;
+
     private DeleteTagV1ResultAssembler $deleteTagV1ResultAssembler;
+
     private ArchiveTagV1ResultAssembler $archiveTagV1ResultAssembler;
+
     private UnarchiveTagV1ResultAssembler $unarchiveTagV1ResultAssembler;
+
     private TranslationServiceInterface $translationService;
 
     public function __construct(
@@ -75,7 +83,7 @@ class TagService
             } else {
                 $tag = $this->tagService->createTag($userId, new TagName($dto->name));
             }
-        } catch (TagAlreadyExistsException $exception) {
+        } catch (TagAlreadyExistsException $tagAlreadyExistsException) {
             throw new ValidationException($this->translationService->trans('tag.tag.already_exists', ['name' => $dto->name]));
         }
 
@@ -91,9 +99,10 @@ class TagService
         if (!$tag->getUserId()->isEqual($userId)) {
             throw new AccessDeniedException();
         }
+
         try {
             $this->tagService->updateTag($tagId, new TagName($dto->name));
-        } catch (TagAlreadyExistsException $exception) {
+        } catch (TagAlreadyExistsException $tagAlreadyExistsException) {
             throw new ValidationException($this->translationService->trans('tag.tag.already_exists', ['name' => $dto->name]));
         }
 
@@ -109,6 +118,7 @@ class TagService
         if (!$tag->getUserId()->isEqual($userId)) {
             throw new AccessDeniedException();
         }
+
         $this->tagService->deleteTag($tagId);
         return $this->deleteTagV1ResultAssembler->assemble($dto);
     }

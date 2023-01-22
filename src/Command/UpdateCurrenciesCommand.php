@@ -16,9 +16,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class UpdateCurrenciesCommand extends Command
 {
     protected static $defaultName = 'app:update-currencies';
+
     protected static $defaultDescription = 'Load and update currencies';
 
     private CurrencyLoaderServiceInterface $currencyLoaderService;
+
     private CurrencyUpdateServiceInterface $currencyUpdateService;
 
     public function __construct(
@@ -41,7 +43,7 @@ class UpdateCurrenciesCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $currencies = $this->currencyLoaderService->loadCurrencies();
         $filter = $input->getArgument('filter');
-        if (is_array($filter) && count($filter) > 0) {
+        if (is_array($filter) && $filter !== []) {
             $filtered = [];
             foreach ($currencies as $currency) {
                 if (in_array($currency->code->getValue(), $filter, true)) {
@@ -51,8 +53,9 @@ class UpdateCurrenciesCommand extends Command
         } else {
             $filtered = $currencies;
         }
+
         $io->info(sprintf('Loaded %d currencies', count($filtered)));
-        $this->currencyUpdateService->updateCurrencies(...$filtered);
+        $this->currencyUpdateService->updateCurrencies($filtered);
         $io->success('Currencies updated');
 
         return Command::SUCCESS;

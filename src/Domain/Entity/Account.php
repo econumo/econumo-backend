@@ -16,14 +16,23 @@ use DateTimeInterface;
 class Account
 {
     private Id $id;
+
     private AccountName $name;
+
     private Currency $currency;
+
     private string $balance;
+
     private AccountType $type;
+
     private Icon $icon;
+
     private User $user;
-    private bool $isDeleted;
+
+    private bool $isDeleted = false;
+
     private DateTimeImmutable $createdAt;
+
     private DateTimeInterface $updatedAt;
 
     public function __construct(
@@ -43,7 +52,6 @@ class Account
         $this->balance = (string)$balance;
         $this->type = $type;
         $this->icon = $icon;
-        $this->isDeleted = false;
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
     }
@@ -80,6 +88,7 @@ class Account
         } else {
             $amount = $transaction->getAmountRecipient();
         }
+
         if ($transaction->getType()->isExpense()) {
             $this->balance = (string)((float)$this->balance - $amount);
         } elseif ($transaction->getType()->isIncome()) {
@@ -100,6 +109,7 @@ class Account
         } else {
             $amount = $transaction->getAmountRecipient();
         }
+
         if ($transaction->getType()->isExpense()) {
             $this->balance = (string)((float)$this->balance + $amount);
         } elseif ($transaction->getType()->isIncome()) {

@@ -21,6 +21,7 @@ use OpenApi\Annotations as OA;
 class OrderFolderListV1Controller extends AbstractController
 {
     private FolderListService $folderListService;
+
     private ValidatorInterface $validator;
 
     public function __construct(FolderListService $folderListService, ValidatorInterface $validator)

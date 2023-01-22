@@ -25,5 +25,5 @@ class ConnectionResultDto
      * @var AccountAccessResultDto[]
      * @OA\Property()
      */
-    public array $sharedAccounts;
+    public array $sharedAccounts = [];
 }

@@ -20,7 +20,7 @@ final class Version20211128154246 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
+        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', "Migration can only be executed safely on 'postgresql'.");
 
         $this->addSql('ALTER TABLE account_access ADD CONSTRAINT FK_215DE5279B6B5FBA FOREIGN KEY (account_id) REFERENCES accounts (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE account_access ADD CONSTRAINT FK_215DE527A76ED395 FOREIGN KEY (user_id) REFERENCES users (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
@@ -31,7 +31,7 @@ final class Version20211128154246 extends AbstractMigration
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
+        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', "Migration can only be executed safely on 'postgresql'.");
 
         $this->addSql('ALTER TABLE account_access DROP CONSTRAINT FK_215DE5279B6B5FBA');
         $this->addSql('ALTER TABLE account_access DROP CONSTRAINT FK_215DE527A76ED395');

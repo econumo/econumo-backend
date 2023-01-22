@@ -15,8 +15,11 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 class NameService
 {
     private UpdateNameV1ResultAssembler $updateNameV1ResultAssembler;
+
     private UserServiceInterface $userService;
+
     private JWTTokenManagerInterface $authToken;
+
     private UserRepositoryInterface $userRepository;
 
     public function __construct(

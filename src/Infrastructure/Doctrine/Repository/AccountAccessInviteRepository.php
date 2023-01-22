@@ -35,6 +35,7 @@ class AccountAccessInviteRepository extends ServiceEntityRepository implements A
             foreach ($items as $item) {
                 $this->getEntityManager()->persist($item);
             }
+
             $this->getEntityManager()->flush();
         } catch (ORMException | ORMInvalidArgumentException $e) {
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
@@ -43,12 +44,11 @@ class AccountAccessInviteRepository extends ServiceEntityRepository implements A
 
     public function get(Id $accountId, Id $recipientId): AccountAccessInvite
     {
-        /** @var AccountAccessInvite|null $item */
         $item = $this->findOneBy([
             'account' => $this->getEntityManager()->getReference(Account::class, $accountId),
             'recipient' => $this->getEntityManager()->getReference(User::class, $recipientId)
         ]);
-        if ($item === null) {
+        if (!$item instanceof \App\Domain\Entity\AccountAccessInvite) {
             throw new NotFoundException('AccountAccessInvite not found');
         }
 
@@ -63,14 +63,13 @@ class AccountAccessInviteRepository extends ServiceEntityRepository implements A
 
     public function getByUserAndCode(Id $userId, string $code): AccountAccessInvite
     {
-        /** @var AccountAccessInvite|null $item */
         $item = $this->findOneBy(
             [
                 'recipient' => $this->getEntityManager()->getReference(User::class, $userId),
                 'code' => $code
             ]
         );
-        if ($item === null) {
+        if (!$item instanceof \App\Domain\Entity\AccountAccessInvite) {
             throw new NotFoundException('AccountAccessInvite not found');
         }
 

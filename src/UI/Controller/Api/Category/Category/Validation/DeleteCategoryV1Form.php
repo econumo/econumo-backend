@@ -17,17 +17,19 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class DeleteCategoryV1Form extends AbstractType
 {
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(['csrf_protection' => false]);
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('id', TextType::class, [
             'constraints' => [new NotBlank(), new Uuid()],
         ])->add('mode', ChoiceType::class, [
-            'constraints' => [new NotBlank(), new Callback([$this, 'validateReplaceMode'])],
+            'constraints' => [new NotBlank(), new Callback(function ($value, ExecutionContextInterface $context, $payload): void {
+                $this->validateReplaceMode($value, $context, $payload);
+            })],
             'choices' => [
                 DeleteCategoryV1RequestDto::MODE_DELETE,
                 DeleteCategoryV1RequestDto::MODE_REPLACE,
@@ -37,7 +39,7 @@ class DeleteCategoryV1Form extends AbstractType
         ]);
     }
 
-    public function validateReplaceMode($value, ExecutionContextInterface $context, $payload)
+    public function validateReplaceMode($value, ExecutionContextInterface $context, $payload): void
     {
         if ($value !== DeleteCategoryV1RequestDto::MODE_REPLACE) {
             return;

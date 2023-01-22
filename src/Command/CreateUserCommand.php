@@ -16,8 +16,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class CreateUserCommand extends Command
 {
     protected static $defaultName = 'app:create-user';
+
     protected static $defaultDescription = 'Create new user';
+
     private UserFactoryInterface $userFactory;
+
     private UserRepositoryInterface $userRepository;
 
     public function __construct(UserFactoryInterface $userFactory, UserRepositoryInterface $userRepository)

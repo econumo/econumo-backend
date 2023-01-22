@@ -22,7 +22,9 @@ use OpenApi\Annotations as OA;
 class CreateTagV1Controller extends AbstractController
 {
     private TagService $tagService;
+
     private ValidatorInterface $validator;
+
     private OperationServiceInterface $operationService;
 
     public function __construct(

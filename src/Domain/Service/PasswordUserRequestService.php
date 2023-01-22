@@ -12,8 +12,11 @@ use App\Domain\Repository\UserRepositoryInterface;
 class PasswordUserRequestService implements PasswordUserRequestServiceInterface
 {
     private PasswordUserRequestFactoryInterface $passwordUserRequestFactory;
+
     private PasswordUserRequestRepositoryInterface $passwordUserRequestRepository;
+
     private UserRepositoryInterface $userRepository;
+
     private EventDispatcherInterface $eventDispatcher;
 
     public function __construct(

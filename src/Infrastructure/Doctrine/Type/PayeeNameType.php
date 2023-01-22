@@ -13,6 +13,7 @@ class PayeeNameType extends StringType
 
     /**
      * @inheritdoc
+     * @return PayeeName|null
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {

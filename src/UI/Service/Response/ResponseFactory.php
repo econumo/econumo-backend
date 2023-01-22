@@ -24,17 +24,10 @@ class ResponseFactory
         string $message = '',
         int $httpCode = Response::HTTP_OK
     ): Response {
-        $formats = $request->headers->get('content-type');
-
-        switch ($formats) {
-            default:
-                $response = static::createJsonResponse([
-                    'message' => $message,
-                    'data' => $data,
-                ], $httpCode);
-        }
-
-        return $response;
+        return static::createJsonResponse([
+            'message' => $message,
+            'data' => $data,
+        ], $httpCode);
     }
 
     /**
@@ -52,18 +45,11 @@ class ResponseFactory
         array $errors = [],
         int $httpCode = Response::HTTP_BAD_REQUEST
     ): Response {
-        $formats = $request->headers->get('content-type');
-
-        switch ($formats) {
-            default:
-                $response = static::createJsonResponse([
-                    'message' => $message,
-                    'code' => $code,
-                    'errors' => $errors,
-                ], $httpCode);
-        }
-
-        return $response;
+        return static::createJsonResponse([
+            'message' => $message,
+            'code' => $code,
+            'errors' => $errors,
+        ], $httpCode);
     }
 
     /**
@@ -81,22 +67,15 @@ class ResponseFactory
         ?Throwable $exception = null,
         int $httpCode = Response::HTTP_INTERNAL_SERVER_ERROR
     ): Response {
-        $formats = $request->headers->get('content-type');
-
-        switch ($formats) {
-            default:
-                $data = [
-                    'message' => $message,
-                    'code' => $code
-                ];
-                if (null !== $exception) {
-                    $data['exceptionType'] = get_class($exception);
-                    $data['stackTrace'] = $exception->getTrace();
-                }
-                $response = static::createJsonResponse($data, $httpCode);
+        $data = [
+            'message' => $message,
+            'code' => $code
+        ];
+        if (null !== $exception) {
+            $data['exceptionType'] = get_class($exception);
+            $data['stackTrace'] = $exception->getTrace();
         }
-
-        return $response;
+        return static::createJsonResponse($data, $httpCode);
     }
 
     /**

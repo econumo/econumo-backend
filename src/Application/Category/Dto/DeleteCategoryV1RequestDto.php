@@ -13,7 +13,14 @@ use OpenApi\Annotations as OA;
  */
 class DeleteCategoryV1RequestDto
 {
+    /**
+     * @var string
+     */
     public const MODE_DELETE = 'delete';
+
+    /**
+     * @var string
+     */
     public const MODE_REPLACE = 'replace';
 
     /**

@@ -34,6 +34,7 @@ class ConnectionInviteRepository extends ServiceEntityRepository implements Conn
             foreach ($items as $item) {
                 $this->getEntityManager()->persist($item);
             }
+
             $this->getEntityManager()->flush();
         } catch (ORMException | ORMInvalidArgumentException $e) {
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
@@ -55,11 +56,11 @@ class ConnectionInviteRepository extends ServiceEntityRepository implements Conn
 
     public function getByCode(ConnectionCode $code): ConnectionInvite
     {
-        /** @var ConnectionInvite|null $item */
         $item = $this->findOneBy(['code' => $code]);
-        if ($item === null) {
+        if (!$item instanceof ConnectionInvite) {
             throw new NotFoundException(sprintf('ConnectionCode with CODE %s not found', $code));
         }
+
         if ($item->isExpired()) {
             $this->delete($item);
             throw new NotFoundException(sprintf('ConnectionCode with CODE %s not found', $code));

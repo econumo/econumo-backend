@@ -13,6 +13,7 @@ class CurrencyCodeType extends StringType
 
     /**
      * @inheritdoc
+     * @return CurrencyCode|null
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {

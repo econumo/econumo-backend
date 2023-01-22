@@ -15,8 +15,11 @@ use DateTimeInterface;
 class TransactionService implements TransactionServiceInterface
 {
     private TransactionRepositoryInterface $transactionRepository;
+
     private TransactionFactoryInterface $transactionFactory;
+
     private AccountRepositoryInterface $accountRepository;
+
     private AntiCorruptionServiceInterface $antiCorruptionService;
 
     public function __construct(
@@ -46,10 +49,11 @@ class TransactionService implements TransactionServiceInterface
                 $accountRecipient->applyTransaction($transaction);
                 $this->accountRepository->save($accountRecipient);
             }
+
             $this->antiCorruptionService->commit();
-        } catch (\Throwable $exception) {
+        } catch (\Throwable $throwable) {
             $this->antiCorruptionService->rollback();
-            throw $exception;
+            throw $throwable;
         }
 
         return $transaction;
@@ -74,6 +78,7 @@ class TransactionService implements TransactionServiceInterface
             if (!$account->getId()->isEqual($transaction->getAccountId())) {
                 $account = $this->accountRepository->get($transaction->getAccountId());
             }
+
             $account->applyTransaction($transaction);
             $this->accountRepository->save($account);
             if ($transaction->getType()->isTransfer() && $transaction->getAccountRecipientId() !== null) {
@@ -83,9 +88,9 @@ class TransactionService implements TransactionServiceInterface
             }
 
             $this->antiCorruptionService->commit();
-        } catch (\Throwable $exception) {
+        } catch (\Throwable $throwable) {
             $this->antiCorruptionService->rollback();
-            throw $exception;
+            throw $throwable;
         }
 
         return $transaction;
@@ -103,11 +108,12 @@ class TransactionService implements TransactionServiceInterface
                 $accountRecipient->rollbackTransaction($transaction);
                 $this->accountRepository->save($accountRecipient);
             }
+
             $this->transactionRepository->delete($transaction);
             $this->antiCorruptionService->commit();
-        } catch (\Throwable $exception) {
+        } catch (\Throwable $throwable) {
             $this->antiCorruptionService->rollback();
-            throw $exception;
+            throw $throwable;
         }
     }
 
@@ -121,9 +127,9 @@ class TransactionService implements TransactionServiceInterface
             $account->applyTransaction($transaction);
             $this->accountRepository->save($account);
             $this->antiCorruptionService->commit();
-        } catch (\Throwable $exception) {
+        } catch (\Throwable $throwable) {
             $this->antiCorruptionService->rollback();
-            throw $exception;
+            throw $throwable;
         }
 
         return $transaction;

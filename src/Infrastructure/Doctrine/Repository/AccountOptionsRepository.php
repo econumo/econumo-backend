@@ -11,6 +11,7 @@ use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\AccountOptionsRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\ORMInvalidArgumentException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -35,7 +36,7 @@ class AccountOptionsRepository extends ServiceEntityRepository implements Accoun
         return $builder
             ->where('ao.user = :user')
             ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId))
-            ->orderBy('ao.position', 'ASC')
+            ->orderBy('ao.position', Criteria::ASC)
             ->getQuery()
             ->getResult();
     }
@@ -46,6 +47,7 @@ class AccountOptionsRepository extends ServiceEntityRepository implements Accoun
             foreach ($accountOptions as $position) {
                 $this->getEntityManager()->persist($position);
             }
+
             $this->getEntityManager()->flush();
         } catch (ORMException|ORMInvalidArgumentException $e) {
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
@@ -57,12 +59,11 @@ class AccountOptionsRepository extends ServiceEntityRepository implements Accoun
      */
     public function get(Id $accountId, Id $userId): AccountOptions
     {
-        /** @var AccountOptions|null $item */
         $item = $this->findOneBy([
             'account' => $this->getEntityManager()->getReference(Account::class, $accountId),
             'user' => $this->getEntityManager()->getReference(User::class, $userId)
         ]);
-        if ($item === null) {
+        if (!$item instanceof AccountOptions) {
             throw new NotFoundException(
                 sprintf('AccountOptions for account_id %s user_id %s not found', $accountId, $userId)
             );

@@ -14,7 +14,9 @@ use App\Domain\Repository\AccountRepositoryInterface;
 class UpdateTransactionV1ResultAssembler
 {
     private AccountRepositoryInterface $accountRepository;
+
     private TransactionToDtoResultAssembler $transactionToDtoV1ResultAssembler;
+
     private AccountToDtoV1ResultAssembler $accountToDtoV1ResultAssembler;
 
     public function __construct(

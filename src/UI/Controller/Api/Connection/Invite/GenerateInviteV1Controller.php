@@ -21,6 +21,7 @@ use OpenApi\Annotations as OA;
 class GenerateInviteV1Controller extends AbstractController
 {
     private InviteService $inviteService;
+
     private ValidatorInterface $validator;
 
     public function __construct(InviteService $inviteService, ValidatorInterface $validator)

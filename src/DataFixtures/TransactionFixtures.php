@@ -8,7 +8,7 @@ class TransactionFixtures extends AbstractFixture implements DependentFixtureInt
 {
     public string $tableName = 'transactions';
 
-    public function getDependencies()
+    public function getDependencies(): array
     {
         return [
             UserFixtures::class,

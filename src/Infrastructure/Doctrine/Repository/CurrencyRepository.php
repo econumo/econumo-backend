@@ -31,9 +31,8 @@ class CurrencyRepository extends ServiceEntityRepository implements CurrencyRepo
 
     public function get(Id $id): Currency
     {
-        /** @var Currency|null $item */
         $item = $this->find($id);
-        if ($item === null) {
+        if (!$item instanceof Currency) {
             throw new NotFoundException(sprintf('Currency with identifier %s not found', $item));
         }
 
@@ -54,6 +53,7 @@ class CurrencyRepository extends ServiceEntityRepository implements CurrencyRepo
             foreach ($items as $item) {
                 $this->getEntityManager()->persist($item);
             }
+
             $this->getEntityManager()->flush();
         } catch (ORMException|ORMInvalidArgumentException $e) {
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);

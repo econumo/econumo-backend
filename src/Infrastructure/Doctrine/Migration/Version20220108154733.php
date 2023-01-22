@@ -20,12 +20,12 @@ final class Version20220108154733 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
+        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', "Migration can only be executed safely on 'postgresql'.");
 
         $this->addSql('CREATE TABLE account_options (account_id UUID NOT NULL, user_id UUID NOT NULL, position SMALLINT DEFAULT 0 NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(account_id, user_id))');
         $this->addSql('CREATE INDEX IDX_191EEECF9B6B5FBA ON account_options (account_id)');
         $this->addSql('CREATE INDEX IDX_191EEECFA76ED395 ON account_options (user_id)');
-        $this->addSql('COMMENT ON COLUMN account_options.created_at IS \'(DC2Type:datetime_immutable)\'');
+        $this->addSql("COMMENT ON COLUMN account_options.created_at IS '(DC2Type:datetime_immutable)'");
         $this->addSql('ALTER TABLE account_options ADD CONSTRAINT FK_191EEECF9B6B5FBA FOREIGN KEY (account_id) REFERENCES accounts (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE account_options ADD CONSTRAINT FK_191EEECFA76ED395 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE accounts DROP "position"');
@@ -37,7 +37,7 @@ final class Version20220108154733 extends AbstractMigration
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
+        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', "Migration can only be executed safely on 'postgresql'.");
 
         $this->addSql('DROP TABLE account_options');
         $this->addSql('ALTER TABLE accounts ADD "position" SMALLINT DEFAULT 0 NOT NULL');

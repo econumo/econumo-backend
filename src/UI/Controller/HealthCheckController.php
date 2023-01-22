@@ -15,6 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class HealthCheckController extends AbstractController
 {
     private EntityManagerInterface $entityManager;
+
     private CurrencyExchangeUsageService $currencyExchangeStatusService;
 
     public function __construct(
@@ -33,7 +34,7 @@ class HealthCheckController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function __invoke(Request $request): Response
+    public function __invoke(): Response
     {
         $response = [
             'database' => null,
@@ -41,17 +42,16 @@ class HealthCheckController extends AbstractController
             'exchange_rates' => null,
         ];
         $status = true;
-
         try {
             $response['database'] = $this->entityManager->getConnection()->connect();
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
             $response['database'] = false;
             $status = false;
         }
 
         try {
             $response['exchange_rates'] = (bool)$this->currencyExchangeStatusService->getUsage();
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
             $response['exchange_rates'] = false;
         }
 

@@ -14,10 +14,20 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class CurrencyRatesLoaderService implements CurrencyRatesLoaderServiceInterface
 {
+    /**
+     * @var string
+     */
     private const CURRENCY_RATES_LATEST_URL = 'https://openexchangerates.org/api/latest.json';
+
+    /**
+     * @var string
+     */
     private const CURRENCY_RATES_HISTORICAL_URL = 'https://openexchangerates.org/api/historical/:date.json';
+
     private HttpClientInterface $client;
+
     private CurrencyServiceInterface $currencyService;
+
     private string $token;
 
     public function __construct(
@@ -36,6 +46,7 @@ class CurrencyRatesLoaderService implements CurrencyRatesLoaderServiceInterface
         if ($date->format('Y-m-d') === date('Y-m-d')) {
             $datasourceUrl = self::CURRENCY_RATES_LATEST_URL;
         }
+
         $baseCurrency = $this->currencyService->getBaseCurrency();
         $response = $this->client->request('GET', $datasourceUrl, [
             'query' => [
@@ -49,6 +60,7 @@ class CurrencyRatesLoaderService implements CurrencyRatesLoaderServiceInterface
         $updatedAt = \DateTimeImmutable::createFromFormat('U', (string)$data['timestamp']);
         $currencyRateDate = \DateTime::createFromFormat('Y-m-d', $updatedAt->format('Y-m-d'));
         $currencyRateDate->setTime(0, 0, 0, 0);
+
         $baseCode = new CurrencyCode($data['base']);
         foreach ($data['rates'] as $code => $rate) {
             $item = new CurrencyRateDto();
@@ -72,6 +84,7 @@ class CurrencyRatesLoaderService implements CurrencyRatesLoaderServiceInterface
         foreach ($currencies as $currency) {
             $result[] = $currency->getCode()->getValue();
         }
+
         $result = array_unique($result);
         return implode(',', $result);
     }

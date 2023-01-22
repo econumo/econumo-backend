@@ -33,9 +33,9 @@ class EventDispatcher implements EventDispatcherInterface
     {
         try {
             return $this->dispatchEvent($event);
-        } catch (Throwable $e) {
+        } catch (Throwable $throwable) {
             $this->logger->error(sprintf('Error dispatch event %s', get_class($event)));
-            throw $e;
+            throw $throwable;
         }
     }
 
@@ -60,7 +60,7 @@ class EventDispatcher implements EventDispatcherInterface
         /** @var HandledStamp[] $handledStamps */
         $handledStamps = $envelope->all(HandledStamp::class);
 
-        if (!$handledStamps) {
+        if ($handledStamps === []) {
             return null;
         }
 

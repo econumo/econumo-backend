@@ -14,7 +14,9 @@ use Throwable;
 class ConnectionService implements ConnectionServiceInterface
 {
     private UserRepositoryInterface $userRepository;
+
     private AntiCorruptionServiceInterface $antiCorruptionService;
+
     private ConnectionAccountServiceInterface $connectionAccountService;
 
     public function __construct(
@@ -60,9 +62,9 @@ class ConnectionService implements ConnectionServiceInterface
             $this->userRepository->save($initiator, $connectedUser);
 
             $this->antiCorruptionService->commit();
-        } catch (Throwable $exception) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback();
-            throw $exception;
+            throw $throwable;
         }
     }
 }

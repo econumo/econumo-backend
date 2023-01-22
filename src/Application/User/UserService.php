@@ -23,10 +23,15 @@ use App\Application\User\Assembler\RegisterUserV1ResultAssembler;
 class UserService
 {
     private RegisterUserV1ResultAssembler $registerUserV1ResultAssembler;
+
     private LoginUserV1ResultAssembler $loginUserV1ResultAssembler;
+
     private LogoutUserV1ResultAssembler $logoutUserV1ResultAssembler;
+
     private JWTTokenManagerInterface $authToken;
+
     private UserServiceInterface $userService;
+
     private TranslationServiceInterface $translationService;
 
     public function __construct(
@@ -64,8 +69,8 @@ class UserService
         try {
             $user = $this->userService->register(new Email($dto->email), $dto->password, $dto->name);
             return $this->registerUserV1ResultAssembler->assemble($dto, $user);
-        } catch (UserRegisteredException $exception) {
-            throw new ValidationException($this->translationService->trans('user.user.already_exists'), 400, $exception);
+        } catch (UserRegisteredException $userRegisteredException) {
+            throw new ValidationException($this->translationService->trans('user.user.already_exists'), 400, $userRegisteredException);
         }
     }
 }

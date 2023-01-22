@@ -13,6 +13,7 @@ class CategoryNameType extends StringType
 
     /**
      * @inheritdoc
+     * @return CategoryName|null
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {

@@ -8,7 +8,7 @@ class AccountOptionsFixtures extends AbstractFixture implements DependentFixture
 {
     public string $tableName = 'account_options';
 
-    public function getDependencies()
+    public function getDependencies(): array
     {
         return [UserFixtures::class, AccountFixtures::class];
     }

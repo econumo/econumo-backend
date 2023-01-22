@@ -21,6 +21,7 @@ use OpenApi\Annotations as OA;
 class UnarchiveCategoryV1Controller extends AbstractController
 {
     private CategoryService $categoryService;
+
     private ValidatorInterface $validator;
 
     public function __construct(CategoryService $categoryService, ValidatorInterface $validator)
