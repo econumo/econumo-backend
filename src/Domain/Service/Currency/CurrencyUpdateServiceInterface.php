@@ -10,5 +10,9 @@ use App\Domain\Service\Dto\CurrencyDto;
 
 interface CurrencyUpdateServiceInterface
 {
-    public function updateCurrencies(CurrencyDto ...$currencies): void;
+    /**
+     * @param CurrencyDto[] $currencies
+     * @return void
+     */
+    public function updateCurrencies(array $currencies): void;
 }

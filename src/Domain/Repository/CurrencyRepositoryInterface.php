@@ -29,5 +29,9 @@ interface CurrencyRepositoryInterface
 
     public function getReference(Id $id): Currency;
 
-    public function save(Currency ...$items): void;
+    /**
+     * @param Currency[] $items
+     * @return void
+     */
+    public function save(array $items): void;
 }
