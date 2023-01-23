@@ -1,4 +1,4 @@
-name: "Run Codeception tests"
+name: "Test branch"
 on:
     push:
         branches:
@@ -6,8 +6,8 @@ on:
             - '!master'
 
 jobs:
-    codeception:
-        name: Run tests
+    test-branch:
+        name: test_branch
         runs-on: ubuntu-latest
         env:
             DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}
@@ -31,11 +31,15 @@ jobs:
 
             -   uses: actions/checkout@v3
 
-            -   name: Test APP image
+            -   name: Build APP image
                 if: success()
                 run: |
                     docker pull ${DOCKER_IMAGE_APP} || true
                     docker build --cache-from ${DOCKER_IMAGE_APP} --tag ${DOCKER_IMAGE_APP} --target test -f build/docker/app/Dockerfile .
+
+            -   name: Run tests
+                if: success()
+                run: |
                     docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:database:create --if-not-exists --env=test
                     docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:migration:migrate -n --env=test
                     docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:fixtures:load --purge-with-truncate -n --env=test
@@ -44,3 +48,9 @@ jobs:
                     QASE_ENABLE: "false"
                     QASE_TOKEN: ${{ secrets.APP_QASE_TOKEN }}
                     QASE_PROJECT: "EA"
+
+            -   name: Run PSALM analysis
+                if: success()
+                run: |
+                    docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} vendor/bin/psalm --long-progress --output-format=github --threads=3
+
