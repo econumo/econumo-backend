@@ -105,6 +105,9 @@
     </PossiblyFalsePropertyAssignmentValue>
   </file>
   <file src="src/Domain/Entity/Folder.php">
+    <MismatchingDocblockReturnType occurrences="1">
+      <code>Account[]|Collection</code>
+    </MismatchingDocblockReturnType>
     <PossiblyFalsePropertyAssignmentValue occurrences="1">
       <code>DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt-&gt;format('Y-m-d H:i:s'))</code>
     </PossiblyFalsePropertyAssignmentValue>
@@ -138,6 +141,10 @@
     </PossiblyFalsePropertyAssignmentValue>
   </file>
   <file src="src/Domain/Entity/User.php">
+    <MismatchingDocblockReturnType occurrences="2">
+      <code>UserOption[]|Collection</code>
+      <code>self[]|Collection</code>
+    </MismatchingDocblockReturnType>
     <PossiblyFalsePropertyAssignmentValue occurrences="1">
       <code>DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt-&gt;format('Y-m-d H:i:s'))</code>
     </PossiblyFalsePropertyAssignmentValue>
@@ -171,6 +178,11 @@
       <code>iterable</code>
     </InvalidReturnType>
   </file>
+  <file src="src/Domain/Service/Currency/CurrencyRatesUpdateService.php">
+    <RedundantCondition occurrences="1">
+      <code>$this-&gt;currencyRateRepository-&gt;get($item-&gt;getCurrency()-&gt;getId(), $item-&gt;getPublishedAt())</code>
+    </RedundantCondition>
+  </file>
   <file src="src/Domain/Service/Currency/CurrencyService.php">
     <InvalidNullableReturnType occurrences="1">
       <code>Currency</code>
@@ -197,12 +209,14 @@
     </PossiblyFalsePropertyAssignmentValue>
   </file>
   <file src="src/Infrastructure/Doctrine/Repository/AccountAccessInviteRepository.php">
-    <LessSpecificImplementedReturnType occurrences="1">
+    <LessSpecificImplementedReturnType occurrences="2">
+      <code>AccountAccessInvite[]</code>
       <code>AccountAccessInvite[]</code>
     </LessSpecificImplementedReturnType>
   </file>
   <file src="src/Infrastructure/Doctrine/Repository/AccountAccessRepository.php">
-    <LessSpecificImplementedReturnType occurrences="1">
+    <LessSpecificImplementedReturnType occurrences="2">
+      <code>AccountAccess[]</code>
       <code>AccountAccess[]</code>
     </LessSpecificImplementedReturnType>
   </file>
@@ -211,7 +225,8 @@
       <code>$accountId</code>
       <code>$userId</code>
     </ImplicitToStringCast>
-    <LessSpecificImplementedReturnType occurrences="1">
+    <LessSpecificImplementedReturnType occurrences="2">
+      <code>AccountOptions[]</code>
       <code>AccountOptions[]</code>
     </LessSpecificImplementedReturnType>
   </file>
@@ -223,7 +238,8 @@
     <InvalidNullableReturnType occurrences="1">
       <code>Account</code>
     </InvalidNullableReturnType>
-    <LessSpecificImplementedReturnType occurrences="1">
+    <LessSpecificImplementedReturnType occurrences="2">
+      <code>Account[]</code>
       <code>Account[]</code>
     </LessSpecificImplementedReturnType>
     <NullableReturnStatement occurrences="1">
@@ -240,7 +256,8 @@
     <InvalidNullableReturnType occurrences="1">
       <code>Category</code>
     </InvalidNullableReturnType>
-    <LessSpecificImplementedReturnType occurrences="1">
+    <LessSpecificImplementedReturnType occurrences="2">
+      <code>Category[]</code>
       <code>Category[]</code>
     </LessSpecificImplementedReturnType>
     <NullableReturnStatement occurrences="1">
@@ -252,7 +269,8 @@
       <code>$code</code>
       <code>$code</code>
     </ImplicitToStringCast>
-    <LessSpecificImplementedReturnType occurrences="1">
+    <LessSpecificImplementedReturnType occurrences="2">
+      <code>ConnectionInvite[]</code>
       <code>ConnectionInvite[]</code>
     </LessSpecificImplementedReturnType>
   </file>
@@ -260,7 +278,8 @@
     <ImplicitToStringCast occurrences="1">
       <code>$currencyId</code>
     </ImplicitToStringCast>
-    <LessSpecificImplementedReturnType occurrences="1">
+    <LessSpecificImplementedReturnType occurrences="2">
+      <code>CurrencyRate[]</code>
       <code>CurrencyRate[]</code>
     </LessSpecificImplementedReturnType>
     <NullArgument occurrences="1">
@@ -271,7 +290,8 @@
     <InvalidNullableReturnType occurrences="1">
       <code>Currency</code>
     </InvalidNullableReturnType>
-    <LessSpecificImplementedReturnType occurrences="1">
+    <LessSpecificImplementedReturnType occurrences="2">
+      <code>Currency[]</code>
       <code>Currency[]</code>
     </LessSpecificImplementedReturnType>
     <NullArgument occurrences="1">
@@ -285,7 +305,8 @@
     <ImplicitToStringCast occurrences="1">
       <code>$id</code>
     </ImplicitToStringCast>
-    <LessSpecificImplementedReturnType occurrences="1">
+    <LessSpecificImplementedReturnType occurrences="2">
+      <code>Folder[]</code>
       <code>Folder[]</code>
     </LessSpecificImplementedReturnType>
   </file>
@@ -293,12 +314,14 @@
     <ImplicitToStringCast occurrences="1">
       <code>$id</code>
     </ImplicitToStringCast>
-    <LessSpecificImplementedReturnType occurrences="1">
+    <LessSpecificImplementedReturnType occurrences="2">
+      <code>OperationId[]</code>
       <code>OperationId[]</code>
     </LessSpecificImplementedReturnType>
   </file>
   <file src="src/Infrastructure/Doctrine/Repository/PasswordUserRequestRepository.php">
-    <LessSpecificImplementedReturnType occurrences="1">
+    <LessSpecificImplementedReturnType occurrences="2">
+      <code>PasswordUserRequest[]</code>
       <code>PasswordUserRequest[]</code>
     </LessSpecificImplementedReturnType>
   </file>
@@ -309,7 +332,8 @@
     <InvalidNullableReturnType occurrences="1">
       <code>Payee</code>
     </InvalidNullableReturnType>
-    <LessSpecificImplementedReturnType occurrences="1">
+    <LessSpecificImplementedReturnType occurrences="2">
+      <code>Payee[]</code>
       <code>Payee[]</code>
     </LessSpecificImplementedReturnType>
     <NullableReturnStatement occurrences="1">
@@ -323,7 +347,8 @@
     <InvalidNullableReturnType occurrences="1">
       <code>Tag</code>
     </InvalidNullableReturnType>
-    <LessSpecificImplementedReturnType occurrences="1">
+    <LessSpecificImplementedReturnType occurrences="2">
+      <code>Tag[]</code>
       <code>Tag[]</code>
     </LessSpecificImplementedReturnType>
     <NullableReturnStatement occurrences="1">
@@ -334,7 +359,8 @@
     <ImplicitToStringCast occurrences="1">
       <code>$id</code>
     </ImplicitToStringCast>
-    <LessSpecificImplementedReturnType occurrences="1">
+    <LessSpecificImplementedReturnType occurrences="2">
+      <code>Transaction[]</code>
       <code>Transaction[]</code>
     </LessSpecificImplementedReturnType>
   </file>
@@ -342,7 +368,8 @@
     <InvalidNullableReturnType occurrences="1">
       <code>UserOption</code>
     </InvalidNullableReturnType>
-    <LessSpecificImplementedReturnType occurrences="1">
+    <LessSpecificImplementedReturnType occurrences="2">
+      <code>UserOption[]</code>
       <code>UserOption[]</code>
     </LessSpecificImplementedReturnType>
     <NullableReturnStatement occurrences="1">
@@ -358,7 +385,8 @@
     <InvalidNullableReturnType occurrences="1">
       <code>User</code>
     </InvalidNullableReturnType>
-    <LessSpecificImplementedReturnType occurrences="1">
+    <LessSpecificImplementedReturnType occurrences="2">
+      <code>User[]</code>
       <code>User[]</code>
     </LessSpecificImplementedReturnType>
     <NullableReturnStatement occurrences="1">
@@ -379,6 +407,11 @@
     <PossiblyNullReference occurrences="1">
       <code>release</code>
     </PossiblyNullReference>
+  </file>
+  <file src="src/Kernel.php">
+    <MoreSpecificReturnType occurrences="1">
+      <code>iterable</code>
+    </MoreSpecificReturnType>
   </file>
   <file src="src/UI/Controller/Api/User/User/LogoutUserV1Controller.php">
     <PossiblyNullArgument occurrences="1">
