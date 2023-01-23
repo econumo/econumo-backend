@@ -83,17 +83,19 @@ class UserService implements UserServiceInterface
         $this->antiCorruptionService->beginTransaction();
         try {
             $user = $this->userFactory->create($name, $email, $password);
-            $this->userRepository->save($user);
+            $this->userRepository->save([$user]);
 
             $folder = $this->folderFactory->create($user->getId(), new FolderName($this->translator->trans('account.folder.all_accounts')));
-            $this->folderRepository->save($folder);
+            $this->folderRepository->save([$folder]);
 
             $connectionInvite = $this->connectionInviteFactory->create($user);
-            $this->connectionInviteRepository->save($connectionInvite);
+            $this->connectionInviteRepository->save([$connectionInvite]);
 
             $this->userOptionRepository->save(
-                $this->userOptionFactory->create($user, UserOption::CURRENCY, UserOption::DEFAULT_CURRENCY),
-                $this->userOptionFactory->create($user, UserOption::REPORT_DAY, UserOption::DEFAULT_REPORT_DAY)
+                [
+                    $this->userOptionFactory->create($user, UserOption::CURRENCY, UserOption::DEFAULT_CURRENCY),
+                    $this->userOptionFactory->create($user, UserOption::REPORT_DAY, UserOption::DEFAULT_REPORT_DAY)
+                ]
             );
 
             $this->antiCorruptionService->commit();
@@ -114,7 +116,7 @@ class UserService implements UserServiceInterface
         $user = $this->userRepository->get($userId);
         $user->updateName($name);
 
-        $this->userRepository->save($user);
+        $this->userRepository->save([$user]);
     }
 
     public function updateCurrency(Id $userId, CurrencyCode $currencyCode): void
@@ -129,7 +131,7 @@ class UserService implements UserServiceInterface
 
             $currencyOption = $this->userOptionFactory->create($user, UserOption::CURRENCY, $currencyCode->getValue());
             $user->createOption($currencyOption);
-            $this->userOptionRepository->save($currencyOption);
+            $this->userOptionRepository->save([$currencyOption]);
             $this->antiCorruptionService->commit();
         } catch (\Throwable $throwable) {
             $this->antiCorruptionService->rollback();

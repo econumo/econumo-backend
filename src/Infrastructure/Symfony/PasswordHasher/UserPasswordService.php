@@ -39,6 +39,6 @@ class UserPasswordService implements UserPasswordServiceInterface
         $user = $this->userRepository->get($userId);
         $user->updatePassword($this->passwordHasher->hashPassword($user, $password));
 
-        $this->userRepository->save($user);
+        $this->userRepository->save([$user]);
     }
 }

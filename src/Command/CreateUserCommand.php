@@ -47,7 +47,7 @@ class CreateUserCommand extends Command
         $password = trim($input->getArgument('password'));
 
         $user = $this->userFactory->create($name, new Email($email), $password);
-        $this->userRepository->save($user);
+        $this->userRepository->save([$user]);
         $io->success(sprintf('User %s successfully created! (id: %s)', $name, $user->getId()));
 
         return Command::SUCCESS;
