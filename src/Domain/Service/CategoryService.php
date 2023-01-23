@@ -56,7 +56,7 @@ class CategoryService implements CategoryServiceInterface
         $category = $this->categoryFactory->create($userId, $name, $type, $icon);
         $category->updatePosition(count($categories));
 
-        $this->categoryRepository->save($category);
+        $this->categoryRepository->save([$category]);
 
         return $category;
     }
@@ -105,7 +105,7 @@ class CategoryService implements CategoryServiceInterface
         }
     }
 
-    public function orderCategories(Id $userId, PositionDto ...$changes): void
+    public function orderCategories(Id $userId, array $changes): void
     {
         $categories = $this->categoryRepository->findByOwnerId($userId);
         $changed = [];
@@ -123,7 +123,7 @@ class CategoryService implements CategoryServiceInterface
             return;
         }
 
-        $this->categoryRepository->save(...$changed);
+        $this->categoryRepository->save($changed);
     }
 
     public function update(Id $categoryId, CategoryName $name, Icon $icon): void
@@ -139,7 +139,7 @@ class CategoryService implements CategoryServiceInterface
         $category->updateName($name);
         $category->updateIcon($icon);
 
-        $this->categoryRepository->save($category);
+        $this->categoryRepository->save([$category]);
     }
 
     public function archive(Id $categoryId): void
@@ -147,7 +147,7 @@ class CategoryService implements CategoryServiceInterface
         $category = $this->categoryRepository->get($categoryId);
         $category->archive();
 
-        $this->categoryRepository->save($category);
+        $this->categoryRepository->save([$category]);
     }
 
     public function unarchive(Id $categoryId): void
@@ -155,7 +155,7 @@ class CategoryService implements CategoryServiceInterface
         $category = $this->categoryRepository->get($categoryId);
         $category->unarchive();
 
-        $this->categoryRepository->save($category);
+        $this->categoryRepository->save([$category]);
     }
 
     public function getChanged(Id $userId, DateTimeInterface $lastUpdate): array

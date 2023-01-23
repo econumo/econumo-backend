@@ -22,7 +22,12 @@ interface CategoryServiceInterface
 
     public function replaceCategory(Id $categoryId, Id $newCategoryId): void;
 
-    public function orderCategories(Id $userId, PositionDto ...$changes): void;
+    /**
+     * @param Id $userId
+     * @param PositionDto[] $changes
+     * @return void
+     */
+    public function orderCategories(Id $userId, array $changes): void;
 
     public function update(Id $categoryId, CategoryName $name, Icon $icon): void;
 
