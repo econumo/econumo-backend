@@ -28,7 +28,10 @@ class ConnectionInviteRepository extends ServiceEntityRepository implements Conn
         parent::__construct($registry, ConnectionInvite::class);
     }
 
-    public function save(ConnectionInvite ...$items): void
+    /**
+     * @inheritDoc
+     */
+    public function save(array $items): void
     {
         try {
             foreach ($items as $item) {

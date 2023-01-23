@@ -103,7 +103,7 @@ class ConnectionAccountService implements ConnectionAccountServiceInterface
                 }
 
                 $accountOptions = $this->accountOptionsFactory->create($sharedAccountId, $userId, ++$position);
-                $this->accountOptionsRepository->save($accountOptions);
+                $this->accountOptionsRepository->save([$accountOptions]);
 
                 $folder = $this->folderRepository->getLastFolder($userId);
                 $folder->addAccount($accountAccess->getAccount());
@@ -111,7 +111,7 @@ class ConnectionAccountService implements ConnectionAccountServiceInterface
             }
 
             $accountAccess->updateRole($role);
-            $this->accountAccessRepository->save($accountAccess);
+            $this->accountAccessRepository->save([$accountAccess]);
             $this->antiCorruptionService->commit();
         } catch (\Throwable $throwable) {
             $this->antiCorruptionService->rollback();
