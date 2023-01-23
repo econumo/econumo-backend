@@ -33,7 +33,7 @@ final class AccountUserRole implements JsonSerializable, ValueObjectInterface, \
         self::GUEST => 'guest',
     ];
 
-    private readonly int $value;
+    private int $value;
 
     public static function admin(): self
     {

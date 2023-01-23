@@ -29,15 +29,15 @@ class Transaction
         private User $user,
         private TransactionType $type,
         private Account $account,
-        private ?\App\Domain\Entity\Category $category,
+        private ?Category $category,
         float $amount,
         DateTimeInterface $transactionDate,
         DateTimeInterface $createdAt,
-        private ?\App\Domain\Entity\Account $accountRecipient,
+        private ?Account $accountRecipient,
         ?float $amountRecipient,
         private string $description,
-        private ?\App\Domain\Entity\Payee $payee,
-        private ?\App\Domain\Entity\Tag $tag
+        private ?Payee $payee,
+        private ?Tag $tag
     ) {
         $this->amount = (string)$amount;
         $this->amountRecipient = $amountRecipient === null ? null : (string)$amountRecipient;

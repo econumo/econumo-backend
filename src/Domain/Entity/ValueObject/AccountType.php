@@ -19,7 +19,7 @@ final class AccountType implements JsonSerializable, \Stringable
      */
     public const CREDIT_CARD = 2;
 
-    private readonly int $value;
+    private int $value;
 
     public function __construct(int $value)
     {

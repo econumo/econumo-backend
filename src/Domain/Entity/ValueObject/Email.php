@@ -8,7 +8,7 @@ use App\Domain\Exception\DomainException;
 
 final class Email implements \Stringable
 {
-    private readonly string $value;
+    private string $value;
 
     public function __construct(string $email)
     {

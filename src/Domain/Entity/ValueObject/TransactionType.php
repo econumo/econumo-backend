@@ -48,7 +48,7 @@ final class TransactionType implements JsonSerializable, \Stringable
         self::TRANSFER_ALIAS => self::TRANSFER,
     ];
 
-    private readonly int $value;
+    private int $value;
 
     public static function createFromAlias(string $alias): self
     {

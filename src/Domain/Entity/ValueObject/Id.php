@@ -9,7 +9,7 @@ use JsonSerializable;
 
 class Id implements JsonSerializable, \Stringable
 {
-    private readonly string $value;
+    private string $value;
 
     public function __construct(string $value)
     {

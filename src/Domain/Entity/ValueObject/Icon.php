@@ -9,7 +9,7 @@ use JsonSerializable;
 
 class Icon implements ValueObjectInterface, JsonSerializable, \Stringable
 {
-    private readonly string $value;
+    private string $value;
 
     public function __construct(string $value)
     {

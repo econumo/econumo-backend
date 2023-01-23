@@ -37,7 +37,7 @@ final class CategoryType implements JsonSerializable, \Stringable
         self::INCOME_ALIAS => self::INCOME
     ];
 
-    private readonly int $value;
+    private int $value;
 
     public static function createFromAlias(string $alias): self
     {
