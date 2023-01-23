@@ -7,7 +7,7 @@ namespace App\Domain\Entity\ValueObject;
 use DomainException;
 use JsonSerializable;
 
-final class AccountUserRole implements JsonSerializable, ValueObjectInterface
+final class AccountUserRole implements JsonSerializable, ValueObjectInterface, \Stringable
 {
     /**
      * @var int
@@ -33,7 +33,7 @@ final class AccountUserRole implements JsonSerializable, ValueObjectInterface
         self::GUEST => 'guest',
     ];
 
-    private int $value;
+    private readonly int $value;
 
     public static function admin(): self
     {
@@ -97,7 +97,7 @@ final class AccountUserRole implements JsonSerializable, ValueObjectInterface
     /**
      * @inheritdoc
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return $this->value;
     }

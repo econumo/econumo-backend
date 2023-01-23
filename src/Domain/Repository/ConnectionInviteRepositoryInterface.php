@@ -14,7 +14,6 @@ interface ConnectionInviteRepositoryInterface
 {
     /**
      * @param ConnectionInvite[] $items
-     * @return void
      */
     public function save(array $items): void;
 
@@ -23,8 +22,6 @@ interface ConnectionInviteRepositoryInterface
     public function getByUser(Id $userId): ?ConnectionInvite;
 
     /**
-     * @param ConnectionCode $code
-     * @return ConnectionInvite|null
      * @throws NotFoundException
      */
     public function getByCode(ConnectionCode $code): ConnectionInvite;

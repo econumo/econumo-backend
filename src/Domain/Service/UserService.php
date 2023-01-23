@@ -24,52 +24,8 @@ use App\Domain\Service\Translation\TranslationServiceInterface;
 
 class UserService implements UserServiceInterface
 {
-    private UserFactoryInterface $userFactory;
-
-    private UserRepositoryInterface $userRepository;
-
-    private EventDispatcherInterface $eventDispatcher;
-
-    private FolderFactoryInterface $folderFactory;
-
-    private FolderRepositoryInterface $folderRepository;
-
-    private AntiCorruptionServiceInterface $antiCorruptionService;
-
-    private TranslationServiceInterface $translator;
-
-    private ConnectionInviteFactoryInterface $connectionInviteFactory;
-
-    private ConnectionInviteRepositoryInterface $connectionInviteRepository;
-
-    private UserOptionFactoryInterface $userOptionFactory;
-
-    private UserOptionRepositoryInterface $userOptionRepository;
-
-    public function __construct(
-        UserFactoryInterface $userFactory,
-        UserRepositoryInterface $userRepository,
-        EventDispatcherInterface $eventDispatcher,
-        FolderFactoryInterface $folderFactory,
-        FolderRepositoryInterface $folderRepository,
-        AntiCorruptionServiceInterface $antiCorruptionService,
-        TranslationServiceInterface $translator,
-        ConnectionInviteFactoryInterface $connectionInviteFactory,
-        ConnectionInviteRepositoryInterface $connectionInviteRepository,
-        UserOptionFactoryInterface $userOptionFactory,
-        UserOptionRepositoryInterface $userOptionRepository
-    ) {
-        $this->userFactory = $userFactory;
-        $this->userRepository = $userRepository;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->folderFactory = $folderFactory;
-        $this->folderRepository = $folderRepository;
-        $this->antiCorruptionService = $antiCorruptionService;
-        $this->translator = $translator;
-        $this->connectionInviteFactory = $connectionInviteFactory;
-        $this->connectionInviteRepository = $connectionInviteRepository;
-        $this->userOptionFactory = $userOptionFactory;
-        $this->userOptionRepository = $userOptionRepository;
+    public function __construct(private readonly UserFactoryInterface $userFactory, private readonly UserRepositoryInterface $userRepository, private readonly EventDispatcherInterface $eventDispatcher, private readonly FolderFactoryInterface $folderFactory, private readonly FolderRepositoryInterface $folderRepository, private readonly AntiCorruptionServiceInterface $antiCorruptionService, private readonly TranslationServiceInterface $translator, private readonly ConnectionInviteFactoryInterface $connectionInviteFactory, private readonly ConnectionInviteRepositoryInterface $connectionInviteRepository, private readonly UserOptionFactoryInterface $userOptionFactory, private readonly UserOptionRepositoryInterface $userOptionRepository)
+    {
     }
 
     public function register(Email $email, string $password, string $name): User
@@ -77,7 +33,7 @@ class UserService implements UserServiceInterface
         try {
             $this->userRepository->getByEmail($email);
             throw new UserRegisteredException();
-        } catch (NotFoundException $notFoundException) {
+        } catch (NotFoundException) {
         }
 
         $this->antiCorruptionService->beginTransaction();

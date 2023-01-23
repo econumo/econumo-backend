@@ -14,16 +14,8 @@ use Throwable;
 
 class EventDispatcher implements EventDispatcherInterface
 {
-    private MessageBusInterface $messageBus;
-
-    private LoggerInterface $logger;
-
-    public function __construct(
-        MessageBusInterface $messageBus,
-        LoggerInterface $logger
-    ) {
-        $this->messageBus = $messageBus;
-        $this->logger = $logger;
+    public function __construct(private readonly MessageBusInterface $messageBus, private readonly LoggerInterface $logger)
+    {
     }
 
     /**
@@ -34,7 +26,7 @@ class EventDispatcher implements EventDispatcherInterface
         try {
             return $this->dispatchEvent($event);
         } catch (Throwable $throwable) {
-            $this->logger->error(sprintf('Error dispatch event %s', get_class($event)));
+            $this->logger->error(sprintf('Error dispatch event %s', $event::class));
             throw $throwable;
         }
     }

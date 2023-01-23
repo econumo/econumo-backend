@@ -22,32 +22,8 @@ use App\Application\User\Assembler\RegisterUserV1ResultAssembler;
 
 class UserService
 {
-    private RegisterUserV1ResultAssembler $registerUserV1ResultAssembler;
-
-    private LoginUserV1ResultAssembler $loginUserV1ResultAssembler;
-
-    private LogoutUserV1ResultAssembler $logoutUserV1ResultAssembler;
-
-    private JWTTokenManagerInterface $authToken;
-
-    private UserServiceInterface $userService;
-
-    private TranslationServiceInterface $translationService;
-
-    public function __construct(
-        LoginUserV1ResultAssembler $loginUserV1ResultAssembler,
-        LogoutUserV1ResultAssembler $logoutUserV1ResultAssembler,
-        JWTTokenManagerInterface $authToken,
-        RegisterUserV1ResultAssembler $registerUserV1ResultAssembler,
-        UserServiceInterface $userService,
-        TranslationServiceInterface $translationService
-    ) {
-        $this->loginUserV1ResultAssembler = $loginUserV1ResultAssembler;
-        $this->logoutUserV1ResultAssembler = $logoutUserV1ResultAssembler;
-        $this->authToken = $authToken;
-        $this->registerUserV1ResultAssembler = $registerUserV1ResultAssembler;
-        $this->userService = $userService;
-        $this->translationService = $translationService;
+    public function __construct(private readonly LoginUserV1ResultAssembler $loginUserV1ResultAssembler, private readonly LogoutUserV1ResultAssembler $logoutUserV1ResultAssembler, private readonly JWTTokenManagerInterface $authToken, private readonly RegisterUserV1ResultAssembler $registerUserV1ResultAssembler, private readonly UserServiceInterface $userService, private readonly TranslationServiceInterface $translationService)
+    {
     }
 
     public function loginUser(

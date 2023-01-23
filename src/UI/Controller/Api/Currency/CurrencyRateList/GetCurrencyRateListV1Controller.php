@@ -20,14 +20,8 @@ use OpenApi\Annotations as OA;
 
 class GetCurrencyRateListV1Controller extends AbstractController
 {
-    private CurrencyRateListService $currencyRateListService;
-
-    private ValidatorInterface $validator;
-
-    public function __construct(CurrencyRateListService $currencyRateListService, ValidatorInterface $validator)
+    public function __construct(private readonly CurrencyRateListService $currencyRateListService, private readonly ValidatorInterface $validator)
     {
-        $this->currencyRateListService = $currencyRateListService;
-        $this->validator = $validator;
     }
 
     /**
@@ -61,12 +55,11 @@ class GetCurrencyRateListV1Controller extends AbstractController
      * @OA\Response(response=401, description="Unauthorized", @OA\JsonContent(ref="#/components/schemas/JsonResponseUnauthorized")),
      * @OA\Response(response=500, description="Internal Server Error", @OA\JsonContent(ref="#/components/schemas/JsonResponseException")),
      *
-     * @Route("/api/v1/currency/get-currency-rate-list", methods={"GET"})
      *
-     * @param Request $request
      * @return Response
      * @throws ValidationException
      */
+    #[Route(path: '/api/v1/currency/get-currency-rate-list', methods: ['GET'])]
     public function __invoke(Request $request): Response
     {
         $dto = new GetCurrencyRateListV1RequestDto();

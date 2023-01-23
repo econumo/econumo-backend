@@ -15,24 +15,8 @@ use App\Domain\Service\AntiCorruptionServiceInterface;
 
 class ConnectionInviteService implements ConnectionInviteServiceInterface
 {
-    private ConnectionInviteFactoryInterface $connectionInviteFactory;
-
-    private ConnectionInviteRepositoryInterface $connectionInviteRepository;
-
-    private UserRepositoryInterface $userRepository;
-
-    private AntiCorruptionServiceInterface $antiCorruptionService;
-
-    public function __construct(
-        ConnectionInviteFactoryInterface $connectionInviteFactory,
-        ConnectionInviteRepositoryInterface $connectionInviteRepository,
-        UserRepositoryInterface $userRepository,
-        AntiCorruptionServiceInterface $antiCorruptionService
-    ) {
-        $this->connectionInviteFactory = $connectionInviteFactory;
-        $this->connectionInviteRepository = $connectionInviteRepository;
-        $this->userRepository = $userRepository;
-        $this->antiCorruptionService = $antiCorruptionService;
+    public function __construct(private readonly ConnectionInviteFactoryInterface $connectionInviteFactory, private readonly ConnectionInviteRepositoryInterface $connectionInviteRepository, private readonly UserRepositoryInterface $userRepository, private readonly AntiCorruptionServiceInterface $antiCorruptionService)
+    {
     }
 
     public function generate(Id $userId): ConnectionInvite

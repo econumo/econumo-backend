@@ -10,11 +10,8 @@ use App\Domain\Entity\Folder;
 
 class CreateFolderV1ResultAssembler
 {
-    private FolderToDtoV1ResultAssembler $folderToDtoV1ResultAssembler;
-
-    public function __construct(FolderToDtoV1ResultAssembler $folderToDtoV1ResultAssembler)
+    public function __construct(private readonly FolderToDtoV1ResultAssembler $folderToDtoV1ResultAssembler)
     {
-        $this->folderToDtoV1ResultAssembler = $folderToDtoV1ResultAssembler;
     }
 
     public function assemble(

@@ -20,14 +20,8 @@ use OpenApi\Annotations as OA;
 
 class DeleteConnectionV1Controller extends AbstractController
 {
-    private ConnectionService $connectionService;
-
-    private ValidatorInterface $validator;
-
-    public function __construct(ConnectionService $connectionService, ValidatorInterface $validator)
+    public function __construct(private readonly ConnectionService $connectionService, private readonly ValidatorInterface $validator)
     {
-        $this->connectionService = $connectionService;
-        $this->validator = $validator;
     }
 
     /**
@@ -55,12 +49,11 @@ class DeleteConnectionV1Controller extends AbstractController
      * @OA\Response(response=401, description="Unauthorized", @OA\JsonContent(ref="#/components/schemas/JsonResponseUnauthorized")),
      * @OA\Response(response=500, description="Internal Server Error", @OA\JsonContent(ref="#/components/schemas/JsonResponseException")),
      *
-     * @Route("/api/v1/connection/delete-connection", methods={"POST"})
      *
-     * @param Request $request
      * @return Response
      * @throws ValidationException
      */
+    #[Route(path: '/api/v1/connection/delete-connection', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new DeleteConnectionV1RequestDto();

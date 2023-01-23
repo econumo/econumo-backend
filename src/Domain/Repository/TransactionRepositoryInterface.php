@@ -13,26 +13,21 @@ interface TransactionRepositoryInterface
     public function getNextIdentity(): Id;
 
     /**
-     * @param Id $accountId
      * @return Transaction[]
      */
     public function findByAccountId(Id $accountId): array;
 
     /**
      * @param Transaction[] $transactions
-     * @return void
      */
     public function save(array $transactions): void;
 
     /**
-     * @param Id $userId
      * @return Transaction[]
      */
     public function findAvailableForUserId(Id $userId): array;
 
     /**
-     * @param Id $userId
-     * @param DateTimeInterface $lastUpdate
      * @return Transaction[]
      */
     public function findChanges(Id $userId, DateTimeInterface $lastUpdate): array;

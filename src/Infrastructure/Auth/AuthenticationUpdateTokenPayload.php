@@ -11,11 +11,8 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 
 class AuthenticationUpdateTokenPayload
 {
-    private string $baseCurrency;
-
-    public function __construct(string $baseCurrency)
+    public function __construct(private readonly string $baseCurrency)
     {
-        $this->baseCurrency = $baseCurrency;
     }
 
     /**

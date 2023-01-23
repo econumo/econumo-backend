@@ -12,7 +12,6 @@ interface FolderRepositoryInterface
     public function getNextIdentity(): Id;
 
     /**
-     * @param Id $userId
      * @return Folder[]
      */
     public function getByUserId(Id $userId): array;
@@ -23,7 +22,6 @@ interface FolderRepositoryInterface
 
     /**
      * @param Folder[] $items
-     * @return void
      */
     public function save(array $items): void;
 

@@ -15,22 +15,22 @@ class UserOption
     /**
      * @var string
      */
-    public const CURRENCY = 'currency';
+    final public const CURRENCY = 'currency';
 
     /**
      * @var string
      */
-    public const DEFAULT_CURRENCY = 'USD';
+    final public const DEFAULT_CURRENCY = 'USD';
 
     /**
      * @var string
      */
-    public const REPORT_DAY = 'report_day';
+    final public const REPORT_DAY = 'report_day';
 
     /**
      * @var string
      */
-    public const DEFAULT_REPORT_DAY = '1';
+    final public const DEFAULT_REPORT_DAY = '1';
 
 
     /**
@@ -41,30 +41,18 @@ class UserOption
         self::REPORT_DAY
     ];
 
-    private Id $id;
-
-    private string $name;
-
-    private ?string $value;
-
-    private User $user;
-
-    private DateTimeImmutable $createdAt;
+    private readonly DateTimeImmutable $createdAt;
 
     private DateTimeInterface $updatedAt;
 
     public function __construct(
-        Id $id,
-        User $user,
-        string $name,
-        ?string $value,
+        private Id $id,
+        private User $user,
+        private string $name,
+        private ?string $value,
         DateTimeInterface $createdAt
     ) {
-        $this->id = $id;
-        $this->user = $user;
-        $this->name = $name;
         $this->checkName($name);
-        $this->value = $value;
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
     }

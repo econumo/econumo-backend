@@ -7,7 +7,7 @@ namespace App\Domain\Entity\ValueObject;
 use DomainException;
 use JsonSerializable;
 
-final class AccountType implements JsonSerializable
+final class AccountType implements JsonSerializable, \Stringable
 {
     /**
      * @var int
@@ -19,7 +19,7 @@ final class AccountType implements JsonSerializable
      */
     public const CREDIT_CARD = 2;
 
-    private int $value;
+    private readonly int $value;
 
     public function __construct(int $value)
     {
@@ -38,7 +38,7 @@ final class AccountType implements JsonSerializable
     /**
      * @inheritdoc
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return $this->value;
     }
@@ -53,7 +53,7 @@ final class AccountType implements JsonSerializable
         return $this->value;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return (string)$this->value;
     }

@@ -6,9 +6,9 @@ namespace App\Domain\Entity\ValueObject;
 
 use App\Domain\Exception\DomainException;
 
-final class Email
+final class Email implements \Stringable
 {
-    private string $value;
+    private readonly string $value;
 
     public function __construct(string $email)
     {

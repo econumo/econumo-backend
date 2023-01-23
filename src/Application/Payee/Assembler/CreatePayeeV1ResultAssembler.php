@@ -11,11 +11,8 @@ use App\Domain\Entity\Payee;
 
 class CreatePayeeV1ResultAssembler
 {
-    private PayeeToDtoV1ResultAssembler $payeeToDtoV1ResultAssembler;
-
-    public function __construct(PayeeToDtoV1ResultAssembler $payeeToDtoV1ResultAssembler)
+    public function __construct(private readonly PayeeToDtoV1ResultAssembler $payeeToDtoV1ResultAssembler)
     {
-        $this->payeeToDtoV1ResultAssembler = $payeeToDtoV1ResultAssembler;
     }
 
     public function assemble(

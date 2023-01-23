@@ -11,16 +11,8 @@ use App\Domain\Service\DatetimeServiceInterface;
 
 class UserOptionFactory implements UserOptionFactoryInterface
 {
-    private UserOptionRepositoryInterface $userOptionRepository;
-
-    private DatetimeServiceInterface $datetimeService;
-
-    public function __construct(
-        UserOptionRepositoryInterface $userOptionRepository,
-        DatetimeServiceInterface $datetimeService
-    ) {
-        $this->userOptionRepository = $userOptionRepository;
-        $this->datetimeService = $datetimeService;
+    public function __construct(private readonly UserOptionRepositoryInterface $userOptionRepository, private readonly DatetimeServiceInterface $datetimeService)
+    {
     }
 
     public function create(User $user, string $name, ?string $value): UserOption

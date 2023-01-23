@@ -20,14 +20,8 @@ use OpenApi\Annotations as OA;
 
 class CreateFolderV1Controller extends AbstractController
 {
-    private FolderService $folderService;
-
-    private ValidatorInterface $validator;
-
-    public function __construct(FolderService $folderService, ValidatorInterface $validator)
+    public function __construct(private readonly FolderService $folderService, private readonly ValidatorInterface $validator)
     {
-        $this->folderService = $folderService;
-        $this->validator = $validator;
     }
 
     /**
@@ -55,12 +49,11 @@ class CreateFolderV1Controller extends AbstractController
      * @OA\Response(response=401, description="Unauthorized", @OA\JsonContent(ref="#/components/schemas/JsonResponseUnauthorized")),
      * @OA\Response(response=500, description="Internal Server Error", @OA\JsonContent(ref="#/components/schemas/JsonResponseException")),
      *
-     * @Route("/api/v1/account/create-folder", methods={"POST"})
      *
-     * @param Request $request
      * @return Response
      * @throws ValidationException
      */
+    #[Route(path: '/api/v1/account/create-folder', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new CreateFolderV1RequestDto();

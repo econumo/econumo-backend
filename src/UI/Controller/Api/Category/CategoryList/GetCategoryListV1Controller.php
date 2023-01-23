@@ -20,14 +20,8 @@ use OpenApi\Annotations as OA;
 
 class GetCategoryListV1Controller extends AbstractController
 {
-    private CategoryListService $categoryListService;
-
-    private ValidatorInterface $validator;
-
-    public function __construct(CategoryListService $categoryListService, ValidatorInterface $validator)
+    public function __construct(private readonly CategoryListService $categoryListService, private readonly ValidatorInterface $validator)
     {
-        $this->categoryListService = $categoryListService;
-        $this->validator = $validator;
     }
 
     /**
@@ -54,12 +48,11 @@ class GetCategoryListV1Controller extends AbstractController
      * @OA\Response(response=401, description="Unauthorized", @OA\JsonContent(ref="#/components/schemas/JsonResponseUnauthorized")),
      * @OA\Response(response=500, description="Internal Server Error", @OA\JsonContent(ref="#/components/schemas/JsonResponseException")),
      *
-     * @Route("/api/v1/category/get-category-list", methods={"GET"})
      *
-     * @param Request $request
      * @return Response
      * @throws ValidationException
      */
+    #[Route(path: '/api/v1/category/get-category-list', methods: ['GET'])]
     public function __invoke(Request $request): Response
     {
         $dto = new GetCategoryListV1RequestDto();

@@ -10,19 +10,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ValueObjectValidator
 {
-    /**
-     * @var string|ValueObjectInterface
-     */
-    private string $valueObject;
-
     private ?TranslatorInterface $translator = null;
 
-    /**
-     * @param string|ValueObjectInterface $valueObject
-     */
-    public function __construct(string $valueObject)
+    public function __construct(private readonly string $valueObject)
     {
-        $this->valueObject = $valueObject;
     }
 
     public function setTranslator(TranslatorInterface $translator): void

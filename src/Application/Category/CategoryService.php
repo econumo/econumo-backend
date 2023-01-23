@@ -32,44 +32,8 @@ use App\Domain\Service\Translation\TranslationServiceInterface;
 
 class CategoryService
 {
-    private CreateCategoryV1ResultAssembler $createCategoryV1ResultAssembler;
-
-    private CategoryServiceInterface $categoryService;
-
-    private AccountAccessServiceInterface $accountAccessService;
-
-    private DeleteCategoryV1ResultAssembler $deleteCategoryV1ResultAssembler;
-
-    private CategoryRepositoryInterface $categoryRepository;
-
-    private UpdateCategoryV1ResultAssembler $updateCategoryV1ResultAssembler;
-
-    private ArchiveCategoryV1ResultAssembler $archiveCategoryV1ResultAssembler;
-
-    private UnarchiveCategoryV1ResultAssembler $unarchiveCategoryV1ResultAssembler;
-
-    private TranslationServiceInterface $translationService;
-
-    public function __construct(
-        CreateCategoryV1ResultAssembler $createCategoryV1ResultAssembler,
-        CategoryServiceInterface $categoryService,
-        AccountAccessServiceInterface $accountAccessService,
-        DeleteCategoryV1ResultAssembler $deleteCategoryV1ResultAssembler,
-        CategoryRepositoryInterface $categoryRepository,
-        UpdateCategoryV1ResultAssembler $updateCategoryV1ResultAssembler,
-        ArchiveCategoryV1ResultAssembler $archiveCategoryV1ResultAssembler,
-        UnarchiveCategoryV1ResultAssembler $unarchiveCategoryV1ResultAssembler,
-        TranslationServiceInterface $translationService
-    ) {
-        $this->createCategoryV1ResultAssembler = $createCategoryV1ResultAssembler;
-        $this->categoryService = $categoryService;
-        $this->accountAccessService = $accountAccessService;
-        $this->deleteCategoryV1ResultAssembler = $deleteCategoryV1ResultAssembler;
-        $this->categoryRepository = $categoryRepository;
-        $this->updateCategoryV1ResultAssembler = $updateCategoryV1ResultAssembler;
-        $this->archiveCategoryV1ResultAssembler = $archiveCategoryV1ResultAssembler;
-        $this->unarchiveCategoryV1ResultAssembler = $unarchiveCategoryV1ResultAssembler;
-        $this->translationService = $translationService;
+    public function __construct(private readonly CreateCategoryV1ResultAssembler $createCategoryV1ResultAssembler, private readonly CategoryServiceInterface $categoryService, private readonly AccountAccessServiceInterface $accountAccessService, private readonly DeleteCategoryV1ResultAssembler $deleteCategoryV1ResultAssembler, private readonly CategoryRepositoryInterface $categoryRepository, private readonly UpdateCategoryV1ResultAssembler $updateCategoryV1ResultAssembler, private readonly ArchiveCategoryV1ResultAssembler $archiveCategoryV1ResultAssembler, private readonly UnarchiveCategoryV1ResultAssembler $unarchiveCategoryV1ResultAssembler, private readonly TranslationServiceInterface $translationService)
+    {
     }
 
     public function createCategory(

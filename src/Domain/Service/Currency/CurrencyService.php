@@ -13,16 +13,8 @@ use DateTimeInterface;
 
 class CurrencyService implements CurrencyServiceInterface
 {
-    private string $baseCurrency;
-
-    private CurrencyRepositoryInterface $currencyRepository;
-
-    public function __construct(
-        string $baseCurrency,
-        CurrencyRepositoryInterface $currencyRepository
-    ) {
-        $this->baseCurrency = $baseCurrency;
-        $this->currencyRepository = $currencyRepository;
+    public function __construct(private readonly string $baseCurrency, private readonly CurrencyRepositoryInterface $currencyRepository)
+    {
     }
 
     public function getBaseCurrency(): Currency

@@ -21,20 +21,8 @@ use OpenApi\Annotations as OA;
 
 class CreateTagV1Controller extends AbstractController
 {
-    private TagService $tagService;
-
-    private ValidatorInterface $validator;
-
-    private OperationServiceInterface $operationService;
-
-    public function __construct(
-        TagService $tagService,
-        ValidatorInterface $validator,
-        OperationServiceInterface $operationService
-    ) {
-        $this->tagService = $tagService;
-        $this->validator = $validator;
-        $this->operationService = $operationService;
+    public function __construct(private readonly TagService $tagService, private readonly ValidatorInterface $validator, private readonly OperationServiceInterface $operationService)
+    {
     }
 
     /**
@@ -62,12 +50,11 @@ class CreateTagV1Controller extends AbstractController
      * @OA\Response(response=401, description="Unauthorized", @OA\JsonContent(ref="#/components/schemas/JsonResponseUnauthorized")),
      * @OA\Response(response=500, description="Internal Server Error", @OA\JsonContent(ref="#/components/schemas/JsonResponseException")),
      *
-     * @Route("/api/v1/tag/create-tag", methods={"POST"})
      *
-     * @param Request $request
      * @return Response
      * @throws ValidationException
      */
+    #[Route(path: '/api/v1/tag/create-tag', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new CreateTagV1RequestDto();

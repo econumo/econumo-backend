@@ -10,11 +10,8 @@ use App\Infrastructure\Doctrine\Entity\OperationId;
 
 class OperationIdFactory
 {
-    private DatetimeServiceInterface $datetimeService;
-
-    public function __construct(DatetimeServiceInterface $datetimeService)
+    public function __construct(private readonly DatetimeServiceInterface $datetimeService)
     {
-        $this->datetimeService = $datetimeService;
     }
 
     public function create(Id $id): OperationId

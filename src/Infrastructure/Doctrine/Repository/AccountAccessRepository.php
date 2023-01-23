@@ -98,9 +98,7 @@ GROUP BY a.id
 DQL;
         $query = $this->getEntityManager()->createQuery($dql)
             ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId));
-        $accounts = array_map(function ($id): ?Account {
-            return $this->getEntityManager()->getReference(Account::class, new Id($id));
-        }, array_column($query->getScalarResult(), 'id'));
+        $accounts = array_map(fn($id): ?Account => $this->getEntityManager()->getReference(Account::class, new Id($id)), array_column($query->getScalarResult(), 'id'));
 
         return $this->findBy(['account' => $accounts]);
     }
@@ -124,9 +122,7 @@ GROUP BY a.id
 DQL;
         $query = $this->getEntityManager()->createQuery($dql)
             ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId));
-        $accounts = array_map(function ($id): ?Account {
-            return $this->getEntityManager()->getReference(Account::class, new Id($id));
-        }, array_column($query->getScalarResult(), 'id'));
+        $accounts = array_map(fn($id): ?Account => $this->getEntityManager()->getReference(Account::class, new Id($id)), array_column($query->getScalarResult(), 'id'));
 
         return $this->findBy(['account' => $accounts]);
     }

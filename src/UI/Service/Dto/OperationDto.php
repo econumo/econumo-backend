@@ -11,5 +11,5 @@ class OperationDto
 {
     public Id $operationId;
 
-    public ?LockInterface $lock;
+    public ?LockInterface $lock = null;
 }

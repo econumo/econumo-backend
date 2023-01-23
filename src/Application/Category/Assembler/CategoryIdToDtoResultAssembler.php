@@ -10,16 +10,8 @@ use App\Domain\Repository\CategoryRepositoryInterface;
 
 class CategoryIdToDtoResultAssembler
 {
-    private CategoryRepositoryInterface $categoryRepository;
-
-    private CategoryToDtoResultAssembler $categoryToDtoResultAssembler;
-
-    public function __construct(
-        CategoryRepositoryInterface $categoryRepository,
-        CategoryToDtoResultAssembler $categoryToDtoResultAssembler
-    ) {
-        $this->categoryRepository = $categoryRepository;
-        $this->categoryToDtoResultAssembler = $categoryToDtoResultAssembler;
+    public function __construct(private readonly CategoryRepositoryInterface $categoryRepository, private readonly CategoryToDtoResultAssembler $categoryToDtoResultAssembler)
+    {
     }
 
     public function assemble(Id $categoryId): CategoryResultDto

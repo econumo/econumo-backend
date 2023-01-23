@@ -17,11 +17,8 @@ abstract class AbstractFixture extends Fixture
     /** @var string Path to file with fixtures. Could be empty. ex. "tests/fixtures/user.php" */
     public string $dataFile;
 
-    private Connection $connection;
-
-    public function __construct(Connection $connection)
+    public function __construct(private readonly Connection $connection)
     {
-        $this->connection = $connection;
     }
 
     /**

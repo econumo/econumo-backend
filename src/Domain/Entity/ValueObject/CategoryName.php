@@ -15,12 +15,12 @@ class CategoryName implements ValueObjectInterface, JsonSerializable
     /**
      * @var int
      */
-    public const MIN_LENGTH = 3;
+    final public const MIN_LENGTH = 3;
 
     /**
      * @var int
      */
-    public const MAX_LENGTH = 18;
+    final public const MAX_LENGTH = 18;
 
     public static function validate($value): void
     {

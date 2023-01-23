@@ -10,11 +10,8 @@ use App\Domain\Entity\ConnectionInvite;
 
 class GenerateInviteV1ResultAssembler
 {
-    private ConnectionInviteToDtoResultAssembler $connectionInviteToDtoResultAssembler;
-
-    public function __construct(ConnectionInviteToDtoResultAssembler $connectionInviteToDtoResultAssembler)
+    public function __construct(private readonly ConnectionInviteToDtoResultAssembler $connectionInviteToDtoResultAssembler)
     {
-        $this->connectionInviteToDtoResultAssembler = $connectionInviteToDtoResultAssembler;
     }
 
     public function assemble(

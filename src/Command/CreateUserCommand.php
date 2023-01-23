@@ -19,15 +19,9 @@ class CreateUserCommand extends Command
 
     protected static $defaultDescription = 'Create new user';
 
-    private UserFactoryInterface $userFactory;
-
-    private UserRepositoryInterface $userRepository;
-
-    public function __construct(UserFactoryInterface $userFactory, UserRepositoryInterface $userRepository)
+    public function __construct(private readonly UserFactoryInterface $userFactory, private readonly UserRepositoryInterface $userRepository)
     {
         parent::__construct(self::$defaultName);
-        $this->userFactory = $userFactory;
-        $this->userRepository = $userRepository;
     }
 
 
@@ -42,9 +36,9 @@ class CreateUserCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $name = trim($input->getArgument('name'));
-        $email = trim($input->getArgument('email'));
-        $password = trim($input->getArgument('password'));
+        $name = trim((string) $input->getArgument('name'));
+        $email = trim((string) $input->getArgument('email'));
+        $password = trim((string) $input->getArgument('password'));
 
         $user = $this->userFactory->create($name, new Email($email), $password);
         $this->userRepository->save([$user]);

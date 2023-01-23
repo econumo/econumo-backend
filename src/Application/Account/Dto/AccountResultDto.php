@@ -30,7 +30,7 @@ class AccountResultDto
      * Account folder id
      * @OA\Property(example="1ad16d32-36af-496e-9867-3919436b8d86")
      */
-    public ?string $folderId;
+    public ?string $folderId = null;
 
     /**
      * Account name

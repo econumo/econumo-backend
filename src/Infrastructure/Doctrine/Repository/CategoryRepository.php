@@ -51,9 +51,7 @@ DQL;
             ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId));
         $ids = array_column($query->getScalarResult(), 'user_id');
         $ids[] = $userId->getValue();
-        $users = array_map(function ($id): ?User {
-            return $this->getEntityManager()->getReference(User::class, new Id($id));
-        }, array_unique($ids));
+        $users = array_map(fn($id): ?User => $this->getEntityManager()->getReference(User::class, new Id($id)), array_unique($ids));
 
         $builder = $this->createQueryBuilder('c')
             ->where('c.user IN(:users)')

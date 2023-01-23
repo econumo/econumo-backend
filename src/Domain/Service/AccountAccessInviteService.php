@@ -25,44 +25,8 @@ use App\Domain\Repository\UserRepositoryInterface;
 
 class AccountAccessInviteService implements AccountAccessInviteServiceInterface
 {
-    private UserRepositoryInterface $userRepository;
-
-    private AccountAccessInviteRepositoryInterface $accountAccessInviteRepository;
-
-    private AccountAccessInviteFactoryInterface $accountAccessInviteFactory;
-
-    private AccountRepositoryInterface $accountRepository;
-
-    private AccountAccessFactoryInterface $accountAccessFactory;
-
-    private AccountAccessRepositoryInterface $accountAccessRepository;
-
-    private AntiCorruptionServiceInterface $antiCorruptionService;
-
-    private AccountOptionsFactoryInterface $accountOptionsFactory;
-
-    private AccountOptionsRepositoryInterface $accountOptionsRepository;
-
-    public function __construct(
-        UserRepositoryInterface $userRepository,
-        AccountAccessInviteRepositoryInterface $accountAccessInviteRepository,
-        AccountAccessInviteFactoryInterface $accountAccessInviteFactory,
-        AccountRepositoryInterface $accountRepository,
-        AccountAccessFactoryInterface $accountAccessFactory,
-        AccountAccessRepositoryInterface $accountAccessRepository,
-        AntiCorruptionServiceInterface $antiCorruptionService,
-        AccountOptionsFactoryInterface $accountOptionsFactory,
-        AccountOptionsRepositoryInterface $accountOptionsRepository
-    ) {
-        $this->userRepository = $userRepository;
-        $this->accountAccessInviteRepository = $accountAccessInviteRepository;
-        $this->accountAccessInviteFactory = $accountAccessInviteFactory;
-        $this->accountRepository = $accountRepository;
-        $this->accountAccessFactory = $accountAccessFactory;
-        $this->accountAccessRepository = $accountAccessRepository;
-        $this->antiCorruptionService = $antiCorruptionService;
-        $this->accountOptionsFactory = $accountOptionsFactory;
-        $this->accountOptionsRepository = $accountOptionsRepository;
+    public function __construct(private readonly UserRepositoryInterface $userRepository, private readonly AccountAccessInviteRepositoryInterface $accountAccessInviteRepository, private readonly AccountAccessInviteFactoryInterface $accountAccessInviteFactory, private readonly AccountRepositoryInterface $accountRepository, private readonly AccountAccessFactoryInterface $accountAccessFactory, private readonly AccountAccessRepositoryInterface $accountAccessRepository, private readonly AntiCorruptionServiceInterface $antiCorruptionService, private readonly AccountOptionsFactoryInterface $accountOptionsFactory, private readonly AccountOptionsRepositoryInterface $accountOptionsRepository)
+    {
     }
 
     public function generate(
@@ -82,7 +46,7 @@ class AccountAccessInviteService implements AccountAccessInviteServiceInterface
             try {
                 $oldInvite = $this->accountAccessInviteRepository->get($accountId, $recipient->getId());
                 $this->accountAccessInviteRepository->delete($oldInvite);
-            } catch (NotFoundException $notFoundException) {
+            } catch (NotFoundException) {
                 // do nothing
             }
 

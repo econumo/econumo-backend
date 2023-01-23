@@ -27,36 +27,8 @@ use App\Domain\Service\FolderServiceInterface;
 
 class FolderService
 {
-    private FolderServiceInterface $folderService;
-
-    private CreateFolderV1ResultAssembler $createFolderV1ResultAssembler;
-
-    private UpdateFolderV1ResultAssembler $updateFolderV1ResultAssembler;
-
-    private FolderRepositoryInterface $folderRepository;
-
-    private ReplaceFolderV1ResultAssembler $replaceFolderV1ResultAssembler;
-
-    private HideFolderV1ResultAssembler $hideFolderV1ResultAssembler;
-
-    private ShowFolderV1ResultAssembler $showFolderV1ResultAssembler;
-
-    public function __construct(
-        FolderServiceInterface $folderService,
-        CreateFolderV1ResultAssembler $createFolderV1ResultAssembler,
-        UpdateFolderV1ResultAssembler $updateFolderV1ResultAssembler,
-        FolderRepositoryInterface $folderRepository,
-        ReplaceFolderV1ResultAssembler $replaceFolderV1ResultAssembler,
-        HideFolderV1ResultAssembler $hideFolderV1ResultAssembler,
-        ShowFolderV1ResultAssembler $showFolderV1ResultAssembler
-    ) {
-        $this->folderService = $folderService;
-        $this->createFolderV1ResultAssembler = $createFolderV1ResultAssembler;
-        $this->updateFolderV1ResultAssembler = $updateFolderV1ResultAssembler;
-        $this->folderRepository = $folderRepository;
-        $this->replaceFolderV1ResultAssembler = $replaceFolderV1ResultAssembler;
-        $this->hideFolderV1ResultAssembler = $hideFolderV1ResultAssembler;
-        $this->showFolderV1ResultAssembler = $showFolderV1ResultAssembler;
+    public function __construct(private readonly FolderServiceInterface $folderService, private readonly CreateFolderV1ResultAssembler $createFolderV1ResultAssembler, private readonly UpdateFolderV1ResultAssembler $updateFolderV1ResultAssembler, private readonly FolderRepositoryInterface $folderRepository, private readonly ReplaceFolderV1ResultAssembler $replaceFolderV1ResultAssembler, private readonly HideFolderV1ResultAssembler $hideFolderV1ResultAssembler, private readonly ShowFolderV1ResultAssembler $showFolderV1ResultAssembler)
+    {
     }
 
     public function createFolder(

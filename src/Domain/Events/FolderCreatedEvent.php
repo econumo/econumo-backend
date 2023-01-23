@@ -6,16 +6,10 @@ namespace App\Domain\Events;
 
 use App\Domain\Entity\ValueObject\Id;
 
-final class FolderCreatedEvent
+final readonly class FolderCreatedEvent
 {
-    private Id $userId;
-
-    private Id $folderId;
-
-    public function __construct(Id $userId, Id $folderId)
+    public function __construct(private Id $userId, private Id $folderId)
     {
-        $this->userId = $userId;
-        $this->folderId = $folderId;
     }
 
     public function getUserId(): Id

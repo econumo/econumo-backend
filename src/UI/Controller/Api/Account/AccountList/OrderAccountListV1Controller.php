@@ -20,14 +20,8 @@ use OpenApi\Annotations as OA;
 
 class OrderAccountListV1Controller extends AbstractController
 {
-    private AccountListService $accountListService;
-
-    private ValidatorInterface $validator;
-
-    public function __construct(AccountListService $accountListService, ValidatorInterface $validator)
+    public function __construct(private readonly AccountListService $accountListService, private readonly ValidatorInterface $validator)
     {
-        $this->accountListService = $accountListService;
-        $this->validator = $validator;
     }
 
     /**
@@ -55,12 +49,11 @@ class OrderAccountListV1Controller extends AbstractController
      * @OA\Response(response=401, description="Unauthorized", @OA\JsonContent(ref="#/components/schemas/JsonResponseUnauthorized")),
      * @OA\Response(response=500, description="Internal Server Error", @OA\JsonContent(ref="#/components/schemas/JsonResponseException")),
      *
-     * @Route("/api/v1/account/order-account-list", methods={"POST"})
      *
-     * @param Request $request
      * @return Response
      * @throws ValidationException
      */
+    #[Route(path: '/api/v1/account/order-account-list', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new OrderAccountListV1RequestDto();

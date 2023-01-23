@@ -18,32 +18,8 @@ use App\Domain\Service\AntiCorruptionServiceInterface;
 
 class ConnectionAccountService implements ConnectionAccountServiceInterface
 {
-    private AccountAccessRepositoryInterface $accountAccessRepository;
-
-    private AccountAccessFactoryInterface $accountAccessFactory;
-
-    private FolderRepositoryInterface $folderRepository;
-
-    private AntiCorruptionServiceInterface $antiCorruptionService;
-
-    private AccountOptionsFactoryInterface $accountOptionsFactory;
-
-    private AccountOptionsRepositoryInterface $accountOptionsRepository;
-
-    public function __construct(
-        AccountAccessRepositoryInterface $accountAccessRepository,
-        AccountAccessFactoryInterface $accountAccessFactory,
-        FolderRepositoryInterface $folderRepository,
-        AntiCorruptionServiceInterface $antiCorruptionService,
-        AccountOptionsFactoryInterface $accountOptionsFactory,
-        AccountOptionsRepositoryInterface $accountOptionsRepository
-    ) {
-        $this->accountAccessRepository = $accountAccessRepository;
-        $this->accountAccessFactory = $accountAccessFactory;
-        $this->folderRepository = $folderRepository;
-        $this->antiCorruptionService = $antiCorruptionService;
-        $this->accountOptionsFactory = $accountOptionsFactory;
-        $this->accountOptionsRepository = $accountOptionsRepository;
+    public function __construct(private readonly AccountAccessRepositoryInterface $accountAccessRepository, private readonly AccountAccessFactoryInterface $accountAccessFactory, private readonly FolderRepositoryInterface $folderRepository, private readonly AntiCorruptionServiceInterface $antiCorruptionService, private readonly AccountOptionsFactoryInterface $accountOptionsFactory, private readonly AccountOptionsRepositoryInterface $accountOptionsRepository)
+    {
     }
 
     public function revokeAccountAccess(Id $userId, Id $sharedAccountId): void
@@ -91,7 +67,7 @@ class ConnectionAccountService implements ConnectionAccountServiceInterface
         try {
             try {
                 $accountAccess = $this->accountAccessRepository->get($sharedAccountId, $userId);
-            } catch (NotFoundException $notFoundException) {
+            } catch (NotFoundException) {
                 $accountAccess = $this->accountAccessFactory->create($sharedAccountId, $userId, $role);
 
                 $accountOptions = $this->accountOptionsRepository->getByUserId($userId);

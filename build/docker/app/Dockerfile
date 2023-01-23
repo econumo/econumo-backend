@@ -1,4 +1,4 @@
-FROM php:7.4-fpm-alpine as dev
+FROM php:8.2-fpm-alpine as dev
 
 EXPOSE 80 9000
 
@@ -7,9 +7,9 @@ ENV PHP_ERROR_REPORTING 22527
 ENV COMPOSER_ALLOW_SUPERUSER 1
 
 WORKDIR /var/www/
+RUN apk add --update nginx supervisor git busybox-suid postgresql-dev
 
-RUN apk add --update nginx supervisor git busybox-suid postgresql-dev \
-    && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS curl-dev && \
+RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS curl-dev && \
 #    apk add libzip-dev libonig-dev && \
     docker-php-ext-configure bcmath --enable-bcmath && \
     docker-php-ext-configure opcache --enable-opcache && \
@@ -17,7 +17,8 @@ RUN apk add --update nginx supervisor git busybox-suid postgresql-dev \
 #    docker-php-ext-configure mbstring --enable-mbstring && \
 #    pecl install xdebug && \
 #    docker-php-ext-enable xdebug && \
-    docker-php-ext-install -j$(nproc) bcmath opcache json curl pdo_pgsql && \
+#    docker-php-ext-install -j$(nproc) bcmath opcache json curl pdo_pgsql && \
+    docker-php-ext-install -j$(nproc) pdo_pgsql bcmath opcache curl && \
     apk del -f .build-deps && \
     rm -rf /tmp/* /var/cache/apk/* \
 

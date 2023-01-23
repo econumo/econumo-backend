@@ -81,7 +81,7 @@ class CurrencyRateRepository extends ServiceEntityRepository implements Currency
             }
 
             return $item;
-        } catch (NoResultException $noResultException) {
+        } catch (NoResultException) {
             throw new NotFoundException(sprintf('Currency with identifier (%s, %s) not found', $currencyId->getValue(), $date->format('Y-m-d')));
         }
     }
@@ -106,7 +106,7 @@ class CurrencyRateRepository extends ServiceEntityRepository implements Currency
             }
 
             return $item;
-        } catch (NoResultException $noResultException) {
+        } catch (NoResultException) {
             throw new NotFoundException(sprintf('Currency with identifier %s not found', $currencyId));
         }
     }

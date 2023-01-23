@@ -12,34 +12,18 @@ use Throwable;
 class ValidationException extends ApplicationException
 {
     /**
-     * @var array
-     */
-    protected $errors = [];
-
-    /**
      * ValidationException constructor.
-     * @param string $message
-     * @param int $code
-     * @param array $errors
-     * @param Throwable|null $previous
      */
-    public function __construct(string $message = '', int $code = 400, ?Throwable $previous = null, array $errors = [])
+    public function __construct(string $message = '', int $code = 400, ?Throwable $previous = null, protected array $errors = [])
     {
-        $this->errors = $errors;
         parent::__construct($message, $code, $previous);
     }
 
-    /**
-     * @return array
-     */
     public function getErrors(): array
     {
         return $this->errors;
     }
 
-    /**
-     * @return string
-     */
     public function getErrorsAsString(): string
     {
         $result = '';

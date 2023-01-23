@@ -15,20 +15,8 @@ use App\Domain\Service\DatetimeServiceInterface;
 
 class CategoryFactory implements CategoryFactoryInterface
 {
-    private DatetimeServiceInterface $datetimeService;
-
-    private UserRepositoryInterface $userRepository;
-
-    private CategoryRepositoryInterface $categoryRepository;
-
-    public function __construct(
-        DatetimeServiceInterface $datetimeService,
-        UserRepositoryInterface $userRepository,
-        CategoryRepositoryInterface $categoryRepository
-    ) {
-        $this->datetimeService = $datetimeService;
-        $this->userRepository = $userRepository;
-        $this->categoryRepository = $categoryRepository;
+    public function __construct(private readonly DatetimeServiceInterface $datetimeService, private readonly UserRepositoryInterface $userRepository, private readonly CategoryRepositoryInterface $categoryRepository)
+    {
     }
 
     public function create(Id $userId, CategoryName $name, CategoryType $type, Icon $icon): Category

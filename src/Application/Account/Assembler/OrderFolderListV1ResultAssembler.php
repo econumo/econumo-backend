@@ -11,14 +11,8 @@ use App\Domain\Repository\FolderRepositoryInterface;
 
 class OrderFolderListV1ResultAssembler
 {
-    private FolderRepositoryInterface $folderRepository;
-
-    private FolderToDtoV1ResultAssembler $folderToDtoV1ResultAssembler;
-
-    public function __construct(FolderRepositoryInterface $folderRepository, FolderToDtoV1ResultAssembler $folderToDtoV1ResultAssembler)
+    public function __construct(private readonly FolderRepositoryInterface $folderRepository, private readonly FolderToDtoV1ResultAssembler $folderToDtoV1ResultAssembler)
     {
-        $this->folderRepository = $folderRepository;
-        $this->folderToDtoV1ResultAssembler = $folderToDtoV1ResultAssembler;
     }
 
     public function assemble(

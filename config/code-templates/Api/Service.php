@@ -11,12 +11,8 @@ use App\Domain\Entity\ValueObject\Id;
 
 class _CG_SUBJECT_Service
 {
-    private _CG_ACTION__CG_SUBJECT__CG_VERSION_ResultAssembler $_CG_ACTION_LCFIRST__CG_SUBJECT__CG_VERSION_ResultAssembler;
-
-    public function __construct(
-        _CG_ACTION__CG_SUBJECT__CG_VERSION_ResultAssembler $_CG_ACTION_LCFIRST__CG_SUBJECT__CG_VERSION_ResultAssembler
-    ) {
-        $this->_CG_ACTION_LCFIRST__CG_SUBJECT__CG_VERSION_ResultAssembler = $_CG_ACTION_LCFIRST__CG_SUBJECT__CG_VERSION_ResultAssembler;
+    public function __construct(private readonly _CG_ACTION__CG_SUBJECT__CG_VERSION_ResultAssembler $_CG_ACTION_LCFIRST__CG_SUBJECT__CG_VERSION_ResultAssembler)
+    {
     }
 
     public function _CG_ACTION_LCFIRST__CG_SUBJECT_(

@@ -12,16 +12,8 @@ use App\Domain\Repository\AccountRepositoryInterface;
 
 class AccountAccessService implements AccountAccessServiceInterface
 {
-    private AccountAccessRepositoryInterface $accountAccessRepository;
-
-    private AccountRepositoryInterface $accountRepository;
-
-    public function __construct(
-        AccountAccessRepositoryInterface $accountAccessRepository,
-        AccountRepositoryInterface $accountRepository
-    ) {
-        $this->accountAccessRepository = $accountAccessRepository;
-        $this->accountRepository = $accountRepository;
+    public function __construct(private readonly AccountAccessRepositoryInterface $accountAccessRepository, private readonly AccountRepositoryInterface $accountRepository)
+    {
     }
 
     public function isAccessAllowed(Id $userId, Id $accountId): bool
@@ -79,7 +71,7 @@ class AccountAccessService implements AccountAccessServiceInterface
 
         try {
             $access = $this->accountAccessRepository->get($accountId, $userId);
-        } catch (NotFoundException $notFoundException) {
+        } catch (NotFoundException) {
             return false;
         }
 
@@ -95,7 +87,7 @@ class AccountAccessService implements AccountAccessServiceInterface
 
         try {
             $access = $this->accountAccessRepository->get($accountId, $userId);
-        } catch (NotFoundException $notFoundException) {
+        } catch (NotFoundException) {
             return false;
         }
 
@@ -111,7 +103,7 @@ class AccountAccessService implements AccountAccessServiceInterface
 
         try {
             $this->accountAccessRepository->get($accountId, $userId);
-        } catch (NotFoundException $notFoundException) {
+        } catch (NotFoundException) {
             return false;
         }
 

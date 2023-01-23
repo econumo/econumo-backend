@@ -7,9 +7,9 @@ namespace App\Domain\Entity\ValueObject;
 use DomainException;
 use JsonSerializable;
 
-class Id implements JsonSerializable
+class Id implements JsonSerializable, \Stringable
 {
-    private string $value;
+    private readonly string $value;
 
     public function __construct(string $value)
     {
@@ -33,7 +33,7 @@ class Id implements JsonSerializable
     /**
      * @inheritdoc
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return $this->value;
     }

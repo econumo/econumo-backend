@@ -25,7 +25,7 @@ class LocaleSubscriber implements EventSubscriberInterface
         }
 
         // Symfony expects underscore instead of dash in locale
-        $locale = str_replace('-', '_', $parts[0][0]);
+        $locale = str_replace('-', '_', (string) $parts[0][0]);
         $request->setLocale($locale);
     }
 

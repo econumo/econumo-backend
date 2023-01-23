@@ -18,7 +18,6 @@ interface UserRepositoryInterface
 
     /**
      * @param User[] $users
-     * @return void
      */
     public function save(array $users): void;
 

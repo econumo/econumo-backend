@@ -19,17 +19,11 @@ class UpdateCurrencyRatesCommand extends Command
 
     protected static $defaultDescription = 'Load and update currency rates';
 
-    private CurrencyRatesLoaderServiceInterface $currencyRatesLoaderService;
-
-    private CurrencyRatesUpdateServiceInterface $currencyRatesUpdateService;
-
     public function __construct(
-        CurrencyRatesLoaderServiceInterface $currencyRatesLoaderService,
-        CurrencyRatesUpdateServiceInterface $currencyRatesUpdateService
+        private readonly CurrencyRatesLoaderServiceInterface $currencyRatesLoaderService,
+        private readonly CurrencyRatesUpdateServiceInterface $currencyRatesUpdateService
     ) {
         parent::__construct(self::$defaultName);
-        $this->currencyRatesLoaderService = $currencyRatesLoaderService;
-        $this->currencyRatesUpdateService = $currencyRatesUpdateService;
     }
 
     protected function configure(): void

@@ -12,10 +12,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RequestFormValidationHelper
 {
-    /**
-     * @param FormView $formView
-     * @return array
-     */
     public static function getFlatArrayErrors(FormView $formView): array
     {
         $values = [];
@@ -35,7 +31,6 @@ class RequestFormValidationHelper
     }
 
     /**
-     * @param FormInterface $form
      * @throws ValidationException
      */
     public static function validate(FormInterface $form): void

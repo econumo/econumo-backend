@@ -14,11 +14,8 @@ use Symfony\Component\Validator\Constraints\Uuid;
 
 class _CG_ACTION__CG_SUBJECT__CG_VERSION_Form extends AbstractType
 {
-    private ValueObjectValidationFactoryInterface $valueObjectValidationFactory;
-
-    public function __construct(ValueObjectValidationFactoryInterface $valueObjectValidationFactory)
+    public function __construct(private readonly ValueObjectValidationFactoryInterface $valueObjectValidationFactory)
     {
-        $this->valueObjectValidationFactory = $valueObjectValidationFactory;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

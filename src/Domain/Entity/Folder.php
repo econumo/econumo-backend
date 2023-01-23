@@ -18,18 +18,12 @@ class Folder
 {
     use EventTrait;
 
-    private Id $id;
-
-    private FolderName $name;
-
     private int $position = 1000;
 
     private bool $isVisible = true;
 
-    private User $user;
-
     /**
-     * @var ArrayCollection|Account[]
+     * @var Collection|Account[]
      */
     private Collection $accounts;
 
@@ -38,14 +32,11 @@ class Folder
     private DateTimeInterface $updatedAt;
 
     public function __construct(
-        Id $id,
-        User $user,
-        FolderName $name,
+        private Id $id,
+        private User $user,
+        private FolderName $name,
         DateTimeInterface $createdAt
     ) {
-        $this->id = $id;
-        $this->user = $user;
-        $this->name = $name;
         $this->accounts = new ArrayCollection();
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
@@ -93,9 +84,9 @@ class Folder
     }
 
     /**
-     * @return Account[]|ArrayCollection
+     * @return Account[]|Collection
      */
-    public function getAccounts()
+    public function getAccounts(): Collection
     {
         return $this->accounts;
     }

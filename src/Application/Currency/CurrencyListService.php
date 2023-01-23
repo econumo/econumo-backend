@@ -12,16 +12,8 @@ use App\Domain\Repository\CurrencyRepositoryInterface;
 
 class CurrencyListService
 {
-    private GetCurrencyListV1ResultAssembler $getCurrencyListV1ResultAssembler;
-
-    private CurrencyRepositoryInterface $currencyRepository;
-
-    public function __construct(
-        GetCurrencyListV1ResultAssembler $getCurrencyListV1ResultAssembler,
-        CurrencyRepositoryInterface $currencyRepository
-    ) {
-        $this->getCurrencyListV1ResultAssembler = $getCurrencyListV1ResultAssembler;
-        $this->currencyRepository = $currencyRepository;
+    public function __construct(private readonly GetCurrencyListV1ResultAssembler $getCurrencyListV1ResultAssembler, private readonly CurrencyRepositoryInterface $currencyRepository)
+    {
     }
 
     public function getCurrencyList(

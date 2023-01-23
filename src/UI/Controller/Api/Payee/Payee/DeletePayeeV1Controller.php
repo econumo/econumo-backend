@@ -20,14 +20,8 @@ use OpenApi\Annotations as OA;
 
 class DeletePayeeV1Controller extends AbstractController
 {
-    private PayeeService $payeeService;
-
-    private ValidatorInterface $validator;
-
-    public function __construct(PayeeService $payeeService, ValidatorInterface $validator)
+    public function __construct(private readonly PayeeService $payeeService, private readonly ValidatorInterface $validator)
     {
-        $this->payeeService = $payeeService;
-        $this->validator = $validator;
     }
 
     /**
@@ -55,12 +49,11 @@ class DeletePayeeV1Controller extends AbstractController
      * @OA\Response(response=401, description="Unauthorized", @OA\JsonContent(ref="#/components/schemas/JsonResponseUnauthorized")),
      * @OA\Response(response=500, description="Internal Server Error", @OA\JsonContent(ref="#/components/schemas/JsonResponseException")),
      *
-     * @Route("/api/v1/payee/delete-payee", methods={"POST"})
      *
-     * @param Request $request
      * @return Response
      * @throws ValidationException
      */
+    #[Route(path: '/api/v1/payee/delete-payee', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new DeletePayeeV1RequestDto();

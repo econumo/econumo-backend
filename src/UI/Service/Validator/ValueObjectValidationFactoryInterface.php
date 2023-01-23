@@ -9,8 +9,5 @@ use Symfony\Component\Validator\Constraint;
 
 interface ValueObjectValidationFactoryInterface
 {
-    /**
-     * @param string|ValueObjectInterface $valueObject
-     */
-    public function create(string $valueObject): Constraint;
+    public function create(string $valueObjectClassName): Constraint;
 }

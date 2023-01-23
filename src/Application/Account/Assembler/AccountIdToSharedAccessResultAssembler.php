@@ -13,18 +13,11 @@ use App\Domain\Repository\AccountAccessRepositoryInterface;
 
 class AccountIdToSharedAccessResultAssembler
 {
-    private AccountAccessRepositoryInterface $accountAccessRepository;
-
-    private UserIdToDtoResultAssembler $userIdToDtoResultAssembler;
-
-    public function __construct(AccountAccessRepositoryInterface $accountAccessRepository, UserIdToDtoResultAssembler $userIdToDtoResultAssembler)
+    public function __construct(private readonly AccountAccessRepositoryInterface $accountAccessRepository, private readonly UserIdToDtoResultAssembler $userIdToDtoResultAssembler)
     {
-        $this->accountAccessRepository = $accountAccessRepository;
-        $this->userIdToDtoResultAssembler = $userIdToDtoResultAssembler;
     }
 
     /**
-     * @param Id $accountId
      * @return SharedAccessItemResultDto[]
      */
     public function assemble(Id $accountId): array

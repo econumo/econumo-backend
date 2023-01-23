@@ -15,19 +15,7 @@ use DateTimeInterface;
 
 class Account
 {
-    private Id $id;
-
-    private AccountName $name;
-
-    private Currency $currency;
-
     private string $balance;
-
-    private AccountType $type;
-
-    private Icon $icon;
-
-    private User $user;
 
     private bool $isDeleted = false;
 
@@ -36,22 +24,16 @@ class Account
     private DateTimeInterface $updatedAt;
 
     public function __construct(
-        Id $id,
-        User $user,
-        AccountName $name,
-        Currency $currency,
+        private Id $id,
+        private User $user,
+        private AccountName $name,
+        private Currency $currency,
         float $balance,
-        AccountType $type,
-        Icon $icon,
+        private AccountType $type,
+        private Icon $icon,
         DateTimeInterface $createdAt
     ) {
-        $this->id = $id;
-        $this->user = $user;
-        $this->name = $name;
-        $this->currency = $currency;
         $this->balance = (string)$balance;
-        $this->type = $type;
-        $this->icon = $icon;
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
     }

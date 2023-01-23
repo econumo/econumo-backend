@@ -12,7 +12,6 @@ interface UserOptionRepositoryInterface
 
     /**
      * @param UserOption[] $userOptions
-     * @return void
      */
     public function save(array $userOptions): void;
 

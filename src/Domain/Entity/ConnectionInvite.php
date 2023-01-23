@@ -15,15 +15,12 @@ class ConnectionInvite
      */
     private const INVITE_LIFETIME = '+5 minutes';
 
-    private User $user;
-
     private ?ConnectionCode $code = null;
 
     private ?DateTime $expiredAt = null;
 
-    public function __construct(User $user)
+    public function __construct(private User $user)
     {
-        $this->user = $user;
     }
 
     public function generateNewCode(): void

@@ -8,17 +8,8 @@ use Symfony\Component\Form\FormFactoryInterface;
 
 class Validator implements ValidatorInterface
 {
-    /**
-     * @var FormFactoryInterface
-     */
-    private $formFactory;
-
-    /**
-     * @param FormFactoryInterface $formFactory
-     */
-    public function __construct(FormFactoryInterface $formFactory)
+    public function __construct(private readonly FormFactoryInterface $formFactory)
     {
-        $this->formFactory = $formFactory;
     }
 
     /**

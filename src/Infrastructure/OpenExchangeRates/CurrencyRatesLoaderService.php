@@ -24,20 +24,8 @@ class CurrencyRatesLoaderService implements CurrencyRatesLoaderServiceInterface
      */
     private const CURRENCY_RATES_HISTORICAL_URL = 'https://openexchangerates.org/api/historical/:date.json';
 
-    private HttpClientInterface $client;
-
-    private CurrencyServiceInterface $currencyService;
-
-    private string $token;
-
-    public function __construct(
-        string $token,
-        HttpClientInterface $client,
-        CurrencyServiceInterface $currencyService
-    ) {
-        $this->client = $client;
-        $this->currencyService = $currencyService;
-        $this->token = $token;
+    public function __construct(private readonly string $token, private readonly HttpClientInterface $client, private readonly CurrencyServiceInterface $currencyService)
+    {
     }
 
     public function loadCurrencyRates(DateTimeInterface $date): array
@@ -76,7 +64,6 @@ class CurrencyRatesLoaderService implements CurrencyRatesLoaderServiceInterface
 
     /**
      * @param Currency[] $currencies
-     * @return string
      */
     private function getCurrenciesList(array $currencies): string
     {

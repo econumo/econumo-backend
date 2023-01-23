@@ -9,7 +9,6 @@ use ReflectionClass;
 trait ReflectionValueObjectTrait
 {
     /**
-     * @param string $className
      * @param $value
      * @return mixed
      * @throws \ReflectionException

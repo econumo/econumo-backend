@@ -10,17 +10,12 @@ use App\Domain\Entity\CurrencyRate;
 
 class GetCurrencyRateListV1ResultAssembler
 {
-    private CurrencyRateToDtoV1ResultAssembler $currencyRateToDtoV1ResultAssembler;
-
-    public function __construct(CurrencyRateToDtoV1ResultAssembler $currencyRateToDtoV1ResultAssembler)
+    public function __construct(private readonly CurrencyRateToDtoV1ResultAssembler $currencyRateToDtoV1ResultAssembler)
     {
-        $this->currencyRateToDtoV1ResultAssembler = $currencyRateToDtoV1ResultAssembler;
     }
 
     /**
-     * @param GetCurrencyRateListV1RequestDto $dto
      * @param array|CurrencyRate[] $currencyRates
-     * @return GetCurrencyRateListV1ResultDto
      */
     public function assemble(
         GetCurrencyRateListV1RequestDto $dto,

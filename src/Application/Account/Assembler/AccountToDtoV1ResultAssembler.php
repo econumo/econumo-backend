@@ -14,28 +14,8 @@ use App\Domain\Repository\FolderRepositoryInterface;
 
 class AccountToDtoV1ResultAssembler
 {
-    private AccountIdToSharedAccessResultAssembler $accountIdToSharedAccessResultAssembler;
-
-    private CurrencyIdToDtoV1ResultAssembler $currencyIdToDtoV1ResultAssembler;
-
-    private FolderRepositoryInterface $folderRepository;
-
-    private UserIdToDtoResultAssembler $userIdToDtoResultAssembler;
-
-    private AccountOptionsRepositoryInterface $accountOptionsRepository;
-
-    public function __construct(
-        AccountIdToSharedAccessResultAssembler $accountIdToSharedAccessResultAssembler,
-        CurrencyIdToDtoV1ResultAssembler $currencyIdToDtoV1ResultAssembler,
-        FolderRepositoryInterface $folderRepository,
-        UserIdToDtoResultAssembler $userIdToDtoResultAssembler,
-        AccountOptionsRepositoryInterface $accountOptionsRepository
-    ) {
-        $this->accountIdToSharedAccessResultAssembler = $accountIdToSharedAccessResultAssembler;
-        $this->currencyIdToDtoV1ResultAssembler = $currencyIdToDtoV1ResultAssembler;
-        $this->folderRepository = $folderRepository;
-        $this->userIdToDtoResultAssembler = $userIdToDtoResultAssembler;
-        $this->accountOptionsRepository = $accountOptionsRepository;
+    public function __construct(private readonly AccountIdToSharedAccessResultAssembler $accountIdToSharedAccessResultAssembler, private readonly CurrencyIdToDtoV1ResultAssembler $currencyIdToDtoV1ResultAssembler, private readonly FolderRepositoryInterface $folderRepository, private readonly UserIdToDtoResultAssembler $userIdToDtoResultAssembler, private readonly AccountOptionsRepositoryInterface $accountOptionsRepository)
+    {
     }
 
     public function assemble(Id $userId, Account $account): AccountResultDto

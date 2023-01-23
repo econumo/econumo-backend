@@ -7,9 +7,9 @@ namespace App\Domain\Entity\ValueObject;
 use DomainException;
 use JsonSerializable;
 
-class Icon implements ValueObjectInterface, JsonSerializable
+class Icon implements ValueObjectInterface, JsonSerializable, \Stringable
 {
-    private string $value;
+    private readonly string $value;
 
     public function __construct(string $value)
     {
@@ -30,7 +30,7 @@ class Icon implements ValueObjectInterface, JsonSerializable
     /**
      * @inheritdoc
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return $this->value;
     }

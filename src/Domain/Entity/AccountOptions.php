@@ -11,25 +11,16 @@ use DateTimeInterface;
 
 class AccountOptions
 {
-    private Account $account;
-
-    private User $user;
-
-    private int $position;
-
     private DateTimeImmutable $createdAt;
 
     private DateTimeInterface $updatedAt;
 
     public function __construct(
-        Account $account,
-        User $user,
-        int $position,
+        private Account $account,
+        private User $user,
+        private int $position,
         DateTimeInterface $createdAt
     ) {
-        $this->account = $account;
-        $this->user = $user;
-        $this->position = $position;
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
     }

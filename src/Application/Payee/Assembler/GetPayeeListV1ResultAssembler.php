@@ -10,17 +10,12 @@ use App\Domain\Entity\Payee;
 
 class GetPayeeListV1ResultAssembler
 {
-    private PayeeToDtoV1ResultAssembler $payeeToDtoV1ResultAssembler;
-
-    public function __construct(PayeeToDtoV1ResultAssembler $payeeToDtoV1ResultAssembler)
+    public function __construct(private readonly PayeeToDtoV1ResultAssembler $payeeToDtoV1ResultAssembler)
     {
-        $this->payeeToDtoV1ResultAssembler = $payeeToDtoV1ResultAssembler;
     }
 
     /**
-     * @param GetPayeeListV1RequestDto $dto
      * @param Payee[] $payees
-     * @return GetPayeeListV1ResultDto
      */
     public function assemble(
         GetPayeeListV1RequestDto $dto,

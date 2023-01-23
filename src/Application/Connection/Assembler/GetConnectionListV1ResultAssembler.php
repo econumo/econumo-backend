@@ -14,25 +14,14 @@ use App\Domain\Entity\ValueObject\Id;
 
 class GetConnectionListV1ResultAssembler
 {
-    private UserToDtoResultAssembler $userToDtoResultAssembler;
-
-    private AccountAccessToDtoResultAssembler $accountAccessToDtoResultAssembler;
-
-    public function __construct(
-        UserToDtoResultAssembler $userToDtoResultAssembler,
-        AccountAccessToDtoResultAssembler $accountAccessToDtoResultAssembler
-    ) {
-        $this->userToDtoResultAssembler = $userToDtoResultAssembler;
-        $this->accountAccessToDtoResultAssembler = $accountAccessToDtoResultAssembler;
+    public function __construct(private readonly UserToDtoResultAssembler $userToDtoResultAssembler, private readonly AccountAccessToDtoResultAssembler $accountAccessToDtoResultAssembler)
+    {
     }
 
     /**
-     * @param GetConnectionListV1RequestDto $dto
-     * @param Id $userId
      * @param AccountAccess[] $receivedAccountAccess
      * @param AccountAccess[] $issuedAccountAccess
      * @param User[] $connectedUsers
-     * @return GetConnectionListV1ResultDto
      */
     public function assemble(
         GetConnectionListV1RequestDto $dto,

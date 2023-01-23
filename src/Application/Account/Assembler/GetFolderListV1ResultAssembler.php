@@ -10,17 +10,12 @@ use App\Domain\Entity\Folder;
 
 class GetFolderListV1ResultAssembler
 {
-    private FolderToDtoV1ResultAssembler $folderToDtoV1ResultAssembler;
-
-    public function __construct(FolderToDtoV1ResultAssembler $folderToDtoV1ResultAssembler)
+    public function __construct(private readonly FolderToDtoV1ResultAssembler $folderToDtoV1ResultAssembler)
     {
-        $this->folderToDtoV1ResultAssembler = $folderToDtoV1ResultAssembler;
     }
 
     /**
-     * @param GetFolderListV1RequestDto $dto
      * @param Folder[] $folders
-     * @return GetFolderListV1ResultDto
      */
     public function assemble(
         GetFolderListV1RequestDto $dto,

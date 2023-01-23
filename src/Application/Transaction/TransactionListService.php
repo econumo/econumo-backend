@@ -13,20 +13,8 @@ use App\Domain\Service\AccountAccessServiceInterface;
 
 class TransactionListService
 {
-    private GetTransactionListV1ResultAssembler $getTransactionListV1ResultAssembler;
-
-    private TransactionRepositoryInterface $transactionRepository;
-
-    private AccountAccessServiceInterface $accountAccessService;
-
-    public function __construct(
-        GetTransactionListV1ResultAssembler $getTransactionListV1ResultAssembler,
-        TransactionRepositoryInterface $transactionRepository,
-        AccountAccessServiceInterface $accountAccessService
-    ) {
-        $this->getTransactionListV1ResultAssembler = $getTransactionListV1ResultAssembler;
-        $this->transactionRepository = $transactionRepository;
-        $this->accountAccessService = $accountAccessService;
+    public function __construct(private readonly GetTransactionListV1ResultAssembler $getTransactionListV1ResultAssembler, private readonly TransactionRepositoryInterface $transactionRepository, private readonly AccountAccessServiceInterface $accountAccessService)
+    {
     }
 
     public function getTransactionList(

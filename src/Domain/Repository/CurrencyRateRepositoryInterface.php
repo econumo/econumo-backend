@@ -22,7 +22,6 @@ interface CurrencyRateRepositoryInterface
 
     /**
      * @param CurrencyRate[] $items
-     * @return void
      */
     public function save(array $items): void;
 }

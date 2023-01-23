@@ -24,44 +24,8 @@ use App\Domain\Service\Translation\TranslationServiceInterface;
 
 class TransactionService
 {
-    private CreateTransactionV1ResultAssembler $createTransactionV1ResultAssembler;
-
-    private RequestToDomainDtoAssembler $requestToDomainDtoAssembler;
-
-    private TransactionServiceInterface $transactionService;
-
-    private DeleteTransactionV1ResultAssembler $deleteTransactionV1ResultAssembler;
-
-    private TransactionRepositoryInterface $transactionRepository;
-
-    private AccountAccessServiceInterface $accountAccessService;
-
-    private UpdateTransactionV1ResultAssembler $updateTransactionV1ResultAssembler;
-
-    private UpdateTransactionRequestToDomainDtoAssembler $updateTransactionRequestToDomainDtoAssembler;
-
-    private TranslationServiceInterface $translationService;
-
-    public function __construct(
-        CreateTransactionV1ResultAssembler $createTransactionV1ResultAssembler,
-        RequestToDomainDtoAssembler $requestToDomainDtoAssembler,
-        TransactionServiceInterface $transactionService,
-        DeleteTransactionV1ResultAssembler $deleteTransactionV1ResultAssembler,
-        TransactionRepositoryInterface $transactionRepository,
-        AccountAccessServiceInterface $accountAccessService,
-        UpdateTransactionV1ResultAssembler $updateTransactionV1ResultAssembler,
-        UpdateTransactionRequestToDomainDtoAssembler $updateTransactionRequestToDomainDtoAssembler,
-        TranslationServiceInterface $translationService
-    ) {
-        $this->createTransactionV1ResultAssembler = $createTransactionV1ResultAssembler;
-        $this->requestToDomainDtoAssembler = $requestToDomainDtoAssembler;
-        $this->transactionService = $transactionService;
-        $this->deleteTransactionV1ResultAssembler = $deleteTransactionV1ResultAssembler;
-        $this->transactionRepository = $transactionRepository;
-        $this->accountAccessService = $accountAccessService;
-        $this->updateTransactionV1ResultAssembler = $updateTransactionV1ResultAssembler;
-        $this->updateTransactionRequestToDomainDtoAssembler = $updateTransactionRequestToDomainDtoAssembler;
-        $this->translationService = $translationService;
+    public function __construct(private readonly CreateTransactionV1ResultAssembler $createTransactionV1ResultAssembler, private readonly RequestToDomainDtoAssembler $requestToDomainDtoAssembler, private readonly TransactionServiceInterface $transactionService, private readonly DeleteTransactionV1ResultAssembler $deleteTransactionV1ResultAssembler, private readonly TransactionRepositoryInterface $transactionRepository, private readonly AccountAccessServiceInterface $accountAccessService, private readonly UpdateTransactionV1ResultAssembler $updateTransactionV1ResultAssembler, private readonly UpdateTransactionRequestToDomainDtoAssembler $updateTransactionRequestToDomainDtoAssembler, private readonly TranslationServiceInterface $translationService)
+    {
     }
 
     public function createTransaction(

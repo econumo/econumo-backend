@@ -11,16 +11,9 @@ use Throwable;
 
 class ResponseFactory
 {
-    /**
-     * @param Request $request
-     * @param string $message
-     * @param mixed $data
-     * @param int $httpCode
-     * @return Response
-     */
     public static function createOkResponse(
         Request $request,
-        $data = [],
+        mixed $data = [],
         string $message = '',
         int $httpCode = Response::HTTP_OK
     ): Response {
@@ -30,14 +23,6 @@ class ResponseFactory
         ], $httpCode);
     }
 
-    /**
-     * @param Request $request
-     * @param string $message
-     * @param int $code
-     * @param array $errors
-     * @param int $httpCode
-     * @return Response
-     */
     public static function createErrorResponse(
         Request $request,
         string $message = '',
@@ -52,14 +37,6 @@ class ResponseFactory
         ], $httpCode);
     }
 
-    /**
-     * @param Request $request
-     * @param string $message
-     * @param int $code
-     * @param Throwable $exception
-     * @param int $httpCode
-     * @return Response
-     */
     public static function createExceptionResponse(
         Request $request,
         string $message,
@@ -72,20 +49,15 @@ class ResponseFactory
             'code' => $code
         ];
         if (null !== $exception) {
-            $data['exceptionType'] = get_class($exception);
+            $data['exceptionType'] = $exception::class;
             $data['stackTrace'] = $exception->getTrace();
         }
 
         return static::createJsonResponse($data, $httpCode);
     }
 
-    /**
-     * @param mixed $data
-     * @param int $httpCode
-     * @return JsonResponse
-     */
     protected static function createJsonResponse(
-        $data,
+        mixed $data,
         int $httpCode
     ): JsonResponse {
         return new JsonResponse($data, $httpCode);

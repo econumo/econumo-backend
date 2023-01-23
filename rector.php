@@ -10,6 +10,7 @@ use Rector\Doctrine\Set\DoctrineSetList;
 use Rector\PHPUnit\Set\PHPUnitSetList;
 use Rector\Set\ValueObject\SetList;
 use Rector\Symfony\Set\SymfonyLevelSetList;
+use Rector\TypeDeclaration\Rector\Property\TypedPropertyFromAssignsRector;
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->paths([
@@ -23,9 +24,13 @@ return static function (RectorConfig $rectorConfig): void {
     // register a single rule
     $rectorConfig->rule(InlineConstructorDefaultToPropertyRector::class);
 
+    $rectorConfig->importNames();
+
+//    $rectorConfig->rule(TypedPropertyFromAssignsRector::class);
+
     // define sets of rules
     $rectorConfig->sets([
-        LevelSetList::UP_TO_PHP_73,
+        LevelSetList::UP_TO_PHP_82,
 
         SymfonySetList::SYMFONY_54,
         SymfonySetList::SYMFONY_CODE_QUALITY,

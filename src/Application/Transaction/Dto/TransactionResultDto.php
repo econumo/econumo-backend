@@ -46,7 +46,7 @@ class TransactionResultDto
      * Account recipient id
      * @OA\Property(example="f680553f-6b40-407d-a528-5123913be0aa")
      */
-    public ?string $accountRecipientId;
+    public ?string $accountRecipientId = null;
 
     /**
      * Amount
@@ -58,7 +58,7 @@ class TransactionResultDto
      * Amount recipient
      * @OA\Property(example="100.5")
      */
-    public ?float $amountRecipient;
+    public ?float $amountRecipient = null;
 
     /**
      * Category id

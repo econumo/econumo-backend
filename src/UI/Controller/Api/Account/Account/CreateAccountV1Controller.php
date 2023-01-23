@@ -22,20 +22,8 @@ use OpenApi\Annotations as OA;
 
 class CreateAccountV1Controller extends AbstractController
 {
-    private AccountService $accountService;
-
-    private ValidatorInterface $validator;
-
-    private OperationServiceInterface $operationService;
-
-    public function __construct(
-        AccountService $accountService,
-        ValidatorInterface $validator,
-        OperationServiceInterface $operationService
-    ) {
-        $this->accountService = $accountService;
-        $this->validator = $validator;
-        $this->operationService = $operationService;
+    public function __construct(private readonly AccountService $accountService, private readonly ValidatorInterface $validator, private readonly OperationServiceInterface $operationService)
+    {
     }
 
     /**
@@ -63,12 +51,11 @@ class CreateAccountV1Controller extends AbstractController
      * @OA\Response(response=401, description="Unauthorized", @OA\JsonContent(ref="#/components/schemas/JsonResponseUnauthorized")),
      * @OA\Response(response=500, description="Internal Server Error", @OA\JsonContent(ref="#/components/schemas/JsonResponseException")),
      *
-     * @Route("/api/v1/account/create-account", methods={"POST"})
      *
-     * @param Request $request
      * @return Response
      * @throws ValidationException
      */
+    #[Route(path: '/api/v1/account/create-account', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new CreateAccountV1RequestDto();

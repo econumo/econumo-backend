@@ -18,28 +18,8 @@ use App\Domain\Service\Translation\TranslationServiceInterface;
 
 class FolderListService
 {
-    private GetFolderListV1ResultAssembler $getFolderListV1ResultAssembler;
-
-    private FolderRepositoryInterface $folderRepository;
-
-    private OrderFolderListV1ResultAssembler $orderFolderListV1ResultAssembler;
-
-    private FolderServiceInterface $folderService;
-
-    private TranslationServiceInterface $translationService;
-
-    public function __construct(
-        GetFolderListV1ResultAssembler $getFolderListV1ResultAssembler,
-        FolderRepositoryInterface $folderRepository,
-        OrderFolderListV1ResultAssembler $orderFolderListV1ResultAssembler,
-        FolderServiceInterface $folderService,
-        TranslationServiceInterface $translationService
-    ) {
-        $this->getFolderListV1ResultAssembler = $getFolderListV1ResultAssembler;
-        $this->folderRepository = $folderRepository;
-        $this->orderFolderListV1ResultAssembler = $orderFolderListV1ResultAssembler;
-        $this->folderService = $folderService;
-        $this->translationService = $translationService;
+    public function __construct(private readonly GetFolderListV1ResultAssembler $getFolderListV1ResultAssembler, private readonly FolderRepositoryInterface $folderRepository, private readonly OrderFolderListV1ResultAssembler $orderFolderListV1ResultAssembler, private readonly FolderServiceInterface $folderService, private readonly TranslationServiceInterface $translationService)
+    {
     }
 
     public function getFolderList(

@@ -11,24 +11,8 @@ use App\Domain\Repository\UserRepositoryInterface;
 
 class PasswordUserRequestService implements PasswordUserRequestServiceInterface
 {
-    private PasswordUserRequestFactoryInterface $passwordUserRequestFactory;
-
-    private PasswordUserRequestRepositoryInterface $passwordUserRequestRepository;
-
-    private UserRepositoryInterface $userRepository;
-
-    private EventDispatcherInterface $eventDispatcher;
-
-    public function __construct(
-        PasswordUserRequestFactoryInterface $passwordUserRequestFactory,
-        PasswordUserRequestRepositoryInterface $passwordUserRequestRepository,
-        UserRepositoryInterface $userRepository,
-        EventDispatcherInterface $eventDispatcher
-    ) {
-        $this->passwordUserRequestFactory = $passwordUserRequestFactory;
-        $this->passwordUserRequestRepository = $passwordUserRequestRepository;
-        $this->userRepository = $userRepository;
-        $this->eventDispatcher = $eventDispatcher;
+    public function __construct(private readonly PasswordUserRequestFactoryInterface $passwordUserRequestFactory, private readonly PasswordUserRequestRepositoryInterface $passwordUserRequestRepository, private readonly UserRepositoryInterface $userRepository, private readonly EventDispatcherInterface $eventDispatcher)
+    {
     }
 
     public function remindPassword(Email $email): void

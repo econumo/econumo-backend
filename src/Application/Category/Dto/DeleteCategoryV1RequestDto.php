@@ -16,12 +16,12 @@ class DeleteCategoryV1RequestDto
     /**
      * @var string
      */
-    public const MODE_DELETE = 'delete';
+    final public const MODE_DELETE = 'delete';
 
     /**
      * @var string
      */
-    public const MODE_REPLACE = 'replace';
+    final public const MODE_REPLACE = 'replace';
 
     /**
      * @OA\Property(example="95587d1d-2c39-4efc-98f3-23c755da44a4")

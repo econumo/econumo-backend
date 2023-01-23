@@ -10,17 +10,12 @@ use App\Domain\Entity\Category;
 
 class GetCategoryListV1ResultAssembler
 {
-    private CategoryToDtoResultAssembler $categoryToDtoV1ResultAssembler;
-
-    public function __construct(CategoryToDtoResultAssembler $categoryToDtoV1ResultAssembler)
+    public function __construct(private readonly CategoryToDtoResultAssembler $categoryToDtoV1ResultAssembler)
     {
-        $this->categoryToDtoV1ResultAssembler = $categoryToDtoV1ResultAssembler;
     }
 
     /**
-     * @param GetCategoryListV1RequestDto $dto
      * @param Category[] $categories
-     * @return GetCategoryListV1ResultDto
      */
     public function assemble(
         GetCategoryListV1RequestDto $dto,

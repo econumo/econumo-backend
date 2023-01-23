@@ -31,44 +31,8 @@ use App\Domain\Service\Translation\TranslationServiceInterface;
 
 class PayeeService
 {
-    private CreatePayeeV1ResultAssembler $createPayeeV1ResultAssembler;
-
-    private PayeeServiceInterface $payeeService;
-
-    private AccountAccessServiceInterface $accountAccessService;
-
-    private UpdatePayeeV1ResultAssembler $updatePayeeV1ResultAssembler;
-
-    private PayeeRepositoryInterface $payeeRepository;
-
-    private DeletePayeeV1ResultAssembler $deletePayeeV1ResultAssembler;
-
-    private ArchivePayeeV1ResultAssembler $archivePayeeV1ResultAssembler;
-
-    private UnarchivePayeeV1ResultAssembler $unarchivePayeeV1ResultAssembler;
-
-    private TranslationServiceInterface $translationService;
-
-    public function __construct(
-        CreatePayeeV1ResultAssembler $createPayeeV1ResultAssembler,
-        PayeeServiceInterface $payeeService,
-        AccountAccessServiceInterface $accountAccessService,
-        UpdatePayeeV1ResultAssembler $updatePayeeV1ResultAssembler,
-        PayeeRepositoryInterface $payeeRepository,
-        DeletePayeeV1ResultAssembler $deletePayeeV1ResultAssembler,
-        ArchivePayeeV1ResultAssembler $archivePayeeV1ResultAssembler,
-        UnarchivePayeeV1ResultAssembler $unarchivePayeeV1ResultAssembler,
-        TranslationServiceInterface $translationService
-    ) {
-        $this->createPayeeV1ResultAssembler = $createPayeeV1ResultAssembler;
-        $this->payeeService = $payeeService;
-        $this->accountAccessService = $accountAccessService;
-        $this->updatePayeeV1ResultAssembler = $updatePayeeV1ResultAssembler;
-        $this->payeeRepository = $payeeRepository;
-        $this->deletePayeeV1ResultAssembler = $deletePayeeV1ResultAssembler;
-        $this->archivePayeeV1ResultAssembler = $archivePayeeV1ResultAssembler;
-        $this->unarchivePayeeV1ResultAssembler = $unarchivePayeeV1ResultAssembler;
-        $this->translationService = $translationService;
+    public function __construct(private readonly CreatePayeeV1ResultAssembler $createPayeeV1ResultAssembler, private readonly PayeeServiceInterface $payeeService, private readonly AccountAccessServiceInterface $accountAccessService, private readonly UpdatePayeeV1ResultAssembler $updatePayeeV1ResultAssembler, private readonly PayeeRepositoryInterface $payeeRepository, private readonly DeletePayeeV1ResultAssembler $deletePayeeV1ResultAssembler, private readonly ArchivePayeeV1ResultAssembler $archivePayeeV1ResultAssembler, private readonly UnarchivePayeeV1ResultAssembler $unarchivePayeeV1ResultAssembler, private readonly TranslationServiceInterface $translationService)
+    {
     }
 
     public function createPayee(
@@ -98,7 +62,7 @@ class PayeeService
 
         try {
             $this->payeeService->updatePayee($payeeId, new PayeeName($dto->name));
-        } catch (PayeeAlreadyExistsException $payeeAlreadyExistsException) {
+        } catch (PayeeAlreadyExistsException) {
             throw new ValidationException($this->translationService->trans('payee.payee.already_exists', ['name' => $dto->name]));
         }
 

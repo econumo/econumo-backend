@@ -20,14 +20,8 @@ use OpenApi\Annotations as OA;
 
 class OrderFolderListV1Controller extends AbstractController
 {
-    private FolderListService $folderListService;
-
-    private ValidatorInterface $validator;
-
-    public function __construct(FolderListService $folderListService, ValidatorInterface $validator)
+    public function __construct(private readonly FolderListService $folderListService, private readonly ValidatorInterface $validator)
     {
-        $this->folderListService = $folderListService;
-        $this->validator = $validator;
     }
 
     /**
@@ -55,12 +49,11 @@ class OrderFolderListV1Controller extends AbstractController
      * @OA\Response(response=401, description="Unauthorized", @OA\JsonContent(ref="#/components/schemas/JsonResponseUnauthorized")),
      * @OA\Response(response=500, description="Internal Server Error", @OA\JsonContent(ref="#/components/schemas/JsonResponseException")),
      *
-     * @Route("/api/v1/account/order-folder-list", methods={"POST"})
      *
-     * @param Request $request
      * @return Response
      * @throws ValidationException
      */
+    #[Route(path: '/api/v1/account/order-folder-list', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new OrderFolderListV1RequestDto();

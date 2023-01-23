@@ -17,22 +17,14 @@ use Symfony\Component\Lock\Store\FlockStore;
 
 class OperationService implements OperationServiceInterface
 {
-    private OperationIdRepository $operationIdRepository;
+    private readonly LockFactory $lockFactory;
 
-    private OperationIdFactory $operationIdFactory;
-
-    private LockFactory $lockFactory;
-
-    public function __construct(OperationIdRepository $operationIdRepository, OperationIdFactory $operationIdFactory)
+    public function __construct(private readonly OperationIdRepository $operationIdRepository, private readonly OperationIdFactory $operationIdFactory)
     {
-        $this->operationIdRepository = $operationIdRepository;
-        $this->operationIdFactory = $operationIdFactory;
         $this->lockFactory = new LockFactory(new FlockStore());
     }
 
     /**
-     * @param Id $id
-     * @return bool
      * @throws OperationObjectLockedException
      */
     public function checkIfHandled(Id $id): bool
@@ -42,7 +34,7 @@ class OperationService implements OperationServiceInterface
             if ($registeredId->isHandled()) {
                 return true;
             }
-        } catch (NotFoundException $notFoundException) {
+        } catch (NotFoundException) {
         }
 
         $lock = $this->lockFactory->createLock($id->getValue());
@@ -59,7 +51,7 @@ class OperationService implements OperationServiceInterface
         if ($lock->acquire()) {
             try {
                 $this->operationIdRepository->get($id);
-            } catch (NotFoundException $notFoundException) {
+            } catch (NotFoundException) {
                 $operationId = $this->operationIdFactory->create($id);
                 $this->operationIdRepository->save([$operationId]);
             }

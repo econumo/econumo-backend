@@ -11,12 +11,8 @@ use DateTimeInterface;
 
 class CurrencyRateFactory implements CurrencyRateFactoryInterface
 {
-    private CurrencyRateRepositoryInterface $currencyRateRepository;
-
-    public function __construct(
-        CurrencyRateRepositoryInterface $currencyRateRepository
-    ) {
-        $this->currencyRateRepository = $currencyRateRepository;
+    public function __construct(private readonly CurrencyRateRepositoryInterface $currencyRateRepository)
+    {
     }
 
     public function create(

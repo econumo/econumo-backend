@@ -22,10 +22,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use EventTrait;
 
-    private Id $id;
-
-    private string $name;
-
     /**
      * @var string E-mail
      */
@@ -37,17 +33,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private string $password;
 
     /**
-     * @var string The salt
-     */
-    private string $salt;
-
-    /**
-     * @var ArrayCollection|self[]
+     * @var Collection|self[]
      */
     private Collection $connections;
 
     /**
-     * @var ArrayCollection|UserOption[]
+     * @var Collection|UserOption[]
      */
     private Collection $options;
 
@@ -55,11 +46,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     private DateTimeInterface $updatedAt;
 
-    public function __construct(Id $id, string $salt, string $name, Email $email, DateTimeInterface $createdAt)
+    public function __construct(private Id $id, /**
+     * @var string The salt
+     */
+    private string $salt, private string $name, Email $email, DateTimeInterface $createdAt)
     {
-        $this->id = $id;
-        $this->salt = $salt;
-        $this->name = $name;
         $this->identifier = Identifier::createFromEmail($email)->getValue();
         $this->connections = new ArrayCollection();
         $this->options = new ArrayCollection();
@@ -116,9 +107,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @see UserInterface
-     * @return string
      */
-    public function getSalt()
+    public function getSalt(): string
     {
         return $this->salt;
     }
@@ -160,9 +150,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return self[]|ArrayCollection
+     * @return self[]|Collection
      */
-    public function getConnections()
+    public function getConnections(): Collection
     {
         return $this->connections;
     }
@@ -200,9 +190,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return UserOption[]|ArrayCollection
+     * @return UserOption[]|Collection
      */
-    public function getOptions()
+    public function getOptions(): Collection
     {
         return $this->options;
     }

@@ -15,7 +15,6 @@ interface PasswordUserRequestRepositoryInterface
 
     /**
      * @param PasswordUserRequest[] $items
-     * @return void
      */
     public function save(array $items): void;
 }
