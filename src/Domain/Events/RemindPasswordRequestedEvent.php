@@ -6,13 +6,10 @@ namespace App\Domain\Events;
 
 use App\Domain\Entity\ValueObject\Id;
 
-final class RemindPasswordRequestedEvent
+final readonly class RemindPasswordRequestedEvent
 {
-    private Id $id;
-
-    public function __construct(Id $remindPasswordRequest)
+    public function __construct(private Id $id)
     {
-        $this->id = $remindPasswordRequest;
     }
 
     public function getId(): Id

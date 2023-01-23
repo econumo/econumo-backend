@@ -6,7 +6,7 @@ namespace App\Domain\Entity\ValueObject;
 
 use App\Domain\Exception\DomainException;
 
-final class Email
+final class Email implements \Stringable
 {
     private string $value;
 

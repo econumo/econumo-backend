@@ -11,11 +11,8 @@ use DateTimeInterface;
 
 class CurrencyRateService implements CurrencyRateServiceInterface
 {
-    private CurrencyRateRepositoryInterface $currencyRateRepository;
-
-    public function __construct(CurrencyRateRepositoryInterface $currencyRateRepository)
+    public function __construct(private readonly CurrencyRateRepositoryInterface $currencyRateRepository)
     {
-        $this->currencyRateRepository = $currencyRateRepository;
     }
 
     /**

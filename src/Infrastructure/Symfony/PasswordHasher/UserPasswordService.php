@@ -14,14 +14,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserPasswordService implements UserPasswordServiceInterface
 {
-    private UserPasswordHasherInterface $passwordHasher;
-
-    private UserRepositoryInterface $userRepository;
-
-    public function __construct(UserPasswordHasherInterface $passwordHasher, UserRepositoryInterface $userRepository)
+    public function __construct(private readonly UserPasswordHasherInterface $passwordHasher, private readonly UserRepositoryInterface $userRepository)
     {
-        $this->passwordHasher = $passwordHasher;
-        $this->userRepository = $userRepository;
     }
 
     public function changePassword(Id $userId, string $oldPassword, string $newPassword): void

@@ -14,24 +14,8 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 
 class NameService
 {
-    private UpdateNameV1ResultAssembler $updateNameV1ResultAssembler;
-
-    private UserServiceInterface $userService;
-
-    private JWTTokenManagerInterface $authToken;
-
-    private UserRepositoryInterface $userRepository;
-
-    public function __construct(
-        UpdateNameV1ResultAssembler $updateNameV1ResultAssembler,
-        UserServiceInterface $userService,
-        JWTTokenManagerInterface $authToken,
-        UserRepositoryInterface $userRepository
-    ) {
-        $this->updateNameV1ResultAssembler = $updateNameV1ResultAssembler;
-        $this->userService = $userService;
-        $this->authToken = $authToken;
-        $this->userRepository = $userRepository;
+    public function __construct(private readonly UpdateNameV1ResultAssembler $updateNameV1ResultAssembler, private readonly UserServiceInterface $userService, private readonly JWTTokenManagerInterface $authToken, private readonly UserRepositoryInterface $userRepository)
+    {
     }
 
     public function updateName(

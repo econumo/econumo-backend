@@ -12,7 +12,6 @@ interface AccountRepositoryInterface
     public function getNextIdentity(): Id;
 
     /**
-     * @param Id $userId
      * @return Account[]
      */
     public function getAvailableForUserId(Id $userId): array;
@@ -21,7 +20,6 @@ interface AccountRepositoryInterface
 
     /**
      * @param Account[] $accounts
-     * @return void
      */
     public function save(array $accounts): void;
 

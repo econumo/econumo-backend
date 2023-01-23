@@ -19,11 +19,8 @@ use Symfony\Component\Validator\Constraints\Uuid;
 
 class CreateAccountV1Form extends AbstractType
 {
-    private ValueObjectValidationFactoryInterface $valueObjectValidationFactory;
-
-    public function __construct(ValueObjectValidationFactoryInterface $valueObjectValidationFactory)
+    public function __construct(private readonly ValueObjectValidationFactoryInterface $valueObjectValidationFactory)
     {
-        $this->valueObjectValidationFactory = $valueObjectValidationFactory;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

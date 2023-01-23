@@ -15,11 +15,11 @@ class LoadTestingController extends AbstractController
     /**
      * Check controller
      *
-     * @Route("/_/load-testing", methods={"GET"})
      *
      * @param Request $request
      * @return Response
      */
+    #[Route(path: '/_/load-testing', methods: ['GET'])]
     public function __invoke(): Response
     {
         sleep(1);

@@ -12,20 +12,8 @@ use App\Domain\Service\DatetimeServiceInterface;
 
 class PasswordUserRequestFactory implements PasswordUserRequestFactoryInterface
 {
-    private DatetimeServiceInterface $datetimeService;
-
-    private PasswordUserRequestRepositoryInterface $passwordUserRequestRepository;
-
-    private UserRepositoryInterface $userRepository;
-
-    public function __construct(
-        DatetimeServiceInterface $datetimeService,
-        PasswordUserRequestRepositoryInterface $passwordUserRequestRepository,
-        UserRepositoryInterface $userRepository
-    ) {
-        $this->datetimeService = $datetimeService;
-        $this->passwordUserRequestRepository = $passwordUserRequestRepository;
-        $this->userRepository = $userRepository;
+    public function __construct(private readonly DatetimeServiceInterface $datetimeService, private readonly PasswordUserRequestRepositoryInterface $passwordUserRequestRepository, private readonly UserRepositoryInterface $userRepository)
+    {
     }
 
     public function create(Id $userId): PasswordUserRequest

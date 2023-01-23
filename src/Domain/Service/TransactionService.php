@@ -14,24 +14,8 @@ use DateTimeInterface;
 
 class TransactionService implements TransactionServiceInterface
 {
-    private TransactionRepositoryInterface $transactionRepository;
-
-    private TransactionFactoryInterface $transactionFactory;
-
-    private AccountRepositoryInterface $accountRepository;
-
-    private AntiCorruptionServiceInterface $antiCorruptionService;
-
-    public function __construct(
-        TransactionRepositoryInterface $transactionRepository,
-        TransactionFactoryInterface $transactionFactory,
-        AccountRepositoryInterface $accountRepository,
-        AntiCorruptionServiceInterface $antiCorruptionService
-    ) {
-        $this->transactionRepository = $transactionRepository;
-        $this->transactionFactory = $transactionFactory;
-        $this->accountRepository = $accountRepository;
-        $this->antiCorruptionService = $antiCorruptionService;
+    public function __construct(private readonly TransactionRepositoryInterface $transactionRepository, private readonly TransactionFactoryInterface $transactionFactory, private readonly AccountRepositoryInterface $accountRepository, private readonly AntiCorruptionServiceInterface $antiCorruptionService)
+    {
     }
 
     public function createTransaction(TransactionDto $transactionDto): Transaction

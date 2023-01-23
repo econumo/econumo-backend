@@ -11,13 +11,11 @@ interface PayeeRepositoryInterface
     public function getNextIdentity(): Id;
 
     /**
-     * @param Id $userId
      * @return Payee[]
      */
     public function findAvailableForUserId(Id $userId): array;
 
     /**
-     * @param Id $userId
      * @return Payee[]
      */
     public function findByOwnerId(Id $userId): array;
@@ -26,7 +24,6 @@ interface PayeeRepositoryInterface
 
     /**
      * @param Payee[] $payees
-     * @return void
      */
     public function save(array $payees): void;
 

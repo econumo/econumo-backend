@@ -11,15 +11,11 @@ use App\Domain\Exception\NotFoundException;
 interface AccountOptionsRepositoryInterface
 {
     /**
-     * @param Id $userId
      * @return AccountOptions[]
      */
     public function getByUserId(Id $userId): array;
 
     /**
-     * @param Id $accountId
-     * @param Id $userId
-     * @return AccountOptions
      * @throws NotFoundException
      */
     public function get(Id $accountId, Id $userId): AccountOptions;
@@ -28,7 +24,6 @@ interface AccountOptionsRepositoryInterface
 
     /**
      * @param AccountOptions[] $accountOptions
-     * @return void
      */
     public function save(array $accountOptions): void;
 }

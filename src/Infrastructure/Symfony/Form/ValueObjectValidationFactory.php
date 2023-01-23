@@ -13,21 +13,15 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ValueObjectValidationFactory implements ValueObjectValidationFactoryInterface
 {
-    private TranslatorInterface $translator;
-
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(private readonly TranslatorInterface $translator)
     {
-        $this->translator = $translator;
     }
 
-    public function create(string $valueObject): Constraint
+    public function create(string $valueObjectClassName): Constraint
     {
-        return new Callback($this->createValidator($valueObject));
+        return new Callback($this->createValidator($valueObjectClassName));
     }
 
-    /**
-     * @param string|ValueObjectInterface $valueObject
-     */
     private function createValidator(string $valueObject): Closure
     {
         $validator = new ValueObjectValidator($valueObject);

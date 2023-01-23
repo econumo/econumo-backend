@@ -14,8 +14,6 @@ interface CurrencyRepositoryInterface
     public function getNextIdentity(): Id;
 
     /**
-     * @param Id $id
-     * @return Currency
      * @throws NotFoundException
      */
     public function get(Id $id): Currency;
@@ -31,7 +29,6 @@ interface CurrencyRepositoryInterface
 
     /**
      * @param Currency[] $items
-     * @return void
      */
     public function save(array $items): void;
 }

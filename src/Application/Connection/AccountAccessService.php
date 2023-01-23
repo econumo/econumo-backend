@@ -18,24 +18,8 @@ use App\Domain\Service\Connection\ConnectionAccountServiceInterface;
 
 class AccountAccessService
 {
-    private SetAccountAccessV1ResultAssembler $setAccountAccessV1ResultAssembler;
-
-    private ConnectionAccountServiceInterface $connectionAccountService;
-
-    private AccountAccessServiceInterface $accountAccessService;
-
-    private RevokeAccountAccessV1ResultAssembler $revokeAccountAccessV1ResultAssembler;
-
-    public function __construct(
-        SetAccountAccessV1ResultAssembler $setAccountAccessV1ResultAssembler,
-        ConnectionAccountServiceInterface $connectionAccountService,
-        AccountAccessServiceInterface $accountAccessService,
-        RevokeAccountAccessV1ResultAssembler $revokeAccountAccessV1ResultAssembler
-    ) {
-        $this->setAccountAccessV1ResultAssembler = $setAccountAccessV1ResultAssembler;
-        $this->connectionAccountService = $connectionAccountService;
-        $this->accountAccessService = $accountAccessService;
-        $this->revokeAccountAccessV1ResultAssembler = $revokeAccountAccessV1ResultAssembler;
+    public function __construct(private readonly SetAccountAccessV1ResultAssembler $setAccountAccessV1ResultAssembler, private readonly ConnectionAccountServiceInterface $connectionAccountService, private readonly AccountAccessServiceInterface $accountAccessService, private readonly RevokeAccountAccessV1ResultAssembler $revokeAccountAccessV1ResultAssembler)
+    {
     }
 
     public function setAccountAccess(

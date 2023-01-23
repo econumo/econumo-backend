@@ -13,21 +13,8 @@ use App\Domain\Service\DatetimeServiceInterface;
 
 class AccountAccessFactory implements AccountAccessFactoryInterface
 {
-    private DatetimeServiceInterface $datetimeService;
-
-    private AccountRepositoryInterface $accountRepository;
-
-    private UserRepositoryInterface $userRepository;
-
-    public function __construct(
-        DatetimeServiceInterface $datetimeService,
-        AccountRepositoryInterface $accountRepository,
-        UserRepositoryInterface $userRepository
-    )
+    public function __construct(private readonly DatetimeServiceInterface $datetimeService, private readonly AccountRepositoryInterface $accountRepository, private readonly UserRepositoryInterface $userRepository)
     {
-        $this->datetimeService = $datetimeService;
-        $this->accountRepository = $accountRepository;
-        $this->userRepository = $userRepository;
     }
 
     public function create(Id $accountId, Id $userId, AccountUserRole $role): AccountAccess

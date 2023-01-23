@@ -20,14 +20,8 @@ use OpenApi\Annotations as OA;
 
 class GetTagListV1Controller extends AbstractController
 {
-    private TagListService $tagListService;
-
-    private ValidatorInterface $validator;
-
-    public function __construct(TagListService $tagListService, ValidatorInterface $validator)
+    public function __construct(private readonly TagListService $tagListService, private readonly ValidatorInterface $validator)
     {
-        $this->tagListService = $tagListService;
-        $this->validator = $validator;
     }
 
     /**
@@ -54,12 +48,11 @@ class GetTagListV1Controller extends AbstractController
      * @OA\Response(response=401, description="Unauthorized", @OA\JsonContent(ref="#/components/schemas/JsonResponseUnauthorized")),
      * @OA\Response(response=500, description="Internal Server Error", @OA\JsonContent(ref="#/components/schemas/JsonResponseException")),
      *
-     * @Route("/api/v1/tag/get-tag-list", methods={"GET"})
      *
-     * @param Request $request
      * @return Response
      * @throws ValidationException
      */
+    #[Route(path: '/api/v1/tag/get-tag-list', methods: ['GET'])]
     public function __invoke(Request $request): Response
     {
         $dto = new GetTagListV1RequestDto();

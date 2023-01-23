@@ -26,40 +26,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AccountService
 {
-    private CreateAccountV1ResultAssembler $createAccountV1ResultAssembler;
-
-    private DeleteAccountV1ResultAssembler $deleteAccountV1ResultAssembler;
-
-    private AccountServiceInterface $accountService;
-
-    private UpdateAccountV1ResultAssembler $updateAccountV1ResultAssembler;
-
-    private AccountRepositoryInterface $accountRepository;
-
-    private AccountAccessServiceInterface $accountAccessService;
-
-    private TranslatorInterface $translator;
-
-    private ConnectionAccountServiceInterface $connectionAccountService;
-
-    public function __construct(
-        CreateAccountV1ResultAssembler $createAccountV1ResultAssembler,
-        AccountServiceInterface $accountService,
-        DeleteAccountV1ResultAssembler $deleteAccountV1ResultAssembler,
-        UpdateAccountV1ResultAssembler $updateAccountV1ResultAssembler,
-        AccountRepositoryInterface $accountRepository,
-        AccountAccessServiceInterface $accountAccessService,
-        TranslatorInterface $translator,
-        ConnectionAccountServiceInterface $connectionAccountService
-    ) {
-        $this->createAccountV1ResultAssembler = $createAccountV1ResultAssembler;
-        $this->accountService = $accountService;
-        $this->deleteAccountV1ResultAssembler = $deleteAccountV1ResultAssembler;
-        $this->updateAccountV1ResultAssembler = $updateAccountV1ResultAssembler;
-        $this->accountRepository = $accountRepository;
-        $this->accountAccessService = $accountAccessService;
-        $this->translator = $translator;
-        $this->connectionAccountService = $connectionAccountService;
+    public function __construct(private readonly CreateAccountV1ResultAssembler $createAccountV1ResultAssembler, private readonly AccountServiceInterface $accountService, private readonly DeleteAccountV1ResultAssembler $deleteAccountV1ResultAssembler, private readonly UpdateAccountV1ResultAssembler $updateAccountV1ResultAssembler, private readonly AccountRepositoryInterface $accountRepository, private readonly AccountAccessServiceInterface $accountAccessService, private readonly TranslatorInterface $translator, private readonly ConnectionAccountServiceInterface $connectionAccountService)
+    {
     }
 
     public function createAccount(

@@ -12,13 +12,11 @@ interface TagRepositoryInterface
     public function getNextIdentity(): Id;
 
     /**
-     * @param Id $userId
      * @return Tag[]
      */
     public function findAvailableForUserId(Id $userId): array;
 
     /**
-     * @param Id $userId
      * @return Tag[]
      */
     public function findByOwnerId(Id $userId): array;
@@ -27,7 +25,6 @@ interface TagRepositoryInterface
 
     /**
      * @param Tag[] $tags
-     * @return void
      */
     public function save(array $tags): void;
 

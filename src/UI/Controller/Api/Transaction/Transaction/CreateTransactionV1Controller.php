@@ -6,6 +6,7 @@ namespace App\UI\Controller\Api\Transaction\Transaction;
 
 use App\Application\Transaction\TransactionService;
 use App\Application\Transaction\Dto\CreateTransactionV1RequestDto;
+use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\Id;
 use App\UI\Controller\Api\Transaction\Transaction\Validation\CreateTransactionV1Form;
 use App\Application\Exception\ValidationException;
@@ -21,20 +22,8 @@ use OpenApi\Annotations as OA;
 
 class CreateTransactionV1Controller extends AbstractController
 {
-    private TransactionService $transactionService;
-
-    private ValidatorInterface $validator;
-
-    private OperationServiceInterface $operationService;
-
-    public function __construct(
-        TransactionService $transactionService,
-        ValidatorInterface $validator,
-        OperationServiceInterface $operationService
-    ) {
-        $this->transactionService = $transactionService;
-        $this->validator = $validator;
-        $this->operationService = $operationService;
+    public function __construct(private readonly TransactionService $transactionService, private readonly ValidatorInterface $validator, private readonly OperationServiceInterface $operationService)
+    {
     }
 
     /**
@@ -62,17 +51,17 @@ class CreateTransactionV1Controller extends AbstractController
      * @OA\Response(response=401, description="Unauthorized", @OA\JsonContent(ref="#/components/schemas/JsonResponseUnauthorized")),
      * @OA\Response(response=500, description="Internal Server Error", @OA\JsonContent(ref="#/components/schemas/JsonResponseException")),
      *
-     * @Route("/api/v1/transaction/create-transaction", methods={"POST"})
      *
-     * @param Request $request
      * @return Response
      * @throws ValidationException
      */
+    #[Route(path: '/api/v1/transaction/create-transaction', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new CreateTransactionV1RequestDto();
         $this->validator->validate(CreateTransactionV1Form::class, $request->request->all(), $dto);
         $operation = $this->operationService->lock(new Id($dto->id));
+        /** @var User $user */
         $user = $this->getUser();
         $result = $this->transactionService->createTransaction($dto, $user->getId());
         $this->operationService->release($operation);

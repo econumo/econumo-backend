@@ -19,14 +19,8 @@ use OpenApi\Annotations as OA;
 
 class LogoutUserV1Controller extends AbstractController
 {
-    private UserService $userService;
-
-    private ValidatorInterface $validator;
-
-    public function __construct(UserService $userService, ValidatorInterface $validator)
+    public function __construct(private readonly UserService $userService, private readonly ValidatorInterface $validator)
     {
-        $this->userService = $userService;
-        $this->validator = $validator;
     }
 
     /**
@@ -52,12 +46,11 @@ class LogoutUserV1Controller extends AbstractController
      * @OA\Response(response=400, description="Bad Request", @OA\JsonContent(ref="#/components/schemas/JsonResponseError")),
      * @OA\Response(response=500, description="Internal Server Error", @OA\JsonContent(ref="#/components/schemas/JsonResponseException")),
      *
-     * @Route("/api/v1/user/logout-user", methods={"POST"})
      *
-     * @param Request $request
      * @return Response
      * @throws ValidationException
      */
+    #[Route(path: '/api/v1/user/logout-user', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $result = $this->userService->logoutUser($request->headers->get('Authorization'));

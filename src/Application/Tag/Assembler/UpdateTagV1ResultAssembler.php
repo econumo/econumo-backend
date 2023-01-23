@@ -10,11 +10,8 @@ use App\Domain\Entity\ValueObject\Id;
 
 class UpdateTagV1ResultAssembler
 {
-    private TagIdToDtoResultAssembler $tagIdToDtoResultAssembler;
-
-    public function __construct(TagIdToDtoResultAssembler $tagIdToDtoResultAssembler)
+    public function __construct(private readonly TagIdToDtoResultAssembler $tagIdToDtoResultAssembler)
     {
-        $this->tagIdToDtoResultAssembler = $tagIdToDtoResultAssembler;
     }
 
     public function assemble(

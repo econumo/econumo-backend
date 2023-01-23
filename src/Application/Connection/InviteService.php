@@ -21,32 +21,8 @@ use App\Domain\Service\Connection\ConnectionServiceInterface;
 
 class InviteService
 {
-    private GenerateInviteV1ResultAssembler $generateInviteV1ResultAssembler;
-
-    private ConnectionInviteServiceInterface $connectionInviteService;
-
-    private DeleteInviteV1ResultAssembler $deleteInviteV1ResultAssembler;
-
-    private AcceptInviteV1ResultAssembler $acceptInviteV1ResultAssembler;
-
-    private ConnectionServiceInterface $connectionService;
-
-    private ConnectionAccountServiceInterface $connectionAccountService;
-
-    public function __construct(
-        GenerateInviteV1ResultAssembler $generateInviteV1ResultAssembler,
-        ConnectionInviteServiceInterface $connectionInviteService,
-        DeleteInviteV1ResultAssembler $deleteInviteV1ResultAssembler,
-        AcceptInviteV1ResultAssembler $acceptInviteV1ResultAssembler,
-        ConnectionServiceInterface $connectionService,
-        ConnectionAccountServiceInterface $connectionAccountService
-    ) {
-        $this->generateInviteV1ResultAssembler = $generateInviteV1ResultAssembler;
-        $this->connectionInviteService = $connectionInviteService;
-        $this->deleteInviteV1ResultAssembler = $deleteInviteV1ResultAssembler;
-        $this->acceptInviteV1ResultAssembler = $acceptInviteV1ResultAssembler;
-        $this->connectionService = $connectionService;
-        $this->connectionAccountService = $connectionAccountService;
+    public function __construct(private readonly GenerateInviteV1ResultAssembler $generateInviteV1ResultAssembler, private readonly ConnectionInviteServiceInterface $connectionInviteService, private readonly DeleteInviteV1ResultAssembler $deleteInviteV1ResultAssembler, private readonly AcceptInviteV1ResultAssembler $acceptInviteV1ResultAssembler, private readonly ConnectionServiceInterface $connectionService, private readonly ConnectionAccountServiceInterface $connectionAccountService)
+    {
     }
 
     public function generateInvite(

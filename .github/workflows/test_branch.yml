@@ -52,5 +52,5 @@ jobs:
             -   name: Run PSALM analysis
                 if: success()
                 run: |
-                    docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} vendor/bin/psalm --long-progress --output-format=github --threads=3
+                    docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} vendor/bin/psalm --long-progress --output-format=github
 

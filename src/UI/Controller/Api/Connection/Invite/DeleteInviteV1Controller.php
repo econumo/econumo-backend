@@ -20,14 +20,8 @@ use OpenApi\Annotations as OA;
 
 class DeleteInviteV1Controller extends AbstractController
 {
-    private InviteService $inviteService;
-
-    private ValidatorInterface $validator;
-
-    public function __construct(InviteService $inviteService, ValidatorInterface $validator)
+    public function __construct(private readonly InviteService $inviteService, private readonly ValidatorInterface $validator)
     {
-        $this->inviteService = $inviteService;
-        $this->validator = $validator;
     }
 
     /**
@@ -55,12 +49,11 @@ class DeleteInviteV1Controller extends AbstractController
      * @OA\Response(response=401, description="Unauthorized", @OA\JsonContent(ref="#/components/schemas/JsonResponseUnauthorized")),
      * @OA\Response(response=500, description="Internal Server Error", @OA\JsonContent(ref="#/components/schemas/JsonResponseException")),
      *
-     * @Route("/api/v1/connection/delete-invite", methods={"POST"})
      *
-     * @param Request $request
      * @return Response
      * @throws ValidationException
      */
+    #[Route(path: '/api/v1/connection/delete-invite', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new DeleteInviteV1RequestDto();

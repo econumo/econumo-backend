@@ -18,17 +18,8 @@ use DateTimeInterface;
 
 class PayeeService implements PayeeServiceInterface
 {
-    private PayeeFactoryInterface $payeeFactory;
-
-    private PayeeRepositoryInterface $payeeRepository;
-
-    private AccountRepositoryInterface $accountRepository;
-
-    public function __construct(PayeeFactoryInterface $payeeFactory, PayeeRepositoryInterface $payeeRepository, AccountRepositoryInterface $accountRepository)
+    public function __construct(private readonly PayeeFactoryInterface $payeeFactory, private readonly PayeeRepositoryInterface $payeeRepository, private readonly AccountRepositoryInterface $accountRepository)
     {
-        $this->payeeFactory = $payeeFactory;
-        $this->payeeRepository = $payeeRepository;
-        $this->accountRepository = $accountRepository;
     }
 
     public function createPayee(Id $userId, PayeeName $name): Payee

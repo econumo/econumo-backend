@@ -12,16 +12,8 @@ use App\Domain\Service\Currency\CurrencyRateServiceInterface;
 
 class CurrencyRateListService
 {
-    private GetCurrencyRateListV1ResultAssembler $getCurrencyRateListV1ResultAssembler;
-
-    private CurrencyRateServiceInterface $currencyRateService;
-
-    public function __construct(
-        GetCurrencyRateListV1ResultAssembler $getCurrencyRateListV1ResultAssembler,
-        CurrencyRateServiceInterface $currencyRateService
-    ) {
-        $this->getCurrencyRateListV1ResultAssembler = $getCurrencyRateListV1ResultAssembler;
-        $this->currencyRateService = $currencyRateService;
+    public function __construct(private readonly GetCurrencyRateListV1ResultAssembler $getCurrencyRateListV1ResultAssembler, private readonly CurrencyRateServiceInterface $currencyRateService)
+    {
     }
 
     public function getCurrencyRateList(

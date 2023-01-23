@@ -31,44 +31,8 @@ use App\Domain\Service\Translation\TranslationServiceInterface;
 
 class TagService
 {
-    private CreateTagV1ResultAssembler $createTagV1ResultAssembler;
-
-    private TagServiceInterface $tagService;
-
-    private AccountAccessServiceInterface $accountAccessService;
-
-    private UpdateTagV1ResultAssembler $updateTagV1ResultAssembler;
-
-    private TagRepositoryInterface $tagRepository;
-
-    private DeleteTagV1ResultAssembler $deleteTagV1ResultAssembler;
-
-    private ArchiveTagV1ResultAssembler $archiveTagV1ResultAssembler;
-
-    private UnarchiveTagV1ResultAssembler $unarchiveTagV1ResultAssembler;
-
-    private TranslationServiceInterface $translationService;
-
-    public function __construct(
-        CreateTagV1ResultAssembler $createTagV1ResultAssembler,
-        TagServiceInterface $tagService,
-        AccountAccessServiceInterface $accountAccessService,
-        UpdateTagV1ResultAssembler $updateTagV1ResultAssembler,
-        TagRepositoryInterface $tagRepository,
-        DeleteTagV1ResultAssembler $deleteTagV1ResultAssembler,
-        ArchiveTagV1ResultAssembler $archiveTagV1ResultAssembler,
-        UnarchiveTagV1ResultAssembler $unarchiveTagV1ResultAssembler,
-        TranslationServiceInterface $translationService
-    ) {
-        $this->createTagV1ResultAssembler = $createTagV1ResultAssembler;
-        $this->tagService = $tagService;
-        $this->accountAccessService = $accountAccessService;
-        $this->updateTagV1ResultAssembler = $updateTagV1ResultAssembler;
-        $this->tagRepository = $tagRepository;
-        $this->deleteTagV1ResultAssembler = $deleteTagV1ResultAssembler;
-        $this->archiveTagV1ResultAssembler = $archiveTagV1ResultAssembler;
-        $this->unarchiveTagV1ResultAssembler = $unarchiveTagV1ResultAssembler;
-        $this->translationService = $translationService;
+    public function __construct(private readonly CreateTagV1ResultAssembler $createTagV1ResultAssembler, private readonly TagServiceInterface $tagService, private readonly AccountAccessServiceInterface $accountAccessService, private readonly UpdateTagV1ResultAssembler $updateTagV1ResultAssembler, private readonly TagRepositoryInterface $tagRepository, private readonly DeleteTagV1ResultAssembler $deleteTagV1ResultAssembler, private readonly ArchiveTagV1ResultAssembler $archiveTagV1ResultAssembler, private readonly UnarchiveTagV1ResultAssembler $unarchiveTagV1ResultAssembler, private readonly TranslationServiceInterface $translationService)
+    {
     }
 
     public function createTag(
@@ -83,7 +47,7 @@ class TagService
             } else {
                 $tag = $this->tagService->createTag($userId, new TagName($dto->name));
             }
-        } catch (TagAlreadyExistsException $tagAlreadyExistsException) {
+        } catch (TagAlreadyExistsException) {
             throw new ValidationException($this->translationService->trans('tag.tag.already_exists', ['name' => $dto->name]));
         }
 
@@ -102,7 +66,7 @@ class TagService
 
         try {
             $this->tagService->updateTag($tagId, new TagName($dto->name));
-        } catch (TagAlreadyExistsException $tagAlreadyExistsException) {
+        } catch (TagAlreadyExistsException) {
             throw new ValidationException($this->translationService->trans('tag.tag.already_exists', ['name' => $dto->name]));
         }
 

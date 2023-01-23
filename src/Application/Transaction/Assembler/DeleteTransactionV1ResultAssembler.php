@@ -13,20 +13,8 @@ use App\Domain\Repository\AccountRepositoryInterface;
 
 class DeleteTransactionV1ResultAssembler
 {
-    private AccountRepositoryInterface $accountRepository;
-
-    private TransactionToDtoResultAssembler $transactionToDtoV1ResultAssembler;
-
-    private AccountToDtoV1ResultAssembler $accountToDtoV1ResultAssembler;
-
-    public function __construct(
-        AccountRepositoryInterface $accountRepository,
-        TransactionToDtoResultAssembler $transactionToDtoV1ResultAssembler,
-        AccountToDtoV1ResultAssembler $accountToDtoV1ResultAssembler
-    ) {
-        $this->accountRepository = $accountRepository;
-        $this->transactionToDtoV1ResultAssembler = $transactionToDtoV1ResultAssembler;
-        $this->accountToDtoV1ResultAssembler = $accountToDtoV1ResultAssembler;
+    public function __construct(private readonly AccountRepositoryInterface $accountRepository, private readonly TransactionToDtoResultAssembler $transactionToDtoV1ResultAssembler, private readonly AccountToDtoV1ResultAssembler $accountToDtoV1ResultAssembler)
+    {
     }
 
     public function assemble(

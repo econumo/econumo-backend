@@ -20,14 +20,8 @@ use OpenApi\Annotations as OA;
 
 class _CG_ACTION__CG_SUBJECT__CG_VERSION_Controller extends AbstractController
 {
-    private _CG_SUBJECT_Service $_CG_SUBJECT_LCFIRST_Service;
-
-    private ValidatorInterface $validator;
-
-    public function __construct(_CG_SUBJECT_Service $_CG_SUBJECT_LCFIRST_Service, ValidatorInterface $validator)
+    public function __construct(private readonly _CG_SUBJECT_Service $_CG_SUBJECT_LCFIRST_Service, private readonly ValidatorInterface $validator)
     {
-        $this->_CG_SUBJECT_LCFIRST_Service = $_CG_SUBJECT_LCFIRST_Service;
-        $this->validator = $validator;
     }
 
     /**
@@ -61,12 +55,11 @@ class _CG_ACTION__CG_SUBJECT__CG_VERSION_Controller extends AbstractController
      * @OA\Response(response=401, description="Unauthorized", @OA\JsonContent(ref="#/components/schemas/JsonResponseUnauthorized")),
      * @OA\Response(response=500, description="Internal Server Error", @OA\JsonContent(ref="#/components/schemas/JsonResponseException")),
      *
-     * @Route("_CG_URL_", methods={"_CG_METHOD_"})
      *
-     * @param Request $request
      * @return Response
      * @throws ValidationException
      */
+    #[Route(path: '_CG_URL_', methods: ['_CG_METHOD_'])]
     public function __invoke(Request $request): Response
     {
         $dto = new _CG_ACTION__CG_SUBJECT__CG_VERSION_RequestDto();

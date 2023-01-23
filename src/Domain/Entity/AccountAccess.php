@@ -14,25 +14,16 @@ class AccountAccess
 {
     private Id $id;
 
-    private Account $account;
-
-    private User $user;
-
-    private AccountUserRole $role;
-
     private DateTimeImmutable $createdAt;
 
     private DateTimeInterface $updatedAt;
 
     public function __construct(
-        Account $account,
-        User $user,
-        AccountUserRole $role,
+        private Account $account,
+        private User $user,
+        private AccountUserRole $role,
         \DateTimeInterface $createdAt
     ) {
-        $this->account = $account;
-        $this->user = $user;
-        $this->role = $role;
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
     }

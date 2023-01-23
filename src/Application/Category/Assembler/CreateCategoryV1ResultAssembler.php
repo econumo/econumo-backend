@@ -10,11 +10,8 @@ use App\Domain\Entity\Category;
 
 class CreateCategoryV1ResultAssembler
 {
-    private CategoryToDtoResultAssembler $categoryToDtoV1ResultAssembler;
-
-    public function __construct(CategoryToDtoResultAssembler $categoryToDtoV1ResultAssembler)
+    public function __construct(private readonly CategoryToDtoResultAssembler $categoryToDtoV1ResultAssembler)
     {
-        $this->categoryToDtoV1ResultAssembler = $categoryToDtoV1ResultAssembler;
     }
 
     public function assemble(

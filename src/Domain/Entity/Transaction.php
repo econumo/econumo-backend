@@ -14,27 +14,9 @@ use DateTimeInterface;
 
 class Transaction
 {
-    private Id $id;
-
-    private User $user;
-
-    private TransactionType $type;
-
-    private Account $account;
-
-    private ?Account $accountRecipient;
-
     private string $amount;
 
     private ?string $amountRecipient;
-
-    private ?Category $category;
-
-    private string $description;
-
-    private ?Payee $payee;
-
-    private ?Tag $tag;
 
     private DateTimeImmutable $createdAt;
 
@@ -43,31 +25,22 @@ class Transaction
     private DateTimeInterface $spentAt;
 
     public function __construct(
-        Id $id,
-        User $user,
-        TransactionType $type,
-        Account $account,
-        ?Category $category,
+        private Id $id,
+        private User $user,
+        private TransactionType $type,
+        private Account $account,
+        private ?Category $category,
         float $amount,
         DateTimeInterface $transactionDate,
         DateTimeInterface $createdAt,
-        ?Account $accountRecipient,
+        private ?Account $accountRecipient,
         ?float $amountRecipient,
-        string $description,
-        ?Payee $payee,
-        ?Tag $tag
+        private string $description,
+        private ?Payee $payee,
+        private ?Tag $tag
     ) {
-        $this->id = $id;
-        $this->user = $user;
-        $this->type = $type;
-        $this->account = $account;
-        $this->category = $category;
         $this->amount = (string)$amount;
-        $this->accountRecipient = $accountRecipient;
         $this->amountRecipient = $amountRecipient === null ? null : (string)$amountRecipient;
-        $this->description = $description;
-        $this->payee = $payee;
-        $this->tag = $tag;
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->spentAt = DateTime::createFromFormat('Y-m-d H:i:s', $transactionDate->format('Y-m-d H:i:s'));

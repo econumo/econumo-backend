@@ -18,28 +18,8 @@ use App\Domain\Service\Translation\TranslationServiceInterface;
 
 class PayeeListService
 {
-    private GetPayeeListV1ResultAssembler $getPayeeListV1ResultAssembler;
-
-    private PayeeRepositoryInterface $payeeRepository;
-
-    private OrderPayeeListV1ResultAssembler $orderPayeeListV1ResultAssembler;
-
-    private PayeeServiceInterface $payeeService;
-
-    private TranslationServiceInterface $translationService;
-
-    public function __construct(
-        GetPayeeListV1ResultAssembler $getPayeeListV1ResultAssembler,
-        PayeeRepositoryInterface $payeeRepository,
-        OrderPayeeListV1ResultAssembler $orderPayeeListV1ResultAssembler,
-        PayeeServiceInterface $payeeService,
-        TranslationServiceInterface $translationService
-    ) {
-        $this->getPayeeListV1ResultAssembler = $getPayeeListV1ResultAssembler;
-        $this->payeeRepository = $payeeRepository;
-        $this->orderPayeeListV1ResultAssembler = $orderPayeeListV1ResultAssembler;
-        $this->payeeService = $payeeService;
-        $this->translationService = $translationService;
+    public function __construct(private readonly GetPayeeListV1ResultAssembler $getPayeeListV1ResultAssembler, private readonly PayeeRepositoryInterface $payeeRepository, private readonly OrderPayeeListV1ResultAssembler $orderPayeeListV1ResultAssembler, private readonly PayeeServiceInterface $payeeService, private readonly TranslationServiceInterface $translationService)
+    {
     }
 
     public function getPayeeList(

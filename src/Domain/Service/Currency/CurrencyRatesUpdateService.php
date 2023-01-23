@@ -15,20 +15,8 @@ use App\Domain\Service\Dto\CurrencyRateDto;
 
 class CurrencyRatesUpdateService implements CurrencyRatesUpdateServiceInterface
 {
-    private CurrencyRateRepositoryInterface $currencyRateRepository;
-
-    private CurrencyRepositoryInterface $currencyRepository;
-
-    private CurrencyRateFactoryInterface $currencyRateFactory;
-
-    public function __construct(
-        CurrencyRateRepositoryInterface $currencyRateRepository,
-        CurrencyRepositoryInterface $currencyRepository,
-        CurrencyRateFactoryInterface $currencyRateFactory
-    ) {
-        $this->currencyRateRepository = $currencyRateRepository;
-        $this->currencyRepository = $currencyRepository;
-        $this->currencyRateFactory = $currencyRateFactory;
+    public function __construct(private readonly CurrencyRateRepositoryInterface $currencyRateRepository, private readonly CurrencyRepositoryInterface $currencyRepository, private readonly CurrencyRateFactoryInterface $currencyRateFactory)
+    {
     }
 
     /**
@@ -51,7 +39,7 @@ class CurrencyRatesUpdateService implements CurrencyRatesUpdateServiceInterface
                 if ($this->currencyRateRepository->get($item->getCurrency()->getId(), $item->getPublishedAt())) {
                     continue;
                 }
-            } catch (NotFoundException $notFoundException) {
+            } catch (NotFoundException) {
             }
 
             $forUpdate[] = $item;
@@ -66,8 +54,6 @@ class CurrencyRatesUpdateService implements CurrencyRatesUpdateServiceInterface
 
     /**
      * @param Currency[] $currencies
-     * @param CurrencyCode $code
-     * @return Currency
      */
     private function getCurrency(array $currencies, CurrencyCode $code): Currency
     {

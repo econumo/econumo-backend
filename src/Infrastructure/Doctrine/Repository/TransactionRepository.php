@@ -95,9 +95,7 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
             ->createQuery('SELECT a.id FROM App\Domain\Entity\Account a WHERE a.user = :user')
             ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId));
         $userAccountIds = array_column($accountsQuery->getScalarResult(), 'id');
-        $accounts = array_map(function ($id): ?Account {
-            return $this->getEntityManager()->getReference(Account::class, new Id($id));
-        }, array_unique(array_merge($sharedIds, $userAccountIds)));
+        $accounts = array_map(fn(string $id): ?Account => $this->getEntityManager()->getReference(Account::class, new Id($id)), array_unique([...$sharedIds, ...$userAccountIds]));
 
         $query = $this->createQueryBuilder('t')
             ->where('t.account IN(:accounts) OR t.accountRecipient IN(:accounts)')
@@ -134,9 +132,7 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
             ->createQuery('SELECT a.id FROM App\Domain\Entity\Account a WHERE a.user = :user')
             ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId));
         $userAccountIds = array_column($accountsQuery->getScalarResult(), 'id');
-        $accounts = array_map(function ($id): ?Account {
-            return $this->getEntityManager()->getReference(Account::class, new Id($id));
-        }, array_unique(array_merge($sharedIds, $userAccountIds)));
+        $accounts = array_map(fn(string $id): ?Account => $this->getEntityManager()->getReference(Account::class, new Id($id)), array_unique([...$sharedIds, ...$userAccountIds]));
 
         $query = $this->createQueryBuilder('t')
             ->where('t.account IN(:accounts) OR t.accountRecipient IN(:accounts)')

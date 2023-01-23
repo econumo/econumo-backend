@@ -16,24 +16,8 @@ use App\Domain\Service\DatetimeServiceInterface;
 
 class AccountFactory implements AccountFactoryInterface
 {
-    private AccountRepositoryInterface $accountRepository;
-
-    private DatetimeServiceInterface $datetimeService;
-
-    private CurrencyRepositoryInterface $currencyRepository;
-
-    private UserRepositoryInterface $userRepository;
-
-    public function __construct(
-        AccountRepositoryInterface $accountRepository,
-        DatetimeServiceInterface $datetimeService,
-        CurrencyRepositoryInterface $currencyRepository,
-        UserRepositoryInterface $userRepository
-    ) {
-        $this->accountRepository = $accountRepository;
-        $this->datetimeService = $datetimeService;
-        $this->currencyRepository = $currencyRepository;
-        $this->userRepository = $userRepository;
+    public function __construct(private readonly AccountRepositoryInterface $accountRepository, private readonly DatetimeServiceInterface $datetimeService, private readonly CurrencyRepositoryInterface $currencyRepository, private readonly UserRepositoryInterface $userRepository)
+    {
     }
 
     public function create(

@@ -12,13 +12,11 @@ interface CategoryRepositoryInterface
     public function getNextIdentity(): Id;
 
     /**
-     * @param Id $userId
      * @return Category[]
      */
     public function findAvailableForUserId(Id $userId): array;
 
     /**
-     * @param Id $userId
      * @return Category[]
      */
     public function findByOwnerId(Id $userId): array;
@@ -27,7 +25,6 @@ interface CategoryRepositoryInterface
 
     /**
      * @param Category[] $categories
-     * @return void
      */
     public function save(array $categories): void;
 

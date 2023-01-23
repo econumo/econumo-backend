@@ -13,14 +13,8 @@ class CurrencyExchangeUsageService
      */
     private const CURRENCIES_URL = 'https://openexchangerates.org/api/usage.json';
 
-    private HttpClientInterface $client;
-
-    private string $token;
-
-    public function __construct(HttpClientInterface $client, string $token)
+    public function __construct(private readonly HttpClientInterface $client, private readonly string $token)
     {
-        $this->client = $client;
-        $this->token = $token;
     }
 
     public function getUsage(): array

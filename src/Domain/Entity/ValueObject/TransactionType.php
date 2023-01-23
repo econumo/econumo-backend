@@ -7,7 +7,7 @@ namespace App\Domain\Entity\ValueObject;
 use DomainException;
 use JsonSerializable;
 
-final class TransactionType implements JsonSerializable
+final class TransactionType implements JsonSerializable, \Stringable
 {
     /**
      * @var int
@@ -102,7 +102,7 @@ final class TransactionType implements JsonSerializable
     /**
      * @inheritdoc
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return $this->value;
     }
@@ -117,7 +117,7 @@ final class TransactionType implements JsonSerializable
         return $this->value;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return (string)$this->value;
     }

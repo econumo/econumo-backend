@@ -15,20 +15,8 @@ use App\Domain\Service\DatetimeServiceInterface;
 
 class PayeeFactory implements PayeeFactoryInterface
 {
-    private DatetimeServiceInterface $datetimeService;
-
-    private PayeeRepositoryInterface $payeeRepository;
-
-    private UserRepositoryInterface $userRepository;
-
-    public function __construct(
-        DatetimeServiceInterface $datetimeService,
-        PayeeRepositoryInterface $payeeRepository,
-        UserRepositoryInterface $userRepository
-    ) {
-        $this->datetimeService = $datetimeService;
-        $this->payeeRepository = $payeeRepository;
-        $this->userRepository = $userRepository;
+    public function __construct(private readonly DatetimeServiceInterface $datetimeService, private readonly PayeeRepositoryInterface $payeeRepository, private readonly UserRepositoryInterface $userRepository)
+    {
     }
 
     public function create(Id $userId, PayeeName $name): Payee

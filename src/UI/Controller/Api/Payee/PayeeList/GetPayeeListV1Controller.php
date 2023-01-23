@@ -20,14 +20,8 @@ use OpenApi\Annotations as OA;
 
 class GetPayeeListV1Controller extends AbstractController
 {
-    private PayeeListService $payeeListService;
-
-    private ValidatorInterface $validator;
-
-    public function __construct(PayeeListService $payeeListService, ValidatorInterface $validator)
+    public function __construct(private readonly PayeeListService $payeeListService, private readonly ValidatorInterface $validator)
     {
-        $this->payeeListService = $payeeListService;
-        $this->validator = $validator;
     }
 
     /**
@@ -54,12 +48,11 @@ class GetPayeeListV1Controller extends AbstractController
      * @OA\Response(response=401, description="Unauthorized", @OA\JsonContent(ref="#/components/schemas/JsonResponseUnauthorized")),
      * @OA\Response(response=500, description="Internal Server Error", @OA\JsonContent(ref="#/components/schemas/JsonResponseException")),
      *
-     * @Route("/api/v1/payee/get-payee-list", methods={"GET"})
      *
-     * @param Request $request
      * @return Response
      * @throws ValidationException
      */
+    #[Route(path: '/api/v1/payee/get-payee-list', methods: ['GET'])]
     public function __invoke(Request $request): Response
     {
         $dto = new GetPayeeListV1RequestDto();

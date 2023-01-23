@@ -18,36 +18,8 @@ use App\Domain\Service\Dto\TransactionDto;
 
 class TransactionFactory implements TransactionFactoryInterface
 {
-    private DatetimeServiceInterface $datetimeService;
-
-    private TransactionRepositoryInterface $transactionRepository;
-
-    private AccountRepositoryInterface $accountRepository;
-
-    private UserRepositoryInterface $userRepository;
-
-    private CategoryRepositoryInterface $categoryRepository;
-
-    private PayeeRepositoryInterface $payeeRepository;
-
-    private TagRepositoryInterface $tagRepository;
-
-    public function __construct(
-        DatetimeServiceInterface $datetimeService,
-        TransactionRepositoryInterface $transactionRepository,
-        AccountRepositoryInterface $accountRepository,
-        UserRepositoryInterface $userRepository,
-        CategoryRepositoryInterface $categoryRepository,
-        PayeeRepositoryInterface $payeeRepository,
-        TagRepositoryInterface $tagRepository
-    ) {
-        $this->datetimeService = $datetimeService;
-        $this->transactionRepository = $transactionRepository;
-        $this->accountRepository = $accountRepository;
-        $this->userRepository = $userRepository;
-        $this->categoryRepository = $categoryRepository;
-        $this->payeeRepository = $payeeRepository;
-        $this->tagRepository = $tagRepository;
+    public function __construct(private readonly DatetimeServiceInterface $datetimeService, private readonly TransactionRepositoryInterface $transactionRepository, private readonly AccountRepositoryInterface $accountRepository, private readonly UserRepositoryInterface $userRepository, private readonly CategoryRepositoryInterface $categoryRepository, private readonly PayeeRepositoryInterface $payeeRepository, private readonly TagRepositoryInterface $tagRepository)
+    {
     }
 
     public function create(TransactionDto $dto): Transaction

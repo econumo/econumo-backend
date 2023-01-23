@@ -12,33 +12,18 @@ use DateTimeInterface;
 
 class AccountAccessInvite
 {
-    private Account $account;
-
-    private User $recipient;
-
-    private User $owner;
-
-    private AccountUserRole $role;
-
-    private string $code;
-
     private DateTimeImmutable $createdAt;
 
     private DateTimeInterface $updatedAt;
 
     public function __construct(
-        Account $account,
-        User $recipient,
-        User $owner,
-        AccountUserRole $role,
-        string $code,
+        private Account $account,
+        private User $recipient,
+        private User $owner,
+        private AccountUserRole $role,
+        private string $code,
         \DateTimeInterface $createdAt
     ) {
-        $this->account = $account;
-        $this->recipient = $recipient;
-        $this->owner = $owner;
-        $this->role = $role;
-        $this->code = $code;
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
     }

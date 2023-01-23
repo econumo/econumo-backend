@@ -18,20 +18,8 @@ use DateTimeInterface;
 
 class TagService implements TagServiceInterface
 {
-    private TagFactoryInterface $tagFactory;
-
-    private TagRepositoryInterface $tagRepository;
-
-    private AccountRepositoryInterface $accountRepository;
-
-    public function __construct(
-        TagFactoryInterface $tagFactory,
-        TagRepositoryInterface $tagRepository,
-        AccountRepositoryInterface $accountRepository
-    ) {
-        $this->tagFactory = $tagFactory;
-        $this->tagRepository = $tagRepository;
-        $this->accountRepository = $accountRepository;
+    public function __construct(private readonly TagFactoryInterface $tagFactory, private readonly TagRepositoryInterface $tagRepository, private readonly AccountRepositoryInterface $accountRepository)
+    {
     }
 
     public function createTag(Id $userId, TagName $name): Tag

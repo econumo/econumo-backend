@@ -83,13 +83,9 @@ HELP);
 
         $module = implode(
             '',
-            array_map(static function ($item) : string {
-                return ucfirst(strtolower($item));
-            }, explode('-', $matches['module'])),
+            array_map(static fn($item): string => ucfirst(strtolower((string) $item)), explode('-', $matches['module'])),
         );
-        $subject = implode('', array_map(static function (string $item) : string {
-            return ucfirst(strtolower($item));
-        }, explode('-', $matches['subject'])));
+        $subject = implode('', array_map(static fn(string $item): string => ucfirst(strtolower($item)), explode('-', $matches['subject'])));
         $action = ucfirst(strtolower($matches['action']));
         $version = strtoupper($matches['version']);
 

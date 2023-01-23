@@ -13,13 +13,7 @@ use DateTimeInterface;
 
 class Tag
 {
-    private Id $id;
-
-    private TagName $name;
-
     private int $position = 0;
-
-    private User $user;
 
     private bool $isArchived = false;
 
@@ -28,14 +22,11 @@ class Tag
     private DateTimeInterface $updatedAt;
 
     public function __construct(
-        Id $id,
-        User $user,
-        TagName $name,
+        private Id $id,
+        private User $user,
+        private TagName $name,
         DateTimeInterface $createdAt
     ) {
-        $this->id = $id;
-        $this->user = $user;
-        $this->name = $name;
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
     }

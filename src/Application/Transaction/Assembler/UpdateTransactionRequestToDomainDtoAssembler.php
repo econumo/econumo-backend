@@ -16,24 +16,8 @@ use DateTime;
 
 class UpdateTransactionRequestToDomainDtoAssembler
 {
-    private AccountRepositoryInterface $accountRepository;
-
-    private CategoryRepositoryInterface $categoryRepository;
-
-    private TagRepositoryInterface $tagRepository;
-
-    private PayeeRepositoryInterface $payeeRepository;
-
-    public function __construct(
-        AccountRepositoryInterface $accountRepository,
-        CategoryRepositoryInterface $categoryRepository,
-        TagRepositoryInterface $tagRepository,
-        PayeeRepositoryInterface $payeeRepository
-    ) {
-        $this->accountRepository = $accountRepository;
-        $this->categoryRepository = $categoryRepository;
-        $this->tagRepository = $tagRepository;
-        $this->payeeRepository = $payeeRepository;
+    public function __construct(private readonly AccountRepositoryInterface $accountRepository, private readonly CategoryRepositoryInterface $categoryRepository, private readonly TagRepositoryInterface $tagRepository, private readonly PayeeRepositoryInterface $payeeRepository)
+    {
     }
 
     public function assemble(

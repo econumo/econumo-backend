@@ -11,12 +11,8 @@ use App\Domain\Entity\ValueObject\Id;
 
 class TransactionToDtoResultAssembler
 {
-    private UserIdToDtoResultAssembler $userIdToDtoResultAssembler;
-
-    public function __construct(
-        UserIdToDtoResultAssembler $userIdToDtoResultAssembler
-    ) {
-        $this->userIdToDtoResultAssembler = $userIdToDtoResultAssembler;
+    public function __construct(private readonly UserIdToDtoResultAssembler $userIdToDtoResultAssembler)
+    {
     }
 
     public function assemble(

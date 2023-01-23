@@ -12,16 +12,12 @@ use Symfony\Component\Validator\ConstraintValidator;
 
 class OperationIdValidator extends ConstraintValidator
 {
-    private OperationService $operationIdService;
-
-    public function __construct(OperationService $operationIdService)
+    public function __construct(private readonly OperationService $operationIdService)
     {
-        $this->operationIdService = $operationIdService;
     }
 
     /**
      * @param mixed $value
-     * @param Constraint|OperationId $constraint
      */
     public function validate($value, Constraint $constraint): void
     {
@@ -37,7 +33,7 @@ class OperationIdValidator extends ConstraintValidator
                     ->setParameter('{{ string }}', $value)
                     ->addViolation();
             }
-        } catch (OperationObjectLockedException $operationObjectLockedException) {
+        } catch (OperationObjectLockedException) {
             $this->context->buildViolation($constraint->lockedMessage)
                 ->setParameter('{{ string }}', $value)
                 ->addViolation();

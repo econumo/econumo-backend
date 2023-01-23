@@ -20,28 +20,8 @@ use DateTimeInterface;
 
 class CategoryService implements CategoryServiceInterface
 {
-    private CategoryFactoryInterface $categoryFactory;
-
-    private CategoryRepositoryInterface $categoryRepository;
-
-    private AccountRepositoryInterface $accountRepository;
-
-    private AntiCorruptionServiceInterface $antiCorruptionService;
-
-    private TransactionRepositoryInterface $transactionRepository;
-
-    public function __construct(
-        CategoryFactoryInterface $categoryFactory,
-        CategoryRepositoryInterface $categoryRepository,
-        AccountRepositoryInterface $accountRepository,
-        AntiCorruptionServiceInterface $antiCorruptionService,
-        TransactionRepositoryInterface $transactionRepository
-    ) {
-        $this->categoryFactory = $categoryFactory;
-        $this->categoryRepository = $categoryRepository;
-        $this->accountRepository = $accountRepository;
-        $this->antiCorruptionService = $antiCorruptionService;
-        $this->transactionRepository = $transactionRepository;
+    public function __construct(private readonly CategoryFactoryInterface $categoryFactory, private readonly CategoryRepositoryInterface $categoryRepository, private readonly AccountRepositoryInterface $accountRepository, private readonly AntiCorruptionServiceInterface $antiCorruptionService, private readonly TransactionRepositoryInterface $transactionRepository)
+    {
     }
 
     public function createCategory(Id $userId, CategoryName $name, CategoryType $type, Icon $icon): Category

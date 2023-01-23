@@ -18,11 +18,8 @@ class CurrencyLoaderService implements CurrencyLoaderServiceInterface
      */
     private const CURRENCIES_URL = 'https://openexchangerates.org/api/currencies.json';
 
-    private HttpClientInterface $client;
-
-    public function __construct(HttpClientInterface $client)
+    public function __construct(private readonly HttpClientInterface $client)
     {
-        $this->client = $client;
     }
 
     public function loadCurrencies(): array
@@ -34,7 +31,7 @@ class CurrencyLoaderService implements CurrencyLoaderServiceInterface
             $item->code = new CurrencyCode($code);
             try {
                 $item->symbol = Currencies::getSymbol($code);
-            } catch (MissingResourceException $missingResourceException) {
+            } catch (MissingResourceException) {
                 $item->symbol = $code;
             }
 

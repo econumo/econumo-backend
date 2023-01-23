@@ -11,18 +11,12 @@ use App\Domain\Entity\ValueObject\Id;
 
 class GetAccountListV1ResultAssembler
 {
-    private AccountToDtoV1ResultAssembler $accountToDtoV1ResultAssembler;
-
-    public function __construct(AccountToDtoV1ResultAssembler $accountToDtoV1ResultAssembler)
+    public function __construct(private readonly AccountToDtoV1ResultAssembler $accountToDtoV1ResultAssembler)
     {
-        $this->accountToDtoV1ResultAssembler = $accountToDtoV1ResultAssembler;
     }
 
     /**
-     * @param GetAccountListV1RequestDto $dto
-     * @param Id $userId
      * @param Account[] $accounts
-     * @return GetAccountListV1ResultDto
      */
     public function assemble(
         GetAccountListV1RequestDto $dto,

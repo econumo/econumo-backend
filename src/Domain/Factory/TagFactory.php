@@ -15,20 +15,8 @@ use App\Domain\Service\DatetimeServiceInterface;
 
 class TagFactory implements TagFactoryInterface
 {
-    private DatetimeServiceInterface $datetimeService;
-
-    private TagRepositoryInterface $tagRepository;
-
-    private UserRepositoryInterface $userRepository;
-
-    public function __construct(
-        DatetimeServiceInterface $datetimeService,
-        TagRepositoryInterface $tagRepository,
-        UserRepositoryInterface $userRepository
-    ) {
-        $this->datetimeService = $datetimeService;
-        $this->tagRepository = $tagRepository;
-        $this->userRepository = $userRepository;
+    public function __construct(private readonly DatetimeServiceInterface $datetimeService, private readonly TagRepositoryInterface $tagRepository, private readonly UserRepositoryInterface $userRepository)
+    {
     }
 
     public function create(Id $userId, TagName $name): Tag

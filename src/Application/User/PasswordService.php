@@ -21,28 +21,8 @@ use App\Domain\Service\User\UserPasswordServiceInterface;
 
 class PasswordService
 {
-    private RemindPasswordV1ResultAssembler $remindPasswordV1ResultAssembler;
-
-    private PasswordUserRequestServiceInterface $passwordUserRequestService;
-
-    private UpdatePasswordV1ResultAssembler $updatePasswordV1ResultAssembler;
-
-    private UserPasswordServiceInterface $userPasswordService;
-
-    private TranslationServiceInterface $translationService;
-
-    public function __construct(
-        RemindPasswordV1ResultAssembler $remindPasswordV1ResultAssembler,
-        PasswordUserRequestServiceInterface $passwordUserRequestService,
-        UpdatePasswordV1ResultAssembler $updatePasswordV1ResultAssembler,
-        UserPasswordServiceInterface $userPasswordService,
-        TranslationServiceInterface $translationService
-    ) {
-        $this->remindPasswordV1ResultAssembler = $remindPasswordV1ResultAssembler;
-        $this->passwordUserRequestService = $passwordUserRequestService;
-        $this->updatePasswordV1ResultAssembler = $updatePasswordV1ResultAssembler;
-        $this->userPasswordService = $userPasswordService;
-        $this->translationService = $translationService;
+    public function __construct(private readonly RemindPasswordV1ResultAssembler $remindPasswordV1ResultAssembler, private readonly PasswordUserRequestServiceInterface $passwordUserRequestService, private readonly UpdatePasswordV1ResultAssembler $updatePasswordV1ResultAssembler, private readonly UserPasswordServiceInterface $userPasswordService, private readonly TranslationServiceInterface $translationService)
+    {
     }
 
     public function remindPassword(
@@ -50,7 +30,7 @@ class PasswordService
     ): RemindPasswordV1ResultDto {
         try {
             $this->passwordUserRequestService->remindPassword(new Email($dto->username));
-        } catch (NotFoundException $notFoundException) {
+        } catch (NotFoundException) {
             // hide error from user
         }
 
@@ -63,7 +43,7 @@ class PasswordService
     ): UpdatePasswordV1ResultDto {
         try {
             $this->userPasswordService->changePassword($userId, $dto->oldPassword, $dto->newPassword);
-        } catch (UserPasswordNotValidException $userPasswordNotValidException) {
+        } catch (UserPasswordNotValidException) {
             throw new ValidationException($this->translationService->trans('user.password.not_correct'));
         }
 

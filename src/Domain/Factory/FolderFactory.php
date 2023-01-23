@@ -13,20 +13,8 @@ use App\Domain\Service\DatetimeServiceInterface;
 
 class FolderFactory implements FolderFactoryInterface
 {
-    private DatetimeServiceInterface $datetimeService;
-
-    private FolderRepositoryInterface $folderRepository;
-
-    private UserRepositoryInterface $userRepository;
-
-    public function __construct(
-        DatetimeServiceInterface $datetimeService,
-        FolderRepositoryInterface $folderRepository,
-        UserRepositoryInterface $userRepository
-    ) {
-        $this->datetimeService = $datetimeService;
-        $this->folderRepository = $folderRepository;
-        $this->userRepository = $userRepository;
+    public function __construct(private readonly DatetimeServiceInterface $datetimeService, private readonly FolderRepositoryInterface $folderRepository, private readonly UserRepositoryInterface $userRepository)
+    {
     }
 
     public function create(Id $userId, FolderName $name): Folder

@@ -15,28 +15,13 @@ use App\Domain\Service\Connection\ConnectionAccountServiceInterface;
 
 class AcceptInviteV1ResultAssembler
 {
-    private UserToDtoResultAssembler $userToDtoResultAssembler;
-
-    private ConnectionAccountServiceInterface $connectionAccountService;
-
-    private AccountAccessToDtoResultAssembler $accountAccessToDtoResultAssembler;
-
-    public function __construct(
-        UserToDtoResultAssembler $userToDtoResultAssembler,
-        ConnectionAccountServiceInterface $connectionAccountService,
-        AccountAccessToDtoResultAssembler $accountAccessToDtoResultAssembler
-    ) {
-        $this->userToDtoResultAssembler = $userToDtoResultAssembler;
-        $this->connectionAccountService = $connectionAccountService;
-        $this->accountAccessToDtoResultAssembler = $accountAccessToDtoResultAssembler;
+    public function __construct(private readonly UserToDtoResultAssembler $userToDtoResultAssembler, private readonly ConnectionAccountServiceInterface $connectionAccountService, private readonly AccountAccessToDtoResultAssembler $accountAccessToDtoResultAssembler)
+    {
     }
 
     /**
-     * @param AcceptInviteV1RequestDto $dto
-     * @param Id $userId
      * @param AccountAccess[] $sharedWithUserAccounts
      * @param User[] $connectedUsers
-     * @return AcceptInviteV1ResultDto
      */
     public function assemble(
         AcceptInviteV1RequestDto $dto,

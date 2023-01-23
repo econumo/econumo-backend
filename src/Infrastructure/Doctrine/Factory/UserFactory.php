@@ -13,20 +13,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFactory implements UserFactoryInterface
 {
-    private UserRepositoryInterface $userRepository;
-
-    private DatetimeServiceInterface $datetimeService;
-
-    private UserPasswordHasherInterface $userPasswordHasher;
-
-    public function __construct(
-        UserRepositoryInterface $userRepository,
-        DatetimeServiceInterface $datetimeService,
-        UserPasswordHasherInterface $userPasswordHasher
-    ) {
-        $this->userRepository = $userRepository;
-        $this->datetimeService = $datetimeService;
-        $this->userPasswordHasher = $userPasswordHasher;
+    public function __construct(private readonly UserRepositoryInterface $userRepository, private readonly DatetimeServiceInterface $datetimeService, private readonly UserPasswordHasherInterface $userPasswordHasher)
+    {
     }
 
     public function create(string $name, Email $email, string $password): User

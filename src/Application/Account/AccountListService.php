@@ -18,28 +18,8 @@ use App\Domain\Service\Translation\TranslationServiceInterface;
 
 class AccountListService
 {
-    private GetAccountListV1ResultAssembler $getAccountListV1ResultAssembler;
-
-    private AccountRepositoryInterface $accountRepository;
-
-    private OrderAccountListV1ResultAssembler $orderAccountListV1ResultAssembler;
-
-    private AccountServiceInterface $accountService;
-
-    private TranslationServiceInterface $translationService;
-
-    public function __construct(
-        GetAccountListV1ResultAssembler $getAccountListV1ResultAssembler,
-        AccountRepositoryInterface $accountRepository,
-        OrderAccountListV1ResultAssembler $orderAccountListV1ResultAssembler,
-        AccountServiceInterface $accountService,
-        TranslationServiceInterface $translationService
-    ) {
-        $this->getAccountListV1ResultAssembler = $getAccountListV1ResultAssembler;
-        $this->accountRepository = $accountRepository;
-        $this->orderAccountListV1ResultAssembler = $orderAccountListV1ResultAssembler;
-        $this->accountService = $accountService;
-        $this->translationService = $translationService;
+    public function __construct(private readonly GetAccountListV1ResultAssembler $getAccountListV1ResultAssembler, private readonly AccountRepositoryInterface $accountRepository, private readonly OrderAccountListV1ResultAssembler $orderAccountListV1ResultAssembler, private readonly AccountServiceInterface $accountService, private readonly TranslationServiceInterface $translationService)
+    {
     }
 
     public function getAccountList(

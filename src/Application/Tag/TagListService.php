@@ -18,28 +18,8 @@ use App\Domain\Service\Translation\TranslationServiceInterface;
 
 class TagListService
 {
-    private GetTagListV1ResultAssembler $getTagListV1ResultAssembler;
-
-    private TagRepositoryInterface $tagRepository;
-
-    private OrderTagListV1ResultAssembler $orderTagListV1ResultAssembler;
-
-    private TagServiceInterface $tagService;
-
-    private TranslationServiceInterface $translationService;
-
-    public function __construct(
-        GetTagListV1ResultAssembler $getTagListV1ResultAssembler,
-        TagRepositoryInterface $tagRepository,
-        OrderTagListV1ResultAssembler $orderTagListV1ResultAssembler,
-        TagServiceInterface $tagService,
-        TranslationServiceInterface $translationService
-    ) {
-        $this->getTagListV1ResultAssembler = $getTagListV1ResultAssembler;
-        $this->tagRepository = $tagRepository;
-        $this->orderTagListV1ResultAssembler = $orderTagListV1ResultAssembler;
-        $this->tagService = $tagService;
-        $this->translationService = $translationService;
+    public function __construct(private readonly GetTagListV1ResultAssembler $getTagListV1ResultAssembler, private readonly TagRepositoryInterface $tagRepository, private readonly OrderTagListV1ResultAssembler $orderTagListV1ResultAssembler, private readonly TagServiceInterface $tagService, private readonly TranslationServiceInterface $translationService)
+    {
     }
 
     public function getTagList(

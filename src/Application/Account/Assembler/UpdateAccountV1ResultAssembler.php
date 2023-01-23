@@ -13,16 +13,8 @@ use App\Domain\Entity\ValueObject\Id;
 
 class UpdateAccountV1ResultAssembler
 {
-    private AccountToDtoV1ResultAssembler $accountToDtoV1ResultAssembler;
-
-    private TransactionToDtoResultAssembler $transactionToDtoV1ResultAssembler;
-
-    public function __construct(
-        AccountToDtoV1ResultAssembler $accountToDtoV1ResultAssembler,
-        TransactionToDtoResultAssembler $transactionToDtoV1ResultAssembler
-    ) {
-        $this->accountToDtoV1ResultAssembler = $accountToDtoV1ResultAssembler;
-        $this->transactionToDtoV1ResultAssembler = $transactionToDtoV1ResultAssembler;
+    public function __construct(private readonly AccountToDtoV1ResultAssembler $accountToDtoV1ResultAssembler, private readonly TransactionToDtoResultAssembler $transactionToDtoV1ResultAssembler)
+    {
     }
 
     public function assemble(

@@ -15,22 +15,10 @@ use App\Domain\Repository\FolderRepositoryInterface;
 use App\Domain\Service\Dto\PositionDto;
 use DateTimeInterface;
 
-final class FolderService implements FolderServiceInterface
+final readonly class FolderService implements FolderServiceInterface
 {
-    private FolderRepositoryInterface $folderRepository;
-
-    private FolderFactoryInterface $folderFactory;
-
-    private AntiCorruptionServiceInterface $antiCorruptionService;
-
-    public function __construct(
-        FolderRepositoryInterface $folderRepository,
-        FolderFactoryInterface $folderFactory,
-        AntiCorruptionServiceInterface $antiCorruptionService
-    ) {
-        $this->folderRepository = $folderRepository;
-        $this->folderFactory = $folderFactory;
-        $this->antiCorruptionService = $antiCorruptionService;
+    public function __construct(private FolderRepositoryInterface $folderRepository, private FolderFactoryInterface $folderFactory, private AntiCorruptionServiceInterface $antiCorruptionService)
+    {
     }
 
     public function create(Id $userId, FolderName $name): Folder
@@ -143,9 +131,7 @@ final class FolderService implements FolderServiceInterface
     private function resetOrderFolders(Id $userId): void
     {
         $userFolders = $this->folderRepository->getByUserId($userId);
-        usort($userFolders, static function (Folder $a, Folder $b) : int {
-            return $a->getPosition() <=> $b->getPosition();
-        });
+        usort($userFolders, static fn(Folder $a, Folder $b): int => $a->getPosition() <=> $b->getPosition());
         foreach ($userFolders as $i => $userFolder) {
             $userFolder->updatePosition($i);
         }

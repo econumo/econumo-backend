@@ -13,19 +13,13 @@ use App\Domain\Repository\UserRepositoryInterface;
 
 class CurrencyConvertor implements CurrencyConvertorInterface
 {
-    private CurrencyCode $baseCurrency;
-
-    private UserRepositoryInterface $userRepository;
-
-    private CurrencyRateRepositoryInterface $currencyRateRepository;
+    private readonly CurrencyCode $baseCurrency;
 
     public function __construct(
         string $baseCurrency,
-        UserRepositoryInterface $userRepository,
-        CurrencyRateRepositoryInterface $currencyRateRepository
+        private readonly UserRepositoryInterface $userRepository,
+        private readonly CurrencyRateRepositoryInterface $currencyRateRepository
     ) {
-        $this->userRepository = $userRepository;
-        $this->currencyRateRepository = $currencyRateRepository;
         $this->baseCurrency = new CurrencyCode($baseCurrency);
     }
 

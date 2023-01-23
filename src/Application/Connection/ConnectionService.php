@@ -12,16 +12,8 @@ use App\Domain\Service\Connection\ConnectionServiceInterface;
 
 class ConnectionService
 {
-    private DeleteConnectionV1ResultAssembler $deleteConnectionV1ResultAssembler;
-
-    private ConnectionServiceInterface $connectionService;
-
-    public function __construct(
-        DeleteConnectionV1ResultAssembler $deleteConnectionV1ResultAssembler,
-        ConnectionServiceInterface $connectionService
-    ) {
-        $this->deleteConnectionV1ResultAssembler = $deleteConnectionV1ResultAssembler;
-        $this->connectionService = $connectionService;
+    public function __construct(private readonly DeleteConnectionV1ResultAssembler $deleteConnectionV1ResultAssembler, private readonly ConnectionServiceInterface $connectionService)
+    {
     }
 
     public function deleteConnection(

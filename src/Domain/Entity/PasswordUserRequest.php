@@ -16,12 +16,6 @@ class PasswordUserRequest
 {
     use EventTrait;
 
-    private Id $id;
-
-    private User $user;
-
-    private ?string $code;
-
     private DateTimeImmutable $createdAt;
 
     private DateTimeInterface $updatedAt;
@@ -29,14 +23,11 @@ class PasswordUserRequest
     private DateTimeInterface $expiredAt;
 
     public function __construct(
-        Id $id,
-        User $user,
-        string $code,
+        private Id $id,
+        private User $user,
+        private ?string $code,
         DateTimeInterface $createdAt
     ) {
-        $this->id = $id;
-        $this->user = $user;
-        $this->code = $code;
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->expiredAt = $this->createdAt->modify('+12 hours');

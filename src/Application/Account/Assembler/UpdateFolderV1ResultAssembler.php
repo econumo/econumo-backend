@@ -10,11 +10,8 @@ use App\Domain\Entity\ValueObject\Id;
 
 class UpdateFolderV1ResultAssembler
 {
-    private FolderIdToDtoV1ResultAssembler $folderIdToDtoV1ResultAssembler;
-
-    public function __construct(FolderIdToDtoV1ResultAssembler $folderIdToDtoV1ResultAssembler)
+    public function __construct(private readonly FolderIdToDtoV1ResultAssembler $folderIdToDtoV1ResultAssembler)
     {
-        $this->folderIdToDtoV1ResultAssembler = $folderIdToDtoV1ResultAssembler;
     }
 
     public function assemble(

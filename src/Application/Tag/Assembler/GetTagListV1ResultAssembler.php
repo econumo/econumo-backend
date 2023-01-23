@@ -10,17 +10,12 @@ use App\Domain\Entity\Tag;
 
 class GetTagListV1ResultAssembler
 {
-    private TagToDtoResultAssembler $tagToDtoV1ResultAssembler;
-
-    public function __construct(TagToDtoResultAssembler $tagToDtoV1ResultAssembler)
+    public function __construct(private readonly TagToDtoResultAssembler $tagToDtoV1ResultAssembler)
     {
-        $this->tagToDtoV1ResultAssembler = $tagToDtoV1ResultAssembler;
     }
 
     /**
-     * @param GetTagListV1RequestDto $dto
      * @param Tag[] $tags
-     * @return GetTagListV1ResultDto
      */
     public function assemble(
         GetTagListV1RequestDto $dto,

@@ -23,36 +23,8 @@ use Throwable;
 
 class AccountService implements AccountServiceInterface
 {
-    private AccountRepositoryInterface $accountRepository;
-
-    private AccountFactoryInterface $accountFactory;
-
-    private TransactionServiceInterface $transactionService;
-
-    private AccountOptionsFactoryInterface $accountOptionsFactory;
-
-    private AccountOptionsRepositoryInterface $accountOptionsRepository;
-
-    private AntiCorruptionServiceInterface $antiCorruptionService;
-
-    private FolderRepositoryInterface $folderRepository;
-
-    public function __construct(
-        AccountRepositoryInterface $accountRepository,
-        AccountFactoryInterface $accountFactory,
-        TransactionServiceInterface $transactionService,
-        AccountOptionsFactoryInterface $accountOptionsFactory,
-        AccountOptionsRepositoryInterface $accountOptionsRepository,
-        AntiCorruptionServiceInterface $antiCorruptionService,
-        FolderRepositoryInterface $folderRepository
-    ) {
-        $this->accountRepository = $accountRepository;
-        $this->accountFactory = $accountFactory;
-        $this->transactionService = $transactionService;
-        $this->accountOptionsFactory = $accountOptionsFactory;
-        $this->accountOptionsRepository = $accountOptionsRepository;
-        $this->antiCorruptionService = $antiCorruptionService;
-        $this->folderRepository = $folderRepository;
+    public function __construct(private readonly AccountRepositoryInterface $accountRepository, private readonly AccountFactoryInterface $accountFactory, private readonly TransactionServiceInterface $transactionService, private readonly AccountOptionsFactoryInterface $accountOptionsFactory, private readonly AccountOptionsRepositoryInterface $accountOptionsRepository, private readonly AntiCorruptionServiceInterface $antiCorruptionService, private readonly FolderRepositoryInterface $folderRepository)
+    {
     }
 
     public function create(AccountDto $dto): Account

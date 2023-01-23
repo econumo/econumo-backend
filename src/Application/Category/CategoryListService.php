@@ -18,28 +18,8 @@ use App\Domain\Service\Translation\TranslationServiceInterface;
 
 class CategoryListService
 {
-    private GetCategoryListV1ResultAssembler $getCategoryListV1ResultAssembler;
-
-    private CategoryRepositoryInterface $categoryRepository;
-
-    private OrderCategoryListV1ResultAssembler $orderCategoryListV1ResultAssembler;
-
-    private CategoryServiceInterface $categoryService;
-
-    private TranslationServiceInterface $translationService;
-
-    public function __construct(
-        GetCategoryListV1ResultAssembler $getCategoryListV1ResultAssembler,
-        CategoryRepositoryInterface $categoryRepository,
-        OrderCategoryListV1ResultAssembler $orderCategoryListV1ResultAssembler,
-        CategoryServiceInterface $categoryService,
-        TranslationServiceInterface $translationService
-    ) {
-        $this->getCategoryListV1ResultAssembler = $getCategoryListV1ResultAssembler;
-        $this->categoryRepository = $categoryRepository;
-        $this->orderCategoryListV1ResultAssembler = $orderCategoryListV1ResultAssembler;
-        $this->categoryService = $categoryService;
-        $this->translationService = $translationService;
+    public function __construct(private readonly GetCategoryListV1ResultAssembler $getCategoryListV1ResultAssembler, private readonly CategoryRepositoryInterface $categoryRepository, private readonly OrderCategoryListV1ResultAssembler $orderCategoryListV1ResultAssembler, private readonly CategoryServiceInterface $categoryService, private readonly TranslationServiceInterface $translationService)
+    {
     }
 
     public function getCategoryList(

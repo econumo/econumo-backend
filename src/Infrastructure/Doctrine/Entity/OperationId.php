@@ -17,13 +17,6 @@ use Doctrine\ORM\Mapping as ORM;
 class OperationId
 {
     /**
-     * @ORM\Id()
-     * @ORM\CustomIdGenerator("NONE")
-     * @ORM\Column(type="uuid")
-     */
-    private Id $id;
-
-    /**
      * @ORM\Column(type="boolean", options={"default"=false})
      */
     private bool $isHandled = false;
@@ -38,9 +31,13 @@ class OperationId
      */
     private DateTimeInterface $updatedAt;
 
-    public function __construct(Id $id, DateTimeInterface $createdAt)
+    public function __construct(/**
+     * @ORM\Id()
+     * @ORM\CustomIdGenerator("NONE")
+     * @ORM\Column(type="uuid")
+     */
+    private Id $id, DateTimeInterface $createdAt)
     {
-        $this->id = $id;
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
     }

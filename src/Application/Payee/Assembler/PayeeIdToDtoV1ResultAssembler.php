@@ -10,16 +10,8 @@ use App\Domain\Repository\PayeeRepositoryInterface;
 
 class PayeeIdToDtoV1ResultAssembler
 {
-    private PayeeRepositoryInterface $payeeRepository;
-
-    private PayeeToDtoV1ResultAssembler $payeeToDtoV1ResultAssembler;
-
-    public function __construct(
-        PayeeRepositoryInterface $payeeRepository,
-        PayeeToDtoV1ResultAssembler $payeeToDtoV1ResultAssembler
-    ) {
-        $this->payeeRepository = $payeeRepository;
-        $this->payeeToDtoV1ResultAssembler = $payeeToDtoV1ResultAssembler;
+    public function __construct(private readonly PayeeRepositoryInterface $payeeRepository, private readonly PayeeToDtoV1ResultAssembler $payeeToDtoV1ResultAssembler)
+    {
     }
 
     public function assemble(

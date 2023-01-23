@@ -11,16 +11,8 @@ use App\Domain\Repository\AccountRepositoryInterface;
 
 class OrderAccountListV1ResultAssembler
 {
-    private AccountRepositoryInterface $accountRepository;
-
-    private AccountToDtoV1ResultAssembler $accountToDtoV1ResultAssembler;
-
-    public function __construct(
-        AccountRepositoryInterface $accountRepository,
-        AccountToDtoV1ResultAssembler $accountToDtoV1ResultAssembler
-    ) {
-        $this->accountRepository = $accountRepository;
-        $this->accountToDtoV1ResultAssembler = $accountToDtoV1ResultAssembler;
+    public function __construct(private readonly AccountRepositoryInterface $accountRepository, private readonly AccountToDtoV1ResultAssembler $accountToDtoV1ResultAssembler)
+    {
     }
 
     public function assemble(

@@ -20,14 +20,8 @@ use OpenApi\Annotations as OA;
 
 class GetConnectionListV1Controller extends AbstractController
 {
-    private ConnectionListService $connectionListService;
-
-    private ValidatorInterface $validator;
-
-    public function __construct(ConnectionListService $connectionListService, ValidatorInterface $validator)
+    public function __construct(private readonly ConnectionListService $connectionListService, private readonly ValidatorInterface $validator)
     {
-        $this->connectionListService = $connectionListService;
-        $this->validator = $validator;
     }
 
     /**
@@ -61,12 +55,11 @@ class GetConnectionListV1Controller extends AbstractController
      * @OA\Response(response=401, description="Unauthorized", @OA\JsonContent(ref="#/components/schemas/JsonResponseUnauthorized")),
      * @OA\Response(response=500, description="Internal Server Error", @OA\JsonContent(ref="#/components/schemas/JsonResponseException")),
      *
-     * @Route("/api/v1/connection/get-connection-list", methods={"GET"})
      *
-     * @param Request $request
      * @return Response
      * @throws ValidationException
      */
+    #[Route(path: '/api/v1/connection/get-connection-list', methods: ['GET'])]
     public function __invoke(Request $request): Response
     {
         $dto = new GetConnectionListV1RequestDto();

@@ -12,16 +12,8 @@ use App\Domain\Service\Dto\CurrencyDto;
 
 class CurrencyUpdateService implements CurrencyUpdateServiceInterface
 {
-    private CurrencyRepositoryInterface $currencyRepository;
-
-    private CurrencyFactoryInterface $currencyFactory;
-
-    public function __construct(
-        CurrencyRepositoryInterface $currencyRepository,
-        CurrencyFactoryInterface $currencyFactory
-    ) {
-        $this->currencyRepository = $currencyRepository;
-        $this->currencyFactory = $currencyFactory;
+    public function __construct(private readonly CurrencyRepositoryInterface $currencyRepository, private readonly CurrencyFactoryInterface $currencyFactory)
+    {
     }
 
     /**

@@ -11,11 +11,8 @@ use App\Domain\Entity\ValueObject\Id;
 
 class CreateAccountV1ResultAssembler
 {
-    private AccountToDtoV1ResultAssembler $accountToDtoV1ResultAssembler;
-
-    public function __construct(AccountToDtoV1ResultAssembler $accountToDtoV1ResultAssembler)
+    public function __construct(private readonly AccountToDtoV1ResultAssembler $accountToDtoV1ResultAssembler)
     {
-        $this->accountToDtoV1ResultAssembler = $accountToDtoV1ResultAssembler;
     }
 
     public function assemble(

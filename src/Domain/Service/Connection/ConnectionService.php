@@ -13,20 +13,8 @@ use Throwable;
 
 class ConnectionService implements ConnectionServiceInterface
 {
-    private UserRepositoryInterface $userRepository;
-
-    private AntiCorruptionServiceInterface $antiCorruptionService;
-
-    private ConnectionAccountServiceInterface $connectionAccountService;
-
-    public function __construct(
-        UserRepositoryInterface $userRepository,
-        AntiCorruptionServiceInterface $antiCorruptionService,
-        ConnectionAccountServiceInterface $connectionAccountService
-    ) {
-        $this->userRepository = $userRepository;
-        $this->antiCorruptionService = $antiCorruptionService;
-        $this->connectionAccountService = $connectionAccountService;
+    public function __construct(private readonly UserRepositoryInterface $userRepository, private readonly AntiCorruptionServiceInterface $antiCorruptionService, private readonly ConnectionAccountServiceInterface $connectionAccountService)
+    {
     }
 
     public function getUserList(Id $userId): iterable

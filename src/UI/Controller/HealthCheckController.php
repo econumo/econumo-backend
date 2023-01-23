@@ -14,26 +14,18 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class HealthCheckController extends AbstractController
 {
-    private EntityManagerInterface $entityManager;
-
-    private CurrencyExchangeUsageService $currencyExchangeStatusService;
-
-    public function __construct(
-        EntityManagerInterface $entityManager,
-        CurrencyExchangeUsageService $currencyExchangeStatusService
-    ) {
-        $this->entityManager = $entityManager;
-        $this->currencyExchangeStatusService = $currencyExchangeStatusService;
+    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly CurrencyExchangeUsageService $currencyExchangeStatusService)
+    {
     }
 
     /**
      * Check controller
      *
-     * @Route("/_/health-check", methods={"GET"})
      *
      * @param Request $request
      * @return Response
      */
+    #[Route(path: '/_/health-check', methods: ['GET'])]
     public function __invoke(): Response
     {
         $response = [
@@ -44,17 +36,17 @@ class HealthCheckController extends AbstractController
         $status = true;
         try {
             $response['database'] = $this->entityManager->getConnection()->connect();
-        } catch (\Exception $exception) {
+        } catch (\Exception) {
             $response['database'] = false;
             $status = false;
         }
 
         try {
             $response['exchange_rates'] = (bool)$this->currencyExchangeStatusService->getUsage();
-        } catch (\Exception $exception) {
+        } catch (\Exception) {
             $response['exchange_rates'] = false;
         }
 
-        return new JsonResponse($response, $status ? Response::HTTP_OK : Response::HTTP_INTERNAL_SERVER_ERROR);
+        return new JsonResponse($response, ($status ? Response::HTTP_OK : Response::HTTP_INTERNAL_SERVER_ERROR));
     }
 }

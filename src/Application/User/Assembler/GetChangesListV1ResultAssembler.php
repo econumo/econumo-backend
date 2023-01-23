@@ -26,46 +26,12 @@ use App\Domain\Entity\ValueObject\Id;
 
 class GetChangesListV1ResultAssembler
 {
-    private FolderToDtoV1ResultAssembler $folderToDtoV1ResultAssembler;
-
-    private AccountToDtoV1ResultAssembler $accountToDtoV1ResultAssembler;
-
-    private CategoryToDtoResultAssembler $categoryToDtoResultAssembler;
-
-    private TagToDtoResultAssembler $tagToDtoResultAssembler;
-
-    private PayeeToDtoV1ResultAssembler $payeeToDtoV1ResultAssembler;
-
-    private CurrencyToDtoV1ResultAssembler $currencyToDtoV1ResultAssembler;
-
-    private CurrencyRateToDtoV1ResultAssembler $currencyRateToDtoV1ResultAssembler;
-
-    private TransactionToDtoResultAssembler $transactionToDtoResultAssembler;
-
-    public function __construct(
-        FolderToDtoV1ResultAssembler $folderToDtoV1ResultAssembler,
-        AccountToDtoV1ResultAssembler $accountToDtoV1ResultAssembler,
-        CategoryToDtoResultAssembler $categoryToDtoResultAssembler,
-        TagToDtoResultAssembler $tagToDtoResultAssembler,
-        PayeeToDtoV1ResultAssembler $payeeToDtoV1ResultAssembler,
-        CurrencyToDtoV1ResultAssembler $currencyToDtoV1ResultAssembler,
-        CurrencyRateToDtoV1ResultAssembler $currencyRateToDtoV1ResultAssembler,
-        TransactionToDtoResultAssembler $transactionToDtoResultAssembler
-    )
+    public function __construct(private readonly FolderToDtoV1ResultAssembler $folderToDtoV1ResultAssembler, private readonly AccountToDtoV1ResultAssembler $accountToDtoV1ResultAssembler, private readonly CategoryToDtoResultAssembler $categoryToDtoResultAssembler, private readonly TagToDtoResultAssembler $tagToDtoResultAssembler, private readonly PayeeToDtoV1ResultAssembler $payeeToDtoV1ResultAssembler, private readonly CurrencyToDtoV1ResultAssembler $currencyToDtoV1ResultAssembler, private readonly CurrencyRateToDtoV1ResultAssembler $currencyRateToDtoV1ResultAssembler, private readonly TransactionToDtoResultAssembler $transactionToDtoResultAssembler)
     {
-        $this->folderToDtoV1ResultAssembler = $folderToDtoV1ResultAssembler;
-        $this->accountToDtoV1ResultAssembler = $accountToDtoV1ResultAssembler;
-        $this->categoryToDtoResultAssembler = $categoryToDtoResultAssembler;
-        $this->tagToDtoResultAssembler = $tagToDtoResultAssembler;
-        $this->payeeToDtoV1ResultAssembler = $payeeToDtoV1ResultAssembler;
-        $this->currencyToDtoV1ResultAssembler = $currencyToDtoV1ResultAssembler;
-        $this->currencyRateToDtoV1ResultAssembler = $currencyRateToDtoV1ResultAssembler;
-        $this->transactionToDtoResultAssembler = $transactionToDtoResultAssembler;
     }
 
     /**
      * @param GetChangesListV1RequestDto $dto
-     * @param Id $userId
      * @param Folder[] $folders
      * @param Account[] $accounts
      * @param Category[] $categories
@@ -74,7 +40,6 @@ class GetChangesListV1ResultAssembler
      * @param Currency[] $currencies
      * @param CurrencyRate[] $currencyRates
      * @param Transaction[] $transactions
-     * @param array $connections
      * @return GetChangesListV1ResultDto
      */
     public function assemble(

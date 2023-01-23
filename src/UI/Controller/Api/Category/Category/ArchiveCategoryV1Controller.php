@@ -20,14 +20,8 @@ use OpenApi\Annotations as OA;
 
 class ArchiveCategoryV1Controller extends AbstractController
 {
-    private CategoryService $categoryService;
-
-    private ValidatorInterface $validator;
-
-    public function __construct(CategoryService $categoryService, ValidatorInterface $validator)
+    public function __construct(private readonly CategoryService $categoryService, private readonly ValidatorInterface $validator)
     {
-        $this->categoryService = $categoryService;
-        $this->validator = $validator;
     }
 
     /**
@@ -55,12 +49,11 @@ class ArchiveCategoryV1Controller extends AbstractController
      * @OA\Response(response=401, description="Unauthorized", @OA\JsonContent(ref="#/components/schemas/JsonResponseUnauthorized")),
      * @OA\Response(response=500, description="Internal Server Error", @OA\JsonContent(ref="#/components/schemas/JsonResponseException")),
      *
-     * @Route("/api/v1/category/archive-category", methods={"POST"})
      *
-     * @param Request $request
      * @return Response
      * @throws ValidationException
      */
+    #[Route(path: '/api/v1/category/archive-category', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new ArchiveCategoryV1RequestDto();

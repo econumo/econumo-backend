@@ -12,7 +12,6 @@ interface AccountAccessInviteRepositoryInterface
 {
     /**
      * @param AccountAccessInvite[] $items
-     * @return void
      */
     public function save(array $items): void;
 
@@ -23,7 +22,6 @@ interface AccountAccessInviteRepositoryInterface
     public function delete(AccountAccessInvite $invite): void;
 
     /**
-     * @param Id $userId
      * @return AccountAccessInvite[]
      */
     public function getUnacceptedByUser(Id $userId): array;

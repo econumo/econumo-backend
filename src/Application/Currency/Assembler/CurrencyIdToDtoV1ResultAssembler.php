@@ -10,11 +10,8 @@ use App\Domain\Repository\CurrencyRepositoryInterface;
 
 class CurrencyIdToDtoV1ResultAssembler
 {
-    private CurrencyRepositoryInterface $currencyRepository;
-
-    public function __construct(CurrencyRepositoryInterface $currencyRepository)
+    public function __construct(private readonly CurrencyRepositoryInterface $currencyRepository)
     {
-        $this->currencyRepository = $currencyRepository;
     }
 
     public function assemble(Id $currencyId): CurrencyResultDto

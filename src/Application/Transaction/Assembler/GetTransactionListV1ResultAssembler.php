@@ -11,19 +11,12 @@ use App\Domain\Entity\ValueObject\Id;
 
 class GetTransactionListV1ResultAssembler
 {
-    private TransactionToDtoResultAssembler $transactionToDtoV1ResultAssembler;
-
-    public function __construct(
-        TransactionToDtoResultAssembler $transactionToDtoV1ResultAssembler
-    ) {
-        $this->transactionToDtoV1ResultAssembler = $transactionToDtoV1ResultAssembler;
+    public function __construct(private readonly TransactionToDtoResultAssembler $transactionToDtoV1ResultAssembler)
+    {
     }
 
     /**
-     * @param GetTransactionListV1RequestDto $dto
-     * @param Id $userId
      * @param Transaction[] $transactions
-     * @return GetTransactionListV1ResultDto
      */
     public function assemble(
         GetTransactionListV1RequestDto $dto,

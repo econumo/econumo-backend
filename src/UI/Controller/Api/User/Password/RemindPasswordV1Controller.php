@@ -19,14 +19,8 @@ use OpenApi\Annotations as OA;
 
 class RemindPasswordV1Controller extends AbstractController
 {
-    private PasswordService $passwordService;
-
-    private ValidatorInterface $validator;
-
-    public function __construct(PasswordService $passwordService, ValidatorInterface $validator)
+    public function __construct(private readonly PasswordService $passwordService, private readonly ValidatorInterface $validator)
     {
-        $this->passwordService = $passwordService;
-        $this->validator = $validator;
     }
 
     /**
@@ -56,12 +50,11 @@ class RemindPasswordV1Controller extends AbstractController
      *     @OA\Response(response=500, description="Internal Server Error", @OA\JsonContent(ref="#/components/schemas/JsonResponseException"))
      * )
      *
-     * @Route("/api/v1/user/remind-password", methods={"POST"})
      *
-     * @param Request $request
      * @return Response
      * @throws ValidationException
      */
+    #[Route(path: '/api/v1/user/remind-password', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new RemindPasswordV1RequestDto();

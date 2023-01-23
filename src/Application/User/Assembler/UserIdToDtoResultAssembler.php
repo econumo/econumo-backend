@@ -10,14 +10,8 @@ use App\Domain\Repository\UserRepositoryInterface;
 
 class UserIdToDtoResultAssembler
 {
-    private UserRepositoryInterface $userRepository;
-
-    private UserToDtoResultAssembler $userToDtoResultAssembler;
-
-    public function __construct(UserRepositoryInterface $userRepository, UserToDtoResultAssembler $userToDtoResultAssembler)
+    public function __construct(private readonly UserRepositoryInterface $userRepository, private readonly UserToDtoResultAssembler $userToDtoResultAssembler)
     {
-        $this->userRepository = $userRepository;
-        $this->userToDtoResultAssembler = $userToDtoResultAssembler;
     }
 
     public function assemble(Id $userId): UserResultDto

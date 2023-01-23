@@ -14,17 +14,7 @@ use DateTimeInterface;
 
 class Category
 {
-    private Id $id;
-
-    private CategoryName $name;
-
     private int $position = 0;
-
-    private CategoryType $type;
-
-    private User $user;
-
-    private Icon $icon;
 
     private bool $isArchived = false;
 
@@ -33,18 +23,13 @@ class Category
     private DateTimeInterface $updatedAt;
 
     public function __construct(
-        Id $id,
-        User $user,
-        CategoryName $name,
-        CategoryType $type,
-        Icon $icon,
+        private Id $id,
+        private User $user,
+        private CategoryName $name,
+        private CategoryType $type,
+        private Icon $icon,
         DateTimeInterface $createdAt
     ) {
-        $this->id = $id;
-        $this->user = $user;
-        $this->name = $name;
-        $this->type = $type;
-        $this->icon = $icon;
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
     }

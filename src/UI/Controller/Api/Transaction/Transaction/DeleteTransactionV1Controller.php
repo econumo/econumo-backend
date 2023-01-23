@@ -6,6 +6,7 @@ namespace App\UI\Controller\Api\Transaction\Transaction;
 
 use App\Application\Transaction\TransactionService;
 use App\Application\Transaction\Dto\DeleteTransactionV1RequestDto;
+use App\Domain\Entity\User;
 use App\UI\Controller\Api\Transaction\Transaction\Validation\DeleteTransactionV1Form;
 use App\Application\Exception\ValidationException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,14 +20,8 @@ use OpenApi\Annotations as OA;
 
 class DeleteTransactionV1Controller extends AbstractController
 {
-    private TransactionService $transactionService;
-
-    private ValidatorInterface $validator;
-
-    public function __construct(TransactionService $transactionService, ValidatorInterface $validator)
+    public function __construct(private readonly TransactionService $transactionService, private readonly ValidatorInterface $validator)
     {
-        $this->transactionService = $transactionService;
-        $this->validator = $validator;
     }
 
     /**
@@ -54,16 +49,16 @@ class DeleteTransactionV1Controller extends AbstractController
      * @OA\Response(response=401, description="Unauthorized", @OA\JsonContent(ref="#/components/schemas/JsonResponseUnauthorized")),
      * @OA\Response(response=500, description="Internal Server Error", @OA\JsonContent(ref="#/components/schemas/JsonResponseException")),
      *
-     * @Route("/api/v1/transaction/delete-transaction", methods={"POST"})
      *
-     * @param Request $request
      * @return Response
      * @throws ValidationException
      */
+    #[Route(path: '/api/v1/transaction/delete-transaction', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new DeleteTransactionV1RequestDto();
         $this->validator->validate(DeleteTransactionV1Form::class, $request->request->all(), $dto);
+        /** @var User $user */
         $user = $this->getUser();
         $result = $this->transactionService->deleteTransaction($dto, $user->getId());
 

@@ -13,20 +13,8 @@ use App\Domain\Service\Connection\ConnectionServiceInterface;
 
 class ConnectionListService
 {
-    private GetConnectionListV1ResultAssembler $getConnectionListV1ResultAssembler;
-
-    private ConnectionServiceInterface $connectionService;
-
-    private ConnectionAccountServiceInterface $connectionAccountService;
-
-    public function __construct(
-        GetConnectionListV1ResultAssembler $getConnectionListV1ResultAssembler,
-        ConnectionServiceInterface $connectionService,
-        ConnectionAccountServiceInterface $connectionAccountService
-    ) {
-        $this->getConnectionListV1ResultAssembler = $getConnectionListV1ResultAssembler;
-        $this->connectionService = $connectionService;
-        $this->connectionAccountService = $connectionAccountService;
+    public function __construct(private readonly GetConnectionListV1ResultAssembler $getConnectionListV1ResultAssembler, private readonly ConnectionServiceInterface $connectionService, private readonly ConnectionAccountServiceInterface $connectionAccountService)
+    {
     }
 
     public function getConnectionList(
