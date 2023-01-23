@@ -24,7 +24,11 @@ interface PayeeRepositoryInterface
 
     public function get(Id $id): Payee;
 
-    public function save(Payee ...$payees): void;
+    /**
+     * @param Payee[] $payees
+     * @return void
+     */
+    public function save(array $payees): void;
 
     public function getReference(Id $id): Payee;
 

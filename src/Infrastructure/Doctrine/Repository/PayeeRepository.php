@@ -82,7 +82,10 @@ DQL;
         return $item;
     }
 
-    public function save(Payee ...$payees): void
+    /**
+     * @inheritDoc
+     */
+    public function save(array $payees): void
     {
         try {
             foreach ($payees as $payee) {
