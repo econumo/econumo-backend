@@ -43,7 +43,7 @@ class PayeeService implements PayeeServiceInterface
         $payee = $this->payeeFactory->create($userId, $name);
         $payee->updatePosition(count($payees));
 
-        $this->payeeRepository->save($payee);
+        $this->payeeRepository->save([$payee]);
 
         return $payee;
     }
@@ -69,7 +69,7 @@ class PayeeService implements PayeeServiceInterface
         }
 
         $payee->updateName($name);
-        $this->payeeRepository->save($payee);
+        $this->payeeRepository->save([$payee]);
     }
 
     public function deletePayee(Id $payeeId): void
@@ -78,7 +78,10 @@ class PayeeService implements PayeeServiceInterface
         $this->payeeRepository->delete($payee);
     }
 
-    public function orderPayees(Id $userId, PositionDto ...$changes): void
+    /**
+     * @inheritDoc
+     */
+    public function orderPayees(Id $userId, array $changes): void
     {
         $payees = $this->payeeRepository->findAvailableForUserId($userId);
         $changed = [];
@@ -96,7 +99,7 @@ class PayeeService implements PayeeServiceInterface
             return;
         }
 
-        $this->payeeRepository->save(...$changed);
+        $this->payeeRepository->save($changed);
     }
 
     public function archivePayee(Id $payeeId): void
@@ -104,7 +107,7 @@ class PayeeService implements PayeeServiceInterface
         $payee = $this->payeeRepository->get($payeeId);
         $payee->archive();
 
-        $this->payeeRepository->save($payee);
+        $this->payeeRepository->save([$payee]);
     }
 
     public function unarchivePayee(Id $payeeId): void
@@ -112,7 +115,7 @@ class PayeeService implements PayeeServiceInterface
         $payee = $this->payeeRepository->get($payeeId);
         $payee->unarchive();
 
-        $this->payeeRepository->save($payee);
+        $this->payeeRepository->save([$payee]);
     }
 
     public function getChanged(Id $userId, DateTimeInterface $lastUpdate): array
