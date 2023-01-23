@@ -6,6 +6,7 @@ namespace App\UI\Controller\Api\Tag\Tag;
 
 use App\Application\Tag\TagService;
 use App\Application\Tag\Dto\CreateTagV1RequestDto;
+use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\Id;
 use App\UI\Controller\Api\Tag\Tag\Validation\CreateTagV1Form;
 use App\Application\Exception\ValidationException;
@@ -60,6 +61,7 @@ class CreateTagV1Controller extends AbstractController
         $dto = new CreateTagV1RequestDto();
         $this->validator->validate(CreateTagV1Form::class, $request->request->all(), $dto);
         $operation = $this->operationService->lock(new Id($dto->id));
+        /** @var User $user */
         $user = $this->getUser();
         $result = $this->tagService->createTag($dto, $user->getId());
         $this->operationService->release($operation);

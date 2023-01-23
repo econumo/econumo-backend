@@ -6,6 +6,7 @@ namespace App\UI\Controller\Api\Category\Category;
 
 use App\Application\Category\CategoryService;
 use App\Application\Category\Dto\CreateCategoryV1RequestDto;
+use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\Id;
 use App\UI\Controller\Api\Category\Category\Validation\CreateCategoryV1Form;
 use App\Application\Exception\ValidationException;
@@ -60,6 +61,7 @@ class CreateCategoryV1Controller extends AbstractController
         $dto = new CreateCategoryV1RequestDto();
         $this->validator->validate(CreateCategoryV1Form::class, $request->request->all(), $dto);
         $operation = $this->operationService->lock(new Id($dto->id));
+        /** @var User $user */
         $user = $this->getUser();
         $result = $this->categoryService->createCategory($dto, $user->getId());
         $this->operationService->release($operation);

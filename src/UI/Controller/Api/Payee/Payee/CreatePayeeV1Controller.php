@@ -6,6 +6,7 @@ namespace App\UI\Controller\Api\Payee\Payee;
 
 use App\Application\Payee\PayeeService;
 use App\Application\Payee\Dto\CreatePayeeV1RequestDto;
+use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\Id;
 use App\UI\Controller\Api\Payee\Payee\Validation\CreatePayeeV1Form;
 use App\Application\Exception\ValidationException;
@@ -60,6 +61,7 @@ class CreatePayeeV1Controller extends AbstractController
         $dto = new CreatePayeeV1RequestDto();
         $this->validator->validate(CreatePayeeV1Form::class, $request->request->all(), $dto);
         $operation = $this->operationService->lock(new Id($dto->id));
+        /** @var User $user */
         $user = $this->getUser();
         $result = $this->payeeService->createPayee($dto, $user->getId());
         $this->operationService->release($operation);

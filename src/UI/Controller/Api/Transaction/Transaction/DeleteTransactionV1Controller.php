@@ -6,6 +6,7 @@ namespace App\UI\Controller\Api\Transaction\Transaction;
 
 use App\Application\Transaction\TransactionService;
 use App\Application\Transaction\Dto\DeleteTransactionV1RequestDto;
+use App\Domain\Entity\User;
 use App\UI\Controller\Api\Transaction\Transaction\Validation\DeleteTransactionV1Form;
 use App\Application\Exception\ValidationException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -57,6 +58,7 @@ class DeleteTransactionV1Controller extends AbstractController
     {
         $dto = new DeleteTransactionV1RequestDto();
         $this->validator->validate(DeleteTransactionV1Form::class, $request->request->all(), $dto);
+        /** @var User $user */
         $user = $this->getUser();
         $result = $this->transactionService->deleteTransaction($dto, $user->getId());
 

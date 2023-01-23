@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="4.10.0@916b098b008f6de4543892b1e0651c1c3b92cbfa">
+<files psalm-version="4.30.0@d0bc6e25d89f649e4f36a534f330f8bb4643dd69">
   <file src="src/Application/Account/AccountService.php">
     <PossiblyFalseArgument occurrences="1">
       <code>$updatedAt</code>
@@ -158,20 +158,10 @@
       <code>DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt-&gt;format('Y-m-d H:i:s'))</code>
     </PossiblyFalsePropertyAssignmentValue>
   </file>
-  <file src="src/Domain/Repository/ConnectionInviteRepositoryInterface.php">
-    <MismatchingDocblockReturnType occurrences="1">
-      <code>ConnectionInvite|null</code>
-    </MismatchingDocblockReturnType>
-  </file>
   <file src="src/Domain/Service/AccountService.php">
     <PossiblyNullArgument occurrences="1">
       <code>$dto-&gt;folderId</code>
     </PossiblyNullArgument>
-  </file>
-  <file src="src/Domain/Service/Connection/ConnectionInviteService.php">
-    <PossiblyNullReference occurrences="1">
-      <code>getUserId</code>
-    </PossiblyNullReference>
   </file>
   <file src="src/Domain/Service/Connection/ConnectionService.php">
     <InvalidReturnStatement occurrences="1">
@@ -196,11 +186,6 @@
       <code>$transaction-&gt;getAccountRecipientId()</code>
     </PossiblyNullArgument>
   </file>
-  <file src="src/Infrastructure/Auth/AuthenticationFailureHandler.php">
-    <PossiblyInvalidArgument occurrences="1">
-      <code>$exception-&gt;getCode()</code>
-    </PossiblyInvalidArgument>
-  </file>
   <file src="src/Infrastructure/Auth/AuthenticationUpdateTokenPayload.php">
     <MismatchingDocblockParamType occurrences="1">
       <code>AuthenticationSuccessEvent</code>
@@ -212,17 +197,11 @@
     </PossiblyFalsePropertyAssignmentValue>
   </file>
   <file src="src/Infrastructure/Doctrine/Repository/AccountAccessInviteRepository.php">
-    <InvalidScalarArgument occurrences="1">
-      <code>$e-&gt;getCode()</code>
-    </InvalidScalarArgument>
     <LessSpecificImplementedReturnType occurrences="1">
       <code>AccountAccessInvite[]</code>
     </LessSpecificImplementedReturnType>
   </file>
   <file src="src/Infrastructure/Doctrine/Repository/AccountAccessRepository.php">
-    <InvalidScalarArgument occurrences="1">
-      <code>$e-&gt;getCode()</code>
-    </InvalidScalarArgument>
     <LessSpecificImplementedReturnType occurrences="1">
       <code>AccountAccess[]</code>
     </LessSpecificImplementedReturnType>
@@ -232,9 +211,6 @@
       <code>$accountId</code>
       <code>$userId</code>
     </ImplicitToStringCast>
-    <InvalidScalarArgument occurrences="1">
-      <code>$e-&gt;getCode()</code>
-    </InvalidScalarArgument>
     <LessSpecificImplementedReturnType occurrences="1">
       <code>AccountOptions[]</code>
     </LessSpecificImplementedReturnType>
@@ -247,9 +223,6 @@
     <InvalidNullableReturnType occurrences="1">
       <code>Account</code>
     </InvalidNullableReturnType>
-    <InvalidScalarArgument occurrences="1">
-      <code>$e-&gt;getCode()</code>
-    </InvalidScalarArgument>
     <LessSpecificImplementedReturnType occurrences="1">
       <code>Account[]</code>
     </LessSpecificImplementedReturnType>
@@ -267,9 +240,6 @@
     <InvalidNullableReturnType occurrences="1">
       <code>Category</code>
     </InvalidNullableReturnType>
-    <InvalidScalarArgument occurrences="1">
-      <code>$e-&gt;getCode()</code>
-    </InvalidScalarArgument>
     <LessSpecificImplementedReturnType occurrences="1">
       <code>Category[]</code>
     </LessSpecificImplementedReturnType>
@@ -282,9 +252,6 @@
       <code>$code</code>
       <code>$code</code>
     </ImplicitToStringCast>
-    <InvalidScalarArgument occurrences="1">
-      <code>$e-&gt;getCode()</code>
-    </InvalidScalarArgument>
     <LessSpecificImplementedReturnType occurrences="1">
       <code>ConnectionInvite[]</code>
     </LessSpecificImplementedReturnType>
@@ -293,9 +260,6 @@
     <ImplicitToStringCast occurrences="1">
       <code>$currencyId</code>
     </ImplicitToStringCast>
-    <InvalidScalarArgument occurrences="1">
-      <code>$e-&gt;getCode()</code>
-    </InvalidScalarArgument>
     <LessSpecificImplementedReturnType occurrences="1">
       <code>CurrencyRate[]</code>
     </LessSpecificImplementedReturnType>
@@ -307,9 +271,6 @@
     <InvalidNullableReturnType occurrences="1">
       <code>Currency</code>
     </InvalidNullableReturnType>
-    <InvalidScalarArgument occurrences="1">
-      <code>$e-&gt;getCode()</code>
-    </InvalidScalarArgument>
     <LessSpecificImplementedReturnType occurrences="1">
       <code>Currency[]</code>
     </LessSpecificImplementedReturnType>
@@ -324,9 +285,6 @@
     <ImplicitToStringCast occurrences="1">
       <code>$id</code>
     </ImplicitToStringCast>
-    <InvalidScalarArgument occurrences="1">
-      <code>$e-&gt;getCode()</code>
-    </InvalidScalarArgument>
     <LessSpecificImplementedReturnType occurrences="1">
       <code>Folder[]</code>
     </LessSpecificImplementedReturnType>
@@ -335,17 +293,11 @@
     <ImplicitToStringCast occurrences="1">
       <code>$id</code>
     </ImplicitToStringCast>
-    <InvalidScalarArgument occurrences="1">
-      <code>$e-&gt;getCode()</code>
-    </InvalidScalarArgument>
     <LessSpecificImplementedReturnType occurrences="1">
       <code>OperationId[]</code>
     </LessSpecificImplementedReturnType>
   </file>
   <file src="src/Infrastructure/Doctrine/Repository/PasswordUserRequestRepository.php">
-    <InvalidScalarArgument occurrences="1">
-      <code>$e-&gt;getCode()</code>
-    </InvalidScalarArgument>
     <LessSpecificImplementedReturnType occurrences="1">
       <code>PasswordUserRequest[]</code>
     </LessSpecificImplementedReturnType>
@@ -357,9 +309,6 @@
     <InvalidNullableReturnType occurrences="1">
       <code>Payee</code>
     </InvalidNullableReturnType>
-    <InvalidScalarArgument occurrences="1">
-      <code>$e-&gt;getCode()</code>
-    </InvalidScalarArgument>
     <LessSpecificImplementedReturnType occurrences="1">
       <code>Payee[]</code>
     </LessSpecificImplementedReturnType>
@@ -374,9 +323,6 @@
     <InvalidNullableReturnType occurrences="1">
       <code>Tag</code>
     </InvalidNullableReturnType>
-    <InvalidScalarArgument occurrences="1">
-      <code>$e-&gt;getCode()</code>
-    </InvalidScalarArgument>
     <LessSpecificImplementedReturnType occurrences="1">
       <code>Tag[]</code>
     </LessSpecificImplementedReturnType>
@@ -388,9 +334,6 @@
     <ImplicitToStringCast occurrences="1">
       <code>$id</code>
     </ImplicitToStringCast>
-    <InvalidScalarArgument occurrences="1">
-      <code>$e-&gt;getCode()</code>
-    </InvalidScalarArgument>
     <LessSpecificImplementedReturnType occurrences="1">
       <code>Transaction[]</code>
     </LessSpecificImplementedReturnType>
@@ -399,9 +342,6 @@
     <InvalidNullableReturnType occurrences="1">
       <code>UserOption</code>
     </InvalidNullableReturnType>
-    <InvalidScalarArgument occurrences="1">
-      <code>$e-&gt;getCode()</code>
-    </InvalidScalarArgument>
     <LessSpecificImplementedReturnType occurrences="1">
       <code>UserOption[]</code>
     </LessSpecificImplementedReturnType>
@@ -418,9 +358,6 @@
     <InvalidNullableReturnType occurrences="1">
       <code>User</code>
     </InvalidNullableReturnType>
-    <InvalidScalarArgument occurrences="1">
-      <code>$e-&gt;getCode()</code>
-    </InvalidScalarArgument>
     <LessSpecificImplementedReturnType occurrences="1">
       <code>User[]</code>
     </LessSpecificImplementedReturnType>
@@ -433,57 +370,15 @@
       <code>$className</code>
     </ArgumentTypeCoercion>
   </file>
-  <file src="src/Infrastructure/Doctrine/UserProvider.php">
-    <PossiblyInvalidArgument occurrences="1">
-      <code>$notFoundException-&gt;getCode()</code>
-    </PossiblyInvalidArgument>
-  </file>
   <file src="src/Infrastructure/OpenExchangeRates/CurrencyRatesLoaderService.php">
     <PossiblyFalseReference occurrences="1">
       <code>format</code>
     </PossiblyFalseReference>
   </file>
-  <file src="src/Infrastructure/Symfony/Form/Constraints/OperationIdValidator.php">
-    <UndefinedMagicPropertyFetch occurrences="3">
-      <code>$constraint-&gt;errorMessage</code>
-      <code>$constraint-&gt;formatErrorMessage</code>
-      <code>$constraint-&gt;lockedMessage</code>
-    </UndefinedMagicPropertyFetch>
-  </file>
   <file src="src/Infrastructure/Symfony/OperationService.php">
     <PossiblyNullReference occurrences="1">
       <code>release</code>
     </PossiblyNullReference>
-  </file>
-  <file src="src/UI/Controller/Api/Category/Category/CreateCategoryV1Controller.php">
-    <PossiblyNullReference occurrences="1">
-      <code>getId</code>
-    </PossiblyNullReference>
-  </file>
-  <file src="src/UI/Controller/Api/Payee/Payee/CreatePayeeV1Controller.php">
-    <PossiblyNullReference occurrences="1">
-      <code>getId</code>
-    </PossiblyNullReference>
-  </file>
-  <file src="src/UI/Controller/Api/Tag/Tag/CreateTagV1Controller.php">
-    <PossiblyNullReference occurrences="1">
-      <code>getId</code>
-    </PossiblyNullReference>
-  </file>
-  <file src="src/UI/Controller/Api/Transaction/Transaction/CreateTransactionV1Controller.php">
-    <PossiblyNullReference occurrences="1">
-      <code>getId</code>
-    </PossiblyNullReference>
-  </file>
-  <file src="src/UI/Controller/Api/Transaction/Transaction/DeleteTransactionV1Controller.php">
-    <PossiblyNullReference occurrences="1">
-      <code>getId</code>
-    </PossiblyNullReference>
-  </file>
-  <file src="src/UI/Controller/Api/User/User/LoginUserV1Controller.php">
-    <ArgumentTypeCoercion occurrences="1">
-      <code>$user</code>
-    </ArgumentTypeCoercion>
   </file>
   <file src="src/UI/Controller/Api/User/User/LogoutUserV1Controller.php">
     <PossiblyNullArgument occurrences="1">

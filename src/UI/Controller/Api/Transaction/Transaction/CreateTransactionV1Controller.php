@@ -6,6 +6,7 @@ namespace App\UI\Controller\Api\Transaction\Transaction;
 
 use App\Application\Transaction\TransactionService;
 use App\Application\Transaction\Dto\CreateTransactionV1RequestDto;
+use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\Id;
 use App\UI\Controller\Api\Transaction\Transaction\Validation\CreateTransactionV1Form;
 use App\Application\Exception\ValidationException;
@@ -60,6 +61,7 @@ class CreateTransactionV1Controller extends AbstractController
         $dto = new CreateTransactionV1RequestDto();
         $this->validator->validate(CreateTransactionV1Form::class, $request->request->all(), $dto);
         $operation = $this->operationService->lock(new Id($dto->id));
+        /** @var User $user */
         $user = $this->getUser();
         $result = $this->transactionService->createTransaction($dto, $user->getId());
         $this->operationService->release($operation);
