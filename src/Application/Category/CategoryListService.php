@@ -57,7 +57,8 @@ class CategoryListService
         if ($dto->changes === []) {
             throw new ValidationException($this->translationService->trans('category.category_list.empty_list'));
         }
-        $this->categoryService->orderCategories($userId, ...$dto->changes);
+
+        $this->categoryService->orderCategories($userId, $dto->changes);
         return $this->orderCategoryListV1ResultAssembler->assemble($dto, $userId);
     }
 }

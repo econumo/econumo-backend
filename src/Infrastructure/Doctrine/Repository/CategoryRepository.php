@@ -82,7 +82,10 @@ DQL;
         return $item;
     }
 
-    public function save(Category ...$categories): void
+    /**
+     * @inheritDoc
+     */
+    public function save(array $categories): void
     {
         try {
             foreach ($categories as $category) {
