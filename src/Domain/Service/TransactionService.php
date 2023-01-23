@@ -39,15 +39,15 @@ class TransactionService implements TransactionServiceInterface
         $this->antiCorruptionService->beginTransaction();
         try {
             $transaction = $this->transactionFactory->create($transactionDto);
-            $this->transactionRepository->save($transaction);
+            $this->transactionRepository->save([$transaction]);
 
             $account = $this->accountRepository->get($transactionDto->accountId);
             $account->applyTransaction($transaction);
-            $this->accountRepository->save($account);
+            $this->accountRepository->save([$account]);
             if ($transactionDto->type->isTransfer() && $transactionDto->accountRecipientId !== null) {
                 $accountRecipient = $this->accountRepository->get($transactionDto->accountRecipientId);
                 $accountRecipient->applyTransaction($transaction);
-                $this->accountRepository->save($accountRecipient);
+                $this->accountRepository->save([$accountRecipient]);
             }
 
             $this->antiCorruptionService->commit();
@@ -66,25 +66,25 @@ class TransactionService implements TransactionServiceInterface
         try {
             $account = $this->accountRepository->get($transaction->getAccountId());
             $account->rollbackTransaction($transaction);
-            $this->accountRepository->save($account);
+            $this->accountRepository->save([$account]);
             if ($transaction->getType()->isTransfer() && $transaction->getAccountRecipientId() !== null) {
                 $accountRecipient = $this->accountRepository->get($transaction->getAccountRecipientId());
                 $accountRecipient->rollbackTransaction($transaction);
-                $this->accountRepository->save($accountRecipient);
+                $this->accountRepository->save([$accountRecipient]);
             }
 
             $transaction->update($transactionDto);
-            $this->transactionRepository->save($transaction);
+            $this->transactionRepository->save([$transaction]);
             if (!$account->getId()->isEqual($transaction->getAccountId())) {
                 $account = $this->accountRepository->get($transaction->getAccountId());
             }
 
             $account->applyTransaction($transaction);
-            $this->accountRepository->save($account);
+            $this->accountRepository->save([$account]);
             if ($transaction->getType()->isTransfer() && $transaction->getAccountRecipientId() !== null) {
                 $accountRecipient = $this->accountRepository->get($transaction->getAccountRecipientId());
                 $accountRecipient->applyTransaction($transaction);
-                $this->accountRepository->save($accountRecipient);
+                $this->accountRepository->save([$accountRecipient]);
             }
 
             $this->antiCorruptionService->commit();
@@ -102,11 +102,11 @@ class TransactionService implements TransactionServiceInterface
         try {
             $account = $this->accountRepository->get($transaction->getAccountId());
             $account->rollbackTransaction($transaction);
-            $this->accountRepository->save($account);
+            $this->accountRepository->save([$account]);
             if ($transaction->getType()->isTransfer() && $transaction->getAccountRecipientId() !== null) {
                 $accountRecipient = $this->accountRepository->get($transaction->getAccountRecipientId());
                 $accountRecipient->rollbackTransaction($transaction);
-                $this->accountRepository->save($accountRecipient);
+                $this->accountRepository->save([$accountRecipient]);
             }
 
             $this->transactionRepository->delete($transaction);
@@ -122,10 +122,10 @@ class TransactionService implements TransactionServiceInterface
         $this->antiCorruptionService->beginTransaction();
         try {
             $transaction = $this->transactionFactory->createCorrection($accountId, $correction, $updatedAt, $comment);
-            $this->transactionRepository->save($transaction);
+            $this->transactionRepository->save([$transaction]);
             $account = $this->accountRepository->get($accountId);
             $account->applyTransaction($transaction);
-            $this->accountRepository->save($account);
+            $this->accountRepository->save([$account]);
             $this->antiCorruptionService->commit();
         } catch (\Throwable $throwable) {
             $this->antiCorruptionService->rollback();
