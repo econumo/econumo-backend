@@ -117,7 +117,7 @@ class AccountAccessInviteService implements AccountAccessInviteServiceInterface
             $this->accountAccessInviteRepository->delete($invite);
 
             $accountOptions = $this->accountOptionsFactory->create($account->getId(), $userId, 0);
-            $this->accountOptionsRepository->save($accountOptions);
+            $this->accountOptionsRepository->save([$accountOptions]);
 
             $this->antiCorruptionService->commit();
         } catch (\Throwable $throwable) {

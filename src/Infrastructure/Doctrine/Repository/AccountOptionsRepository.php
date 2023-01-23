@@ -41,7 +41,10 @@ class AccountOptionsRepository extends ServiceEntityRepository implements Accoun
             ->getResult();
     }
 
-    public function save(AccountOptions ...$accountOptions): void
+    /**
+     * @inheritDoc
+     */
+    public function save(array $accountOptions): void
     {
         try {
             foreach ($accountOptions as $position) {

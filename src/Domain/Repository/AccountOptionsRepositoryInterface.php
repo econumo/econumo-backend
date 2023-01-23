@@ -26,5 +26,9 @@ interface AccountOptionsRepositoryInterface
 
     public function delete(AccountOptions $options): void;
 
-    public function save(AccountOptions ...$accountOptions): void;
+    /**
+     * @param AccountOptions[] $accountOptions
+     * @return void
+     */
+    public function save(array $accountOptions): void;
 }

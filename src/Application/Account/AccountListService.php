@@ -57,7 +57,8 @@ class AccountListService
         if ($dto->changes === []) {
             throw new ValidationException($this->translationService->trans('account.account_list.empty_list'));
         }
-        $this->accountService->orderAccounts($userId, ...$dto->changes);
+
+        $this->accountService->orderAccounts($dto->changes, $dto->changes);
         return $this->orderAccountListV1ResultAssembler->assemble($dto, $userId);
     }
 }
