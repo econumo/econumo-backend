@@ -35,7 +35,7 @@ class PasswordUserRequestService implements PasswordUserRequestServiceInterface
     {
         $user = $this->userRepository->getByEmail($email);
         $passwordUserRequest = $this->passwordUserRequestFactory->create($user->getId());
-        $this->passwordUserRequestRepository->save($passwordUserRequest);
+        $this->passwordUserRequestRepository->save([$passwordUserRequest]);
         $this->eventDispatcher->dispatchAll($passwordUserRequest->releaseEvents());
     }
 }

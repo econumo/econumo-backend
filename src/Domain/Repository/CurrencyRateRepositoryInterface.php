@@ -20,5 +20,9 @@ interface CurrencyRateRepositoryInterface
      */
     public function getAll(?\DateTimeInterface $date = null): array;
 
-    public function save(CurrencyRate ...$items): void;
+    /**
+     * @param CurrencyRate[] $items
+     * @return void
+     */
+    public function save(array $items): void;
 }

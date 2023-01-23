@@ -39,7 +39,10 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
         return new Id($uuid->toString());
     }
 
-    public function save(Account ...$accounts): void
+    /**
+     * @inheritDoc
+     */
+    public function save(array $accounts): void
     {
         try {
             foreach ($accounts as $account) {

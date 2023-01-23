@@ -24,7 +24,10 @@ class CurrencyUpdateService implements CurrencyUpdateServiceInterface
         $this->currencyFactory = $currencyFactory;
     }
 
-    public function updateCurrencies(CurrencyDto ...$currencies): void
+    /**
+     * @inheritDoc
+     */
+    public function updateCurrencies(array $currencies): void
     {
         $savedCurrencies = $this->currencyRepository->getAll();
         $newCurrencies = [];
@@ -46,6 +49,6 @@ class CurrencyUpdateService implements CurrencyUpdateServiceInterface
             return;
         }
 
-        $this->currencyRepository->save(...$newCurrencies);
+        $this->currencyRepository->save($newCurrencies);
     }
 }

@@ -25,7 +25,11 @@ interface CategoryRepositoryInterface
 
     public function get(Id $id): Category;
 
-    public function save(Category ...$categories): void;
+    /**
+     * @param Category[] $categories
+     * @return void
+     */
+    public function save(array $categories): void;
 
     public function getReference(Id $id): Category;
 

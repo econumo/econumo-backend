@@ -1,0 +1,493 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="4.10.0@916b098b008f6de4543892b1e0651c1c3b92cbfa">
+  <file src="src/Application/Account/AccountService.php">
+    <PossiblyFalseArgument occurrences="1">
+      <code>$updatedAt</code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="src/Application/Category/CategoryService.php">
+    <PossiblyNullArgument occurrences="1">
+      <code>$dto-&gt;replaceId</code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="src/Application/Connection/Assembler/ConnectionInviteToDtoResultAssembler.php">
+    <PossiblyNullReference occurrences="2">
+      <code>format</code>
+      <code>getValue</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="src/Application/Transaction/Assembler/RequestToDomainDtoAssembler.php">
+    <PossiblyNullArgument occurrences="1">
+      <code>$dto-&gt;categoryId</code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="src/Application/Transaction/Assembler/TransactionToDtoResultAssembler.php">
+    <PossiblyNullReference occurrences="4">
+      <code>getValue</code>
+      <code>getValue</code>
+      <code>getValue</code>
+      <code>getValue</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="src/Application/Transaction/Assembler/UpdateTransactionRequestToDomainDtoAssembler.php">
+    <PossiblyNullArgument occurrences="1">
+      <code>$dto-&gt;categoryId</code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="src/Application/User/Assembler/GetChangesListV1ResultAssembler.php">
+    <UndefinedClass occurrences="2">
+      <code>GetChangesListV1RequestDto</code>
+      <code>GetChangesListV1ResultDto</code>
+    </UndefinedClass>
+  </file>
+  <file src="src/Application/User/Assembler/LogoutUserV1ResultAssembler.php">
+    <UndefinedPropertyAssignment occurrences="1">
+      <code>$result-&gt;result</code>
+    </UndefinedPropertyAssignment>
+  </file>
+  <file src="src/Application/User/Assembler/RemindPasswordV1ResultAssembler.php">
+    <UndefinedPropertyAssignment occurrences="1">
+      <code>$result-&gt;result</code>
+    </UndefinedPropertyAssignment>
+  </file>
+  <file src="src/Command/CreateUserCommand.php">
+    <ImplicitToStringCast occurrences="1">
+      <code>$user-&gt;getId()</code>
+    </ImplicitToStringCast>
+  </file>
+  <file src="src/Command/MakeAPIMaker.php">
+    <ParamNameMismatch occurrences="1">
+      <code>$inputConf</code>
+    </ParamNameMismatch>
+  </file>
+  <file src="src/Command/UpdateCurrencyRatesCommand.php">
+    <PossiblyFalseArgument occurrences="1">
+      <code>$date</code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="src/Domain/Entity/Account.php">
+    <PossiblyFalsePropertyAssignmentValue occurrences="1">
+      <code>DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt-&gt;format('Y-m-d H:i:s'))</code>
+    </PossiblyFalsePropertyAssignmentValue>
+    <PossiblyNullReference occurrences="2">
+      <code>isEqual</code>
+      <code>isEqual</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="src/Domain/Entity/AccountAccess.php">
+    <PossiblyFalsePropertyAssignmentValue occurrences="1">
+      <code>DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt-&gt;format('Y-m-d H:i:s'))</code>
+    </PossiblyFalsePropertyAssignmentValue>
+  </file>
+  <file src="src/Domain/Entity/AccountAccessInvite.php">
+    <PossiblyFalsePropertyAssignmentValue occurrences="1">
+      <code>DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt-&gt;format('Y-m-d H:i:s'))</code>
+    </PossiblyFalsePropertyAssignmentValue>
+  </file>
+  <file src="src/Domain/Entity/AccountOptions.php">
+    <PossiblyFalsePropertyAssignmentValue occurrences="1">
+      <code>DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt-&gt;format('Y-m-d H:i:s'))</code>
+    </PossiblyFalsePropertyAssignmentValue>
+  </file>
+  <file src="src/Domain/Entity/Category.php">
+    <PossiblyFalsePropertyAssignmentValue occurrences="1">
+      <code>DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt-&gt;format('Y-m-d H:i:s'))</code>
+    </PossiblyFalsePropertyAssignmentValue>
+  </file>
+  <file src="src/Domain/Entity/Currency.php">
+    <PossiblyFalsePropertyAssignmentValue occurrences="1">
+      <code>DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt-&gt;format('Y-m-d H:i:s'))</code>
+    </PossiblyFalsePropertyAssignmentValue>
+  </file>
+  <file src="src/Domain/Entity/CurrencyRate.php">
+    <PossiblyFalsePropertyAssignmentValue occurrences="1">
+      <code>DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt-&gt;format('Y-m-d H:i:s'))</code>
+    </PossiblyFalsePropertyAssignmentValue>
+  </file>
+  <file src="src/Domain/Entity/Folder.php">
+    <PossiblyFalsePropertyAssignmentValue occurrences="1">
+      <code>DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt-&gt;format('Y-m-d H:i:s'))</code>
+    </PossiblyFalsePropertyAssignmentValue>
+    <PossiblyInvalidMethodCall occurrences="3">
+      <code>add</code>
+      <code>contains</code>
+      <code>removeElement</code>
+    </PossiblyInvalidMethodCall>
+  </file>
+  <file src="src/Domain/Entity/PasswordUserRequest.php">
+    <PossiblyFalsePropertyAssignmentValue occurrences="1">
+      <code>DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt-&gt;format('Y-m-d H:i:s'))</code>
+    </PossiblyFalsePropertyAssignmentValue>
+    <PossiblyFalseReference occurrences="1">
+      <code>modify</code>
+    </PossiblyFalseReference>
+  </file>
+  <file src="src/Domain/Entity/Payee.php">
+    <PossiblyFalsePropertyAssignmentValue occurrences="1">
+      <code>DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt-&gt;format('Y-m-d H:i:s'))</code>
+    </PossiblyFalsePropertyAssignmentValue>
+  </file>
+  <file src="src/Domain/Entity/Tag.php">
+    <PossiblyFalsePropertyAssignmentValue occurrences="1">
+      <code>DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt-&gt;format('Y-m-d H:i:s'))</code>
+    </PossiblyFalsePropertyAssignmentValue>
+  </file>
+  <file src="src/Domain/Entity/Transaction.php">
+    <PossiblyFalsePropertyAssignmentValue occurrences="1">
+      <code>DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt-&gt;format('Y-m-d H:i:s'))</code>
+    </PossiblyFalsePropertyAssignmentValue>
+  </file>
+  <file src="src/Domain/Entity/User.php">
+    <PossiblyFalsePropertyAssignmentValue occurrences="1">
+      <code>DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt-&gt;format('Y-m-d H:i:s'))</code>
+    </PossiblyFalsePropertyAssignmentValue>
+    <PossiblyInvalidMethodCall occurrences="6">
+      <code>add</code>
+      <code>add</code>
+      <code>contains</code>
+      <code>removeElement</code>
+      <code>removeElement</code>
+      <code>removeElement</code>
+    </PossiblyInvalidMethodCall>
+    <PossiblyNullArgument occurrences="1">
+      <code>$option-&gt;getValue()</code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="src/Domain/Entity/UserOption.php">
+    <PossiblyFalsePropertyAssignmentValue occurrences="1">
+      <code>DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt-&gt;format('Y-m-d H:i:s'))</code>
+    </PossiblyFalsePropertyAssignmentValue>
+  </file>
+  <file src="src/Domain/Repository/ConnectionInviteRepositoryInterface.php">
+    <MismatchingDocblockReturnType occurrences="1">
+      <code>ConnectionInvite|null</code>
+    </MismatchingDocblockReturnType>
+  </file>
+  <file src="src/Domain/Service/AccountService.php">
+    <PossiblyNullArgument occurrences="1">
+      <code>$dto-&gt;folderId</code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="src/Domain/Service/Connection/ConnectionInviteService.php">
+    <PossiblyNullReference occurrences="1">
+      <code>getUserId</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="src/Domain/Service/Connection/ConnectionService.php">
+    <InvalidReturnStatement occurrences="1">
+      <code>$user-&gt;getConnections()</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="1">
+      <code>iterable</code>
+    </InvalidReturnType>
+  </file>
+  <file src="src/Domain/Service/Currency/CurrencyService.php">
+    <InvalidNullableReturnType occurrences="1">
+      <code>Currency</code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement occurrences="1">
+      <code>$this-&gt;currencyRepository-&gt;getByCode(new CurrencyCode($this-&gt;baseCurrency))</code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Domain/Service/TransactionService.php">
+    <PossiblyNullArgument occurrences="3">
+      <code>$transaction-&gt;getAccountRecipientId()</code>
+      <code>$transaction-&gt;getAccountRecipientId()</code>
+      <code>$transaction-&gt;getAccountRecipientId()</code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="src/Infrastructure/Auth/AuthenticationFailureHandler.php">
+    <PossiblyInvalidArgument occurrences="1">
+      <code>$exception-&gt;getCode()</code>
+    </PossiblyInvalidArgument>
+  </file>
+  <file src="src/Infrastructure/Auth/AuthenticationUpdateTokenPayload.php">
+    <MismatchingDocblockParamType occurrences="1">
+      <code>AuthenticationSuccessEvent</code>
+    </MismatchingDocblockParamType>
+  </file>
+  <file src="src/Infrastructure/Doctrine/Entity/OperationId.php">
+    <PossiblyFalsePropertyAssignmentValue occurrences="1">
+      <code>DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt-&gt;format('Y-m-d H:i:s'))</code>
+    </PossiblyFalsePropertyAssignmentValue>
+  </file>
+  <file src="src/Infrastructure/Doctrine/Repository/AccountAccessInviteRepository.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$e-&gt;getCode()</code>
+    </InvalidScalarArgument>
+    <LessSpecificImplementedReturnType occurrences="1">
+      <code>AccountAccessInvite[]</code>
+    </LessSpecificImplementedReturnType>
+  </file>
+  <file src="src/Infrastructure/Doctrine/Repository/AccountAccessRepository.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$e-&gt;getCode()</code>
+    </InvalidScalarArgument>
+    <LessSpecificImplementedReturnType occurrences="1">
+      <code>AccountAccess[]</code>
+    </LessSpecificImplementedReturnType>
+  </file>
+  <file src="src/Infrastructure/Doctrine/Repository/AccountOptionsRepository.php">
+    <ImplicitToStringCast occurrences="2">
+      <code>$accountId</code>
+      <code>$userId</code>
+    </ImplicitToStringCast>
+    <InvalidScalarArgument occurrences="1">
+      <code>$e-&gt;getCode()</code>
+    </InvalidScalarArgument>
+    <LessSpecificImplementedReturnType occurrences="1">
+      <code>AccountOptions[]</code>
+    </LessSpecificImplementedReturnType>
+  </file>
+  <file src="src/Infrastructure/Doctrine/Repository/AccountRepository.php">
+    <ImplicitToStringCast occurrences="2">
+      <code>$id</code>
+      <code>$id</code>
+    </ImplicitToStringCast>
+    <InvalidNullableReturnType occurrences="1">
+      <code>Account</code>
+    </InvalidNullableReturnType>
+    <InvalidScalarArgument occurrences="1">
+      <code>$e-&gt;getCode()</code>
+    </InvalidScalarArgument>
+    <LessSpecificImplementedReturnType occurrences="1">
+      <code>Account[]</code>
+    </LessSpecificImplementedReturnType>
+    <NullableReturnStatement occurrences="1">
+      <code>$this-&gt;getEntityManager()-&gt;getReference(Account::class, $id)</code>
+    </NullableReturnStatement>
+    <TooManyArguments occurrences="1">
+      <code>orX</code>
+    </TooManyArguments>
+  </file>
+  <file src="src/Infrastructure/Doctrine/Repository/CategoryRepository.php">
+    <ImplicitToStringCast occurrences="1">
+      <code>$id</code>
+    </ImplicitToStringCast>
+    <InvalidNullableReturnType occurrences="1">
+      <code>Category</code>
+    </InvalidNullableReturnType>
+    <InvalidScalarArgument occurrences="1">
+      <code>$e-&gt;getCode()</code>
+    </InvalidScalarArgument>
+    <LessSpecificImplementedReturnType occurrences="1">
+      <code>Category[]</code>
+    </LessSpecificImplementedReturnType>
+    <NullableReturnStatement occurrences="1">
+      <code>$this-&gt;getEntityManager()-&gt;getReference(Category::class, $id)</code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Infrastructure/Doctrine/Repository/ConnectionInviteRepository.php">
+    <ImplicitToStringCast occurrences="2">
+      <code>$code</code>
+      <code>$code</code>
+    </ImplicitToStringCast>
+    <InvalidScalarArgument occurrences="1">
+      <code>$e-&gt;getCode()</code>
+    </InvalidScalarArgument>
+    <LessSpecificImplementedReturnType occurrences="1">
+      <code>ConnectionInvite[]</code>
+    </LessSpecificImplementedReturnType>
+  </file>
+  <file src="src/Infrastructure/Doctrine/Repository/CurrencyRateRepository.php">
+    <ImplicitToStringCast occurrences="1">
+      <code>$currencyId</code>
+    </ImplicitToStringCast>
+    <InvalidScalarArgument occurrences="1">
+      <code>$e-&gt;getCode()</code>
+    </InvalidScalarArgument>
+    <LessSpecificImplementedReturnType occurrences="1">
+      <code>CurrencyRate[]</code>
+    </LessSpecificImplementedReturnType>
+    <NullArgument occurrences="1">
+      <code>$item</code>
+    </NullArgument>
+  </file>
+  <file src="src/Infrastructure/Doctrine/Repository/CurrencyRepository.php">
+    <InvalidNullableReturnType occurrences="1">
+      <code>Currency</code>
+    </InvalidNullableReturnType>
+    <InvalidScalarArgument occurrences="1">
+      <code>$e-&gt;getCode()</code>
+    </InvalidScalarArgument>
+    <LessSpecificImplementedReturnType occurrences="1">
+      <code>Currency[]</code>
+    </LessSpecificImplementedReturnType>
+    <NullArgument occurrences="1">
+      <code>$item</code>
+    </NullArgument>
+    <NullableReturnStatement occurrences="1">
+      <code>$this-&gt;getEntityManager()-&gt;getReference(Currency::class, $id)</code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Infrastructure/Doctrine/Repository/FolderRepository.php">
+    <ImplicitToStringCast occurrences="1">
+      <code>$id</code>
+    </ImplicitToStringCast>
+    <InvalidScalarArgument occurrences="1">
+      <code>$e-&gt;getCode()</code>
+    </InvalidScalarArgument>
+    <LessSpecificImplementedReturnType occurrences="1">
+      <code>Folder[]</code>
+    </LessSpecificImplementedReturnType>
+  </file>
+  <file src="src/Infrastructure/Doctrine/Repository/OperationIdRepository.php">
+    <ImplicitToStringCast occurrences="1">
+      <code>$id</code>
+    </ImplicitToStringCast>
+    <InvalidScalarArgument occurrences="1">
+      <code>$e-&gt;getCode()</code>
+    </InvalidScalarArgument>
+    <LessSpecificImplementedReturnType occurrences="1">
+      <code>OperationId[]</code>
+    </LessSpecificImplementedReturnType>
+  </file>
+  <file src="src/Infrastructure/Doctrine/Repository/PasswordUserRequestRepository.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$e-&gt;getCode()</code>
+    </InvalidScalarArgument>
+    <LessSpecificImplementedReturnType occurrences="1">
+      <code>PasswordUserRequest[]</code>
+    </LessSpecificImplementedReturnType>
+  </file>
+  <file src="src/Infrastructure/Doctrine/Repository/PayeeRepository.php">
+    <ImplicitToStringCast occurrences="1">
+      <code>$id</code>
+    </ImplicitToStringCast>
+    <InvalidNullableReturnType occurrences="1">
+      <code>Payee</code>
+    </InvalidNullableReturnType>
+    <InvalidScalarArgument occurrences="1">
+      <code>$e-&gt;getCode()</code>
+    </InvalidScalarArgument>
+    <LessSpecificImplementedReturnType occurrences="1">
+      <code>Payee[]</code>
+    </LessSpecificImplementedReturnType>
+    <NullableReturnStatement occurrences="1">
+      <code>$this-&gt;getEntityManager()-&gt;getReference(Payee::class, $id)</code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Infrastructure/Doctrine/Repository/TagRepository.php">
+    <ImplicitToStringCast occurrences="1">
+      <code>$id</code>
+    </ImplicitToStringCast>
+    <InvalidNullableReturnType occurrences="1">
+      <code>Tag</code>
+    </InvalidNullableReturnType>
+    <InvalidScalarArgument occurrences="1">
+      <code>$e-&gt;getCode()</code>
+    </InvalidScalarArgument>
+    <LessSpecificImplementedReturnType occurrences="1">
+      <code>Tag[]</code>
+    </LessSpecificImplementedReturnType>
+    <NullableReturnStatement occurrences="1">
+      <code>$this-&gt;getEntityManager()-&gt;getReference(Tag::class, $id)</code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Infrastructure/Doctrine/Repository/TransactionRepository.php">
+    <ImplicitToStringCast occurrences="1">
+      <code>$id</code>
+    </ImplicitToStringCast>
+    <InvalidScalarArgument occurrences="1">
+      <code>$e-&gt;getCode()</code>
+    </InvalidScalarArgument>
+    <LessSpecificImplementedReturnType occurrences="1">
+      <code>Transaction[]</code>
+    </LessSpecificImplementedReturnType>
+  </file>
+  <file src="src/Infrastructure/Doctrine/Repository/UserOptionRepository.php">
+    <InvalidNullableReturnType occurrences="1">
+      <code>UserOption</code>
+    </InvalidNullableReturnType>
+    <InvalidScalarArgument occurrences="1">
+      <code>$e-&gt;getCode()</code>
+    </InvalidScalarArgument>
+    <LessSpecificImplementedReturnType occurrences="1">
+      <code>UserOption[]</code>
+    </LessSpecificImplementedReturnType>
+    <NullableReturnStatement occurrences="1">
+      <code>$this-&gt;getEntityManager()-&gt;getReference(UserOption::class, $id)</code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Infrastructure/Doctrine/Repository/UserRepository.php">
+    <ImplicitToStringCast occurrences="3">
+      <code>$email</code>
+      <code>$id</code>
+      <code>$identifier</code>
+    </ImplicitToStringCast>
+    <InvalidNullableReturnType occurrences="1">
+      <code>User</code>
+    </InvalidNullableReturnType>
+    <InvalidScalarArgument occurrences="1">
+      <code>$e-&gt;getCode()</code>
+    </InvalidScalarArgument>
+    <LessSpecificImplementedReturnType occurrences="1">
+      <code>User[]</code>
+    </LessSpecificImplementedReturnType>
+    <NullableReturnStatement occurrences="1">
+      <code>$this-&gt;getEntityManager()-&gt;getReference(User::class, $id)</code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Infrastructure/Doctrine/Type/ReflectionValueObjectTrait.php">
+    <ArgumentTypeCoercion occurrences="1">
+      <code>$className</code>
+    </ArgumentTypeCoercion>
+  </file>
+  <file src="src/Infrastructure/Doctrine/UserProvider.php">
+    <PossiblyInvalidArgument occurrences="1">
+      <code>$notFoundException-&gt;getCode()</code>
+    </PossiblyInvalidArgument>
+  </file>
+  <file src="src/Infrastructure/OpenExchangeRates/CurrencyRatesLoaderService.php">
+    <PossiblyFalseReference occurrences="1">
+      <code>format</code>
+    </PossiblyFalseReference>
+  </file>
+  <file src="src/Infrastructure/Symfony/Form/Constraints/OperationIdValidator.php">
+    <UndefinedMagicPropertyFetch occurrences="3">
+      <code>$constraint-&gt;errorMessage</code>
+      <code>$constraint-&gt;formatErrorMessage</code>
+      <code>$constraint-&gt;lockedMessage</code>
+    </UndefinedMagicPropertyFetch>
+  </file>
+  <file src="src/Infrastructure/Symfony/OperationService.php">
+    <PossiblyNullReference occurrences="1">
+      <code>release</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="src/UI/Controller/Api/Category/Category/CreateCategoryV1Controller.php">
+    <PossiblyNullReference occurrences="1">
+      <code>getId</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="src/UI/Controller/Api/Payee/Payee/CreatePayeeV1Controller.php">
+    <PossiblyNullReference occurrences="1">
+      <code>getId</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="src/UI/Controller/Api/Tag/Tag/CreateTagV1Controller.php">
+    <PossiblyNullReference occurrences="1">
+      <code>getId</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="src/UI/Controller/Api/Transaction/Transaction/CreateTransactionV1Controller.php">
+    <PossiblyNullReference occurrences="1">
+      <code>getId</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="src/UI/Controller/Api/Transaction/Transaction/DeleteTransactionV1Controller.php">
+    <PossiblyNullReference occurrences="1">
+      <code>getId</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="src/UI/Controller/Api/User/User/LoginUserV1Controller.php">
+    <ArgumentTypeCoercion occurrences="1">
+      <code>$user</code>
+    </ArgumentTypeCoercion>
+  </file>
+  <file src="src/UI/Controller/Api/User/User/LogoutUserV1Controller.php">
+    <PossiblyNullArgument occurrences="1">
+      <code>$request-&gt;headers-&gt;get('Authorization')</code>
+    </PossiblyNullArgument>
+  </file>
+</files>

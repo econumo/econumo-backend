@@ -22,5 +22,10 @@ interface AccountServiceInterface
 
     public function updateBalance(Id $accountId, float $balance, \DateTimeInterface $updatedAt, ?string $comment = ''): ?Transaction;
 
-    public function orderAccounts(Id $userId, AccountPositionDto ...$changes): void;
+    /**
+     * @param Id $userId
+     * @param AccountPositionDto[] $changes
+     * @return void
+     */
+    public function orderAccounts(Id $userId, array $changes): void;
 }

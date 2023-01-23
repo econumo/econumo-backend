@@ -13,5 +13,9 @@ interface PasswordUserRequestRepositoryInterface
 
     public function getByCode(string $code): PasswordUserRequest;
 
-    public function save(PasswordUserRequest ...$items): void;
+    /**
+     * @param PasswordUserRequest[] $items
+     * @return void
+     */
+    public function save(array $items): void;
 }

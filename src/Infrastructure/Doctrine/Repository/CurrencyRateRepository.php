@@ -111,7 +111,10 @@ class CurrencyRateRepository extends ServiceEntityRepository implements Currency
         }
     }
 
-    public function save(CurrencyRate ...$items): void
+    /**
+     * @inheritDoc
+     */
+    public function save(array $items): void
     {
         try {
             foreach ($items as $item) {

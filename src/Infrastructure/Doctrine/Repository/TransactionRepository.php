@@ -55,7 +55,10 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
             ->getResult();
     }
 
-    public function save(Transaction ...$transactions): void
+    /**
+     * @inheritDoc
+     */
+    public function save(array $transactions): void
     {
         try {
             foreach ($transactions as $transaction) {

@@ -35,7 +35,10 @@ class UserOptionRepository extends ServiceEntityRepository implements UserOption
         return new Id($uuid->toString());
     }
 
-    public function save(UserOption ...$userOptions): void
+    /**
+     * @inheritDoc
+     */
+    public function save(array $userOptions): void
     {
         try {
             foreach ($userOptions as $userOption) {

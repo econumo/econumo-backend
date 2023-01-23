@@ -12,7 +12,11 @@ use App\Domain\Exception\NotFoundException;
 
 interface ConnectionInviteRepositoryInterface
 {
-    public function save(ConnectionInvite ...$items): void;
+    /**
+     * @param ConnectionInvite[] $items
+     * @return void
+     */
+    public function save(array $items): void;
 
     public function delete(ConnectionInvite $item): void;
 

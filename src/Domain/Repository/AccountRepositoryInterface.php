@@ -19,7 +19,11 @@ interface AccountRepositoryInterface
 
     public function get(Id $id): Account;
 
-    public function save(Account ...$accounts): void;
+    /**
+     * @param Account[] $accounts
+     * @return void
+     */
+    public function save(array $accounts): void;
 
     public function delete(Id $id): void;
 

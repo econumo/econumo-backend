@@ -29,7 +29,10 @@ class AccountAccessInviteRepository extends ServiceEntityRepository implements A
         parent::__construct($registry, AccountAccessInvite::class);
     }
 
-    public function save(AccountAccessInvite ...$items): void
+    /**
+     * @inheritDoc
+     */
+    public function save(array $items): void
     {
         try {
             foreach ($items as $item) {

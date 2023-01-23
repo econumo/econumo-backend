@@ -50,12 +50,15 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', \get_class($user)));
         }
 
-        $user->setPassword($newEncodedPassword);
+        $user->updatePassword($newEncodedPassword);
         $this->_em->persist($user);
         $this->_em->flush();
     }
 
-    public function save(User ...$users): void
+    /**
+     * @inheritDoc
+     */
+    public function save(array $users): void
     {
         try {
             foreach ($users as $user) {

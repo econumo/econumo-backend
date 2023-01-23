@@ -59,7 +59,7 @@ class ConnectionService implements ConnectionServiceInterface
 
             $initiator->deleteConnection($connectedUser);
             $connectedUser->deleteConnection($initiator);
-            $this->userRepository->save($initiator, $connectedUser);
+            $this->userRepository->save([$initiator, $connectedUser]);
 
             $this->antiCorruptionService->commit();
         } catch (Throwable $throwable) {

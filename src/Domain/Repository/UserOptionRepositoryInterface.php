@@ -10,7 +10,11 @@ interface UserOptionRepositoryInterface
 {
     public function getNextIdentity(): Id;
 
-    public function save(UserOption ...$userOptions): void;
+    /**
+     * @param UserOption[] $userOptions
+     * @return void
+     */
+    public function save(array $userOptions): void;
 
     public function delete(UserOption $userOption): void;
 
