@@ -79,10 +79,10 @@ class AccountService implements AccountServiceInterface
                 $dto->balance,
                 new Icon($dto->icon)
             );
-            $this->accountRepository->save($account);
+            $this->accountRepository->save([$account]);
 
             $accountOptions = $this->accountOptionsFactory->create($account->getId(), $dto->userId, $position);
-            $this->accountOptionsRepository->save($accountOptions);
+            $this->accountOptionsRepository->save([$accountOptions]);
 
             $folder = $this->folderRepository->get($dto->folderId);
             if (!$folder->getUserId()->isEqual($dto->userId)) {
@@ -106,7 +106,7 @@ class AccountService implements AccountServiceInterface
         $account = $this->accountRepository->get($id);
         $account->delete();
 
-        $this->accountRepository->save($account);
+        $this->accountRepository->save([$account]);
     }
 
     public function update(Id $userId, Id $accountId, AccountName $name, Icon $icon = null): void
@@ -117,7 +117,7 @@ class AccountService implements AccountServiceInterface
             $account->updateIcon($icon);
         }
 
-        $this->accountRepository->save($account);
+        $this->accountRepository->save([$account]);
     }
 
     public function updateBalance(
@@ -139,7 +139,10 @@ class AccountService implements AccountServiceInterface
         );
     }
 
-    public function orderAccounts(Id $userId, AccountPositionDto ...$changes): void
+    /**
+     * @inheritDoc
+     */
+    public function orderAccounts(Id $userId, array $changes): void
     {
         $this->antiCorruptionService->beginTransaction();
         try {
@@ -189,8 +192,9 @@ class AccountService implements AccountServiceInterface
                     );
                 }
             }
-            $this->accountOptionsRepository->save(...$tmpOptions);
-            $this->folderRepository->save(...$folders);
+
+            $this->accountOptionsRepository->save($tmpOptions);
+            $this->folderRepository->save($folders);
             $this->antiCorruptionService->commit();
         } catch (\Throwable $throwable) {
             $this->antiCorruptionService->rollback();
