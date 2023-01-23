@@ -58,7 +58,7 @@ class PayeeListService
             throw new ValidationException($this->translationService->trans('payee.payee_list.empty_list'));
         }
 
-        $this->payeeService->orderPayees($userId, ...$dto->changes);
+        $this->payeeService->orderPayees($userId, $dto->changes);
         return $this->orderPayeeListV1ResultAssembler->assemble($dto, $userId);
     }
 }
