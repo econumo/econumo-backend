@@ -46,7 +46,7 @@ class TagService implements TagServiceInterface
         $tag = $this->tagFactory->create($userId, $name);
         $tag->updatePosition(count($tags));
 
-        $this->tagRepository->save($tag);
+        $this->tagRepository->save([$tag]);
         return $tag;
     }
 
@@ -71,10 +71,10 @@ class TagService implements TagServiceInterface
         }
 
         $tag->updateName($name);
-        $this->tagRepository->save($tag);
+        $this->tagRepository->save([$tag]);
     }
 
-    public function orderTags(Id $userId, PositionDto ...$changes): void
+    public function orderTags(Id $userId, array $changes): void
     {
         $tags = $this->tagRepository->findAvailableForUserId($userId);
         $changed = [];
@@ -92,7 +92,7 @@ class TagService implements TagServiceInterface
             return;
         }
 
-        $this->tagRepository->save(...$changed);
+        $this->tagRepository->save($changed);
     }
 
     public function deleteTag(Id $tagId): void
@@ -106,7 +106,7 @@ class TagService implements TagServiceInterface
         $tag = $this->tagRepository->get($tagId);
         $tag->archive();
 
-        $this->tagRepository->save($tag);
+        $this->tagRepository->save([$tag]);
     }
 
     public function unarchiveTag(Id $tagId): void
@@ -114,7 +114,7 @@ class TagService implements TagServiceInterface
         $tag = $this->tagRepository->get($tagId);
         $tag->unarchive();
 
-        $this->tagRepository->save($tag);
+        $this->tagRepository->save([$tag]);
     }
 
     public function getChanged(Id $userId, DateTimeInterface $lastUpdate): array

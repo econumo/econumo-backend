@@ -82,7 +82,10 @@ DQL;
         return $item;
     }
 
-    public function save(Tag ...$tags): void
+    /**
+     * @inheritDoc
+     */
+    public function save(array $tags): void
     {
         try {
             foreach ($tags as $tag) {

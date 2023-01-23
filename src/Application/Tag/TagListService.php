@@ -58,7 +58,7 @@ class TagListService
             throw new ValidationException($this->translationService->trans('tag.tag_list.empty_list'));
         }
 
-        $this->tagService->orderTags($userId, ...$dto->changes);
+        $this->tagService->orderTags($userId, $dto->changes);
 
         return $this->orderTagListV1ResultAssembler->assemble($dto, $userId);
     }

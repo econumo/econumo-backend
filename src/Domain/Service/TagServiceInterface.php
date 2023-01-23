@@ -20,7 +20,12 @@ interface TagServiceInterface
 
     public function updateTag(Id $tagId, TagName $name): void;
 
-    public function orderTags(Id $userId, PositionDto ...$changes): void;
+    /**
+     * @param Id $userId
+     * @param PositionDto[] $changes
+     * @return void
+     */
+    public function orderTags(Id $userId, array $changes): void;
 
     public function deleteTag(Id $tagId): void;
 
