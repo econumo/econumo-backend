@@ -21,7 +21,11 @@ interface FolderRepositoryInterface
 
     public function get(Id $id): Folder;
 
-    public function save(Folder ...$items): void;
+    /**
+     * @param Folder[] $items
+     * @return void
+     */
+    public function save(array $items): void;
 
     public function delete(Folder $folder): void;
 

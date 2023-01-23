@@ -56,7 +56,10 @@ class FolderRepository extends ServiceEntityRepository implements FolderReposito
         return $item;
     }
 
-    public function save(Folder ...$items): void
+    /**
+     * @inheritDoc
+     */
+    public function save(array $items): void
     {
         try {
             foreach ($items as $item) {
