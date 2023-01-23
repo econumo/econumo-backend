@@ -30,7 +30,10 @@ class AccountAccessRepository extends ServiceEntityRepository implements Account
         parent::__construct($registry, AccountAccess::class);
     }
 
-    public function save(AccountAccess ...$items): void
+    /**
+     * @inheritDoc
+     */
+    public function save(array $items): void
     {
         try {
             foreach ($items as $item) {

@@ -92,7 +92,7 @@ class AccountAccessInviteService implements AccountAccessInviteServiceInterface
                 $account->getUserId(),
                 $role
             );
-            $this->accountAccessInviteRepository->save($invite);
+            $this->accountAccessInviteRepository->save([$invite]);
             $this->antiCorruptionService->commit();
         } catch (\Throwable $throwable) {
             $this->antiCorruptionService->rollback();
@@ -113,7 +113,7 @@ class AccountAccessInviteService implements AccountAccessInviteServiceInterface
                 $userId,
                 $invite->getRole()
             );
-            $this->accountAccessRepository->save($access);
+            $this->accountAccessRepository->save([$access]);
             $this->accountAccessInviteRepository->delete($invite);
 
             $accountOptions = $this->accountOptionsFactory->create($account->getId(), $userId, 0);

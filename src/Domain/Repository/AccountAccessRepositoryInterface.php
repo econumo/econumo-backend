@@ -16,7 +16,11 @@ interface AccountAccessRepositoryInterface
      */
     public function getByAccount(Id $accountId): array;
 
-    public function save(AccountAccess ...$items): void;
+    /**
+     * @param AccountAccess[] $items
+     * @return void
+     */
+    public function save(array $items): void;
 
     /**
      * @param Id $accountId
