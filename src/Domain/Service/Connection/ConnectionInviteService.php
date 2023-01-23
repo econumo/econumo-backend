@@ -43,7 +43,7 @@ class ConnectionInviteService implements ConnectionInviteServiceInterface
         }
 
         $connectionInvite->generateNewCode();
-        $this->connectionInviteRepository->save($connectionInvite);
+        $this->connectionInviteRepository->save([$connectionInvite]);
         return $connectionInvite;
     }
 
@@ -55,7 +55,7 @@ class ConnectionInviteService implements ConnectionInviteServiceInterface
         }
 
         $connectionInvite->clearCode();
-        $this->connectionInviteRepository->save($connectionInvite);
+        $this->connectionInviteRepository->save([$connectionInvite]);
     }
 
     public function accept(Id $userId, ConnectionCode $code): void
@@ -72,10 +72,10 @@ class ConnectionInviteService implements ConnectionInviteServiceInterface
 
             $owner->connectUser($guest);
             $guest->connectUser($owner);
-            $this->userRepository->save($owner, $guest);
+            $this->userRepository->save([$owner, $guest]);
 
             $connectionInvite->clearCode();
-            $this->connectionInviteRepository->save($connectionInvite);
+            $this->connectionInviteRepository->save([$connectionInvite]);
 
             $this->antiCorruptionService->commit();
         } catch (\Throwable $throwable) {

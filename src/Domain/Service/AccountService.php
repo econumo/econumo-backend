@@ -90,7 +90,7 @@ class AccountService implements AccountServiceInterface
             }
 
             $folder->addAccount($account);
-            $this->folderRepository->save($folder);
+            $this->folderRepository->save([$folder]);
 
             $this->antiCorruptionService->commit();
         } catch (Throwable $throwable) {

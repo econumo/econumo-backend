@@ -58,7 +58,7 @@ class FolderListService
             throw new ValidationException($this->translationService->trans('account.folder_list.empty_list'));
         }
 
-        $this->folderService->orderFolders($userId, ...$dto->changes);
+        $this->folderService->orderFolders($userId, $dto->changes);
         return $this->orderFolderListV1ResultAssembler->assemble($dto, $userId);
     }
 }

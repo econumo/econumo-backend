@@ -107,7 +107,7 @@ class ConnectionAccountService implements ConnectionAccountServiceInterface
 
                 $folder = $this->folderRepository->getLastFolder($userId);
                 $folder->addAccount($accountAccess->getAccount());
-                $this->folderRepository->save($folder);
+                $this->folderRepository->save([$folder]);
             }
 
             $accountAccess->updateRole($role);

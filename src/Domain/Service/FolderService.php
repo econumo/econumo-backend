@@ -50,7 +50,7 @@ final class FolderService implements FolderServiceInterface
         $folder = $this->folderFactory->create($userId, $name);
         $folder->updatePosition($lastFolderPosition + 1);
 
-        $this->folderRepository->save($folder);
+        $this->folderRepository->save([$folder]);
 
         return $folder;
     }
@@ -66,7 +66,7 @@ final class FolderService implements FolderServiceInterface
         }
 
         $folder->updateName($name);
-        $this->folderRepository->save($folder);
+        $this->folderRepository->save([$folder]);
     }
 
     public function delete(Id $folderId): void
@@ -106,7 +106,7 @@ final class FolderService implements FolderServiceInterface
             }
 
             $this->folderRepository->delete($folder);
-            $this->folderRepository->save($replaceFolder);
+            $this->folderRepository->save([$replaceFolder]);
 
             $this->resetOrderFolders($userId);
             $this->antiCorruptionService->commit();
@@ -116,7 +116,10 @@ final class FolderService implements FolderServiceInterface
         }
     }
 
-    public function orderFolders(Id $userId, PositionDto ...$changes): void
+    /**
+     * @inheritDoc
+     */
+    public function orderFolders(Id $userId, array $changes): void
     {
         $folders = $this->folderRepository->getByUserId($userId);
         $changed = [];
@@ -134,7 +137,7 @@ final class FolderService implements FolderServiceInterface
             return;
         }
 
-        $this->folderRepository->save(...$changed);
+        $this->folderRepository->save($changed);
     }
 
     private function resetOrderFolders(Id $userId): void
@@ -147,7 +150,7 @@ final class FolderService implements FolderServiceInterface
             $userFolder->updatePosition($i);
         }
 
-        $this->folderRepository->save(...$userFolders);
+        $this->folderRepository->save($userFolders);
     }
 
     public function hide(Id $folderId): void
@@ -155,7 +158,7 @@ final class FolderService implements FolderServiceInterface
         $folder = $this->folderRepository->get($folderId);
         $folder->makeInvisible();
 
-        $this->folderRepository->save($folder);
+        $this->folderRepository->save([$folder]);
     }
 
     public function show(Id $folderId): void
@@ -163,7 +166,7 @@ final class FolderService implements FolderServiceInterface
         $folder = $this->folderRepository->get($folderId);
         $folder->makeVisible();
 
-        $this->folderRepository->save($folder);
+        $this->folderRepository->save([$folder]);
     }
 
     public function getChanged(Id $userId, DateTimeInterface $lastUpdate): array
