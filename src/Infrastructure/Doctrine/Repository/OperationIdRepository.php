@@ -35,7 +35,12 @@ class OperationIdRepository extends ServiceEntityRepository
         return $item;
     }
 
-    public function save(OperationId ...$items): void
+    /**
+     * @param OperationId[] $items
+     * @return void
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function save(array $items): void
     {
         try {
             foreach ($items as $item) {

@@ -61,7 +61,7 @@ class OperationService implements OperationServiceInterface
                 $this->operationIdRepository->get($id);
             } catch (NotFoundException $notFoundException) {
                 $operationId = $this->operationIdFactory->create($id);
-                $this->operationIdRepository->save($operationId);
+                $this->operationIdRepository->save([$operationId]);
             }
 
             $dto = new OperationDto();
@@ -81,6 +81,6 @@ class OperationService implements OperationServiceInterface
         $saved = $this->operationIdRepository->get($dto->operationId);
         $saved->markHandled();
 
-        $this->operationIdRepository->save($saved);
+        $this->operationIdRepository->save([$saved]);
     }
 }
