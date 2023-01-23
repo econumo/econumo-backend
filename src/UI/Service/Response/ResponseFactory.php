@@ -75,6 +75,7 @@ class ResponseFactory
             $data['exceptionType'] = get_class($exception);
             $data['stackTrace'] = $exception->getTrace();
         }
+
         return static::createJsonResponse($data, $httpCode);
     }
 
