@@ -10,7 +10,11 @@ use App\Domain\Exception\NotFoundException;
 
 interface AccountAccessInviteRepositoryInterface
 {
-    public function save(AccountAccessInvite ...$items): void;
+    /**
+     * @param AccountAccessInvite[] $items
+     * @return void
+     */
+    public function save(array $items): void;
 
     public function get(Id $accountId, Id $recipientId): AccountAccessInvite;
 
