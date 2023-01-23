@@ -36,7 +36,10 @@ class PasswordUserRequestRepository extends ServiceEntityRepository implements P
         return new Id($uuid->toString());
     }
 
-    public function save(PasswordUserRequest ...$items): void
+    /**
+     * @inheritDoc
+     */
+    public function save(array $items): void
     {
         try {
             foreach ($items as $item) {
