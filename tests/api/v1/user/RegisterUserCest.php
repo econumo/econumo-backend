@@ -47,6 +47,7 @@ class RegisterUserCest
         $I->seeResponseMatchesJsonType([
             'data' => [
                 'id' => 'string',
+                'token' => 'string',
             ],
         ]);
     }
