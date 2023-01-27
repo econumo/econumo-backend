@@ -16,6 +16,11 @@ interface AccountRepositoryInterface
      */
     public function getAvailableForUserId(Id $userId): array;
 
+    /**
+     * @return Account[]
+     */
+    public function getUserAccounts(Id $userId): array;
+
     public function get(Id $id): Account;
 
     /**

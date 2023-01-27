@@ -10,10 +10,11 @@ use App\Application\Transaction\Assembler\GetTransactionListV1ResultAssembler;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Repository\TransactionRepositoryInterface;
 use App\Domain\Service\AccountAccessServiceInterface;
+use App\Domain\Service\TransactionServiceInterface;
 
 class TransactionListService
 {
-    public function __construct(private readonly GetTransactionListV1ResultAssembler $getTransactionListV1ResultAssembler, private readonly TransactionRepositoryInterface $transactionRepository, private readonly AccountAccessServiceInterface $accountAccessService)
+    public function __construct(private readonly GetTransactionListV1ResultAssembler $getTransactionListV1ResultAssembler, private readonly TransactionRepositoryInterface $transactionRepository, private readonly AccountAccessServiceInterface $accountAccessService, private readonly TransactionServiceInterface $transactionService)
     {
     }
 
@@ -25,7 +26,8 @@ class TransactionListService
             $this->accountAccessService->checkViewTransactionsAccess($userId, new Id($dto->accountId));
             $transactions = $this->transactionRepository->findByAccountId(new Id($dto->accountId));
         } else {
-            $transactions = $this->transactionRepository->findAvailableForUserId($userId);
+//            $transactions = $this->transactionRepository->findAvailableForUserId($userId);
+            $transactions = $this->transactionService->getTransactionsForVisibleAccounts($userId);
         }
 
         return $this->getTransactionListV1ResultAssembler->assemble($dto, $userId, $transactions);

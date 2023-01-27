@@ -8,13 +8,14 @@ use App\Domain\Entity\Transaction;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Factory\TransactionFactoryInterface;
 use App\Domain\Repository\AccountRepositoryInterface;
+use App\Domain\Repository\FolderRepositoryInterface;
 use App\Domain\Repository\TransactionRepositoryInterface;
 use App\Domain\Service\Dto\TransactionDto;
 use DateTimeInterface;
 
 class TransactionService implements TransactionServiceInterface
 {
-    public function __construct(private readonly TransactionRepositoryInterface $transactionRepository, private readonly TransactionFactoryInterface $transactionFactory, private readonly AccountRepositoryInterface $accountRepository, private readonly AntiCorruptionServiceInterface $antiCorruptionService)
+    public function __construct(private readonly TransactionRepositoryInterface $transactionRepository, private readonly TransactionFactoryInterface $transactionFactory, private readonly AccountRepositoryInterface $accountRepository, private readonly AntiCorruptionServiceInterface $antiCorruptionService, private readonly FolderRepositoryInterface $folderRepository)
     {
     }
 
@@ -122,5 +123,28 @@ class TransactionService implements TransactionServiceInterface
     public function getChanged(Id $userId, DateTimeInterface $lastUpdate): array
     {
         return $this->transactionRepository->findChanges($userId, $lastUpdate);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTransactionsForVisibleAccounts(Id $userId): array
+    {
+        $folders = $this->folderRepository->getByUserId($userId);
+        $accounts = $this->accountRepository->getUserAccounts($userId);
+        $excludeAccountIds = [];
+        foreach ($accounts as $account) {
+            if ($account->isDeleted()) {
+                $excludeAccountIds[] = $account->getId();
+                continue;
+            }
+            foreach ($folders as $folder) {
+                if ($folder->containsAccount($account) && !$folder->isVisible()) {
+                    $excludeAccountIds[] = $account->getId();
+                }
+            }
+        }
+
+        return $this->transactionRepository->findAvailableForUserId($userId, $excludeAccountIds);
     }
 }

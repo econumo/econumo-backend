@@ -23,9 +23,10 @@ interface TransactionRepositoryInterface
     public function save(array $transactions): void;
 
     /**
+     * @param Id[] $excludeAccounts
      * @return Transaction[]
      */
-    public function findAvailableForUserId(Id $userId): array;
+    public function findAvailableForUserId(Id $userId, array $excludeAccounts = []): array;
 
     /**
      * @return Transaction[]

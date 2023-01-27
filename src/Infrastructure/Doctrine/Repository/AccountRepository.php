@@ -74,6 +74,24 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
             ->getResult();
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function getUserAccounts(Id $userId): array
+    {
+        $builder = $this->createQueryBuilder('a');
+        return $builder
+            ->select('a')
+            ->leftJoin(AccountAccess::class, 'aa', Join::WITH, 'aa.account = a')
+            ->where($builder->expr()->orX(
+                $builder->expr()->eq('a.user', ':user'),
+                $builder->expr()->eq('aa.user', ':user'),
+            ))
+            ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId))
+            ->getQuery()
+            ->getResult();
+    }
+
     public function get(Id $id): Account
     {
         $item = $this->find($id);

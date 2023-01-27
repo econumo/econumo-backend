@@ -84,7 +84,10 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
         return $item;
     }
 
-    public function findAvailableForUserId(Id $userId): array
+    /**
+     * @inheritDoc
+     */
+    public function findAvailableForUserId(Id $userId, array $excludeAccounts = []): array
     {
         $sharedAccountsQuery = $this->getEntityManager()
             ->createQuery('SELECT IDENTITY(aa.account) as accountId FROM App\Domain\Entity\AccountAccess aa WHERE aa.user = :user')
@@ -96,10 +99,23 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
             ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId));
         $userAccountIds = array_column($accountsQuery->getScalarResult(), 'id');
         $accounts = array_map(fn(string $id): ?Account => $this->getEntityManager()->getReference(Account::class, new Id($id)), array_unique([...$sharedIds, ...$userAccountIds]));
+        $filteredAccounts = [];
+        foreach ($accounts as $accountRawId) {
+            $found = false;
+            foreach ($excludeAccounts as $accountId) {
+                if ($accountRawId === $accountId->getValue()) {
+                    $found = true;
+                    break;
+                }
+            }
+            if (!$found) {
+                $filteredAccounts[] = $accountRawId;
+            }
+        }
 
         $query = $this->createQueryBuilder('t')
             ->where('t.account IN(:accounts) OR t.accountRecipient IN(:accounts)')
-            ->setParameter('accounts', $accounts);
+            ->setParameter('accounts', $filteredAccounts);
 
         return $query->getQuery()->getResult();
     }
