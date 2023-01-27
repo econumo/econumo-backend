@@ -100,16 +100,16 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
         $userAccountIds = array_column($accountsQuery->getScalarResult(), 'id');
         $accounts = array_map(fn(string $id): ?Account => $this->getEntityManager()->getReference(Account::class, new Id($id)), array_unique([...$sharedIds, ...$userAccountIds]));
         $filteredAccounts = [];
-        foreach ($accounts as $accountRawId) {
+        foreach ($accounts as $account) {
             $found = false;
             foreach ($excludeAccounts as $accountId) {
-                if ($accountRawId === $accountId->getValue()) {
+                if ($accountId->isEqual($account->getId())) {
                     $found = true;
                     break;
                 }
             }
             if (!$found) {
-                $filteredAccounts[] = $accountRawId;
+                $filteredAccounts[] = $account;
             }
         }
 
