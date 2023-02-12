@@ -10,12 +10,12 @@ use App\Application\User\Assembler\LoginUserV1ResultAssembler;
 use App\Application\User\Dto\LogoutUserV1RequestDto;
 use App\Application\User\Dto\LogoutUserV1ResultDto;
 use App\Application\User\Assembler\LogoutUserV1ResultAssembler;
+use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\Email;
 use App\Domain\Exception\UserRegisteredException;
 use App\Domain\Service\Translation\TranslationServiceInterface;
 use App\Domain\Service\UserServiceInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 use App\Application\User\Dto\RegisterUserV1RequestDto;
 use App\Application\User\Dto\RegisterUserV1ResultDto;
 use App\Application\User\Assembler\RegisterUserV1ResultAssembler;
@@ -27,7 +27,7 @@ class UserService
     }
 
     public function loginUser(
-        UserInterface $user
+        User $user
     ): LoginUserV1ResultDto {
         $token = $this->authToken->create($user);
         return $this->loginUserV1ResultAssembler->assemble($user, $token);

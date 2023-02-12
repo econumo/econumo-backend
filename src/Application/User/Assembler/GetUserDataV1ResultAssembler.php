@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace App\Application\User\Assembler;
 
-use App\Application\User\Dto\UpdateCurrencyV1RequestDto;
-use App\Application\User\Dto\UpdateCurrencyV1ResultDto;
+use App\Application\User\Dto\GetUserDataV1RequestDto;
+use App\Application\User\Dto\GetUserDataV1ResultDto;
 use App\Domain\Entity\User;
 
-class UpdateCurrencyV1ResultAssembler
+class GetUserDataV1ResultAssembler
 {
     public function __construct(private readonly CurrentUserToDtoResultAssembler $currentUserToDtoResultAssembler)
     {
     }
 
     public function assemble(
-        UpdateCurrencyV1RequestDto $dto,
+        GetUserDataV1RequestDto $dto,
         User $user
-    ): UpdateCurrencyV1ResultDto {
-        $result = new UpdateCurrencyV1ResultDto();
+    ): GetUserDataV1ResultDto {
+        $result = new GetUserDataV1ResultDto();
         $result->user = $this->currentUserToDtoResultAssembler->assemble($user);
 
         return $result;

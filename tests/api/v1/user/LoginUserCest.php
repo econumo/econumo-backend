@@ -9,8 +9,8 @@ use Codeception\Util\HttpCode;
 
 class LoginUserCest
 {
-    private string $url = '/api/v1/user/login-user';
-
+//    private string $url = '/api/v1/user/login-user';
+//
 //    /**
 //     * @throws \Codeception\Exception\ModuleException
 //     */
@@ -34,7 +34,7 @@ class LoginUserCest
 //     */
 //    public function requestShouldReturn401ResponseCode(ApiTester $I): void
 //    {
-//        $I->sendPOST($this->url, ['username' => 'john@snow.test', 'password' => 'pass',]);
+//        $I->sendPOST($this->url, ['username' => 'john@snow.test', 'password' => 'wrong',]);
 //        $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
 //    }
 //
@@ -45,9 +45,8 @@ class LoginUserCest
 //    {
 //        $I->sendPOST($this->url, ['username' => 'john@snow.test', 'password' => 'pass',]);
 //        $I->seeResponseMatchesJsonType([
-//            'data' => [
-//                'token' => 'string',
-//            ],
+//            'token' => 'string',
+//            'user' => $I->getCurrentUserDtoJsonType(),
 //        ]);
 //    }
 }

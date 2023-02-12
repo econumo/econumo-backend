@@ -46,8 +46,7 @@ class RegisterUserCest
         $I->sendPOST($this->url, ['email' => 'sersei@lannister.test', 'password' => 'pass', 'name' => 'Sersei']);
         $I->seeResponseMatchesJsonType([
             'data' => [
-                'id' => 'string',
-                'token' => 'string',
+                'user' => $I->getCurrentUserDtoJsonType(),
             ],
         ]);
     }

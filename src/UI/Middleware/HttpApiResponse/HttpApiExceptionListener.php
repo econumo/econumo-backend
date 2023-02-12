@@ -10,6 +10,7 @@ use App\UI\Service\Response\ResponseFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
@@ -29,7 +30,7 @@ class HttpApiExceptionListener
                     (int) $exception->getCode(),
                     $exception->getErrors()
                 );
-            } elseif ($exception instanceof AccessDeniedException) {
+            } elseif ($exception instanceof AccessDeniedException || $exception instanceof AccessDeniedHttpException) {
                 $response = ResponseFactory::createErrorResponse(
                     $event->getRequest(),
                     $exception->getMessage(),

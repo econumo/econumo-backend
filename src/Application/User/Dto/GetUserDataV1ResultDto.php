@@ -11,7 +11,7 @@ use OpenApi\Annotations as OA;
  *     required={"user"}
  * )
  */
-class UpdateCurrencyV1ResultDto
+class GetUserDataV1ResultDto
 {
     public CurrentUserResultDto $user;
 }

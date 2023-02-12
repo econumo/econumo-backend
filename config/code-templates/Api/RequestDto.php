@@ -7,7 +7,7 @@ namespace _CG_APPROOT_\Application\_CG_MODULE_\Dto;
 use OpenApi\Annotations as OA;
 
 /**
- * @OA\Definition(
+ * @OA\Schema(
  *     required={"id"}
  * )
  */

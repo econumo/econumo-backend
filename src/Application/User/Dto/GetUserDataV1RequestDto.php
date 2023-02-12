@@ -8,10 +8,9 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     required={"user"}
+ *     required={}
  * )
  */
-class UpdateCurrencyV1ResultDto
+class GetUserDataV1RequestDto
 {
-    public CurrentUserResultDto $user;
 }

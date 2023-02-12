@@ -8,14 +8,10 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     required={"token"}
+ *     required={"user"}
  * )
  */
 class UpdateNameV1ResultDto
 {
-    /**
-     * Id
-     * @OA\Property(example="jwt-token")
-     */
-    public string $token;
+    public CurrentUserResultDto $user;
 }

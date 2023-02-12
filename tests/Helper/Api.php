@@ -50,6 +50,18 @@ class Api extends \Codeception\Module
         ];
     }
 
+    public function getCurrentUserDtoJsonType(): array
+    {
+        return [
+            'id' => 'string',
+            'name' => 'string',
+            'email' => 'string',
+            'avatar' => 'string',
+            'currency' => 'string',
+            'reportDay' => 'integer',
+        ];
+    }
+
     public function getUserDtoJsonType(): array
     {
         return [

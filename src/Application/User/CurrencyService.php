@@ -11,11 +11,10 @@ use App\Domain\Entity\ValueObject\CurrencyCode;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Repository\UserRepositoryInterface;
 use App\Domain\Service\UserServiceInterface;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 
 class CurrencyService
 {
-    public function __construct(private readonly UpdateCurrencyV1ResultAssembler $updateCurrencyV1ResultAssembler, private readonly UserServiceInterface $userService, private readonly JWTTokenManagerInterface $authToken, private readonly UserRepositoryInterface $userRepository)
+    public function __construct(private readonly UpdateCurrencyV1ResultAssembler $updateCurrencyV1ResultAssembler, private readonly UserServiceInterface $userService, private readonly UserRepositoryInterface $userRepository)
     {
     }
 
@@ -25,7 +24,6 @@ class CurrencyService
     ): UpdateCurrencyV1ResultDto {
         $this->userService->updateCurrency($userId, new CurrencyCode($dto->currency));
         $user = $this->userRepository->get($userId);
-        $token = $this->authToken->create($user);
-        return $this->updateCurrencyV1ResultAssembler->assemble($dto, $token);
+        return $this->updateCurrencyV1ResultAssembler->assemble($dto, $user);
     }
 }

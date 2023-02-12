@@ -62,3 +62,8 @@ services:
             $baseCurrency: '%env(string:CURRENCY_BASE)%'
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_created, method: onTokenCreated }
+
+    App\Infrastructure\Auth\AuthenticationSuccessListener:
+        class: App\Infrastructure\Auth\AuthenticationSuccessListener
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_success, method: onAuthenticationSuccessResponse }

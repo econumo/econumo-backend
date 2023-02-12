@@ -49,7 +49,7 @@ class UpdateNameCest
         $I->sendPOST($this->url, ['name' => 'Johnny']);
         $I->seeResponseMatchesJsonType([
             'data' => [
-                'token' => 'string',
+                'user' => $I->getCurrentUserDtoJsonType(),
             ],
         ]);
     }

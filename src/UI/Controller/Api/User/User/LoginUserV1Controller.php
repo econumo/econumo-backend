@@ -6,9 +6,11 @@ namespace App\UI\Controller\Api\User\User;
 
 use App\Application\User\UserService;
 use App\Application\User\Dto\LoginUserV1RequestDto;
+use App\Domain\Entity\User;
 use App\UI\Controller\Api\User\User\Validation\LoginUserV1Form;
 use App\Application\Exception\ValidationException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\UI\Service\Validator\ValidatorInterface;
@@ -59,13 +61,13 @@ class LoginUserV1Controller extends AbstractController
     #[Route(path: '/api/v1/user/login-user', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
+        /** @var User $user */
         $user = $this->getUser();
         if ($user === null) {
             throw new AccessDeniedHttpException('Auth failed');
         }
 
         $result = $this->userService->loginUser($user);
-
-        return ResponseFactory::createOkResponse($request, $result);
+        return new JsonResponse($result);
     }
 }

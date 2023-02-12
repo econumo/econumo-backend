@@ -7,9 +7,9 @@ namespace App\Tests\api\v1\user;
 use App\Tests\ApiTester;
 use Codeception\Util\HttpCode;
 
-class UpdateCurrencyCest
+class GetUserDataCest
 {
-    private string $url = '/api/v1/user/update-currency';
+    private string $url = '/api/v1/user/get-user-data';
 
     /**
      * @throws \Codeception\Exception\ModuleException
@@ -17,7 +17,7 @@ class UpdateCurrencyCest
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, ['currency' => 'EUR']);
+        $I->sendGET($this->url, []);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
 
@@ -27,7 +27,7 @@ class UpdateCurrencyCest
     public function requestShouldReturn400ResponseCode(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, ['unexpected_param' => 'test']);
+        $I->sendGET($this->url, ['unexpected_param' => 'test']);
         $I->seeResponseCodeIs(HttpCode::BAD_REQUEST);
     }
 
@@ -36,7 +36,7 @@ class UpdateCurrencyCest
      */
     public function requestShouldReturn401ResponseCode(ApiTester $I): void
     {
-        $I->sendPOST($this->url, ['currency' => 'EUR']);
+        $I->sendGET($this->url);
         $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
     }
 
@@ -46,7 +46,7 @@ class UpdateCurrencyCest
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, ['currency' => 'EUR']);
+        $I->sendGET($this->url, []);
         $I->seeResponseMatchesJsonType([
             'data' => [
                 'user' => $I->getCurrentUserDtoJsonType(),
