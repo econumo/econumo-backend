@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Entity;
 
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Entity\ValueObject\ReportPeriod;
 use App\Domain\Exception\UserOptionException;
 use DateTime;
 use DateTimeImmutable;
@@ -30,13 +31,13 @@ class UserOption
     /**
      * @var string
      */
-    final public const DEFAULT_REPORT_PERIOD = 'monthly';
+    final public const DEFAULT_REPORT_PERIOD = ReportPeriod::MONTHLY;
 
 
     /**
      * @var string[]
      */
-    private const OPTIONS = [
+    public const OPTIONS = [
         self::CURRENCY,
         self::REPORT_PERIOD
     ];
@@ -72,6 +73,15 @@ class UserOption
         if (!in_array($name, self::OPTIONS, true)) {
             throw new UserOptionException();
         }
+    }
+
+    public function updateValue(string $value): void
+    {
+        if ($this->value === $value) {
+            return;
+        }
+        $this->value = $value;
+        $this->updated();
     }
 
     private function updated(): void

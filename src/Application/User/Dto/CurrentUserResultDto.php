@@ -41,16 +41,16 @@ class CurrentUserResultDto
     public string $avatar;
 
     /**
-     * Default currency
+     * Currency
      * @var string
      * @OA\Property(example="USD")
      */
     public string $currency;
 
     /**
-     * Default report period
+     * Report period
      * @var string
-     * @OA\Property(example=monthly)
+     * @OA\Property(example="monthly")
      */
     public string $reportPeriod;
 }

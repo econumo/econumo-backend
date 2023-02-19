@@ -58,7 +58,7 @@ class Api extends \Codeception\Module
             'email' => 'string',
             'avatar' => 'string',
             'currency' => 'string',
-            'reportDay' => 'integer',
+            'reportPeriod' => 'string',
         ];
     }
 

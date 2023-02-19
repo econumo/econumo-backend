@@ -8,6 +8,7 @@ use App\Domain\Entity\ValueObject\CurrencyCode;
 use App\Domain\Entity\ValueObject\Email;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\Identifier;
+use App\Domain\Entity\ValueObject\ReportPeriod;
 use App\Domain\Events\UserRegisteredEvent;
 use App\Domain\Traits\EventTrait;
 use DateTime;
@@ -206,5 +207,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return new CurrencyCode(UserOption::DEFAULT_CURRENCY);
+    }
+
+    public function updateCurrency(CurrencyCode $currencyCode): void
+    {
+        foreach ($this->options as $option) {
+            if ($option->getName() === UserOption::CURRENCY) {
+                $option->updateValue($currencyCode->getValue());
+            }
+        }
+    }
+
+    public function updateReportPeriod(ReportPeriod $reportPeriod): void
+    {
+        foreach ($this->options as $option) {
+            if ($option->getName() === UserOption::CURRENCY) {
+                $option->updateValue($reportPeriod->getValue());
+            }
+        }
     }
 }
