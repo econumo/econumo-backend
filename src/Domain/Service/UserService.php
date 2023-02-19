@@ -50,7 +50,7 @@ class UserService implements UserServiceInterface
             $this->userOptionRepository->save(
                 [
                     $this->userOptionFactory->create($user, UserOption::CURRENCY, UserOption::DEFAULT_CURRENCY),
-                    $this->userOptionFactory->create($user, UserOption::REPORT_DAY, UserOption::DEFAULT_REPORT_DAY)
+                    $this->userOptionFactory->create($user, UserOption::REPORT_PERIOD, UserOption::DEFAULT_REPORT_PERIOD)
                 ]
             );
 

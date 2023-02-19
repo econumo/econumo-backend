@@ -71,6 +71,14 @@ class Api extends \Codeception\Module
         ];
     }
 
+    public function getUserOptionDtoJsonType(): array
+    {
+        return [
+            'name' => 'string',
+            'value' => 'string|null',
+        ];
+    }
+
     public function getCategoryDtoJsonType(): array
     {
         return [

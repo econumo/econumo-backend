@@ -25,12 +25,12 @@ class UserOption
     /**
      * @var string
      */
-    final public const REPORT_DAY = 'report_day';
+    final public const REPORT_PERIOD = 'report_period';
 
     /**
      * @var string
      */
-    final public const DEFAULT_REPORT_DAY = '1';
+    final public const DEFAULT_REPORT_PERIOD = 'monthly';
 
 
     /**
@@ -38,7 +38,7 @@ class UserOption
      */
     private const OPTIONS = [
         self::CURRENCY,
-        self::REPORT_DAY
+        self::REPORT_PERIOD
     ];
 
     private readonly DateTimeImmutable $createdAt;

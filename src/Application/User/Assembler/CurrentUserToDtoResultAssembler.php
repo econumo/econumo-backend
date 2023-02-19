@@ -23,7 +23,7 @@ class CurrentUserToDtoResultAssembler
             $options[$option->getName()] = $option->getValue();
         }
         $dto->currency = $options[UserOption::CURRENCY] ?? UserOption::DEFAULT_CURRENCY;
-        $dto->reportDay = (int)($options[UserOption::REPORT_DAY] ?? UserOption::DEFAULT_REPORT_DAY);
+        $dto->reportPeriod = ($options[UserOption::REPORT_PERIOD] ?? UserOption::DEFAULT_REPORT_PERIOD);
 
         return $dto;
     }
