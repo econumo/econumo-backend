@@ -7,6 +7,7 @@ use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\CurrencyCode;
 use App\Domain\Entity\ValueObject\Email;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Entity\ValueObject\ReportPeriod;
 
 interface UserServiceInterface
 {
@@ -15,4 +16,6 @@ interface UserServiceInterface
     public function updateName(Id $userId, string $name): void;
 
     public function updateCurrency(Id $userId, CurrencyCode $currencyCode): void;
+
+    public function updateReportPeriod(Id $userId, ReportPeriod $reportPeriod): void;
 }

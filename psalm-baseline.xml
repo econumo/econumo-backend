@@ -245,7 +245,8 @@
     <NullableReturnStatement occurrences="1">
       <code>$this-&gt;getEntityManager()-&gt;getReference(Account::class, $id)</code>
     </NullableReturnStatement>
-    <TooManyArguments occurrences="1">
+    <TooManyArguments occurrences="2">
+      <code>orX</code>
       <code>orX</code>
     </TooManyArguments>
   </file>
@@ -363,6 +364,9 @@
       <code>Transaction[]</code>
       <code>Transaction[]</code>
     </LessSpecificImplementedReturnType>
+    <PossiblyNullReference occurrences="1">
+      <code>getId</code>
+    </PossiblyNullReference>
   </file>
   <file src="src/Infrastructure/Doctrine/Repository/UserOptionRepository.php">
     <InvalidNullableReturnType occurrences="1">

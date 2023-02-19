@@ -10,6 +10,7 @@ use App\Domain\Entity\ValueObject\CurrencyCode;
 use App\Domain\Entity\ValueObject\Email;
 use App\Domain\Entity\ValueObject\FolderName;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Entity\ValueObject\ReportPeriod;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Exception\UserRegisteredException;
 use App\Domain\Factory\ConnectionInviteFactoryInterface;
@@ -50,7 +51,7 @@ class UserService implements UserServiceInterface
             $this->userOptionRepository->save(
                 [
                     $this->userOptionFactory->create($user, UserOption::CURRENCY, UserOption::DEFAULT_CURRENCY),
-                    $this->userOptionFactory->create($user, UserOption::REPORT_DAY, UserOption::DEFAULT_REPORT_DAY)
+                    $this->userOptionFactory->create($user, UserOption::REPORT_PERIOD, UserOption::DEFAULT_REPORT_PERIOD)
                 ]
             );
 
@@ -80,14 +81,22 @@ class UserService implements UserServiceInterface
         $this->antiCorruptionService->beginTransaction();
         try {
             $user = $this->userRepository->get($userId);
-            $oldOption = $user->getOption(UserOption::CURRENCY);
-            if ($oldOption !== null) {
-                $this->userOptionRepository->delete($oldOption);
-            }
+            $user->updateCurrency($currencyCode);
+            $this->userRepository->save([$user]);
+            $this->antiCorruptionService->commit();
+        } catch (\Throwable $throwable) {
+            $this->antiCorruptionService->rollback();
+            throw $throwable;
+        }
+    }
 
-            $currencyOption = $this->userOptionFactory->create($user, UserOption::CURRENCY, $currencyCode->getValue());
-            $user->createOption($currencyOption);
-            $this->userOptionRepository->save([$currencyOption]);
+    public function updateReportPeriod(Id $userId, ReportPeriod $reportPeriod): void
+    {
+        $this->antiCorruptionService->beginTransaction();
+        try {
+            $user = $this->userRepository->get($userId);
+            $user->updateReportPeriod($reportPeriod);
+            $this->userRepository->save([$user]);
             $this->antiCorruptionService->commit();
         } catch (\Throwable $throwable) {
             $this->antiCorruptionService->rollback();

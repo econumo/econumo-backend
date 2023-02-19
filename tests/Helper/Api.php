@@ -57,8 +57,9 @@ class Api extends \Codeception\Module
             'name' => 'string',
             'email' => 'string',
             'avatar' => 'string',
+            'options' => 'array',
             'currency' => 'string',
-            'reportDay' => 'integer',
+            'reportPeriod' => 'string',
         ];
     }
 
@@ -68,6 +69,14 @@ class Api extends \Codeception\Module
             'id' => 'string',
             'name' => 'string',
             'avatar' => 'string',
+        ];
+    }
+
+    public function getUserOptionDtoJsonType(): array
+    {
+        return [
+            'name' => 'string',
+            'value' => 'string|null',
         ];
     }
 

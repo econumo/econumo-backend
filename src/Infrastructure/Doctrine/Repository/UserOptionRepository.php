@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Doctrine\Repository;
 
+use App\Domain\Entity\User;
 use App\Domain\Entity\UserOption;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Repository\UserOptionRepositoryInterface;
@@ -60,5 +61,13 @@ class UserOptionRepository extends ServiceEntityRepository implements UserOption
     {
         $this->getEntityManager()->remove($userOption);
         $this->getEntityManager()->flush();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function findByUserId(Id $userId): array
+    {
+        return $this->findBy(['user' => $this->getEntityManager()->getReference(User::class, $userId)]);
     }
 }
