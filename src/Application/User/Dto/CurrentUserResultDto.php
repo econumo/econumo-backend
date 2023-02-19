@@ -8,7 +8,7 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     required={"id", "name", "email", "avatar", "currency", "reportPeriod"}
+ *     required={"id", "name", "email", "avatar", "options"}
  * )
  */
 class CurrentUserResultDto
@@ -41,6 +41,13 @@ class CurrentUserResultDto
     public string $avatar;
 
     /**
+     * @var OptionResultDto[]
+     * @OA\Property()
+     */
+    public array $options = [];
+
+    /**
+     * @deprecated
      * Currency
      * @var string
      * @OA\Property(example="USD")
@@ -48,6 +55,7 @@ class CurrentUserResultDto
     public string $currency;
 
     /**
+     * @deprecated
      * Report period
      * @var string
      * @OA\Property(example="monthly")
