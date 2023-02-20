@@ -13,6 +13,7 @@ use App\Domain\Service\Budget\Dto\BudgetDataDto;
 use App\Domain\Service\Budget\Dto\BudgetDataReportDto;
 use DatePeriod;
 use DateTime;
+use DateTimeImmutable;
 use DateTimeInterface;
 
 class BudgetDataService implements BudgetDataServiceInterface
@@ -38,6 +39,10 @@ class BudgetDataService implements BudgetDataServiceInterface
         foreach ($period as $reportDateStart) {
             $reportDateEnd = DateTime::createFromInterface($reportDateStart);
             $reportDateEnd->add($period->getDateInterval());
+            if ($reportDateEnd > $dateEnd) {
+                $reportDateEnd = DateTime::createFromInterface($dateEnd);
+            }
+
             $reports = [];
             foreach ($budgets as $budget) {
                 $reportDto = new BudgetDataReportDto(

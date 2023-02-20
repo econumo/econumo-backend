@@ -29,35 +29,35 @@
         <field name="updatedAt" type="datetime" column="updated_at" nullable="false"/>
 
         <many-to-one field="user" target-entity="App\Domain\Entity\User">
-            <join-column name="user_id" referenced-column-name="id" nullable="false"/>
+            <join-column name="user_id" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
         </many-to-one>
         <many-to-many field="sharedAccess" target-entity="App\Domain\Entity\User">
             <join-table name="budget_access">
                 <join-columns>
-                    <join-column name="budget_id" referenced-column-name="id" nullable="false" />
+                    <join-column name="budget_id" referenced-column-name="id" nullable="false" on-delete="CASCADE" />
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="user_id" referenced-column-name="id" nullable="false" />
+                    <join-column name="user_id" referenced-column-name="id" nullable="false" on-delete="CASCADE" />
                 </inverse-join-columns>
             </join-table>
         </many-to-many>
         <many-to-many field="categories" target-entity="App\Domain\Entity\Category">
             <join-table name="budget_categories">
                 <join-columns>
-                    <join-column name="budget_id" referenced-column-name="id" nullable="false" />
+                    <join-column name="budget_id" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="category_id" referenced-column-name="id" nullable="false" />
+                    <join-column name="category_id" referenced-column-name="id" nullable="false" on-delete="CASCADE" />
                 </inverse-join-columns>
             </join-table>
         </many-to-many>
         <many-to-many field="tags" target-entity="App\Domain\Entity\Tag">
             <join-table name="budget_tags">
                 <join-columns>
-                    <join-column name="budget_id" referenced-column-name="id" nullable="false" />
+                    <join-column name="budget_id" referenced-column-name="id" nullable="false" on-delete="CASCADE" />
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="tag_id" referenced-column-name="id" nullable="false" />
+                    <join-column name="tag_id" referenced-column-name="id" nullable="false" on-delete="CASCADE" />
                 </inverse-join-columns>
             </join-table>
         </many-to-many>
