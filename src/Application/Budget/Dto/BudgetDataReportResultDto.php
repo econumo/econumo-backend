@@ -21,7 +21,7 @@ class BudgetDataReportResultDto
 
     /**
      * Spent
-     * @OA\Property(example="-15000.00")
+     * @OA\Property(example="15000.00")
      */
     public float $spent;
 }

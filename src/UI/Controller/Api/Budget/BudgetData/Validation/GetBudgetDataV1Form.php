@@ -40,16 +40,23 @@ class GetBudgetDataV1Form extends AbstractType
 
     public function validateDateRange($value, ExecutionContextInterface $context, $payload): void
     {
-        $dateEnd = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $value);
+        $dateEnd = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $value)->getTimestamp();
 
         /** @var \Symfony\Component\Form\Form $form */
         $form = $context->getRoot();
         /** @var GetBudgetDataV1RequestDto $dto */
         $dto = $form->getData();
-        $dateStart = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dto->dateStart);
+        $dateStart = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dto->dateStart)->getTimestamp();
 
         if ($dateStart > $dateEnd) {
             $context->buildViolation('DateEnd < DateStart')
+                ->atPath('dateEnd')
+                ->addViolation();
+            return;
+        }
+
+        if ($dateEnd - $dateStart >= 7776000) {
+            $context->buildViolation('Period more than 3 months')
                 ->atPath('dateEnd')
                 ->addViolation();
         }

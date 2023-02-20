@@ -33,7 +33,7 @@ class BudgetDataResultDto
 
     /**
      * Total expense
-     * @OA\Property(example="-100000.0")
+     * @OA\Property(example="100000.0")
      */
     public float $totalExpense;
 

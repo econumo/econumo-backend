@@ -27,7 +27,7 @@ class GetBudgetDataCest
     public function requestShouldReturn400ResponseCode(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendGET($this->url, ['dateStart' => 'test', 'dateEnd' => 'test']);
+        $I->sendGET($this->url, ['dateStart' => '2021-08-01 00:00:00', 'dateEnd' => '2022-09-01 00:00:00']);
         $I->seeResponseCodeIs(HttpCode::BAD_REQUEST);
     }
 
