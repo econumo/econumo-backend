@@ -199,4 +199,23 @@ class Api extends \Codeception\Module
             'role' => 'string',
         ];
     }
+
+    public function getBudgetDtoJsonType(): array
+    {
+        return [
+            'id' => 'string',
+            'name' => 'string',
+            'icon' => 'string',
+            'carryOver' => 'integer',
+            'carryOverNegative' => 'integer',
+            'carryOverStartDate' => 'string',
+            'amount' => 'float|integer',
+            'position' => 'integer',
+            'owner' => 'array',
+            'sharedAccess' => 'array',
+            'categories' => 'array',
+            'tags' => 'array',
+            'excludeTags' => 'integer',
+        ];
+    }
 }

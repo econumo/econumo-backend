@@ -11,14 +11,12 @@ use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\TransactionRepositoryInterface;
+use App\Infrastructure\Doctrine\Repository\Traits\NextIdentityTrait;
+use App\Infrastructure\Doctrine\Repository\Traits\SaveEntityTrait;
 use DateTimeInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\Exception\ORMException;
-use Doctrine\ORM\ORMInvalidArgumentException;
 use Doctrine\Persistence\ManagerRegistry;
-use Ramsey\Uuid\Uuid;
-use RuntimeException;
 
 /**
  * @method Transaction|null find($id, $lockMode = null, $lockVersion = null)
@@ -28,17 +26,11 @@ use RuntimeException;
  */
 class TransactionRepository extends ServiceEntityRepository implements TransactionRepositoryInterface
 {
+    use SaveEntityTrait, NextIdentityTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Transaction::class);
-    }
-
-    public function getNextIdentity(): Id
-    {
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $uuid = Uuid::uuid4();
-
-        return new Id($uuid->toString());
     }
 
     /**
@@ -53,22 +45,6 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
             ->orderBy('t.spentAt', Criteria::DESC)
             ->getQuery()
             ->getResult();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function save(array $transactions): void
-    {
-        try {
-            foreach ($transactions as $transaction) {
-                $this->getEntityManager()->persist($transaction);
-            }
-
-            $this->getEntityManager()->flush();
-        } catch (ORMException | ORMInvalidArgumentException $e) {
-            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
-        }
     }
 
     /**

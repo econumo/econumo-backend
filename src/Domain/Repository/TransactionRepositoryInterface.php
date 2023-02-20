@@ -18,9 +18,9 @@ interface TransactionRepositoryInterface
     public function findByAccountId(Id $accountId): array;
 
     /**
-     * @param Transaction[] $transactions
+     * @param Transaction[] $items
      */
-    public function save(array $transactions): void;
+    public function save(array $items): void;
 
     /**
      * @param Id[] $excludeAccounts
