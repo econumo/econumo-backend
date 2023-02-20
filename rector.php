@@ -22,7 +22,7 @@ return static function (RectorConfig $rectorConfig): void {
 
 
     // register a single rule
-    $rectorConfig->rule(InlineConstructorDefaultToPropertyRector::class);
+//    $rectorConfig->rule(InlineConstructorDefaultToPropertyRector::class);
 
     $rectorConfig->importNames();
 
