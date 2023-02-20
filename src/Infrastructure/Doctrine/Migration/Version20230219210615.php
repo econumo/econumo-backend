@@ -32,7 +32,7 @@ SQL;
 
         $addReportPeriodSQL =<<<'SQL'
 INSERT INTO user_options (id, name, value, user_id, created_at, updated_at)
-    SELECT gen_random_uuid(), 'report_period', 'monthly', id, created_at, updated_at FROM users
+    SELECT gen_random_uuid(), 'report_period', 'month', id, created_at, updated_at FROM users
 ON CONFLICT (user_id,name) 
 DO NOTHING;
 SQL;

@@ -38,4 +38,10 @@ interface TransactionRepositoryInterface
     public function delete(Transaction $transaction): void;
 
     public function replaceCategory(Id $oldCategoryId, Id $newCategoryId): void;
+
+    public function calculateTotalIncome(Id $userId, DateTimeInterface $dateStart, DateTimeInterface $dateEnd): float;
+
+    public function calculateTotalExpenses(Id $userId, DateTimeInterface $dateStart, DateTimeInterface $dateEnd): float;
+
+    public function calculateAmount(array $categoryIds, array $tagIds, bool $excludeTags, DateTimeInterface $dateStart, DateTimeInterface $dateEnd): float;
 }

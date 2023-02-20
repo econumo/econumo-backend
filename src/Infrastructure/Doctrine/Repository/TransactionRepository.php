@@ -26,7 +26,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class TransactionRepository extends ServiceEntityRepository implements TransactionRepositoryInterface
 {
-    use SaveEntityTrait, NextIdentityTrait;
+    use NextIdentityTrait;
+    use SaveEntityTrait;
 
     public function __construct(ManagerRegistry $registry)
     {
@@ -133,5 +134,64 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
             ->setParameter('lastUpdate', $lastUpdate);
 
         return $query->getQuery()->getResult();
+    }
+
+    public function calculateTotalIncome(Id $userId, DateTimeInterface $dateStart, DateTimeInterface $dateEnd): float
+    {
+        $result = $this->getEntityManager()
+            ->createQuery('SELECT COALESCE(SUM(t.amount)) as amount FROM App\Domain\Entity\Transaction t WHERE t.type = 1 AND t.user = :user AND t.spentAt > :dateStart AND t.spentAt < :dateEnd')
+            ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId))
+            ->setParameter('dateStart', $dateStart)
+            ->setParameter('dateEnd', $dateEnd)
+            ->getSingleScalarResult();
+        return (float)$result;
+    }
+
+    public function calculateTotalExpenses(Id $userId, DateTimeInterface $dateStart, DateTimeInterface $dateEnd): float
+    {
+        $result = $this->getEntityManager()
+            ->createQuery('SELECT COALESCE(SUM(t.amount)) as amount FROM App\Domain\Entity\Transaction t WHERE t.type = 0 AND t.user = :user AND t.spentAt > :dateStart AND t.spentAt < :dateEnd')
+            ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId))
+            ->setParameter('dateStart', $dateStart)
+            ->setParameter('dateEnd', $dateEnd)
+            ->getSingleScalarResult();
+        return (float)$result;
+    }
+
+    public function calculateAmount(
+        array $categoryIds,
+        array $tagIds,
+        bool $excludeTags,
+        DateTimeInterface $dateStart,
+        DateTimeInterface $dateEnd
+    ): float {
+        if ($tagIds === []) {
+            $result = $this->getEntityManager()
+                ->createQuery('SELECT COALESCE(SUM(t.amount)) as amount FROM App\Domain\Entity\Transaction t WHERE t.category IN (:categoryIds) AND t.spentAt > :dateStart AND t.spentAt < :dateEnd')
+                ->setParameter('categoryIds', $categoryIds)
+                ->setParameter('dateStart', $dateStart)
+                ->setParameter('dateEnd', $dateEnd)
+                ->getSingleScalarResult();
+        } else {
+            if ($excludeTags) {
+                $result = $this->getEntityManager()
+                    ->createQuery('SELECT COALESCE(SUM(t.amount)) as amount FROM App\Domain\Entity\Transaction t WHERE t.category IN (:categoryIds) AND t.tag IN (:tagIds) AND t.spentAt > :dateStart AND t.spentAt < :dateEnd')
+                    ->setParameter('tagIds', $tagIds)
+                    ->setParameter('categoryIds', $categoryIds)
+                    ->setParameter('dateStart', $dateStart)
+                    ->setParameter('dateEnd', $dateEnd)
+                    ->getSingleScalarResult();
+            } else {
+                $result = $this->getEntityManager()
+                    ->createQuery('SELECT COALESCE(SUM(t.amount)) as amount FROM App\Domain\Entity\Transaction t WHERE t.category IN (:categoryIds) AND t.tag NOT IN (:tagIds) AND t.spentAt > :dateStart AND t.spentAt < :dateEnd')
+                    ->setParameter('tagIds', $tagIds)
+                    ->setParameter('categoryIds', $categoryIds)
+                    ->setParameter('dateStart', $dateStart)
+                    ->setParameter('dateEnd', $dateEnd)
+                    ->getSingleScalarResult();
+            }
+        }
+
+        return (float)$result;
     }
 }

@@ -218,4 +218,23 @@ class Api extends \Codeception\Module
             'excludeTags' => 'integer',
         ];
     }
+
+    public function getBudgetDataDtoJsonType(): array
+    {
+        return [
+            'dateStart' => 'string',
+            'dateEnd' => 'string',
+            'totalIncome' => 'float|integer',
+            'totalExpense' => 'float|integer',
+            'budgets' => 'array'
+        ];
+    }
+
+    public function getBudgetDataReportDtoJsonType(): array
+    {
+        return [
+            'id' => 'string',
+            'spent' => 'float|integer',
+        ];
+    }
 }
