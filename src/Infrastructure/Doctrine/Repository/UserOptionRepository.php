@@ -21,8 +21,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class UserOptionRepository extends ServiceEntityRepository implements UserOptionRepositoryInterface
 {
-    use SaveEntityTrait, NextIdentityTrait;
-
+    use SaveEntityTrait;
+    use NextIdentityTrait;
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, UserOption::class);

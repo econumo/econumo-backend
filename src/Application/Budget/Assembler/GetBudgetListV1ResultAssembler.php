@@ -15,9 +15,7 @@ class GetBudgetListV1ResultAssembler
     }
 
     /**
-     * @param GetBudgetListV1RequestDto $dto
      * @param Budget[] $budgets
-     * @return GetBudgetListV1ResultDto
      */
     public function assemble(
         GetBudgetListV1RequestDto $dto,

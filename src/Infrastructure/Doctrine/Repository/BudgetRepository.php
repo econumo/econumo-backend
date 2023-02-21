@@ -23,8 +23,9 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class BudgetRepository extends ServiceEntityRepository implements BudgetRepositoryInterface
 {
-    use SaveEntityTrait, NextIdentityTrait, DeleteEntityTrait;
-
+    use SaveEntityTrait;
+    use NextIdentityTrait;
+    use DeleteEntityTrait;
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Budget::class);

@@ -23,8 +23,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class PayeeRepository extends ServiceEntityRepository implements PayeeRepositoryInterface
 {
-    use NextIdentityTrait, SaveEntityTrait;
-
+    use NextIdentityTrait;
+    use SaveEntityTrait;
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Payee::class);

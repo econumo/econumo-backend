@@ -26,8 +26,8 @@ use RuntimeException;
  */
 class CurrencyRepository extends ServiceEntityRepository implements CurrencyRepositoryInterface
 {
-    use SaveEntityTrait, NextIdentityTrait;
-
+    use SaveEntityTrait;
+    use NextIdentityTrait;
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Currency::class);

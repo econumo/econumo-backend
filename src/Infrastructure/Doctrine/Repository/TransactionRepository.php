@@ -85,6 +85,7 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
                     break;
                 }
             }
+
             if (!$found) {
                 $filteredAccounts[] = $account;
             }
@@ -172,24 +173,22 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
                 ->setParameter('dateStart', $dateStart)
                 ->setParameter('dateEnd', $dateEnd)
                 ->getSingleScalarResult();
+        } elseif ($excludeTags) {
+            $result = $this->getEntityManager()
+                ->createQuery('SELECT COALESCE(SUM(t.amount)) as amount FROM App\Domain\Entity\Transaction t WHERE t.category IN (:categoryIds) AND t.tag IN (:tagIds) AND t.spentAt >= :dateStart AND t.spentAt < :dateEnd')
+                ->setParameter('tagIds', $tagIds)
+                ->setParameter('categoryIds', $categoryIds)
+                ->setParameter('dateStart', $dateStart)
+                ->setParameter('dateEnd', $dateEnd)
+                ->getSingleScalarResult();
         } else {
-            if ($excludeTags) {
-                $result = $this->getEntityManager()
-                    ->createQuery('SELECT COALESCE(SUM(t.amount)) as amount FROM App\Domain\Entity\Transaction t WHERE t.category IN (:categoryIds) AND t.tag IN (:tagIds) AND t.spentAt >= :dateStart AND t.spentAt < :dateEnd')
-                    ->setParameter('tagIds', $tagIds)
-                    ->setParameter('categoryIds', $categoryIds)
-                    ->setParameter('dateStart', $dateStart)
-                    ->setParameter('dateEnd', $dateEnd)
-                    ->getSingleScalarResult();
-            } else {
-                $result = $this->getEntityManager()
-                    ->createQuery('SELECT COALESCE(SUM(t.amount)) as amount FROM App\Domain\Entity\Transaction t WHERE t.category IN (:categoryIds) AND t.tag NOT IN (:tagIds) AND t.spentAt >= :dateStart AND t.spentAt < :dateEnd')
-                    ->setParameter('tagIds', $tagIds)
-                    ->setParameter('categoryIds', $categoryIds)
-                    ->setParameter('dateStart', $dateStart)
-                    ->setParameter('dateEnd', $dateEnd)
-                    ->getSingleScalarResult();
-            }
+            $result = $this->getEntityManager()
+                ->createQuery('SELECT COALESCE(SUM(t.amount)) as amount FROM App\Domain\Entity\Transaction t WHERE t.category IN (:categoryIds) AND t.tag NOT IN (:tagIds) AND t.spentAt >= :dateStart AND t.spentAt < :dateEnd')
+                ->setParameter('tagIds', $tagIds)
+                ->setParameter('categoryIds', $categoryIds)
+                ->setParameter('dateStart', $dateStart)
+                ->setParameter('dateEnd', $dateEnd)
+                ->getSingleScalarResult();
         }
 
         return (float)$result;

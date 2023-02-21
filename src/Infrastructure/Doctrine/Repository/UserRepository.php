@@ -26,8 +26,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface, UserRepositoryInterface
 {
-    use SaveEntityTrait, NextIdentityTrait;
-
+    use SaveEntityTrait;
+    use NextIdentityTrait;
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);

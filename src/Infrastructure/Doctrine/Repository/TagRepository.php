@@ -23,8 +23,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class TagRepository extends ServiceEntityRepository implements TagRepositoryInterface
 {
-    use NextIdentityTrait, SaveEntityTrait;
-
+    use NextIdentityTrait;
+    use SaveEntityTrait;
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Tag::class);

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Doctrine\Repository;
 
+use DateTime;
 use App\Domain\Entity\Currency;
 use App\Domain\Entity\CurrencyRate;
 use App\Domain\Entity\ValueObject\Id;
@@ -25,8 +26,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CurrencyRateRepository extends ServiceEntityRepository implements CurrencyRateRepositoryInterface
 {
-    use SaveEntityTrait, NextIdentityTrait;
-
+    use SaveEntityTrait;
+    use NextIdentityTrait;
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, CurrencyRate::class);
@@ -47,7 +48,7 @@ class CurrencyRateRepository extends ServiceEntityRepository implements Currency
                 throw new NotFoundException('Currency rates not loaded');
             }
 
-            $ratesDate = \DateTime::createFromFormat('Y-m-d', $lastDate);
+            $ratesDate = DateTime::createFromFormat('Y-m-d', $lastDate);
         } else {
             $dateBuilder = $this->createQueryBuilder('cr')
                 ->select('cr.publishedAt')
@@ -56,7 +57,7 @@ class CurrencyRateRepository extends ServiceEntityRepository implements Currency
                 ->where('cr.publishedAt <= :date')
                 ->setParameter('date', $date);
             $lastDate = $dateBuilder->getQuery()->getSingleScalarResult();
-            $ratesDate = \DateTime::createFromFormat('Y-m-d', $lastDate);
+            $ratesDate = DateTime::createFromFormat('Y-m-d', $lastDate);
         }
 
         return $this->createQueryBuilder('cr')

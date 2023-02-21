@@ -16,15 +16,18 @@ class ReportPeriod implements ValueObjectInterface, JsonSerializable
     /**
      * @var string
      */
-    public const MONTHLY = 'monthly';
+    final public const MONTHLY = 'monthly';
 
     /**
-     * @var array<string, int>
+     * @var string[]
      */
     private const OPTIONS = [
         self::MONTHLY
     ];
 
+    /**
+     * @var array<string, string>
+     */
     private const DATE_INTERVAL_MAPPING = [
         self::MONTHLY => '1 month'
     ];

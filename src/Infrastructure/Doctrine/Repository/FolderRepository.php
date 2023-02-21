@@ -27,8 +27,8 @@ use RuntimeException;
  */
 class FolderRepository extends ServiceEntityRepository implements FolderRepositoryInterface
 {
-    use NextIdentityTrait, SaveEntityTrait;
-
+    use NextIdentityTrait;
+    use SaveEntityTrait;
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Folder::class);

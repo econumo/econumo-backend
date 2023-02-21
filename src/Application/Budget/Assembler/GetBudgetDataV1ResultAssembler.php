@@ -14,9 +14,7 @@ use App\Domain\Service\Budget\Dto\BudgetDataReportDto;
 class GetBudgetDataV1ResultAssembler
 {
     /**
-     * @param GetBudgetDataV1RequestDto $dto
      * @param BudgetDataDto[] $reports
-     * @return GetBudgetDataV1ResultDto
      */
     public function assemble(
         GetBudgetDataV1RequestDto $dto,
@@ -38,6 +36,7 @@ class GetBudgetDataV1ResultAssembler
                 $subDto->spent = $budget->spent;
                 $dto->budgets[] = $subDto;
             }
+
             $result->items[] = $dto;
         }
 

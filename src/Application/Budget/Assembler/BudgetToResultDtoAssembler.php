@@ -24,7 +24,7 @@ class BudgetToResultDtoAssembler
         $dto->icon = $budget->getIcon()->getValue();
         $dto->carryOver = (int)$budget->isCarryOver();
         $dto->carryOverNegative = (int)$budget->isCarryOverNegative();
-        $dto->carryOverStartDate = (!$budget->getCarryOverStartDate() ? '' : $budget->getCarryOverStartDate()->format('Y-m-d H:i:s'));
+        $dto->carryOverStartDate = ($budget->getCarryOverStartDate() === null ? '' : $budget->getCarryOverStartDate()->format('Y-m-d H:i:s'));
         $dto->amount = $budget->getAmount();
 
         $dto->position = 0;
@@ -43,6 +43,7 @@ class BudgetToResultDtoAssembler
         foreach ($budget->getTags() as $tag) {
             $dto->tags[] = $this->tagToDtoResultAssembler->assemble($tag);
         }
+
         $dto->excludeTags = (int)$budget->isExcludeTags();
 
         return $dto;

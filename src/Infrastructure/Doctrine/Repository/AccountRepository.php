@@ -25,8 +25,9 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class AccountRepository extends ServiceEntityRepository implements AccountRepositoryInterface
 {
-    use SaveEntityTrait, NextIdentityTrait, DeleteEntityTrait;
-
+    use SaveEntityTrait;
+    use NextIdentityTrait;
+    use DeleteEntityTrait;
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Account::class);

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\UI\Controller\Api\Budget\BudgetData\Validation;
 
+use Symfony\Component\Form\Form;
 use App\Application\Budget\Dto\GetBudgetDataV1RequestDto;
 use App\UI\Service\Validator\ValueObjectValidationFactoryInterface;
 use DateTimeImmutable;
@@ -42,7 +43,7 @@ class GetBudgetDataV1Form extends AbstractType
     {
         $dateEnd = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $value)->getTimestamp();
 
-        /** @var \Symfony\Component\Form\Form $form */
+        /** @var Form $form */
         $form = $context->getRoot();
         /** @var GetBudgetDataV1RequestDto $dto */
         $dto = $form->getData();
@@ -55,7 +56,7 @@ class GetBudgetDataV1Form extends AbstractType
             return;
         }
 
-        if ($dateEnd - $dateStart >= 7776000) {
+        if ($dateEnd - $dateStart >= 7_776_000) {
             $context->buildViolation('Period more than 3 months')
                 ->atPath('dateEnd')
                 ->addViolation();

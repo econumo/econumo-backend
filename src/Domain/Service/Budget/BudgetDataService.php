@@ -50,6 +50,7 @@ class BudgetDataService implements BudgetDataServiceInterface
                 );
                 $reports[] = $reportDto;
             }
+
             $dto = new BudgetDataDto(
                 $reportDateStart,
                 $reportDateEnd,
@@ -79,10 +80,12 @@ class BudgetDataService implements BudgetDataServiceInterface
         foreach ($budget->getCategories() as $category) {
             $categoryIds[] = $category->getId();
         }
+
         $tagIds = [];
         foreach ($budget->getTags() as $tag) {
             $tagIds[] = $tag->getId();
         }
+
         return $this->transactionRepository->calculateAmount($categoryIds, $tagIds, $budget->isExcludeTags(), $dateStart, $dateEnd);
     }
 }

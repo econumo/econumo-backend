@@ -22,8 +22,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CategoryRepository extends ServiceEntityRepository implements CategoryRepositoryInterface
 {
-    use NextIdentityTrait, SaveEntityTrait;
-
+    use NextIdentityTrait;
+    use SaveEntityTrait;
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Category::class);
