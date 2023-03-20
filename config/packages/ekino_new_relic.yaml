@@ -1,5 +1,5 @@
 ekino_new_relic:
-    enabled: %env(NEW_RELIC_ENABLED)%
+    enabled: "%env(NEW_RELIC_ENABLED)%"
     application_name: "%env(NEW_RELIC_APP_NAME)%"
     api_key: "%env(NEW_RELIC_API_KEY)%"
     api_host: "%env(NEW_RELIC_API_HOST)%"
