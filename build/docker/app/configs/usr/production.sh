@@ -8,7 +8,14 @@ if [[ -n "${NEW_RELIC_API_KEY}" ]]; then
       cd /tmp/newrelic-php5-*/ && \
       export NR_INSTALL_USE_CP_NOT_LN=1 && \
       export NR_INSTALL_SILENT=1 && \
-      sh newrelic-install install -n logs-integration
+      sh newrelic-install install -n logs-integration && \
+      rm -rf /tmp/newrelic-php5-* /tmp/nrinstall* && \
+      sed -i \
+        -e "s/\"REPLACE_WITH_REAL_KEY\"/$NEW_RELIC_LICENSE_KEY/" \
+        -e "s/\"YOUR_APPLICATION_NAME\"/$NEW_RELIC_APP_NAME/" \
+        -e 's/;newrelic.daemon.app_connect_timeout =.*/newrelic.daemon.app_connect_timeout=15s/' \
+        -e 's/;newrelic.daemon.start_timeout =.*/newrelic.daemon.start_timeout=5s/' \
+        /usr/local/etc/php/conf.d/newrelic.ini
 fi
 
 /usr/bin/supervisord -n -c /etc/supervisord.conf
