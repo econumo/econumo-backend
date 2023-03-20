@@ -4,7 +4,7 @@ cd /var/www && php bin/console doctrine:migrations:migrate --quiet --no-interact
 echo "* * * * * www-data  cd /var/www && php bin/console schedule:run >> /dev/null 2>&1" | crontab -u www-data -
 
 if [[ -n "${NEW_RELIC_API_KEY}" ]]; then
-  mkdir -p cd /opt/newrelic && \
+  mkdir -p /opt/newrelic && \
       cd /opt/newrelic && \
       wget -qO- https://download.newrelic.com/php_agent/archive/10.7.0.319/newrelic-php5-10.7.0.319-linux.tar.gz | tar xvz -C /opt/newrelic && \
       cd /opt/newrelic/newrelic-php5-10.7.0.319-linux/ && \
