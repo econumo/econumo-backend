@@ -1,2 +1,0 @@
-ekino_new_relic:
-    enabled: "%env(bool:NEW_RELIC_ENABLED)%"
