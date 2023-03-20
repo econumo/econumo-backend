@@ -1,8 +1,8 @@
 ekino_new_relic:
-    enabled: false
-    application_name: "%env(NEWRELIC_APP_NAME)%"
-    api_key: "%env(NEWRELIC_API_KEY)%"
-    api_host: "%env(NEWRELIC_API_HOST)%"
-    license_key: "%env(NEWRELIC_LICENSE_KEY)%"
+    enabled: "%env(bool:NEW_RELIC_ENABLED)%"
+    application_name: "%env(NEW_RELIC_APP_NAME)%"
+    api_key: "%env(NEW_RELIC_API_KEY)%"
+    api_host: "%env(NEW_RELIC_API_HOST)%"
+    license_key: "%env(NEW_RELIC_LICENSE_KEY)%"
     exceptions: true
     deprecations: false
