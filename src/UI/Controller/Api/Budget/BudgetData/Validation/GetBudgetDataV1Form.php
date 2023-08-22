@@ -48,6 +48,7 @@ class GetBudgetDataV1Form extends AbstractType
         /** @var GetBudgetDataV1RequestDto $dto */
         $dto = $form->getData();
         $dateStart = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dto->dateStart)->getTimestamp();
+        $dateEndLimit = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dto->dateStart)->modify('+3 months')->getTimestamp();
 
         if ($dateStart > $dateEnd) {
             $context->buildViolation('DateEnd < DateStart')
@@ -56,7 +57,7 @@ class GetBudgetDataV1Form extends AbstractType
             return;
         }
 
-        if ($dateEnd - $dateStart >= 7_776_000) {
+        if ($dateEnd > $dateEndLimit) {
             $context->buildViolation('Period more than 3 months')
                 ->atPath('dateEnd')
                 ->addViolation();
