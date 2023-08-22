@@ -13,8 +13,8 @@ on:
                 required: true
 
 jobs:
-    build_and_publish_to_docker_hub:
-        name: docker_hub_publish
+    build_and_publish:
+        name: build_and_publish
         runs-on: ubuntu-latest
         env:
             DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}

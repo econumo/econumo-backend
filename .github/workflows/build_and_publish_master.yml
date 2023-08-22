@@ -6,7 +6,7 @@ on:
 
 jobs:
     build_and_publish_master_to_docker_hub:
-        uses: ./.github/workflows/build_and_publish_docker_hub.yml
+        uses: ./.github/workflows/build_and_publish.yml
         with:
             DOCKER_IMAGE_APP: "econumo/api-backend:latest"
         secrets: inherit
