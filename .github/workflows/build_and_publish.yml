@@ -1,19 +1,25 @@
-name: "Test branch"
 on:
-    push:
-        branches:
-            - '*'
-            - '!master'
-            - '!develop'
+    workflow_call:
+        inputs:
+            DOCKER_IMAGE_APP:
+                required: true
+                type: string
+        secrets:
+            DOCKER_LOGIN:
+                required: true
+            DOCKER_PASSWORD:
+                required: true
+            APP_QASE_TOKEN:
+                required: true
 
 jobs:
-    test-branch:
-        name: test_branch
+    build_and_publish:
+        name: build_and_publish
         runs-on: ubuntu-latest
         env:
             DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}
             DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-            DOCKER_IMAGE_APP: "econumo/api-backend:latest"
+            DOCKER_IMAGE_APP: ${{ inputs.DOCKER_IMAGE_APP }}
 
         services:
             postgresql:
@@ -32,17 +38,13 @@ jobs:
 
             -   uses: actions/checkout@v3
 
-            -   name: Validate COMPOSER
-                if: success()
-                run: composer validate
-
-            -   name: Build APP image
+            -   name: Build APP image for testing
                 if: success()
                 run: |
                     docker pull ${DOCKER_IMAGE_APP} || true
                     docker build --cache-from ${DOCKER_IMAGE_APP} --tag ${DOCKER_IMAGE_APP} --target test -f build/docker/app/Dockerfile .
 
-            -   name: Run tests
+            -   name: Test APP image
                 if: success()
                 run: |
                     docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:database:create --if-not-exists --env=test
@@ -50,17 +52,16 @@ jobs:
                     docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:fixtures:load --purge-with-truncate -n --env=test
                     docker run --network="host" --add-host=db:127.0.0.1 --env QASE_ENABLE=${QASE_ENABLE} --env QASE_TOKEN=${QASE_TOKEN} --env QASE_PROJECT=${QASE_PROJECT} ${DOCKER_IMAGE_APP} vendor/bin/codecept run
                 env:
-                    QASE_ENABLE: "false"
+                    QASE_ENABLE: "true"
                     QASE_TOKEN: ${{ secrets.APP_QASE_TOKEN }}
                     QASE_PROJECT: "EA"
 
-            -   name: Run RECTOR
+            -   name: Build APP image for publishing
                 if: success()
                 run: |
-                    docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} vendor/bin/rector process --dry-run
+                    docker build --cache-from ${DOCKER_IMAGE_APP} --tag ${DOCKER_IMAGE_APP} --target prod -f build/docker/app/Dockerfile .
 
-#            -   name: Run PSALM analysis
-#                if: success()
-#                run: |
-#                    docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} vendor/bin/psalm --long-progress --output-format=github
-
+            -   name: Publish DOCKER image
+                if: success()
+                run: |
+                    docker push ${DOCKER_IMAGE_APP}
