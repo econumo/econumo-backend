@@ -25,7 +25,6 @@ class AccountFactory implements AccountFactoryInterface
         AccountName $name,
         AccountType $accountType,
         Id $currencyId,
-        float $balance,
         Icon $icon
     ): Account {
         return new Account(
@@ -33,7 +32,6 @@ class AccountFactory implements AccountFactoryInterface
             $this->userRepository->getReference($userId),
             $name,
             $this->currencyRepository->getReference($currencyId),
-            $balance,
             $accountType,
             $icon,
             $this->datetimeService->getCurrentDatetime()

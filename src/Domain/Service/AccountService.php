@@ -48,7 +48,6 @@ class AccountService implements AccountServiceInterface
                 new AccountName($dto->name),
                 new AccountType(AccountType::CREDIT_CARD),
                 $dto->currencyId,
-                $dto->balance,
                 new Icon($dto->icon)
             );
             $this->accountRepository->save([$account]);
@@ -63,6 +62,8 @@ class AccountService implements AccountServiceInterface
 
             $folder->addAccount($account);
             $this->folderRepository->save([$folder]);
+
+            $this->updateBalance($account->getId(), $dto->balance, $account->getCreatedAt(), '');
 
             $this->antiCorruptionService->commit();
         } catch (Throwable $throwable) {

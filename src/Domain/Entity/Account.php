@@ -28,12 +28,11 @@ class Account
         private User $user,
         private AccountName $name,
         private Currency $currency,
-        float $balance,
         private AccountType $type,
         private Icon $icon,
         DateTimeInterface $createdAt
     ) {
-        $this->balance = (string)$balance;
+        $this->balance = (string)0.0;
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
     }
@@ -147,6 +146,11 @@ class Account
             $this->isDeleted = true;
             $this->updated();
         }
+    }
+
+    public function getCreatedAt(): DateTimeInterface
+    {
+        return $this->createdAt;
     }
 
     public function getUpdatedAt(): DateTimeInterface

@@ -17,7 +17,6 @@ interface AccountFactoryInterface
         AccountName $name,
         AccountType $accountType,
         Id $currencyId,
-        float $balance,
         Icon $icon
     ): Account;
 }
