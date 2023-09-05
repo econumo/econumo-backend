@@ -32,7 +32,7 @@ class Account
         private Icon $icon,
         DateTimeInterface $createdAt
     ) {
-        $this->balance = (string)0.0;
+        $this->balance = '0';
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
     }

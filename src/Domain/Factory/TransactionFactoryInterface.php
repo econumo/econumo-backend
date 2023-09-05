@@ -11,5 +11,7 @@ interface TransactionFactoryInterface
 {
     public function create(TransactionDto $dto): Transaction;
 
+    public function createTransaction(Id $accountId, float $transaction, \DateTimeInterface $transactionDate, string $comment = ''): Transaction;
+
     public function createCorrection(Id $accountId, float $correction, \DateTimeInterface $transactionDate, string $comment = ''): Transaction;
 }

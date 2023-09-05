@@ -13,17 +13,18 @@ use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\AccessDeniedException;
 use App\Domain\Factory\AccountFactoryInterface;
 use App\Domain\Factory\AccountOptionsFactoryInterface;
+use App\Domain\Factory\TransactionFactoryInterface;
 use App\Domain\Repository\AccountOptionsRepositoryInterface;
 use App\Domain\Repository\AccountRepositoryInterface;
 use App\Domain\Repository\FolderRepositoryInterface;
+use App\Domain\Repository\TransactionRepositoryInterface;
 use App\Domain\Service\Dto\AccountDto;
-use App\Domain\Service\Dto\AccountPositionDto;
 use DateTimeInterface;
 use Throwable;
 
 class AccountService implements AccountServiceInterface
 {
-    public function __construct(private readonly AccountRepositoryInterface $accountRepository, private readonly AccountFactoryInterface $accountFactory, private readonly TransactionServiceInterface $transactionService, private readonly AccountOptionsFactoryInterface $accountOptionsFactory, private readonly AccountOptionsRepositoryInterface $accountOptionsRepository, private readonly AntiCorruptionServiceInterface $antiCorruptionService, private readonly FolderRepositoryInterface $folderRepository)
+    public function __construct(private readonly AccountRepositoryInterface $accountRepository, private readonly AccountFactoryInterface $accountFactory, private readonly TransactionServiceInterface $transactionService, private readonly AccountOptionsFactoryInterface $accountOptionsFactory, private readonly AccountOptionsRepositoryInterface $accountOptionsRepository, private readonly AntiCorruptionServiceInterface $antiCorruptionService, private readonly FolderRepositoryInterface $folderRepository, private readonly TransactionFactoryInterface $transactionFactory, private readonly TransactionRepositoryInterface $transactionRepository)
     {
     }
 
@@ -63,7 +64,17 @@ class AccountService implements AccountServiceInterface
             $folder->addAccount($account);
             $this->folderRepository->save([$folder]);
 
-            $this->updateBalance($account->getId(), $dto->balance, $account->getCreatedAt(), '');
+            if ((string)$dto->balance !== '0') {
+                $transaction = $this->transactionFactory->createTransaction(
+                    $account->getId(),
+                    $dto->balance,
+                    $account->getCreatedAt()
+                );
+                $this->transactionRepository->save([$transaction]);
+                $account = $this->accountRepository->get($account->getId());
+                $account->applyTransaction($transaction);
+                $this->accountRepository->save([$account]);
+            }
 
             $this->antiCorruptionService->commit();
         } catch (Throwable $throwable) {

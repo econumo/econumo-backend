@@ -41,6 +41,30 @@ class TransactionFactory implements TransactionFactoryInterface
         );
     }
 
+    public function createTransaction(
+        Id $accountId,
+        float $transaction,
+        \DateTimeInterface $transactionDate,
+        string $comment = ''
+    ): Transaction {
+        $account = $this->accountRepository->get($accountId);
+        return new Transaction(
+            $this->transactionRepository->getNextIdentity(),
+            $this->userRepository->getReference($account->getUserId()),
+            new TransactionType($transaction < 0 ? TransactionType::EXPENSE : TransactionType::INCOME),
+            $this->accountRepository->getReference($accountId),
+            null,
+            abs($transaction),
+            $transactionDate,
+            $this->datetimeService->getCurrentDatetime(),
+            null,
+            null,
+            $comment,
+            null,
+            null
+        );
+    }
+
     public function createCorrection(
         Id $accountId,
         float $correction,
