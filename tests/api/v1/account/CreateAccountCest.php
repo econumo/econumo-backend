@@ -61,7 +61,7 @@ class CreateAccountCest
     {
         $I->amAuthenticatedAsJohn();
         $I->sendPOST($this->url, [
-            'id' => '4b7946ca-2a48-4ea3-8645-2960cea6b94f',
+            'id' => '4b7946ca-2a48-4ea3-8645-2960cea6b94e',
             'name' => 'Savings Account',
             'currencyId' => 'fe5d9269-b69c-4841-9c04-136225447eca',
             'balance' => 100.13,
