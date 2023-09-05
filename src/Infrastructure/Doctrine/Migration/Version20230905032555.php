@@ -24,7 +24,7 @@ final class Version20230905032555 extends AbstractMigration
 
         $sql = <<<SQL
 INSERT INTO transactions (id, user_id, type, account_id, account_recipient_id, amount, amount_recipient, category_id, description, payee_id, tag_id, created_at, updated_at, spent_at)
-SELECT gen_random_uuid(), tmp1.user_id, CASE WHEN COALESCE(transactions_balance, 0) + balance < 0 THEN 0 ELSE 1 END as type, tmp1.account_id, NULL, tmp1.missing_transaction, NULL, NULL, 'Econumo: Start balance', NULL, NULL, '2021-01-01 00:00:00', '2021-01-01 00:00:00', '2021-01-01 00:00:00'
+SELECT gen_random_uuid(), tmp1.user_id, CASE WHEN COALESCE(transactions_balance, 0) + balance < 0 THEN 0 ELSE 1 END as type, tmp1.account_id, NULL, ABS(tmp1.missing_transaction), NULL, NULL, 'Econumo: Start balance', NULL, NULL, '2021-01-01 00:00:00', '2021-01-01 00:00:00', '2021-01-01 00:00:00'
 FROM (SELECT * FROM (SELECT a.user_id as user_id,
              a.id as account_id,
              a.balance as balance,
