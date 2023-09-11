@@ -199,4 +199,12 @@ class Api extends \Codeception\Module
             'role' => 'string',
         ];
     }
+
+    public function getBalanceAnalyticsDtoJsonType(): array
+    {
+        return [
+            'date' => 'string',
+            'amount' => 'string'
+        ];
+    }
 }

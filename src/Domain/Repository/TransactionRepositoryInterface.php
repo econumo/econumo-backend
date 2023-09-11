@@ -17,6 +17,8 @@ interface TransactionRepositoryInterface
      */
     public function findByAccountId(Id $accountId): array;
 
+    public function getBalance(Id $accountId, DateTimeInterface $date): float;
+
     /**
      * @param Transaction[] $transactions
      */
