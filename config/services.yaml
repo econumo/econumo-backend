@@ -67,3 +67,10 @@ services:
         class: App\Infrastructure\Auth\AuthenticationSuccessListener
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_success, method: onAuthenticationSuccessResponse }
+
+    App\UI\Middleware\ProtectSystemApi\ProtectSystemApiListener:
+        class: App\UI\Middleware\ProtectSystemApi\ProtectSystemApiListener
+        arguments:
+            $token: '%env(ECONUMO_SYSTEM_API_TOKEN)%'
+        tags:
+            - { name: kernel.event_listener }

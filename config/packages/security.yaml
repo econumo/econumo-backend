@@ -34,6 +34,11 @@ security:
             stateless: true
             anonymous: true
 
+        api_system:
+            pattern: ^/api/v1/system/
+            stateless: true
+            anonymous: true
+
         api:
             pattern: ^/api
             stateless: true
@@ -47,6 +52,7 @@ security:
         - {path: ^/api/v1/user/register-user, roles: IS_AUTHENTICATED_ANONYMOUSLY}
         - {path: ^/api/v1/user/login-user, roles: IS_AUTHENTICATED_ANONYMOUSLY}
         - {path: ^/api/v1/user/remind-password, roles: IS_AUTHENTICATED_ANONYMOUSLY}
+        - {path: ^/api/v1/system/, roles: IS_AUTHENTICATED_ANONYMOUSLY}
         - {path: ^/api/doc, roles: IS_AUTHENTICATED_ANONYMOUSLY}
         - {path: ^/api, roles: IS_AUTHENTICATED_FULLY}
 

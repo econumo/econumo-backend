@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\UI\Middleware\RestrictAccessFromPublic;
+namespace App\UI\Middleware\ProtectSystemApi;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-class RestrictAccessFromPublicListener implements EventSubscriberInterface
+readonly class ProtectSystemApiListener implements EventSubscriberInterface
 {
     /**
      * @inheritDoc
@@ -21,16 +21,20 @@ class RestrictAccessFromPublicListener implements EventSubscriberInterface
         ];
     }
 
+    public function __construct(private string $token)
+    {
+    }
+
     public function onKernelController(ControllerEvent $event): void
     {
         $controller = $event->getController();
         $controller = is_array($controller) ? $controller[0] : $controller;
 
-        if (!$controller instanceof AccessibleFromPublicInterface) {
-            $isRequestFromPublic = (bool)$event->getRequest()->headers->get('x-pub', '0');
+        if ($controller instanceof SystemApiInterface) {
+            $tokenAPI = (string)$event->getRequest()->headers->get('Authorization');
 
-            if ($isRequestFromPublic) {
-                throw new AccessDeniedHttpException('This method is not accessible from public');
+            if ($this->token !== $tokenAPI) {
+                throw new AccessDeniedHttpException('Access denied');
             }
         }
     }

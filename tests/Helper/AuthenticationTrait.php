@@ -29,6 +29,13 @@ trait AuthenticationTrait
         $this->amAuthenticatedAsUser('margo@tirrell.test');
     }
 
+    public function amAuthenticatedAsSystemUser(): void
+    {
+        /** @var \Codeception\Module\REST $rest */
+        $rest = $this->getModule('REST');
+        $rest->haveHttpHeader('Authorization', 'test');
+    }
+
     public function amAuthenticatedAsUser(string $email): void
     {
         /** @var UserRepositoryInterface $userRepository */

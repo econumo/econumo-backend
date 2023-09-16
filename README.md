@@ -9,16 +9,23 @@
 
 ### Currencies 
 
-Econumo uses [openexchangerates.org](https://docs.openexchangerates.org/docs/api-introduction) for updating currencies and it's rates.
-It's free for econumo needs.
+#### How to load currencies
 
-Basically, if you don't plan to use account with different currencies - probably you don't need it to. 
+Please use the currency loader to fulfill your database: https://github.com/econumo/currency-loader
 
-#### How to update currencies list and it's rates?
-1. Register new account at [openexchangerates.org](https://openexchangerates.org)
-2. Generate new access token
-3. Put token at `.env` as `OPEN_EXCHANGE_RATES_TOKEN={YOUR_TOKEN}`
-4. Run `bin/console app:update-currencies` to update full list of available currencies
-5. Run `bin/console app:update-currency-rates` to update currency rates
+Alternatively, you can use the API call: 
+```bash
+curl -X 'POST' \
+  '<YOUR_API_BASE_URL>/api/v1/system/import-currency-list' \
+  -H 'accept: application/json' \
+  -H '<ECONUMO_SYSTEM_API_TOKEN>' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "items": [
+    "USD",
+    "EUR",
+  ]
+}'
+```
 
-If you would like to change base currency - put at `.env` string `CURRENCY_BASE=USD`
+If you want to change base currency (by default USD) - update the value of `CURRENCY_BASE` in the `.env`. 
