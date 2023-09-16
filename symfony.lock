@@ -171,9 +171,6 @@
     "doctrine/sql-formatter": {
         "version": "1.1.1"
     },
-    "dragonmantank/cron-expression": {
-        "version": "v3.3.2"
-    },
     "egulias/email-validator": {
         "version": "3.2"
     },
@@ -307,6 +304,18 @@
     },
     "phpspec/prophecy": {
         "version": "v1.10.3"
+    },
+    "phpstan/phpstan": {
+        "version": "1.9",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "1.0",
+            "ref": "f10b8054de1a94a3b9e8806a6453fd5c98491c44"
+        },
+        "files": [
+            "phpstan.dist.neon"
+        ]
     },
     "phpunit/php-code-coverage": {
         "version": "8.0.1"
@@ -772,9 +781,6 @@
     },
     "zendframework/zend-eventmanager": {
         "version": "3.2.1"
-    },
-    "zenstruck/schedule-bundle": {
-        "version": "v1.5.0"
     },
     "zircote/swagger-php": {
         "version": "2.0.15"

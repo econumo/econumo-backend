@@ -402,11 +402,6 @@
       <code>$className</code>
     </ArgumentTypeCoercion>
   </file>
-  <file src="src/Infrastructure/OpenExchangeRates/CurrencyRatesLoaderService.php">
-    <PossiblyFalseReference occurrences="1">
-      <code>format</code>
-    </PossiblyFalseReference>
-  </file>
   <file src="src/Infrastructure/Symfony/OperationService.php">
     <PossiblyNullReference occurrences="1">
       <code>release</code>

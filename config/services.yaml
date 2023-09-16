@@ -25,16 +25,6 @@ services:
         arguments:
             $baseCurrency: '%env(string:CURRENCY_BASE)%'
 
-    App\Domain\Service\Currency\CurrencyRatesLoaderServiceInterface:
-        class: \App\Infrastructure\OpenExchangeRates\CurrencyRatesLoaderService
-        arguments:
-            $token: '%env(OPEN_EXCHANGE_RATES_TOKEN)%'
-
-    App\Infrastructure\OpenExchangeRates\CurrencyExchangeUsageService:
-        class: \App\Infrastructure\OpenExchangeRates\CurrencyExchangeUsageService
-        arguments:
-            $token: '%env(OPEN_EXCHANGE_RATES_TOKEN)%'
-
     App\Domain\Service\Currency\CurrencyConvertorInterface:
         class: \App\Domain\Service\Currency\CurrencyConvertor
         arguments:

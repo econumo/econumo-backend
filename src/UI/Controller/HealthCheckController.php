@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\UI\Controller;
 
-use App\Infrastructure\OpenExchangeRates\CurrencyExchangeUsageService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -14,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class HealthCheckController extends AbstractController
 {
-    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly CurrencyExchangeUsageService $currencyExchangeStatusService)
+    public function __construct(private readonly EntityManagerInterface $entityManager)
     {
     }
 
@@ -31,7 +30,6 @@ class HealthCheckController extends AbstractController
         $response = [
             'database' => null,
             'messenger' => null,
-            'exchange_rates' => null,
         ];
         $status = true;
         try {
@@ -40,12 +38,6 @@ class HealthCheckController extends AbstractController
             $response['database'] = false;
             $status = false;
         }
-
-        /*try {
-            $response['exchange_rates'] = (bool)$this->currencyExchangeStatusService->getUsage();
-        } catch (\Exception) {
-            $response['exchange_rates'] = false;
-        }*/
 
         return new JsonResponse($response, ($status ? Response::HTTP_OK : Response::HTTP_INTERNAL_SERVER_ERROR));
     }

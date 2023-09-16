@@ -11,9 +11,9 @@ use App\Domain\Entity\ValueObject\CurrencyCode;
 use App\Domain\Service\Currency\CurrencyUpdateServiceInterface;
 use App\Domain\Service\Dto\CurrencyDto;
 
-class CurrencyListService
+readonly class CurrencyListService
 {
-    public function __construct(private readonly ImportCurrencyListV1ResultAssembler $importCurrencyListV1ResultAssembler, private readonly CurrencyUpdateServiceInterface $currencyUpdateService)
+    public function __construct(private ImportCurrencyListV1ResultAssembler $importCurrencyListV1ResultAssembler, private CurrencyUpdateServiceInterface $currencyUpdateService)
     {
     }
 

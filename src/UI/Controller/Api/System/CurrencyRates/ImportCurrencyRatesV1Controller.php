@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\UI\Controller\Api\Currency\CurrencyRateList;
+namespace App\UI\Controller\Api\System\CurrencyRates;
 
-use App\Application\Currency\CurrencyRateListService;
-use App\Application\Currency\Dto\GetCurrencyRateListV1RequestDto;
-use App\UI\Controller\Api\Currency\CurrencyRateList\Validation\GetCurrencyRateListV1Form;
+use App\Application\System\CurrencyRatesService;
+use App\Application\System\Dto\ImportCurrencyRatesV1RequestDto;
+use App\UI\Controller\Api\System\CurrencyRates\Validation\ImportCurrencyRatesV1Form;
 use App\Application\Exception\ValidationException;
 use App\Domain\Entity\User;
+use App\UI\Middleware\ProtectSystemApi\SystemApiInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,16 +19,17 @@ use Symfony\Component\Routing\Annotation\Route;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Annotations as OA;
 
-class GetCurrencyRateListV1Controller extends AbstractController
+class ImportCurrencyRatesV1Controller extends AbstractController implements SystemApiInterface
 {
-    public function __construct(private readonly CurrencyRateListService $currencyRateListService, private readonly ValidatorInterface $validator)
+    public function __construct(private readonly CurrencyRatesService $currencyRatesService, private readonly ValidatorInterface $validator)
     {
     }
 
     /**
-     * Get CurrencyRateList
+     * Import currencies rates
      *
-     * @OA\Tag(name="Currency"),
+     * @OA\Tag(name="System"),
+     * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\Application\System\Dto\ImportCurrencyRatesV1RequestDto::class))),
      * @OA\Response(
      *     response=200,
      *     description="OK",
@@ -38,7 +40,7 @@ class GetCurrencyRateListV1Controller extends AbstractController
      *             @OA\Schema(
      *                 @OA\Property(
      *                     property="data",
-     *                     ref=@Model(type=\App\Application\Currency\Dto\GetCurrencyRateListV1ResultDto::class)
+     *                     ref=@Model(type=\App\Application\System\Dto\ImportCurrencyRatesV1ResultDto::class)
      *                 )
      *             )
      *         }
@@ -52,15 +54,13 @@ class GetCurrencyRateListV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/currency/get-currency-rate-list', methods: ['GET'])]
+    #[Route(path: '/api/v1/system/import-currency-rates', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
-        $dto = new GetCurrencyRateListV1RequestDto();
-        $this->validator->validate(GetCurrencyRateListV1Form::class, $request->query->all(), $dto);
-        /** @var User $user */
-        $user = $this->getUser();
-        $result = $this->currencyRateListService->getCurrencyRateList($dto, $user->getId());
+        $dto = new ImportCurrencyRatesV1RequestDto();
+        $this->validator->validate(ImportCurrencyRatesV1Form::class, $request->request->all(), $dto);
+        $result = $this->currencyRatesService->importCurrencyRates($dto);
 
-        return ResponseFactory::createOkResponse($request, $result);
+        return ResponseFactory::createOkResponse($request, $result, "OK");
     }
 }

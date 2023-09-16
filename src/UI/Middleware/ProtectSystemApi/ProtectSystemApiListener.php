@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\UI\Middleware\ProtectSystemApi;
 
+use RuntimeException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -33,6 +34,9 @@ readonly class ProtectSystemApiListener implements EventSubscriberInterface
         if ($controller instanceof SystemApiInterface) {
             $tokenAPI = (string)$event->getRequest()->headers->get('Authorization');
 
+            if ($this->token === "") {
+                throw new RuntimeException('ECONUMO_SYSTEM_API_TOKEN is not set');
+            }
             if ($this->token !== $tokenAPI) {
                 throw new AccessDeniedHttpException('Access denied');
             }
