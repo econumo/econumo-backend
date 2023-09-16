@@ -18,7 +18,7 @@ Alternatively, you can use the API call:
 curl -X 'POST' \
   '<YOUR_API_BASE_URL>/api/v1/system/import-currency-list' \
   -H 'accept: application/json' \
-  -H '<ECONUMO_SYSTEM_API_TOKEN>' \
+  -H '<ECONUMO_SYSTEM_API_KEY>' \
   -H 'Content-Type: application/json' \
   -d '{
   "items": [

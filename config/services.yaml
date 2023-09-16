@@ -61,6 +61,6 @@ services:
     App\UI\Middleware\ProtectSystemApi\ProtectSystemApiListener:
         class: App\UI\Middleware\ProtectSystemApi\ProtectSystemApiListener
         arguments:
-            $token: '%env(ECONUMO_SYSTEM_API_TOKEN)%'
+            $token: '%env(ECONUMO_SYSTEM_API_KEY)%'
         tags:
             - { name: kernel.event_listener }

@@ -35,7 +35,7 @@ readonly class ProtectSystemApiListener implements EventSubscriberInterface
             $tokenAPI = (string)$event->getRequest()->headers->get('Authorization');
 
             if ($this->token === "") {
-                throw new RuntimeException('ECONUMO_SYSTEM_API_TOKEN is not set');
+                throw new RuntimeException('ECONUMO_SYSTEM_API_KEY is not set');
             }
             if ($this->token !== $tokenAPI) {
                 throw new AccessDeniedHttpException('Access denied');
