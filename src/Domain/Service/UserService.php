@@ -37,7 +37,7 @@ class UserService implements UserServiceInterface
         } catch (NotFoundException) {
         }
 
-        $this->antiCorruptionService->beginTransaction();
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
             $user = $this->userFactory->create($name, $email, $password);
             $this->userRepository->save([$user]);
@@ -55,9 +55,9 @@ class UserService implements UserServiceInterface
                 ]
             );
 
-            $this->antiCorruptionService->commit();
+            $this->antiCorruptionService->commit(__METHOD__);
         } catch (\Throwable $throwable) {
-            $this->antiCorruptionService->rollback();
+            $this->antiCorruptionService->rollback(__METHOD__);
             throw $throwable;
         }
 
@@ -78,28 +78,28 @@ class UserService implements UserServiceInterface
 
     public function updateCurrency(Id $userId, CurrencyCode $currencyCode): void
     {
-        $this->antiCorruptionService->beginTransaction();
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
             $user = $this->userRepository->get($userId);
             $user->updateCurrency($currencyCode);
             $this->userRepository->save([$user]);
-            $this->antiCorruptionService->commit();
+            $this->antiCorruptionService->commit(__METHOD__);
         } catch (\Throwable $throwable) {
-            $this->antiCorruptionService->rollback();
+            $this->antiCorruptionService->rollback(__METHOD__);
             throw $throwable;
         }
     }
 
     public function updateReportPeriod(Id $userId, ReportPeriod $reportPeriod): void
     {
-        $this->antiCorruptionService->beginTransaction();
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
             $user = $this->userRepository->get($userId);
             $user->updateReportPeriod($reportPeriod);
             $this->userRepository->save([$user]);
-            $this->antiCorruptionService->commit();
+            $this->antiCorruptionService->commit(__METHOD__);
         } catch (\Throwable $throwable) {
-            $this->antiCorruptionService->rollback();
+            $this->antiCorruptionService->rollback(__METHOD__);
             throw $throwable;
         }
     }

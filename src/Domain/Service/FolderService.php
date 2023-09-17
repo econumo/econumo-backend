@@ -64,13 +64,14 @@ final readonly class FolderService implements FolderServiceInterface
             throw new LastFolderRemoveException();
         }
 
-        $this->antiCorruptionService->beginTransaction();
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
             $userId = $folder->getUserId();
             $this->folderRepository->delete($folder);
             $this->resetOrderFolders($userId);
+            $this->antiCorruptionService->commit(__METHOD__);
         } catch (\Throwable $throwable) {
-            $this->antiCorruptionService->rollback();
+            $this->antiCorruptionService->rollback(__METHOD__);
             throw $throwable;
         }
     }
@@ -85,7 +86,7 @@ final readonly class FolderService implements FolderServiceInterface
 
         $userId = $folder->getUserId();
 
-        $this->antiCorruptionService->beginTransaction();
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
             foreach ($folder->getAccounts() as $account) {
                 if (!$replaceFolder->containsAccount($account)) {
@@ -97,9 +98,9 @@ final readonly class FolderService implements FolderServiceInterface
             $this->folderRepository->save([$replaceFolder]);
 
             $this->resetOrderFolders($userId);
-            $this->antiCorruptionService->commit();
+            $this->antiCorruptionService->commit(__METHOD__);
         } catch (\Throwable $throwable) {
-            $this->antiCorruptionService->rollback();
+            $this->antiCorruptionService->rollback(__METHOD__);
             throw $throwable;
         }
     }

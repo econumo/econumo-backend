@@ -21,7 +21,7 @@ class TransactionService implements TransactionServiceInterface
 
     public function createTransaction(TransactionDto $transactionDto): Transaction
     {
-        $this->antiCorruptionService->beginTransaction();
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
             $transaction = $this->transactionFactory->create($transactionDto);
             $this->transactionRepository->save([$transaction]);
@@ -35,9 +35,9 @@ class TransactionService implements TransactionServiceInterface
                 $this->accountRepository->save([$accountRecipient]);
             }
 
-            $this->antiCorruptionService->commit();
+            $this->antiCorruptionService->commit(__METHOD__);
         } catch (\Throwable $throwable) {
-            $this->antiCorruptionService->rollback();
+            $this->antiCorruptionService->rollback(__METHOD__);
             throw $throwable;
         }
 
@@ -46,7 +46,7 @@ class TransactionService implements TransactionServiceInterface
 
     public function updateTransaction(Id $id, TransactionDto $transactionDto): Transaction
     {
-        $this->antiCorruptionService->beginTransaction();
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
         $transaction = $this->transactionRepository->get($id);
         try {
             $account = $this->accountRepository->get($transaction->getAccountId());
@@ -72,9 +72,9 @@ class TransactionService implements TransactionServiceInterface
                 $this->accountRepository->save([$accountRecipient]);
             }
 
-            $this->antiCorruptionService->commit();
+            $this->antiCorruptionService->commit(__METHOD__);
         } catch (\Throwable $throwable) {
-            $this->antiCorruptionService->rollback();
+            $this->antiCorruptionService->rollback(__METHOD__);
             throw $throwable;
         }
 
@@ -83,7 +83,7 @@ class TransactionService implements TransactionServiceInterface
 
     public function deleteTransaction(Transaction $transaction): void
     {
-        $this->antiCorruptionService->beginTransaction();
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
             $account = $this->accountRepository->get($transaction->getAccountId());
             $account->rollbackTransaction($transaction);
@@ -95,25 +95,25 @@ class TransactionService implements TransactionServiceInterface
             }
 
             $this->transactionRepository->delete($transaction);
-            $this->antiCorruptionService->commit();
+            $this->antiCorruptionService->commit(__METHOD__);
         } catch (\Throwable $throwable) {
-            $this->antiCorruptionService->rollback();
+            $this->antiCorruptionService->rollback(__METHOD__);
             throw $throwable;
         }
     }
 
     public function updateBalance(Id $accountId, float $correction, \DateTimeInterface $updatedAt, string $comment = ''): Transaction
     {
-        $this->antiCorruptionService->beginTransaction();
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
             $transaction = $this->transactionFactory->createCorrection($accountId, $correction, $updatedAt, $comment);
             $this->transactionRepository->save([$transaction]);
             $account = $this->accountRepository->get($accountId);
             $account->applyTransaction($transaction);
             $this->accountRepository->save([$account]);
-            $this->antiCorruptionService->commit();
+            $this->antiCorruptionService->commit(__METHOD__);
         } catch (\Throwable $throwable) {
-            $this->antiCorruptionService->rollback();
+            $this->antiCorruptionService->rollback(__METHOD__);
             throw $throwable;
         }
 

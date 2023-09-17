@@ -74,13 +74,13 @@ class CategoryService implements CategoryServiceInterface
             throw new ReplaceCategoryException();
         }
 
-        $this->antiCorruptionService->beginTransaction();
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
             $this->transactionRepository->replaceCategory($categoryId, $newCategoryId);
             $this->categoryRepository->delete($category);
-            $this->antiCorruptionService->commit();
+            $this->antiCorruptionService->commit(__METHOD__);
         } catch (\Throwable $throwable) {
-            $this->antiCorruptionService->rollback();
+            $this->antiCorruptionService->rollback(__METHOD__);
             throw $throwable;
         }
     }

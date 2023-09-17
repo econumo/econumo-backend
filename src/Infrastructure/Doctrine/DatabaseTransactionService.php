@@ -15,7 +15,7 @@ class DatabaseTransactionService implements AntiCorruptionServiceInterface
     {
     }
 
-    public function beginTransaction(string $name = ''): void
+    public function beginTransaction(string $name): void
     {
         if (null !== $this->activeTransaction) {
             return;
@@ -25,7 +25,7 @@ class DatabaseTransactionService implements AntiCorruptionServiceInterface
         $this->activeTransaction = $name;
     }
 
-    public function commit(string $name = ''): void
+    public function commit(string $name): void
     {
         if ($this->activeTransaction !== $name) {
             return;
@@ -35,7 +35,7 @@ class DatabaseTransactionService implements AntiCorruptionServiceInterface
         $this->activeTransaction = null;
     }
 
-    public function rollback(string $name = ''): void
+    public function rollback(string $name): void
     {
         $this->entityManager->rollback();
         $this->activeTransaction = null;

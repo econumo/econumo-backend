@@ -31,7 +31,7 @@ class ConnectionService implements ConnectionServiceInterface
             throw new DomainException('Deleting yourself?');
         }
 
-        $this->antiCorruptionService->beginTransaction();
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
             foreach ($this->connectionAccountService->getReceivedAccountAccess($initiator->getId()) as $accountAccess) {
                 if ($accountAccess->getAccount()->getUserId()->isEqual($connectedUser->getId())) {
@@ -49,9 +49,9 @@ class ConnectionService implements ConnectionServiceInterface
             $connectedUser->deleteConnection($initiator);
             $this->userRepository->save([$initiator, $connectedUser]);
 
-            $this->antiCorruptionService->commit();
+            $this->antiCorruptionService->commit(__METHOD__);
         } catch (Throwable $throwable) {
-            $this->antiCorruptionService->rollback();
+            $this->antiCorruptionService->rollback(__METHOD__);
             throw $throwable;
         }
     }
