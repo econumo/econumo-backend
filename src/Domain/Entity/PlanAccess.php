@@ -19,8 +19,8 @@ class PlanAccess
     private DateTimeInterface $updatedAt;
 
     public function __construct(
-        private readonly Plan $plan,
-        private readonly User $user,
+        private Plan $plan,
+        private User $user,
         private UserRole $role,
         \DateTimeInterface $createdAt
     ) {

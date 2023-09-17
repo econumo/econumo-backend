@@ -16,8 +16,8 @@ class PlanOptions
     private DateTimeInterface $updatedAt;
 
     public function __construct(
-        private readonly Plan $plan,
-        private readonly User $user,
+        private Plan $plan,
+        private User $user,
         private int $position,
         DateTimeInterface $createdAt
     ) {
