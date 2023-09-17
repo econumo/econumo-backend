@@ -54,4 +54,11 @@ class PlanPreviewResultDto
      * @OA\Property(example="2021-01-01 12:15:00")
      */
     public string $updatedAt;
+
+    /**
+     * Account access
+     * @var SharedAccessItemResultDto[]
+     * @OA\Property()
+     */
+    public array $sharedAccess = [];
 }
