@@ -9,7 +9,6 @@ namespace App\Domain\Service\Budget;
 use App\Domain\Entity\Plan;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\PlanName;
-use App\Domain\Exception\AccessDeniedException;
 use App\Domain\Exception\PlanAlreadyExistsException;
 use App\Domain\Factory\PlanFactoryInterface;
 use App\Domain\Factory\PlanOptionsFactoryInterface;
@@ -26,7 +25,7 @@ readonly class PlanService implements PlanServiceInterface
         private PlanRepositoryInterface $planRepository,
         private PlanOptionsRepositoryInterface $planOptionsRepository,
         private PlanOptionsFactoryInterface $planOptionsFactory,
-        private PlanAccessRepositoryInterface $planAccessRepository,
+        private PlanAccessRepositoryInterface $planAccessRepository
     ) {
     }
 
@@ -101,25 +100,21 @@ readonly class PlanService implements PlanServiceInterface
 
     public function deletePlan(Id $userId, Id $planId): void
     {
-        $plans = $this->planRepository->getAvailableForUserId($userId);
-        $exists = false;
-        $plan = null;
-        foreach ($plans as $item) {
-            if ($item->getId()->isEqual($planId)) {
-                $plan = $item;
-                $exists = true;
-                break;
-            }
-        }
-        if (!$exists) {
-            throw new AccessDeniedException();
-        }
-
+        $plan = $this->planRepository->get($planId);
         if ($plan->getUserId()->isEqual($userId)) {
             $this->planRepository->delete($planId);
         } else {
             $access = $this->planAccessRepository->get($planId, $userId);
             $this->planAccessRepository->delete($access);
         }
+    }
+
+    public function updatePlan(Id $planId, PlanName $name): Plan
+    {
+        $plan = $this->planRepository->get($planId);
+        $plan->updateName($name);
+        $this->planRepository->save([$plan]);
+
+        return $plan;
     }
 }
