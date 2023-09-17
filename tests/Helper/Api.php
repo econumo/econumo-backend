@@ -207,4 +207,17 @@ class Api extends \Codeception\Module
             'amount' => 'string'
         ];
     }
+
+    public function getShortPlanDtoJsonType(): array
+    {
+        return [
+            'id' => 'string',
+            'ownerUserId' => 'string',
+            'name' => 'string',
+            'position' => 'integer|null',
+            'isArchived' => 'integer',
+            'createdAt' => 'string',
+            'updatedAt' => 'string',
+        ];
+    }
 }
