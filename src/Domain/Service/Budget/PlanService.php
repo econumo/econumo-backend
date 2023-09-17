@@ -9,6 +9,7 @@ namespace App\Domain\Service\Budget;
 use App\Domain\Entity\Plan;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\PlanName;
+use App\Domain\Exception\NotFoundException;
 use App\Domain\Exception\PlanAlreadyExistsException;
 use App\Domain\Factory\PlanFactoryInterface;
 use App\Domain\Factory\PlanOptionsFactoryInterface;
@@ -78,8 +79,12 @@ readonly class PlanService implements PlanServiceInterface
             foreach ($plans as $plan) {
                 foreach ($changes as $change) {
                     if ($plan->getId()->isEqual($change->getId())) {
-                        $options = $this->planOptionsRepository->get($plan->getId(), $userId);
-                        $options->updatePosition($change->position);
+                        try {
+                            $options = $this->planOptionsRepository->get($plan->getId(), $userId);
+                            $options->updatePosition($change->position);
+                        } catch (NotFoundException $e) {
+                            $options = $this->planOptionsFactory->create($plan->getId(), $userId, $change->position);
+                        }
                         $changed[] = $options;
                         break;
                     }
@@ -100,12 +105,24 @@ readonly class PlanService implements PlanServiceInterface
 
     public function deletePlan(Id $userId, Id $planId): void
     {
-        $plan = $this->planRepository->get($planId);
-        if ($plan->getUserId()->isEqual($userId)) {
-            $this->planRepository->delete($planId);
-        } else {
-            $access = $this->planAccessRepository->get($planId, $userId);
-            $this->planAccessRepository->delete($access);
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
+        try {
+            $plan = $this->planRepository->get($planId);
+            if ($plan->getUserId()->isEqual($userId)) {
+                $this->planRepository->delete($planId);
+            } else {
+                $access = $this->planAccessRepository->get($planId, $userId);
+                $this->planAccessRepository->delete($access);
+                try {
+                    $options = $this->planOptionsRepository->get($planId, $userId);
+                    $this->planOptionsRepository->delete($options);
+                } catch (NotFoundException $e) {
+                }
+            }
+            $this->antiCorruptionService->commit(__METHOD__);
+        } catch (\Throwable $e) {
+            $this->antiCorruptionService->rollback(__METHOD__);
+            throw $e;
         }
     }
 
