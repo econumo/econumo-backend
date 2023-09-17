@@ -14,13 +14,13 @@ use OpenApi\Annotations as OA;
 class PlanResultDto
 {
     /**
-     * @OA\Property(example="b14b4662-4ec6-42c1-ad8e-f2c99f289f43")
+     * @OA\Property(example="05c8f3e1-d77f-4b37-b2ca-0fc5f0f0c7a9")
      */
     public string $id;
 
     /**
      * Owner user id
-     * @OA\Property(example="f680553f-6b40-407d-a528-5123913be0aa")
+     * @OA\Property(example="aff21334-96f0-4fb1-84d8-0223d0280954")
      */
     public string $ownerUserId;
 

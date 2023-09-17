@@ -9,9 +9,11 @@ namespace App\Domain\Service\Budget;
 use App\Domain\Entity\Plan;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\PlanName;
+use App\Domain\Exception\AccessDeniedException;
 use App\Domain\Exception\PlanAlreadyExistsException;
 use App\Domain\Factory\PlanFactoryInterface;
 use App\Domain\Factory\PlanOptionsFactoryInterface;
+use App\Domain\Repository\PlanAccessRepositoryInterface;
 use App\Domain\Repository\PlanOptionsRepositoryInterface;
 use App\Domain\Repository\PlanRepositoryInterface;
 use App\Domain\Service\AntiCorruptionServiceInterface;
@@ -24,6 +26,7 @@ readonly class PlanService implements PlanServiceInterface
         private PlanRepositoryInterface $planRepository,
         private PlanOptionsRepositoryInterface $planOptionsRepository,
         private PlanOptionsFactoryInterface $planOptionsFactory,
+        private PlanAccessRepositoryInterface $planAccessRepository,
     ) {
     }
 
@@ -93,6 +96,30 @@ readonly class PlanService implements PlanServiceInterface
         } catch (\Throwable $e) {
             $this->antiCorruptionService->rollback(__METHOD__);
             throw $e;
+        }
+    }
+
+    public function deletePlan(Id $userId, Id $planId): void
+    {
+        $plans = $this->planRepository->getAvailableForUserId($userId);
+        $exists = false;
+        $plan = null;
+        foreach ($plans as $item) {
+            if ($item->getId()->isEqual($planId)) {
+                $plan = $item;
+                $exists = true;
+                break;
+            }
+        }
+        if (!$exists) {
+            throw new AccessDeniedException();
+        }
+
+        if ($plan->getUserId()->isEqual($userId)) {
+            $this->planRepository->delete($planId);
+        } else {
+            $access = $this->planAccessRepository->get($planId, $userId);
+            $this->planAccessRepository->delete($access);
         }
     }
 }

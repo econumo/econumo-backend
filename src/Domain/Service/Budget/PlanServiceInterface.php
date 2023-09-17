@@ -21,4 +21,6 @@ interface PlanServiceInterface
      * @return void
      */
     public function orderPlans(Id $userId, array $changes): void;
+
+    public function deletePlan(Id $userId, Id $planId): void;
 }
