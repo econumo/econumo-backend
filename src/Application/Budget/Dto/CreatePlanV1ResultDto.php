@@ -8,14 +8,13 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     required={"items"}
+ *     required={"item"}
  * )
  */
-class GetPlanListV1ResultDto
+class CreatePlanV1ResultDto
 {
     /**
-     * @var PlanResultDto[]
      * @OA\Property()
      */
-    public array $items = [];
+    public PlanResultDto $item;
 }

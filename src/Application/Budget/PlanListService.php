@@ -8,10 +8,14 @@ use App\Application\Budget\Dto\GetPlanListV1RequestDto;
 use App\Application\Budget\Dto\GetPlanListV1ResultDto;
 use App\Application\Budget\Assembler\GetPlanListV1ResultAssembler;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Repository\PlanRepositoryInterface;
 
-class PlanListService
+readonly class PlanListService
 {
-    public function __construct(private readonly GetPlanListV1ResultAssembler $getPlanListV1ResultAssembler)
+    public function __construct(
+        private GetPlanListV1ResultAssembler $getPlanListV1ResultAssembler,
+        private PlanRepositoryInterface $planRepository
+    )
     {
     }
 
@@ -19,7 +23,7 @@ class PlanListService
         GetPlanListV1RequestDto $dto,
         Id $userId
     ): GetPlanListV1ResultDto {
-        // some actions ...
-        return $this->getPlanListV1ResultAssembler->assemble($dto);
+        $plans = $this->planRepository->getAvailableForUserId($userId);
+        return $this->getPlanListV1ResultAssembler->assemble($dto, $plans, $userId);
     }
 }

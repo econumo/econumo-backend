@@ -21,6 +21,11 @@ interface PlanRepositoryInterface
      */
     public function getUserPlans(Id $userId): array;
 
+    /**
+     * @return Plan[]
+     */
+    public function findByOwnerId(Id $userId): array;
+
     public function get(Id $id): Plan;
 
     /**

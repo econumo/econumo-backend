@@ -11,7 +11,7 @@ use OpenApi\Annotations as OA;
  *     required={"id", "ownerUserId", "name", "position", "isArchived", "createdAt", "updatedAt"}
  * )
  */
-class PlanPreviewResultDto
+class PlanResultDto
 {
     /**
      * @OA\Property(example="b14b4662-4ec6-42c1-ad8e-f2c99f289f43")

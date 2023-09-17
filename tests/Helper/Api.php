@@ -218,6 +218,7 @@ class Api extends \Codeception\Module
             'isArchived' => 'integer',
             'createdAt' => 'string',
             'updatedAt' => 'string',
+            'sharedAccess' => 'array',
         ];
     }
 }

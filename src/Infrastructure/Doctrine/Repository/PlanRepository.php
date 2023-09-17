@@ -91,6 +91,14 @@ class PlanRepository extends ServiceEntityRepository implements PlanRepositoryIn
             ->getResult();
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function findByOwnerId(Id $userId): array
+    {
+        return $this->findBy(['user' => $this->getEntityManager()->getReference(User::class, $userId)]);
+    }
+
     public function get(Id $id): Plan
     {
         $item = $this->find($id);

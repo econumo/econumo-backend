@@ -43,6 +43,11 @@ class Plan
         return $this->user->getId();
     }
 
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
     public function isArchived(): bool
     {
         return $this->isArchived;
