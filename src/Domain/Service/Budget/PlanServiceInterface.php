@@ -9,8 +9,16 @@ namespace App\Domain\Service\Budget;
 use App\Domain\Entity\Plan;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\PlanName;
+use App\Domain\Service\Dto\PositionDto;
 
 interface PlanServiceInterface
 {
     public function createPlan(Id $userId, PlanName $name): Plan;
+
+    /**
+     * @param Id $userId
+     * @param PositionDto[] $changes
+     * @return void
+     */
+    public function orderPlans(Id $userId, array $changes): void;
 }

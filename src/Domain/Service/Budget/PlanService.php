@@ -16,14 +16,14 @@ use App\Domain\Repository\PlanOptionsRepositoryInterface;
 use App\Domain\Repository\PlanRepositoryInterface;
 use App\Domain\Service\AntiCorruptionServiceInterface;
 
-class PlanService implements PlanServiceInterface
+readonly class PlanService implements PlanServiceInterface
 {
     public function __construct(
-        private readonly AntiCorruptionServiceInterface $antiCorruptionService,
-        private readonly PlanFactoryInterface $planFactory,
-        private readonly PlanRepositoryInterface $planRepository,
-        private readonly PlanOptionsRepositoryInterface $planOptionsRepository,
-        private readonly PlanOptionsFactoryInterface $planOptionsFactory,
+        private AntiCorruptionServiceInterface $antiCorruptionService,
+        private PlanFactoryInterface $planFactory,
+        private PlanRepositoryInterface $planRepository,
+        private PlanOptionsRepositoryInterface $planOptionsRepository,
+        private PlanOptionsFactoryInterface $planOptionsFactory,
     ) {
     }
 
@@ -62,5 +62,37 @@ class PlanService implements PlanServiceInterface
         }
 
         return $plan;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function orderPlans(Id $userId, array $changes): void
+    {
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
+        try {
+            $plans = $this->planRepository->getAvailableForUserId($userId);
+            $changed = [];
+            foreach ($plans as $plan) {
+                foreach ($changes as $change) {
+                    if ($plan->getId()->isEqual($change->getId())) {
+                        $options = $this->planOptionsRepository->get($plan->getId(), $userId);
+                        $options->updatePosition($change->position);
+                        $changed[] = $options;
+                        break;
+                    }
+                }
+            }
+
+            if ($changed === []) {
+                return;
+            }
+
+            $this->planOptionsRepository->save($changed);
+            $this->antiCorruptionService->commit(__METHOD__);
+        } catch (\Throwable $e) {
+            $this->antiCorruptionService->rollback(__METHOD__);
+            throw $e;
+        }
     }
 }
