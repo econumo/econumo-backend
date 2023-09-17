@@ -12,8 +12,6 @@ use DateTimeInterface;
 
 class Plan
 {
-    private bool $isArchived = false;
-
     private DateTimeImmutable $createdAt;
 
     private DateTimeInterface $updatedAt;
@@ -48,31 +46,10 @@ class Plan
         return $this->user;
     }
 
-    public function isArchived(): bool
-    {
-        return $this->isArchived;
-    }
-
     public function updateName(PlanName $name): void
     {
         if (!$this->name->isEqual($name)) {
             $this->name = $name;
-            $this->updated();
-        }
-    }
-
-    public function archive(): void
-    {
-        if (!$this->isArchived) {
-            $this->isArchived = true;
-            $this->updated();
-        }
-    }
-
-    public function unarchive(): void
-    {
-        if ($this->isArchived) {
-            $this->isArchived = false;
             $this->updated();
         }
     }

@@ -37,7 +37,6 @@ readonly class PlanToDtoV1ResultAssembler
             $item->position = 0;
         }
         $item->ownerUserId = $plan->getUserId()->getValue();
-        $item->isArchived = $plan->isArchived() ? 1 : 0;
         $item->createdAt = $plan->getCreatedAt()->format('Y-m-d H:i:s');
         $item->updatedAt = $plan->getUpdatedAt()->format('Y-m-d H:i:s');
         $item->sharedAccess = [];

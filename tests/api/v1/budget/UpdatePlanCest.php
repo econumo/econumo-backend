@@ -60,7 +60,7 @@ class UpdatePlanCest
         $I->sendPOST($this->url, ['id' => '05c8f3e1-d77f-4b37-b2ca-0fc5f0f0c7a9', 'name' => 'Super plan']);
         $I->seeResponseMatchesJsonType([
             'data' => [
-                'item' => $I->getShortPlanDtoJsonType(),
+                'item' => $I->getPlanDtoJsonType(),
             ],
         ]);
         $I->seeResponseMatchesJsonType($I->getSharedAccessDtoJsonType(), '$.data.item.sharedAccess[0]');

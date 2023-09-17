@@ -8,7 +8,7 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     required={"id", "ownerUserId", "name", "position", "isArchived", "createdAt", "updatedAt"}
+ *     required={"id", "ownerUserId", "name", "position", "createdAt", "updatedAt"}
  * )
  */
 class PlanResultDto
@@ -33,13 +33,6 @@ class PlanResultDto
      * @OA\Property(example="0")
      */
     public int $position;
-
-    /**
-     * Is archived plan?
-     * @var int
-     * @OA\Property(example="0")
-     */
-    public int $isArchived;
 
     /**
      * Created at

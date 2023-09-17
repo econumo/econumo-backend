@@ -50,7 +50,7 @@ class CreatePlanCest
         $I->sendPOST($this->url, ['id' => '77e270f6-16d5-4c38-bd08-b434786f7dd2', 'name' => 'My new plan']);
         $I->seeResponseMatchesJsonType([
             'data' => [
-                'item' => $I->getShortPlanDtoJsonType(),
+                'item' => $I->getPlanDtoJsonType(),
             ],
         ]);
         $I->seeResponseMatchesJsonType($I->getSharedAccessDtoJsonType(), '$.data.item.sharedAccess[0]');

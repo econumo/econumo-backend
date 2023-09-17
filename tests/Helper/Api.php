@@ -208,14 +208,13 @@ class Api extends \Codeception\Module
         ];
     }
 
-    public function getShortPlanDtoJsonType(): array
+    public function getPlanDtoJsonType(): array
     {
         return [
             'id' => 'string',
             'ownerUserId' => 'string',
             'name' => 'string',
             'position' => 'integer|null',
-            'isArchived' => 'integer',
             'createdAt' => 'string',
             'updatedAt' => 'string',
             'sharedAccess' => 'array',

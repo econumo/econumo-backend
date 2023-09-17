@@ -49,7 +49,7 @@ class GetPlanListCest
         $I->amAuthenticatedAsJohn();
         $I->sendGET($this->url, []);
         $I->seeResponseMatchesJsonType($I->getRootResponseWithItemsJsonType());
-        $I->seeResponseMatchesJsonType($I->getShortPlanDtoJsonType(), '$.data.items[0]');
+        $I->seeResponseMatchesJsonType($I->getPlanDtoJsonType(), '$.data.items[0]');
         $I->seeResponseMatchesJsonType($I->getSharedAccessDtoJsonType(), '$.data.items[0].sharedAccess[0]');
     }
 }

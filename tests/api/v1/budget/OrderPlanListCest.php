@@ -82,6 +82,6 @@ class OrderPlanListCest
             ]
         ]);
         $I->seeResponseMatchesJsonType($I->getRootResponseWithItemsJsonType());
-        $I->seeResponseMatchesJsonType($I->getShortPlanDtoJsonType(), '$.data.items[0]');
+        $I->seeResponseMatchesJsonType($I->getPlanDtoJsonType(), '$.data.items[0]');
     }
 }
