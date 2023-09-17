@@ -209,6 +209,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return new CurrencyCode(UserOption::DEFAULT_CURRENCY);
     }
 
+    public function getDefaultPlanId(): ?Id
+    {
+        foreach ($this->options as $option) {
+            if ($option->getName() === UserOption::DEFAULT_PLAN) {
+                if (!$option->getValue()) {
+                    return null;
+                }
+                return new Id($option->getValue());
+            }
+        }
+
+        return null;
+    }
+
     public function updateCurrency(CurrencyCode $currencyCode): void
     {
         foreach ($this->options as $option) {
@@ -223,6 +237,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         foreach ($this->options as $option) {
             if ($option->getName() === UserOption::CURRENCY) {
                 $option->updateValue($reportPeriod->getValue());
+            }
+        }
+    }
+
+    public function updateDefaultPlan(?Id $planId): void
+    {
+        foreach ($this->options as $option) {
+            if ($option->getName() === UserOption::DEFAULT_PLAN) {
+                if ($planId === null) {
+                    $option->updateValue(null);
+                } else {
+                    $option->updateValue($planId->getValue());
+                }
+                return;
             }
         }
     }

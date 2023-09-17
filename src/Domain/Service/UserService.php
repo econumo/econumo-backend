@@ -19,13 +19,27 @@ use App\Domain\Factory\UserFactoryInterface;
 use App\Domain\Factory\UserOptionFactoryInterface;
 use App\Domain\Repository\ConnectionInviteRepositoryInterface;
 use App\Domain\Repository\FolderRepositoryInterface;
+use App\Domain\Repository\PlanRepositoryInterface;
 use App\Domain\Repository\UserOptionRepositoryInterface;
 use App\Domain\Repository\UserRepositoryInterface;
 use App\Domain\Service\Translation\TranslationServiceInterface;
 
 class UserService implements UserServiceInterface
 {
-    public function __construct(private readonly UserFactoryInterface $userFactory, private readonly UserRepositoryInterface $userRepository, private readonly EventDispatcherInterface $eventDispatcher, private readonly FolderFactoryInterface $folderFactory, private readonly FolderRepositoryInterface $folderRepository, private readonly AntiCorruptionServiceInterface $antiCorruptionService, private readonly TranslationServiceInterface $translator, private readonly ConnectionInviteFactoryInterface $connectionInviteFactory, private readonly ConnectionInviteRepositoryInterface $connectionInviteRepository, private readonly UserOptionFactoryInterface $userOptionFactory, private readonly UserOptionRepositoryInterface $userOptionRepository)
+    public function __construct(
+        private readonly UserFactoryInterface $userFactory,
+        private readonly UserRepositoryInterface $userRepository,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly FolderFactoryInterface $folderFactory,
+        private readonly FolderRepositoryInterface $folderRepository,
+        private readonly AntiCorruptionServiceInterface $antiCorruptionService,
+        private readonly TranslationServiceInterface $translator,
+        private readonly ConnectionInviteFactoryInterface $connectionInviteFactory,
+        private readonly ConnectionInviteRepositoryInterface $connectionInviteRepository,
+        private readonly UserOptionFactoryInterface $userOptionFactory,
+        private readonly UserOptionRepositoryInterface $userOptionRepository,
+        private readonly PlanRepositoryInterface $planRepository
+    )
     {
     }
 
@@ -51,7 +65,8 @@ class UserService implements UserServiceInterface
             $this->userOptionRepository->save(
                 [
                     $this->userOptionFactory->create($user, UserOption::CURRENCY, UserOption::DEFAULT_CURRENCY),
-                    $this->userOptionFactory->create($user, UserOption::REPORT_PERIOD, UserOption::DEFAULT_REPORT_PERIOD)
+                    $this->userOptionFactory->create($user, UserOption::REPORT_PERIOD, UserOption::DEFAULT_REPORT_PERIOD),
+                    $this->userOptionFactory->create($user, UserOption::DEFAULT_PLAN, null)
                 ]
             );
 
@@ -96,6 +111,21 @@ class UserService implements UserServiceInterface
         try {
             $user = $this->userRepository->get($userId);
             $user->updateReportPeriod($reportPeriod);
+            $this->userRepository->save([$user]);
+            $this->antiCorruptionService->commit(__METHOD__);
+        } catch (\Throwable $throwable) {
+            $this->antiCorruptionService->rollback(__METHOD__);
+            throw $throwable;
+        }
+    }
+
+    public function updateDefaultPlan(Id $userId, Id $planId): void
+    {
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
+        try {
+            $plan = $this->planRepository->get($planId);
+            $user = $this->userRepository->get($userId);
+            $user->updateDefaultPlan($plan->getId());
             $this->userRepository->save([$user]);
             $this->antiCorruptionService->commit(__METHOD__);
         } catch (\Throwable $throwable) {

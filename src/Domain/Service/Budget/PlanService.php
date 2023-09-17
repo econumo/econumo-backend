@@ -16,7 +16,10 @@ use App\Domain\Factory\PlanOptionsFactoryInterface;
 use App\Domain\Repository\PlanAccessRepositoryInterface;
 use App\Domain\Repository\PlanOptionsRepositoryInterface;
 use App\Domain\Repository\PlanRepositoryInterface;
+use App\Domain\Repository\UserOptionRepositoryInterface;
+use App\Domain\Repository\UserRepositoryInterface;
 use App\Domain\Service\AntiCorruptionServiceInterface;
+use App\Domain\Service\UserServiceInterface;
 
 readonly class PlanService implements PlanServiceInterface
 {
@@ -26,7 +29,10 @@ readonly class PlanService implements PlanServiceInterface
         private PlanRepositoryInterface $planRepository,
         private PlanOptionsRepositoryInterface $planOptionsRepository,
         private PlanOptionsFactoryInterface $planOptionsFactory,
-        private PlanAccessRepositoryInterface $planAccessRepository
+        private PlanAccessRepositoryInterface $planAccessRepository,
+        private UserServiceInterface $userService,
+        private UserRepositoryInterface $userRepository,
+        private UserOptionRepositoryInterface $userOptionRepository,
     ) {
     }
 
@@ -58,6 +64,8 @@ readonly class PlanService implements PlanServiceInterface
 
             $planOptions = $this->planOptionsFactory->create($plan->getId(), $userId, $position);
             $this->planOptionsRepository->save([$planOptions]);
+
+            $this->userService->updateDefaultPlan($userId, $plan->getId());
             $this->antiCorruptionService->commit(__METHOD__);
         } catch (\Throwable $e) {
             $this->antiCorruptionService->rollback(__METHOD__);
@@ -108,7 +116,12 @@ readonly class PlanService implements PlanServiceInterface
         $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
             $plan = $this->planRepository->get($planId);
+
             if ($plan->getUserId()->isEqual($userId)) {
+                $access = $this->planAccessRepository->getByPlan($planId);
+                foreach ($access as $item) {
+                    $this->updateUserDefaultPlanWhenItWasDeleted($item->getUserId(), $item->getPlanId());
+                }
                 $this->planRepository->delete($planId);
             } else {
                 $access = $this->planAccessRepository->get($planId, $userId);
@@ -119,6 +132,7 @@ readonly class PlanService implements PlanServiceInterface
                 } catch (NotFoundException $e) {
                 }
             }
+            $this->updateUserDefaultPlanWhenItWasDeleted($userId, $planId);
             $this->antiCorruptionService->commit(__METHOD__);
         } catch (\Throwable $e) {
             $this->antiCorruptionService->rollback(__METHOD__);
@@ -133,5 +147,27 @@ readonly class PlanService implements PlanServiceInterface
         $this->planRepository->save([$plan]);
 
         return $plan;
+    }
+
+    private function updateUserDefaultPlanWhenItWasDeleted(Id $userId, Id $planId): void
+    {
+        $user = $this->userRepository->get($userId);
+        if (!$user->getDefaultPlanId() || $user->getDefaultPlanId()->isEqual($planId)) {
+            $availablePlans = $this->planRepository->getAvailableForUserId($userId);
+            $planUpdated = false;
+            if (count($availablePlans) > 0) {
+                foreach ($availablePlans as $availablePlan) {
+                    if ($availablePlan->getId()->isEqual($planId)) {
+                        continue;
+                    }
+                    $user->updateDefaultPlan($availablePlan->getId());
+                    $planUpdated = true;
+                }
+            }
+            if (!$planUpdated) {
+                $user->updateDefaultPlan(null);
+            }
+            $this->userRepository->save([$user]);
+        }
     }
 }

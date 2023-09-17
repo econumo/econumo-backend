@@ -18,4 +18,6 @@ interface UserServiceInterface
     public function updateCurrency(Id $userId, CurrencyCode $currencyCode): void;
 
     public function updateReportPeriod(Id $userId, ReportPeriod $reportPeriod): void;
+
+    public function updateDefaultPlan(Id $userId, Id $planId): void;
 }

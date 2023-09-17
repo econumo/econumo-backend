@@ -11,7 +11,7 @@ use OpenApi\Annotations as OA;
  *     required={"user"}
  * )
  */
-class UpdateReportPeriodV1ResultDto
+class UpdatePlanV1ResultDto
 {
     /**
      * @OA\Property()
