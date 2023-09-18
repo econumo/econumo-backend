@@ -18,6 +18,9 @@ use App\Domain\Exception\RevokeOwnerAccessException;
 use App\Domain\Repository\PlanRepositoryInterface;
 use App\Domain\Service\Budget\PlanAccessServiceInterface;
 use App\Domain\Service\Budget\PlanServiceInterface;
+use App\Application\Budget\Dto\AcceptAccessV1RequestDto;
+use App\Application\Budget\Dto\AcceptAccessV1ResultDto;
+use App\Application\Budget\Assembler\AcceptAccessV1ResultAssembler;
 
 readonly class AccessService
 {
@@ -26,7 +29,8 @@ readonly class AccessService
         private PlanAccessServiceInterface $planAccessService,
         private PlanServiceInterface $planService,
         private PlanRepositoryInterface $planRepository,
-        private GrantAccessV1ResultAssembler $grantAccessV1ResultAssembler
+        private GrantAccessV1ResultAssembler $grantAccessV1ResultAssembler,
+        private readonly AcceptAccessV1ResultAssembler $acceptAccessV1ResultAssembler
     ) {
     }
 
@@ -61,5 +65,15 @@ readonly class AccessService
         $this->planService->grantAccess($planId, $sharedUserId, $role);
         $plan = $this->planRepository->get($planId);
         return $this->grantAccessV1ResultAssembler->assemble($dto, $plan, $userId);
+    }
+
+    public function acceptAccess(
+        AcceptAccessV1RequestDto $dto,
+        Id $userId
+    ): AcceptAccessV1ResultDto {
+        $planId = new Id($dto->planId);
+        $this->planService->acceptAccess($planId, $userId);
+        $plan = $this->planRepository->get($planId);
+        return $this->acceptAccessV1ResultAssembler->assemble($dto, $plan, $userId);
     }
 }

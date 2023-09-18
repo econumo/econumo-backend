@@ -30,4 +30,6 @@ interface PlanServiceInterface
     public function revokeAccess(Id $planId, Id $sharedUserId): void;
 
     public function grantAccess(Id $planId, Id $sharedUserId, UserRole $role): void;
+
+    public function acceptAccess(Id $planId, Id $userId): void;
 }

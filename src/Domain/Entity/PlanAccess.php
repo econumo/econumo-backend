@@ -68,10 +68,10 @@ class PlanAccess
         return $this->isAccepted;
     }
 
-    public function accept(bool $isAccepted): void
+    public function accept(): void
     {
-        if ($this->isAccepted !== $isAccepted) {
-            $this->isAccepted = $isAccepted;
+        if ($this->isAccepted === false) {
+            $this->isAccepted = true;
             $this->updated();
         }
     }

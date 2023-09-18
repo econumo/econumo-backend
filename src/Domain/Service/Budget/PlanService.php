@@ -196,4 +196,11 @@ readonly class PlanService implements PlanServiceInterface
 
         $this->planAccessRepository->save([$access]);
     }
+
+    public function acceptAccess(Id $planId, Id $userId): void
+    {
+        $access = $this->planAccessRepository->get($planId, $userId);
+        $access->accept();
+        $this->planAccessRepository->save([$access]);
+    }
 }
