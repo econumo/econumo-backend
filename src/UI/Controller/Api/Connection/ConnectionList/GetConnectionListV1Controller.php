@@ -28,13 +28,6 @@ class GetConnectionListV1Controller extends AbstractController
      * Get ConnectionList
      *
      * @OA\Tag(name="Connection"),
-     * @OA\Parameter(
-     *     name="id",
-     *     in="query",
-     *     required=true,
-     *     @OA\Schema(type="string"),
-     *     description="ID чего-либо",
-     * ),
      * @OA\Response(
      *     response=200,
      *     description="OK",
