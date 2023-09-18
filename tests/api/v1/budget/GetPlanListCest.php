@@ -50,6 +50,6 @@ class GetPlanListCest
         $I->sendGET($this->url, []);
         $I->seeResponseMatchesJsonType($I->getRootResponseWithItemsJsonType());
         $I->seeResponseMatchesJsonType($I->getPlanDtoJsonType(), '$.data.items[0]');
-        $I->seeResponseMatchesJsonType($I->getSharedAccessDtoJsonType(), '$.data.items[0].sharedAccess[0]');
+        $I->seeResponseMatchesJsonType($I->getPlanSharedAccessDtoJsonType(), '$.data.items[0].sharedAccess[0]');
     }
 }

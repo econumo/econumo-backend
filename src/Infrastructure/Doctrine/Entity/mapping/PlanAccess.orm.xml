@@ -9,6 +9,11 @@
         <id name="user" association-key="true"/>
 
         <field name="role" type="user_role_type" column="role" nullable="false"/>
+        <field name="isAccepted" type="boolean" column="is_accepted" nullable="false">
+            <options>
+                <option name="default">0</option>
+            </options>
+        </field>
         <field name="createdAt" type="datetime_immutable" column="created_at" nullable="false"/>
         <field name="updatedAt" type="datetime" column="updated_at" nullable="false"/>
 

@@ -14,6 +14,8 @@ class PlanAccess
 {
     private Id $id;
 
+    private bool $isAccepted = false;
+
     private DateTimeImmutable $createdAt;
 
     private DateTimeInterface $updatedAt;
@@ -59,5 +61,18 @@ class PlanAccess
     private function updated(): void
     {
         $this->updatedAt = new DateTime();
+    }
+
+    public function isAccepted(): bool
+    {
+        return $this->isAccepted;
+    }
+
+    public function accept(bool $isAccepted): void
+    {
+        if ($this->isAccepted !== $isAccepted) {
+            $this->isAccepted = $isAccepted;
+            $this->updated();
+        }
     }
 }

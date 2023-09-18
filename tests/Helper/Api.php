@@ -220,4 +220,13 @@ class Api extends \Codeception\Module
             'sharedAccess' => 'array',
         ];
     }
+
+    public function getPlanSharedAccessDtoJsonType(): array
+    {
+        return [
+            'user' => $this->getUserDtoJsonType(),
+            'role' => 'string',
+            'isAccepted' => 'integer',
+        ];
+    }
 }

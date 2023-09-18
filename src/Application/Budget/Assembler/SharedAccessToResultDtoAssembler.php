@@ -18,6 +18,7 @@ readonly class SharedAccessToResultDtoAssembler
     {
         $item = new SharedAccessItemResultDto();
         $item->role = $planAccess->getRole()->getAlias();
+        $item->isAccepted = $planAccess->isAccepted() ? 1 : 0;
         $item->user = $this->userIdToDtoResultAssembler->assemble($planAccess->getUserId());
         return $item;
     }

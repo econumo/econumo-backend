@@ -8,7 +8,7 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     required={"user", "role"}
+ *     required={"user", "role", "isAccepted"}
  * )
  */
 class SharedAccessItemResultDto
@@ -26,4 +26,11 @@ class SharedAccessItemResultDto
      * @OA\Property(example="admin")
      */
     public string $role;
+
+    /**
+     * Is invite accepted?
+     * @var int
+     * @OA\Property(example="0")
+     */
+    public int $isAccepted;
 }

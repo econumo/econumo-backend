@@ -53,6 +53,6 @@ class CreatePlanCest
                 'item' => $I->getPlanDtoJsonType(),
             ],
         ]);
-        $I->seeResponseMatchesJsonType($I->getSharedAccessDtoJsonType(), '$.data.item.sharedAccess[0]');
+        $I->seeResponseMatchesJsonType($I->getPlanSharedAccessDtoJsonType(), '$.data.item.sharedAccess[0]');
     }
 }
