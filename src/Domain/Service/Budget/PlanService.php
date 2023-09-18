@@ -9,9 +9,11 @@ namespace App\Domain\Service\Budget;
 use App\Domain\Entity\Plan;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\PlanName;
+use App\Domain\Entity\ValueObject\UserRole;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Exception\PlanAlreadyExistsException;
 use App\Domain\Exception\RevokeOwnerAccessException;
+use App\Domain\Factory\PlanAccessFactoryInterface;
 use App\Domain\Factory\PlanFactoryInterface;
 use App\Domain\Factory\PlanOptionsFactoryInterface;
 use App\Domain\Repository\PlanAccessRepositoryInterface;
@@ -34,6 +36,7 @@ readonly class PlanService implements PlanServiceInterface
         private UserServiceInterface $userService,
         private UserRepositoryInterface $userRepository,
         private UserOptionRepositoryInterface $userOptionRepository,
+        private PlanAccessFactoryInterface $planAccessFactory
     ) {
     }
 
@@ -180,5 +183,17 @@ readonly class PlanService implements PlanServiceInterface
         }
         $access = $this->planAccessRepository->get($planId, $sharedUserId);
         $this->planAccessRepository->delete($access);
+    }
+
+    public function grantSharedAccess(Id $planId, Id $sharedUserId, UserRole $role): void
+    {
+        try {
+            $access = $this->planAccessRepository->get($planId, $sharedUserId);
+            $access->updateRole($role);
+        } catch (NotFoundException) {
+            $access = $this->planAccessFactory->create($planId, $sharedUserId, $role);
+        }
+
+        $this->planAccessRepository->save([$access]);
     }
 }

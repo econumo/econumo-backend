@@ -9,6 +9,7 @@ namespace App\Domain\Service\Budget;
 use App\Domain\Entity\Plan;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\PlanName;
+use App\Domain\Entity\ValueObject\UserRole;
 use App\Domain\Service\Dto\PositionDto;
 
 interface PlanServiceInterface
@@ -27,4 +28,6 @@ interface PlanServiceInterface
     public function updatePlan(Id $planId, PlanName $name): Plan;
 
     public function revokeSharedAccess(Id $planId, Id $sharedUserId): void;
+
+    public function grantSharedAccess(Id $planId, Id $sharedUserId, UserRole $role): void;
 }
