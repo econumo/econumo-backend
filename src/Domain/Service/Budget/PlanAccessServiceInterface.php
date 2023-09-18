@@ -12,4 +12,6 @@ interface PlanAccessServiceInterface
     public function canDeletePlan(Id $userId, Id $planId): bool;
 
     public function canUpdatePlan(Id $userId, Id $planId): bool;
+
+    public function canManagePlanAccess(Id $userId, Id $planId): bool;
 }

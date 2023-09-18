@@ -11,6 +11,7 @@ use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\PlanName;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Exception\PlanAlreadyExistsException;
+use App\Domain\Exception\RevokeOwnerAccessException;
 use App\Domain\Factory\PlanFactoryInterface;
 use App\Domain\Factory\PlanOptionsFactoryInterface;
 use App\Domain\Repository\PlanAccessRepositoryInterface;
@@ -169,5 +170,15 @@ readonly class PlanService implements PlanServiceInterface
             }
             $this->userRepository->save([$user]);
         }
+    }
+
+    public function revokeSharedAccess(Id $planId, Id $sharedUserId): void
+    {
+        $plan = $this->planRepository->get($planId);
+        if ($plan->getUserId()->isEqual($sharedUserId)) {
+            throw new RevokeOwnerAccessException();
+        }
+        $access = $this->planAccessRepository->get($planId, $sharedUserId);
+        $this->planAccessRepository->delete($access);
     }
 }

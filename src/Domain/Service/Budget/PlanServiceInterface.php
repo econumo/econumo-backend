@@ -25,4 +25,6 @@ interface PlanServiceInterface
     public function deletePlan(Id $userId, Id $planId): void;
 
     public function updatePlan(Id $planId, PlanName $name): Plan;
+
+    public function revokeSharedAccess(Id $planId, Id $sharedUserId): void;
 }
