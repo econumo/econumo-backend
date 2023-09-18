@@ -61,6 +61,8 @@ readonly class PlanService implements PlanServiceInterface
 
             if ($position === 0) {
                 $position = count($this->planRepository->getAvailableForUserId($userId));
+            } else {
+                $position++;
             }
 
             $plan = $this->planFactory->create($userId, $name);
