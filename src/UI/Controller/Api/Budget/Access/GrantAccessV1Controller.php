@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\UI\Controller\Api\Budget\SharedAccess;
+namespace App\UI\Controller\Api\Budget\Access;
 
-use App\Application\Budget\SharedAccessService;
-use App\Application\Budget\Dto\RevokeSharedAccessV1RequestDto;
-use App\UI\Controller\Api\Budget\SharedAccess\Validation\RevokeSharedAccessV1Form;
+use App\Application\Budget\AccessService;
+use App\Application\Budget\Dto\GrantAccessV1RequestDto;
+use App\UI\Controller\Api\Budget\Access\Validation\GrantAccessV1Form;
 use App\Application\Exception\ValidationException;
 use App\Domain\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,17 +18,17 @@ use Symfony\Component\Routing\Annotation\Route;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Annotations as OA;
 
-class RevokeSharedAccessV1Controller extends AbstractController
+class GrantAccessV1Controller extends AbstractController
 {
-    public function __construct(private readonly SharedAccessService $sharedAccessService, private readonly ValidatorInterface $validator)
+    public function __construct(private readonly AccessService $accessService, private readonly ValidatorInterface $validator)
     {
     }
 
     /**
-     * Revoke sharedAccess
+     * Grant access
      *
      * @OA\Tag(name="Budget"),
-     * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\Application\Budget\Dto\RevokeSharedAccessV1RequestDto::class))),
+     * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\Application\Budget\Dto\GrantAccessV1RequestDto::class))),
      * @OA\Response(
      *     response=200,
      *     description="OK",
@@ -39,7 +39,7 @@ class RevokeSharedAccessV1Controller extends AbstractController
      *             @OA\Schema(
      *                 @OA\Property(
      *                     property="data",
-     *                     ref=@Model(type=\App\Application\Budget\Dto\RevokeSharedAccessV1ResultDto::class)
+     *                     ref=@Model(type=\App\Application\Budget\Dto\GrantAccessV1ResultDto::class)
      *                 )
      *             )
      *         }
@@ -53,14 +53,14 @@ class RevokeSharedAccessV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/budget/revoke-shared-access', methods: ['POST'])]
+    #[Route(path: '/api/v1/budget/grant-access', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
-        $dto = new RevokeSharedAccessV1RequestDto();
-        $this->validator->validate(RevokeSharedAccessV1Form::class, $request->request->all(), $dto);
+        $dto = new GrantAccessV1RequestDto();
+        $this->validator->validate(GrantAccessV1Form::class, $request->request->all(), $dto);
         /** @var User $user */
         $user = $this->getUser();
-        $result = $this->sharedAccessService->revokeSharedAccess($dto, $user->getId());
+        $result = $this->accessService->grantAccess($dto, $user->getId());
 
         return ResponseFactory::createOkResponse($request, $result);
     }

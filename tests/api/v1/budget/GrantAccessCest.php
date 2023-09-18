@@ -8,9 +8,9 @@ use Codeception\Exception\ModuleException;
 use App\Tests\ApiTester;
 use Codeception\Util\HttpCode;
 
-class GrantSharedAccessCest
+class GrantAccessCest
 {
-    private string $url = '/api/v1/budget/grant-shared-access';
+    private string $url = '/api/v1/budget/grant-access';
 
     /**
      * @throws ModuleException

@@ -8,9 +8,9 @@ use Codeception\Exception\ModuleException;
 use App\Tests\ApiTester;
 use Codeception\Util\HttpCode;
 
-class RevokeSharedAccessCest
+class RevokeAccessCest
 {
-    private string $url = '/api/v1/budget/revoke-shared-access';
+    private string $url = '/api/v1/budget/revoke-access';
 
     /**
      * @throws ModuleException

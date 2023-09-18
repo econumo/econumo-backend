@@ -175,7 +175,7 @@ readonly class PlanService implements PlanServiceInterface
         }
     }
 
-    public function revokeSharedAccess(Id $planId, Id $sharedUserId): void
+    public function revokeAccess(Id $planId, Id $sharedUserId): void
     {
         $plan = $this->planRepository->get($planId);
         if ($plan->getUserId()->isEqual($sharedUserId)) {
@@ -185,7 +185,7 @@ readonly class PlanService implements PlanServiceInterface
         $this->planAccessRepository->delete($access);
     }
 
-    public function grantSharedAccess(Id $planId, Id $sharedUserId, UserRole $role): void
+    public function grantAccess(Id $planId, Id $sharedUserId, UserRole $role): void
     {
         try {
             $access = $this->planAccessRepository->get($planId, $sharedUserId);

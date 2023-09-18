@@ -6,7 +6,7 @@ namespace App\Tests\functional\api\v1\budget;
 
 use App\Tests\FunctionalTester;
 
-class GrantSharedAccessCest
+class GrantAccessCest
 {
-    private string $url = '/api/v1/budget/grant-shared-access';
+    private string $url = '/api/v1/budget/grant-access';
 }

@@ -6,7 +6,7 @@ namespace App\Tests\functional\api\v1\budget;
 
 use App\Tests\FunctionalTester;
 
-class RevokeSharedAccessCest
+class RevokeAccessCest
 {
-    private string $url = '/api/v1/budget/revoke-shared-access';
+    private string $url = '/api/v1/budget/revoke-access';
 }

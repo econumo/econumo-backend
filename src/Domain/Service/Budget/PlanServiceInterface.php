@@ -27,7 +27,7 @@ interface PlanServiceInterface
 
     public function updatePlan(Id $planId, PlanName $name): Plan;
 
-    public function revokeSharedAccess(Id $planId, Id $sharedUserId): void;
+    public function revokeAccess(Id $planId, Id $sharedUserId): void;
 
-    public function grantSharedAccess(Id $planId, Id $sharedUserId, UserRole $role): void;
+    public function grantAccess(Id $planId, Id $sharedUserId, UserRole $role): void;
 }

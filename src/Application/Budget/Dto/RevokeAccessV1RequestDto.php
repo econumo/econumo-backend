@@ -8,10 +8,10 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     required={"planId", "userId", "role"}
+ *     required={"planId", "userId"},
  * )
  */
-class GrantSharedAccessV1RequestDto
+class RevokeAccessV1RequestDto
 {
     /**
      * @OA\Property(example="229f97a8-e9c9-4d45-8405-91b7f315f014")
@@ -22,9 +22,4 @@ class GrantSharedAccessV1RequestDto
      * @OA\Property(example="77be9577-147b-4f05-9aa7-91d9b159de5b")
      */
     public string $userId;
-
-    /**
-     * @OA\Property(example="admin")
-     */
-    public string $role;
 }

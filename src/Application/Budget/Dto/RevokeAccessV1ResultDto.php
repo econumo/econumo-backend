@@ -11,7 +11,7 @@ use OpenApi\Annotations as OA;
  *     required={"item"}
  * )
  */
-class GrantSharedAccessV1ResultDto
+class RevokeAccessV1ResultDto
 {
     /**
      * @OA\Property()
