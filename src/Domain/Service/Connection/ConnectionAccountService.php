@@ -78,7 +78,12 @@ class ConnectionAccountService implements ConnectionAccountServiceInterface
                     }
                 }
 
-                $accountOptions = $this->accountOptionsFactory->create($sharedAccountId, $userId, ++$position);
+                try {
+                    $accountOptions = $this->accountOptionsRepository->get($sharedAccountId, $userId);
+                    $accountOptions->updatePosition(++$position);
+                } catch (NotFoundException) {
+                    $accountOptions = $this->accountOptionsFactory->create($sharedAccountId, $userId, ++$position);
+                }
                 $this->accountOptionsRepository->save([$accountOptions]);
 
                 $folder = $this->folderRepository->getLastFolder($userId);
