@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Application\Tag\Assembler;
 
-use App\Application\Tag\Dto\TagResultDto;
+use App\Application\Tag\Dto\UserTagResultDto;
 use App\Domain\Entity\Tag;
 
 class TagToDtoResultAssembler
 {
-    public function assemble(Tag $tag): TagResultDto
+    public function assemble(Tag $tag): UserTagResultDto
     {
-        $item = new TagResultDto();
+        $item = new UserTagResultDto();
         $item->id = $tag->getId()->getValue();
         $item->name = $tag->getName()->getValue();
         $item->position = $tag->getPosition();

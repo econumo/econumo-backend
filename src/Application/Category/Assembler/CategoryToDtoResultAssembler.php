@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Application\Category\Assembler;
 
-use App\Application\Category\Dto\CategoryResultDto;
+use App\Application\Category\Dto\UserCategoryResultDto;
 use App\Domain\Entity\Category;
 
 class CategoryToDtoResultAssembler
 {
-    public function assemble(Category $category): CategoryResultDto
+    public function assemble(Category $category): UserCategoryResultDto
     {
-        $item = new CategoryResultDto();
+        $item = new UserCategoryResultDto();
         $item->id = $category->getId()->getValue();
         $item->ownerUserId = $category->getUserId()->getValue();
         $item->name = $category->getName()->getValue();

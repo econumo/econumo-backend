@@ -10,6 +10,7 @@ use App\Domain\Entity\Plan;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\PlanName;
 use App\Domain\Entity\ValueObject\UserRole;
+use App\Domain\Service\Dto\PlanDto;
 use App\Domain\Service\Dto\PositionDto;
 
 interface PlanServiceInterface
@@ -32,4 +33,6 @@ interface PlanServiceInterface
     public function grantAccess(Id $planId, Id $sharedUserId, UserRole $role): void;
 
     public function acceptAccess(Id $planId, Id $userId): void;
+
+    public function getPlan(Id $planId): PlanDto;
 }

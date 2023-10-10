@@ -22,6 +22,7 @@ use App\Domain\Repository\PlanRepositoryInterface;
 use App\Domain\Repository\UserOptionRepositoryInterface;
 use App\Domain\Repository\UserRepositoryInterface;
 use App\Domain\Service\AntiCorruptionServiceInterface;
+use App\Domain\Service\Dto\PlanDto;
 use App\Domain\Service\UserServiceInterface;
 
 readonly class PlanService implements PlanServiceInterface
@@ -123,7 +124,7 @@ readonly class PlanService implements PlanServiceInterface
         try {
             $plan = $this->planRepository->get($planId);
 
-            if ($plan->getUserId()->isEqual($userId)) {
+            if ($plan->getOwnerUserId()->isEqual($userId)) {
                 $access = $this->planAccessRepository->getByPlan($planId);
                 foreach ($access as $item) {
                     $this->updateUserDefaultPlanWhenItWasDeleted($item->getUserId(), $item->getPlanId());
@@ -180,7 +181,7 @@ readonly class PlanService implements PlanServiceInterface
     public function revokeAccess(Id $planId, Id $sharedUserId): void
     {
         $plan = $this->planRepository->get($planId);
-        if ($plan->getUserId()->isEqual($sharedUserId)) {
+        if ($plan->getOwnerUserId()->isEqual($sharedUserId)) {
             throw new RevokeOwnerAccessException();
         }
         $access = $this->planAccessRepository->get($planId, $sharedUserId);
@@ -204,5 +205,21 @@ readonly class PlanService implements PlanServiceInterface
         $access = $this->planAccessRepository->get($planId, $userId);
         $access->accept();
         $this->planAccessRepository->save([$access]);
+    }
+
+    public function getPlan(Id $planId): PlanDto
+    {
+        $plan = $this->planRepository->get($planId);
+        $dto = new PlanDto();
+        $dto->id = $plan->getId();
+        $dto->name = $plan->getName();
+        $dto->ownerUserId = $plan->getOwnerUserId();
+        $dto->createdAt = $plan->getCreatedAt();
+        $dto->updatedAt = $plan->getUpdatedAt();
+        foreach ($this->planAccessRepository->getByPlan($planId) as $item) {
+            $dto->sharedAccess[] = $item->getUserId();
+        }
+
+        return $dto;
     }
 }

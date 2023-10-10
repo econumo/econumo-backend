@@ -36,7 +36,7 @@ readonly class PlanToDtoV1ResultAssembler
         } catch (\Exception) {
             $item->position = 0;
         }
-        $item->ownerUserId = $plan->getUserId()->getValue();
+        $item->ownerUserId = $plan->getOwnerUserId()->getValue();
         $item->createdAt = $plan->getCreatedAt()->format('Y-m-d H:i:s');
         $item->updatedAt = $plan->getUpdatedAt()->format('Y-m-d H:i:s');
         $item->sharedAccess = [];

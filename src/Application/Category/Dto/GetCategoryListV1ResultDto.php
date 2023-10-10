@@ -14,7 +14,7 @@ use OpenApi\Annotations as OA;
 class GetCategoryListV1ResultDto
 {
     /**
-     * @var CategoryResultDto[]
+     * @var UserCategoryResultDto[]
      * @OA\Property()
      */
     public array $items = [];

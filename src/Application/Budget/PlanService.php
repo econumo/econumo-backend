@@ -18,6 +18,9 @@ use App\Application\Budget\Assembler\DeletePlanV1ResultAssembler;
 use App\Application\Budget\Dto\UpdatePlanV1RequestDto;
 use App\Application\Budget\Dto\UpdatePlanV1ResultDto;
 use App\Application\Budget\Assembler\UpdatePlanV1ResultAssembler;
+use App\Application\Budget\Dto\GetPlanV1RequestDto;
+use App\Application\Budget\Dto\GetPlanV1ResultDto;
+use App\Application\Budget\Assembler\GetPlanV1ResultAssembler;
 
 readonly class PlanService
 {
@@ -26,7 +29,8 @@ readonly class PlanService
         private PlanServiceInterface $planService,
         private DeletePlanV1ResultAssembler $deletePlanV1ResultAssembler,
         private UpdatePlanV1ResultAssembler $updatePlanV1ResultAssembler,
-        private PlanAccessServiceInterface $planAccessService
+        private PlanAccessServiceInterface $planAccessService,
+        private GetPlanV1ResultAssembler $getPlanV1ResultAssembler
     )
     {
     }
@@ -62,5 +66,18 @@ readonly class PlanService
 
         $plan = $this->planService->updatePlan($planId, new PlanName($dto->name));
         return $this->updatePlanV1ResultAssembler->assemble($dto, $plan, $userId);
+    }
+
+    public function getPlan(
+        GetPlanV1RequestDto $dto,
+        Id $userId
+    ): GetPlanV1ResultDto {
+        $planId = new Id($dto->id);
+        if (!$this->planAccessService->canReadPlan($userId, $planId)) {
+            throw new AccessDeniedException();
+        }
+
+        $plan = $this->planService->getPlan($planId);
+        return $this->getPlanV1ResultAssembler->assemble($dto, $plan, $userId);
     }
 }

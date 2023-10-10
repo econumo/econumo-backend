@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace _CG_APPROOT_\UI\Controller\Api\_CG_MODULE_\_CG_SUBJECT_;
+namespace App\UI\Controller\Api\Budget\Plan;
 
-use _CG_APPROOT_\Application\_CG_MODULE_\_CG_SUBJECT_Service;
-use _CG_APPROOT_\Application\_CG_MODULE_\Dto\_CG_ACTION__CG_SUBJECT__CG_VERSION_RequestDto;
-use _CG_APPROOT_\UI\Controller\Api\_CG_MODULE_\_CG_SUBJECT_\Validation\_CG_ACTION__CG_SUBJECT__CG_VERSION_Form;
+use App\Application\Budget\PlanService;
+use App\Application\Budget\Dto\GetPlanV1RequestDto;
+use App\UI\Controller\Api\Budget\Plan\Validation\GetPlanV1Form;
 use App\Application\Exception\ValidationException;
 use App\Domain\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,22 +18,22 @@ use Symfony\Component\Routing\Annotation\Route;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Annotations as OA;
 
-class _CG_ACTION__CG_SUBJECT__CG_VERSION_Controller extends AbstractController
+class GetPlanV1Controller extends AbstractController
 {
-    public function __construct(private readonly _CG_SUBJECT_Service $_CG_SUBJECT_LCFIRST_Service, private readonly ValidatorInterface $validator)
+    public function __construct(private readonly PlanService $planService, private readonly ValidatorInterface $validator)
     {
     }
 
     /**
-     * _CG_ACTION_ _CG_SUBJECT_
+     * Get Plan
      *
-     * @OA\Tag(name="_CG_MODULE_"),
+     * @OA\Tag(name="Budget"),
      * @OA\Parameter(
      *     name="id",
      *     in="query",
      *     required=true,
      *     @OA\Schema(type="string"),
-     *     description="_CG_SUBJECT_ ID",
+     *     description="Plan ID",
      * ),
      * @OA\Response(
      *     response=200,
@@ -45,7 +45,7 @@ class _CG_ACTION__CG_SUBJECT__CG_VERSION_Controller extends AbstractController
      *             @OA\Schema(
      *                 @OA\Property(
      *                     property="data",
-     *                     ref=@Model(type=\_CG_APPROOT_\Application\_CG_MODULE_\Dto\_CG_ACTION__CG_SUBJECT__CG_VERSION_ResultDto::class)
+     *                     ref=@Model(type=\App\Application\Budget\Dto\GetPlanV1ResultDto::class)
      *                 )
      *             )
      *         }
@@ -59,14 +59,14 @@ class _CG_ACTION__CG_SUBJECT__CG_VERSION_Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '_CG_URL_', methods: ['_CG_METHOD_'])]
+    #[Route(path: '/api/v1/budget/get-plan', methods: ['GET'])]
     public function __invoke(Request $request): Response
     {
-        $dto = new _CG_ACTION__CG_SUBJECT__CG_VERSION_RequestDto();
-        $this->validator->validate(_CG_ACTION__CG_SUBJECT__CG_VERSION_Form::class, $request->query->all(), $dto);
+        $dto = new GetPlanV1RequestDto();
+        $this->validator->validate(GetPlanV1Form::class, $request->query->all(), $dto);
         /** @var User $user */
         $user = $this->getUser();
-        $result = $this->_CG_SUBJECT_LCFIRST_Service->_CG_ACTION_LCFIRST__CG_SUBJECT_($dto, $user->getId());
+        $result = $this->planService->getPlan($dto, $user->getId());
 
         return ResponseFactory::createOkResponse($request, $result);
     }

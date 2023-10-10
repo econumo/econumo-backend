@@ -5,13 +5,17 @@ declare(strict_types=1);
 namespace App\Domain\Entity;
 
 use App\Domain\Entity\ValueObject\Id;
-use App\Domain\Entity\ValueObject\PlanName;
+use App\Domain\Entity\ValueObject\PlanFolderName;
+use App\Domain\Events\PlanFolderCreatedEvent;
+use App\Domain\Traits\EventTrait;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 
-class Plan
+class PlanFolder
 {
+    use EventTrait;
+
     private DateTimeImmutable $createdAt;
 
     private DateTimeInterface $updatedAt;
@@ -19,11 +23,13 @@ class Plan
     public function __construct(
         private Id $id,
         private User $user,
-        private PlanName $name,
+        private PlanFolderName $name,
+        private int $position,
         DateTimeInterface $createdAt
     ) {
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
+        $this->registerEvent(new PlanFolderCreatedEvent($user->getId(), $id));
     }
 
     public function getId(): Id
@@ -31,22 +37,22 @@ class Plan
         return $this->id;
     }
 
-    public function getName(): PlanName
-    {
-        return $this->name;
-    }
-
-    public function getOwnerUserId(): Id
+    public function getUserId(): Id
     {
         return $this->user->getId();
     }
 
-    public function getUser(): User
+    public function getName(): PlanFolderName
     {
-        return $this->user;
+        return $this->name;
     }
 
-    public function updateName(PlanName $name): void
+    public function getPosition(): int
+    {
+        return $this->position;
+    }
+
+    public function updateName(PlanFolderName $name): void
     {
         if (!$this->name->isEqual($name)) {
             $this->name = $name;
@@ -54,9 +60,12 @@ class Plan
         }
     }
 
-    public function getCreatedAt(): DateTimeInterface
+    public function updatePosition(int $position): void
     {
-        return $this->createdAt;
+        if ($this->position !== $position) {
+            $this->position = $position;
+            $this->updated();
+        }
     }
 
     public function getUpdatedAt(): DateTimeInterface

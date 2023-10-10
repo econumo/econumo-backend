@@ -14,4 +14,6 @@ interface PlanAccessServiceInterface
     public function canUpdatePlan(Id $userId, Id $planId): bool;
 
     public function canManagePlanAccess(Id $userId, Id $planId): bool;
+
+    public function canReadPlan(Id $userId, Id $planId): bool;
 }

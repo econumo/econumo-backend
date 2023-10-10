@@ -56,7 +56,7 @@ readonly class PlanAccessService implements PlanAccessServiceInterface
             throw new AccessDeniedException();
         }
 
-        if ($plan->getUserId()->isEqual($userId)) {
+        if ($plan->getOwnerUserId()->isEqual($userId)) {
             return UserRole::admin();
         }
         $access = $this->planAccessRepository->get($planId, $userId);
@@ -68,6 +68,16 @@ readonly class PlanAccessService implements PlanAccessServiceInterface
         try {
             $role = $this->getPlanUserRole($userId, $planId);
             return $role->isAdmin();
+        } catch (AccessDeniedException $e) {
+            return false;
+        }
+    }
+
+    public function canReadPlan(Id $userId, Id $planId): bool
+    {
+        try {
+            $this->getPlanUserRole($userId, $planId);
+            return true;
         } catch (AccessDeniedException $e) {
             return false;
         }

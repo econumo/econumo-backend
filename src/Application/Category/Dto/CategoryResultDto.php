@@ -7,7 +7,7 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     required={"id", "ownerUserId", "name", "position", "type", "icon", "isArchived", "createdAt", "updatedAt"}
+ *     required={"id", "ownerUserId", "name", "type", "icon", "isArchived", "createdAt", "updatedAt"}
  * )
  */
 class CategoryResultDto
@@ -31,13 +31,6 @@ class CategoryResultDto
      * @OA\Property(example="Taxes")
      */
     public string $name;
-
-    /**
-     * Position
-     * @var int
-     * @OA\Property(example="0")
-     */
-    public int $position;
 
     /**
      * Category type

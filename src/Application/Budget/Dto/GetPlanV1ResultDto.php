@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Tag\Dto;
+namespace App\Application\Budget\Dto;
 
 use OpenApi\Annotations as OA;
 
@@ -11,11 +11,11 @@ use OpenApi\Annotations as OA;
  *     required={"item"}
  * )
  */
-class UpdateTagV1ResultDto
+class GetPlanV1ResultDto
 {
     /**
-     * Tag
+     * @var DetailedPlanResultDto
      * @OA\Property()
      */
-    public UserTagResultDto $item;
+    public DetailedPlanResultDto $item;
 }

@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Application\Transaction\Dto;
 
-use App\Application\Category\Dto\CategoryResultDto;
+use App\Application\Category\Dto\UserCategoryResultDto;
 use App\Application\Payee\Dto\PayeeResultDto;
-use App\Application\Tag\Dto\TagResultDto;
+use App\Application\Tag\Dto\UserTagResultDto;
 use App\Application\User\Dto\UserResultDto;
 use OpenApi\Annotations as OA;
 

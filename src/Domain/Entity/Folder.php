@@ -6,7 +6,7 @@ namespace App\Domain\Entity;
 
 use App\Domain\Entity\ValueObject\FolderName;
 use App\Domain\Entity\ValueObject\Id;
-use App\Domain\Events\FolderCreatedEvent;
+use App\Domain\Events\AccountFolderCreatedEvent;
 use App\Domain\Traits\EventTrait;
 use DateTime;
 use DateTimeImmutable;
@@ -40,7 +40,7 @@ class Folder
         $this->accounts = new ArrayCollection();
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
-        $this->registerEvent(new FolderCreatedEvent($user->getId(), $id));
+        $this->registerEvent(new AccountFolderCreatedEvent($user->getId(), $id));
     }
 
     public function getId(): Id

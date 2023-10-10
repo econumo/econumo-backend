@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Category\Assembler;
 
-use App\Application\Category\Dto\CategoryResultDto;
+use App\Application\Category\Dto\UserCategoryResultDto;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Repository\CategoryRepositoryInterface;
 
@@ -14,7 +14,7 @@ class CategoryIdToDtoResultAssembler
     {
     }
 
-    public function assemble(Id $categoryId): CategoryResultDto
+    public function assemble(Id $categoryId): UserCategoryResultDto
     {
         $category = $this->categoryRepository->get($categoryId);
         return $this->categoryToDtoResultAssembler->assemble($category);
