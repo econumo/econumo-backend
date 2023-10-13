@@ -36,12 +36,12 @@ class PlanDto
     public array $envelopes = [];
 
     /**
-     * @var Id[] category id's
+     * @var Id[][] categories to envelopes mapping
      */
     public array $categories = [];
 
     /**
-     * @var Id[] tag id's
+     * @var Id[][] tags to envelopes mapping
      */
     public array $tags = [];
 

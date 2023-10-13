@@ -4,20 +4,17 @@
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
     <entity repository-class="App\Infrastructure\Doctrine\Repository\EnvelopeRepository" name="App\Domain\Entity\Envelope"
-            table="accounts">
+            table="envelopes">
         <id name="id" type="uuid" column="id"/>
         <field name="type" type="envelope_type" column="type" nullable="false"/>
         <field name="position" type="integer" column="position" nullable="false"/>
-        <field name="name" type="envelope_name_type" column="name" length="64" nullable="false"/>
-        <field name="icon" type="icon_type" column="icon" length="64" nullable="false"/>
+        <field name="name" type="envelope_name_type" column="name" length="64" nullable="true"/>
+        <field name="icon" type="icon_type" column="icon" length="64" nullable="true"/>
         <field name="createdAt" type="datetime_immutable" column="created_at" nullable="false"/>
         <field name="updatedAt" type="datetime" column="updated_at" nullable="false"/>
 
-        <many-to-one field="user" target-entity="App\Domain\Entity\User">
-            <join-column name="user_id" referenced-column-name="id" nullable="false"/>
-        </many-to-one>
         <many-to-one field="plan" target-entity="App\Domain\Entity\Plan">
-            <join-column name="plan_id" referenced-column-name="id" nullable="false"/>
+            <join-column name="plan_id" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
         </many-to-one>
         <many-to-one field="currency" target-entity="App\Domain\Entity\Currency">
             <join-column name="currency_id" referenced-column-name="id" nullable="false"/>

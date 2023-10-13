@@ -81,7 +81,7 @@ class PlanAccessRepository extends ServiceEntityRepository implements PlanAccess
     /**
      * @inheritDoc
      */
-    public function getByPlan(Id $planId): array
+    public function getByPlanId(Id $planId): array
     {
         return $this->findBy(['plan' => $this->getEntityManager()->getReference(Plan::class, $planId)]);
     }

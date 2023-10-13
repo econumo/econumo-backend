@@ -8,17 +8,26 @@ namespace App\Domain\Service\Budget;
 
 use App\Domain\Entity\Plan;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Entity\ValueObject\PlanFolderName;
 use App\Domain\Entity\ValueObject\PlanName;
 use App\Domain\Entity\ValueObject\UserRole;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Exception\PlanAlreadyExistsException;
 use App\Domain\Exception\RevokeOwnerAccessException;
+use App\Domain\Factory\EnvelopeFactoryInterface;
+use App\Domain\Factory\EnvelopeFolderFactoryInterface;
 use App\Domain\Factory\PlanAccessFactoryInterface;
 use App\Domain\Factory\PlanFactoryInterface;
 use App\Domain\Factory\PlanOptionsFactoryInterface;
+use App\Domain\Repository\AccountRepositoryInterface;
+use App\Domain\Repository\CategoryRepositoryInterface;
+use App\Domain\Repository\CurrencyRepositoryInterface;
+use App\Domain\Repository\EnvelopeRepositoryInterface;
 use App\Domain\Repository\PlanAccessRepositoryInterface;
+use App\Domain\Repository\PlanFolderRepositoryInterface;
 use App\Domain\Repository\PlanOptionsRepositoryInterface;
 use App\Domain\Repository\PlanRepositoryInterface;
+use App\Domain\Repository\TagRepositoryInterface;
 use App\Domain\Repository\UserOptionRepositoryInterface;
 use App\Domain\Repository\UserRepositoryInterface;
 use App\Domain\Service\AntiCorruptionServiceInterface;
@@ -37,7 +46,15 @@ readonly class PlanService implements PlanServiceInterface
         private UserServiceInterface $userService,
         private UserRepositoryInterface $userRepository,
         private UserOptionRepositoryInterface $userOptionRepository,
-        private PlanAccessFactoryInterface $planAccessFactory
+        private PlanAccessFactoryInterface $planAccessFactory,
+        private PlanFolderRepositoryInterface $planFolderRepository,
+        private EnvelopeRepositoryInterface $envelopeRepository,
+        private CategoryRepositoryInterface $categoryRepository,
+        private TagRepositoryInterface $tagRepository,
+        private AccountRepositoryInterface $accountRepository,
+        private EnvelopeFactoryInterface $envelopeFactory,
+        private CurrencyRepositoryInterface $currencyRepository,
+        private EnvelopeFolderFactoryInterface $envelopeFolderFactory
     ) {
     }
 
@@ -71,6 +88,24 @@ readonly class PlanService implements PlanServiceInterface
 
             $planOptions = $this->planOptionsFactory->create($plan->getId(), $userId, $position);
             $this->planOptionsRepository->save([$planOptions]);
+
+            $categoriesFolder = $this->envelopeFolderFactory->create($plan->getId(), new PlanFolderName('Expenses'), 0);
+            $tagsFolder = $this->envelopeFolderFactory->create($plan->getId(), new PlanFolderName('Tags'), 1);
+            $this->planFolderRepository->save([$categoriesFolder, $tagsFolder]);
+
+            $user = $this->userRepository->get($userId);
+            $userCurrency = $this->currencyRepository->getByCode($user->getCurrency());
+            $envelopes = [];
+            $categories = $this->categoryRepository->findByOwnerId($userId);
+            $envelopePosition = 0;
+            foreach ($categories as $category) {
+                $envelopes[] = $this->envelopeFactory->createFromCategory($plan->getId(), $category, $userCurrency->getId(), $envelopePosition++, ($category->getType()->isIncome() ? null : $categoriesFolder->getId()));
+            }
+            $tags = $this->tagRepository->findByOwnerId($userId);
+            foreach ($tags as $tag) {
+                $envelopes[] = $this->envelopeFactory->createFromTag($plan->getId(), $tag, $userCurrency->getId(), $envelopePosition++, $tagsFolder->getId());
+            }
+            $this->envelopeRepository->save($envelopes);
 
             $this->userService->updateDefaultPlan($userId, $plan->getId());
             $this->antiCorruptionService->commit(__METHOD__);
@@ -125,7 +160,7 @@ readonly class PlanService implements PlanServiceInterface
             $plan = $this->planRepository->get($planId);
 
             if ($plan->getOwnerUserId()->isEqual($userId)) {
-                $access = $this->planAccessRepository->getByPlan($planId);
+                $access = $this->planAccessRepository->getByPlanId($planId);
                 foreach ($access as $item) {
                     $this->updateUserDefaultPlanWhenItWasDeleted($item->getUserId(), $item->getPlanId());
                 }
@@ -216,8 +251,46 @@ readonly class PlanService implements PlanServiceInterface
         $dto->ownerUserId = $plan->getOwnerUserId();
         $dto->createdAt = $plan->getCreatedAt();
         $dto->updatedAt = $plan->getUpdatedAt();
-        foreach ($this->planAccessRepository->getByPlan($planId) as $item) {
+        $dto->folders = [];
+        foreach ($this->planFolderRepository->getByPlanId($planId) as $item) {
+            $dto->folders[] = $item->getId();
+        }
+        $dto->envelopes = [];
+        foreach ($this->envelopeRepository->getByPlanId($planId) as $item) {
+            $dto->envelopes[] = $item->getId();
+            $dto->categories[$item->getId()->getValue()] = [];
+            foreach ($item->getCategories() as $category) {
+                $dto->categories[$item->getId()->getValue()][] = $category->getId();
+            }
+            $dto->tags[$item->getId()->getValue()] = [];
+            foreach ($item->getTags() as $tag) {
+                $dto->tags[$item->getId()->getValue()][] = $tag->getId();
+            }
+        }
+        $planAccess = $this->planAccessRepository->getByPlanId($planId);
+        foreach ($planAccess as $item) {
             $dto->sharedAccess[] = $item->getUserId();
+        }
+        $dto->currencies = [];
+        foreach ($planAccess as $item) {
+            if ($item->isAccepted()) {
+                foreach ($this->accountRepository->getUserAccounts($item->getUserId()) as $account) {
+                    if ($account->isExcludedFromBudgeting()) {
+                        continue;
+                    }
+                    if (!in_array($account->getCurrencyId(), $dto->currencies)) {
+                        $dto->currencies[] = $account->getCurrencyId();
+                    }
+                }
+            }
+        }
+        foreach ($this->accountRepository->getUserAccounts($plan->getOwnerUserId()) as $account) {
+            if ($account->isExcludedFromBudgeting()) {
+                continue;
+            }
+            if (!in_array($account->getCurrencyId(), $dto->currencies)) {
+                $dto->currencies[] = $account->getCurrencyId();
+            }
         }
 
         return $dto;

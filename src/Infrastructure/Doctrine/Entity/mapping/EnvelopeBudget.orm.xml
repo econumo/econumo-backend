@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity repository-class="App\Infrastructure\Doctrine\Repository\EnvelopeBudgetRepository" name="App\Domain\Entity\EnvelopeBudget"
+            table="envelope_budgets">
+        <id name="id" type="uuid" column="id"/>
+        <field name="amount" type="decimal" column="amount" precision="19" scale="2" nullable="false"/>
+        <field name="period" type="datetime_immutable" column="period" nullable="false"/>
+        <field name="createdAt" type="datetime_immutable" column="created_at" nullable="false"/>
+        <field name="updatedAt" type="datetime" column="updated_at" nullable="false"/>
+
+        <many-to-one field="envelope" target-entity="App\Domain\Entity\Envelope">
+            <join-column name="envelope_id" referenced-column-name="id" nullable="false"/>
+        </many-to-one>
+    </entity>
+</doctrine-mapping>

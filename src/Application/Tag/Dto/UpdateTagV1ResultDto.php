@@ -17,5 +17,5 @@ class UpdateTagV1ResultDto
      * Tag
      * @OA\Property()
      */
-    public UserTagResultDto $item;
+    public TagResultDto $item;
 }

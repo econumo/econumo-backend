@@ -11,7 +11,7 @@ use OpenApi\Annotations as OA;
  *     required={"user", "role", "isAccepted"}
  * )
  */
-class SharedAccessItemResultDto
+class PlanSharedAccessItemResultDto
 {
     /**
      * User

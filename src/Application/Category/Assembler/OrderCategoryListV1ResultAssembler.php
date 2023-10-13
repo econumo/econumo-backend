@@ -11,7 +11,7 @@ use App\Domain\Repository\CategoryRepositoryInterface;
 
 class OrderCategoryListV1ResultAssembler
 {
-    public function __construct(private readonly CategoryRepositoryInterface $categoryRepository, private readonly CategoryToDtoResultAssembler $categoryToDtoResultAssembler)
+    public function __construct(private readonly CategoryRepositoryInterface $categoryRepository, private readonly UserCategoryToDtoResultAssembler $categoryToDtoResultAssembler)
     {
     }
 

@@ -61,4 +61,11 @@ class EnvelopeResultDto
      * @OA\Property(example="1")
      */
     public int $position;
+
+    /**
+     * Is archived
+     * @var int
+     * @OA\Property(example="1")
+     */
+    public int $isArchived = 0;
 }

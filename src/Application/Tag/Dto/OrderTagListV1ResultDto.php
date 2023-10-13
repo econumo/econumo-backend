@@ -14,7 +14,7 @@ use OpenApi\Annotations as OA;
 class OrderTagListV1ResultDto
 {
     /**
-     * @var UserTagResultDto[]
+     * @var TagResultDto[]
      * @OA\Property()
      */
     public array $items = [];

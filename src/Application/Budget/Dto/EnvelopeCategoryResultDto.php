@@ -1,16 +1,18 @@
 <?php
+
 declare(strict_types=1);
 
-namespace App\Application\Category\Dto;
+
+namespace App\Application\Budget\Dto;
 
 use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     required={"id", "ownerUserId", "name", "position", "type", "icon", "isArchived", "createdAt", "updatedAt"}
+ *     required={"id", "ownerUserId", "name", "type", "icon", "isArchived", "envelopeId"}
  * )
  */
-class CategoryResultDto
+class EnvelopeCategoryResultDto
 {
     /**
      * Id
@@ -31,13 +33,6 @@ class CategoryResultDto
      * @OA\Property(example="Taxes")
      */
     public string $name;
-
-    /**
-     * Position
-     * @var int
-     * @OA\Property(example="0")
-     */
-    public int $position;
 
     /**
      * Category type
@@ -61,16 +56,9 @@ class CategoryResultDto
     public int $isArchived;
 
     /**
-     * Created at
+     * Envelope ID
      * @var string
-     * @OA\Property(example="2021-01-01 12:15:00")
+     * @OA\Property(example="a5e2eee2-56aa-43c6-a827-ca155683ea8d")
      */
-    public string $createdAt;
-
-    /**
-     * Updated at
-     * @var string
-     * @OA\Property(example="2021-01-01 12:15:00")
-     */
-    public string $updatedAt;
+    public string $envelopeId;
 }

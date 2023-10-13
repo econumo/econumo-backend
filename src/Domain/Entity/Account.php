@@ -52,6 +52,11 @@ class Account
         return $this->name;
     }
 
+    public function isExcludedFromBudgeting(): bool
+    {
+        return false;
+    }
+
     public function getCurrencyId(): Id
     {
         return $this->currency->getId();

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Application\Budget\Assembler;
 
 use App\Application\Budget\Dto\PlanResultDto;
-use App\Application\Budget\Dto\SharedAccessItemResultDto;
+use App\Application\Budget\Dto\PlanSharedAccessItemResultDto;
 use App\Application\User\Assembler\UserToDtoResultAssembler;
 use App\Domain\Entity\Plan;
 use App\Domain\Entity\ValueObject\Id;
@@ -40,8 +40,8 @@ readonly class PlanToDtoV1ResultAssembler
         $item->createdAt = $plan->getCreatedAt()->format('Y-m-d H:i:s');
         $item->updatedAt = $plan->getUpdatedAt()->format('Y-m-d H:i:s');
         $item->sharedAccess = [];
-        $access = $this->planAccessRepository->getByPlan($plan->getId());
-        $ownerUserAccess = new SharedAccessItemResultDto();
+        $access = $this->planAccessRepository->getByPlanId($plan->getId());
+        $ownerUserAccess = new PlanSharedAccessItemResultDto();
         $ownerUserAccess->isAccepted = 1;
         $ownerUserAccess->role = UserRole::admin()->getAlias();
         $ownerUserAccess->user = $this->userToDtoResultAssembler->assemble($plan->getUser());

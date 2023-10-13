@@ -1,16 +1,18 @@
 <?php
+
 declare(strict_types=1);
 
-namespace App\Application\Category\Dto;
+
+namespace App\Application\Budget\Dto;
 
 use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     required={"id", "ownerUserId", "name", "position", "type", "icon", "isArchived", "createdAt", "updatedAt"}
+ *     required={"id", "ownerUserId", "name", "isArchived", "createdAt", "updatedAt", "envelopeId"}
  * )
  */
-class CategoryResultDto
+class EnvelopeTagResultDto
 {
     /**
      * Id
@@ -28,33 +30,12 @@ class CategoryResultDto
     /**
      * Name
      * @var string
-     * @OA\Property(example="Taxes")
+     * @OA\Property(example="Apple")
      */
     public string $name;
 
     /**
-     * Position
-     * @var int
-     * @OA\Property(example="0")
-     */
-    public int $position;
-
-    /**
-     * Category type
-     * @var string
-     * @OA\Property(example="expense")
-     */
-    public string $type;
-
-    /**
-     * Icon
-     * @var string
-     * @OA\Property(example="local_offer")
-     */
-    public string $icon;
-
-    /**
-     * Is archived category?
+     * Is archived tag?
      * @var int
      * @OA\Property(example="0")
      */
@@ -73,4 +54,11 @@ class CategoryResultDto
      * @OA\Property(example="2021-01-01 12:15:00")
      */
     public string $updatedAt;
+
+    /**
+     * Envelope ID
+     * @var string
+     * @OA\Property(example="a5e2eee2-56aa-43c6-a827-ca155683ea8d")
+     */
+    public string $envelopeId;
 }

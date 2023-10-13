@@ -22,24 +22,19 @@ class PlanFolder
 
     public function __construct(
         private Id $id,
-        private User $user,
+        private Plan $plan,
         private PlanFolderName $name,
         private int $position,
         DateTimeInterface $createdAt
     ) {
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
-        $this->registerEvent(new PlanFolderCreatedEvent($user->getId(), $id));
+        $this->registerEvent(new PlanFolderCreatedEvent($id));
     }
 
     public function getId(): Id
     {
         return $this->id;
-    }
-
-    public function getUserId(): Id
-    {
-        return $this->user->getId();
     }
 
     public function getName(): PlanFolderName

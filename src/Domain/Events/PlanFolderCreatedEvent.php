@@ -8,13 +8,8 @@ use App\Domain\Entity\ValueObject\Id;
 
 final readonly class PlanFolderCreatedEvent
 {
-    public function __construct(private Id $userId, private Id $folderId)
+    public function __construct(private Id $folderId)
     {
-    }
-
-    public function getUserId(): Id
-    {
-        return $this->userId;
     }
 
     public function getFolderId(): Id

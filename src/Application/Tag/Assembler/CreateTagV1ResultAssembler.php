@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Application\Tag\Assembler;
 
-use App\Application\Tag\Assembler\TagToDtoResultAssembler;
+use App\Application\Tag\Assembler\TagToUserTagDtoResultAssembler;
 use App\Application\Tag\Dto\CreateTagV1RequestDto;
 use App\Application\Tag\Dto\CreateTagV1ResultDto;
 use App\Domain\Entity\Tag;
 
 class CreateTagV1ResultAssembler
 {
-    public function __construct(private readonly TagToDtoResultAssembler $tagToDtoV1ResultAssembler)
+    public function __construct(private readonly TagToUserTagDtoResultAssembler $tagToDtoV1ResultAssembler)
     {
     }
 

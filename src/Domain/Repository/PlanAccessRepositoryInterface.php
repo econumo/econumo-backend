@@ -13,7 +13,7 @@ interface PlanAccessRepositoryInterface
     /**
      * @return PlanAccess[]
      */
-    public function getByPlan(Id $planId): array;
+    public function getByPlanId(Id $planId): array;
 
     /**
      * @param PlanAccess[] $items

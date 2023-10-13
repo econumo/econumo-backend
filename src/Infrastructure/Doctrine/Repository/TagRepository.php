@@ -106,4 +106,9 @@ DQL;
         $this->getEntityManager()->remove($tag);
         $this->getEntityManager()->flush();
     }
+
+    public function getByIds(array $ids): array
+    {
+        return $this->findBy(['id' => $ids]);
+    }
 }

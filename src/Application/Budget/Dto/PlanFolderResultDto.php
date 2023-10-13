@@ -11,7 +11,7 @@ use OpenApi\Annotations as OA;
  *     required={"id", "name", "position"}
  * )
  */
-class FolderResultDto
+class PlanFolderResultDto
 {
     /**
      * Id

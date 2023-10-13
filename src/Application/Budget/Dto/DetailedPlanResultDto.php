@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Budget\Dto;
 
-use App\Application\Category\Dto\CategoryResultDto;
 use App\Application\Currency\Dto\CurrencyResultDto;
-use App\Application\Tag\Dto\TagResultDto;
 use OpenApi\Annotations as OA;
 
 /**
@@ -55,7 +53,7 @@ class DetailedPlanResultDto
 
     /**
      * Plan folders
-     * @var FolderResultDto[]
+     * @var PlanFolderResultDto[]
      * @OA\Property()
      */
     public array $folders = [];
@@ -69,21 +67,21 @@ class DetailedPlanResultDto
 
     /**
      * Plan categories
-     * @var CategoryResultDto[]
+     * @var EnvelopeCategoryResultDto[]
      * @OA\Property()
      */
     public array $categories = [];
 
     /**
      * Plan tags
-     * @var TagResultDto[]
+     * @var EnvelopeTagResultDto[]
      * @OA\Property()
      */
     public array $tags = [];
 
     /**
      * Account access
-     * @var SharedAccessItemResultDto[]
+     * @var PlanSharedAccessItemResultDto[]
      * @OA\Property()
      */
     public array $sharedAccess = [];

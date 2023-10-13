@@ -7,7 +7,7 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     required={"id", "ownerUserId", "name", "isArchived", "createdAt", "updatedAt"}
+ *     required={"id", "ownerUserId", "name", "position", "isArchived", "createdAt", "updatedAt"}
  * )
  */
 class TagResultDto
@@ -31,6 +31,13 @@ class TagResultDto
      * @OA\Property(example="Apple")
      */
     public string $name;
+
+    /**
+     * Position
+     * @var int
+     * @OA\Property(example="0")
+     */
+    public int $position;
 
     /**
      * Is archived tag?

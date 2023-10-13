@@ -50,7 +50,7 @@ class PlanResultDto
 
     /**
      * Account access
-     * @var SharedAccessItemResultDto[]
+     * @var PlanSharedAccessItemResultDto[]
      * @OA\Property()
      */
     public array $sharedAccess = [];

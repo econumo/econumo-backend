@@ -27,6 +27,8 @@ doctrine:
             plan_name_type: App\Infrastructure\Doctrine\Type\PlanNameType
             user_role_type: App\Infrastructure\Doctrine\Type\UserRoleType
             plan_folder_name_type: App\Infrastructure\Doctrine\Type\PlanFolderNameType
+            envelope_name_type: App\Infrastructure\Doctrine\Type\PlanFolderNameType
+            envelope_type: App\Infrastructure\Doctrine\Type\EnvelopeType
         server_version: 13
 
     orm:

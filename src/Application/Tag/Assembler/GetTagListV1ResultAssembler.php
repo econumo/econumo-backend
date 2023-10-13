@@ -8,9 +8,9 @@ use App\Application\Tag\Dto\GetTagListV1RequestDto;
 use App\Application\Tag\Dto\GetTagListV1ResultDto;
 use App\Domain\Entity\Tag;
 
-class GetTagListV1ResultAssembler
+readonly class GetTagListV1ResultAssembler
 {
-    public function __construct(private readonly TagToDtoResultAssembler $tagToDtoV1ResultAssembler)
+    public function __construct(private TagToUserTagDtoResultAssembler $tagToDtoV1ResultAssembler)
     {
     }
 

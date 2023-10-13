@@ -24,4 +24,6 @@ interface PlanFolderRepositoryInterface
     public function save(array $items): void;
 
     public function delete(PlanFolder $item): void;
+
+    public function getReference(Id $id): PlanFolder;
 }

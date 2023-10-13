@@ -39,6 +39,16 @@ final class EnvelopeType implements JsonSerializable, \Stringable
 
     private int $value;
 
+    public static function createIncome(): self
+    {
+        return new self(self::INCOME);
+    }
+
+    public static function createExpense(): self
+    {
+        return new self(self::EXPENSE);
+    }
+
     public static function createFromAlias(string $alias): self
     {
         $alias = strtolower(trim($alias));

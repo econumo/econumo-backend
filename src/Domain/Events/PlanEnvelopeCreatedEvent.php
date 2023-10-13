@@ -15,9 +15,8 @@ final readonly class PlanEnvelopeCreatedEvent
     public function __construct(
         private Id $id,
         private Id $planId,
-        private Id $userId,
         private Id $currencyId,
-        private Id $folderId,
+        private ?Id $folderId,
         private EnvelopeType $type,
         private int $position,
         private ?EnvelopeName $name,
@@ -36,17 +35,12 @@ final readonly class PlanEnvelopeCreatedEvent
         return $this->planId;
     }
 
-    public function getUserId(): Id
-    {
-        return $this->userId;
-    }
-
     public function getCurrencyId(): Id
     {
         return $this->currencyId;
     }
 
-    public function getFolderId(): Id
+    public function getFolderId(): ?Id
     {
         return $this->folderId;
     }
