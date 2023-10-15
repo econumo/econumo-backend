@@ -11,7 +11,7 @@ use OpenApi\Annotations as OA;
  *     required={"item"}
  * )
  */
-class CreateFolderV1ResultDto
+class UpdateFolderV1ResultDto
 {
     /**
      * @OA\Property()

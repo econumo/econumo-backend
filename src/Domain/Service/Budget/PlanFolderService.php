@@ -46,4 +46,11 @@ readonly class PlanFolderService implements PlanFolderServiceInterface
         }
         $this->planFolderRepository->delete($folder);
     }
+
+    public function updateFolder(Id $folderId, PlanFolderName $name): void
+    {
+        $folder = $this->planFolderRepository->get($folderId);
+        $folder->updateName($name);
+        $this->planFolderRepository->save([$folder]);
+    }
 }

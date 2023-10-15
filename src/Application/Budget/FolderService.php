@@ -19,6 +19,9 @@ use App\Application\Budget\Dto\DeleteFolderV1RequestDto;
 use App\Application\Budget\Dto\DeleteFolderV1ResultDto;
 use App\Application\Budget\Assembler\DeleteFolderV1ResultAssembler;
 use App\Domain\Service\Translation\TranslationServiceInterface;
+use App\Application\Budget\Dto\UpdateFolderV1RequestDto;
+use App\Application\Budget\Dto\UpdateFolderV1ResultDto;
+use App\Application\Budget\Assembler\UpdateFolderV1ResultAssembler;
 
 readonly class FolderService
 {
@@ -29,6 +32,7 @@ readonly class FolderService
         private DeleteFolderV1ResultAssembler $deleteFolderV1ResultAssembler,
         private PlanFolderRepositoryInterface $planFolderRepository,
         private TranslationServiceInterface $translationService,
+        private UpdateFolderV1ResultAssembler $updateFolderV1ResultAssembler,
     ) {
     }
 
@@ -60,5 +64,19 @@ readonly class FolderService
             throw new ValidationException($this->translationService->trans('budget.plan_folder.is_not_empty'));
         }
         return $this->deleteFolderV1ResultAssembler->assemble($dto);
+    }
+
+    public function updateFolder(
+        UpdateFolderV1RequestDto $dto,
+        Id $userId
+    ): UpdateFolderV1ResultDto {
+        $folderId = new Id($dto->id);
+        $folder = $this->planFolderRepository->get($folderId);
+        $planId = $folder->getPlan()->getId();
+        if (!$this->planAccessService->canUpdatePlan($userId, $planId)) {
+            throw new AccessDeniedException();
+        }
+        $this->planFolderService->updateFolder($folderId, new PlanFolderName($dto->name));
+        return $this->updateFolderV1ResultAssembler->assemble($dto, $folderId);
     }
 }

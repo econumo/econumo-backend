@@ -19,4 +19,6 @@ interface PlanFolderServiceInterface
      * @throws PlanFolderIsNotEmptyException
      */
     public function deleteFolder(Id $folderId): void;
+
+    public function updateFolder(Id $folderId, PlanFolderName $name): void;
 }
