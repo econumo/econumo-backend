@@ -7,6 +7,7 @@ namespace App\Domain\Entity;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\PlanFolderName;
 use App\Domain\Events\PlanFolderCreatedEvent;
+use App\Domain\Traits\EntityTrait;
 use App\Domain\Traits\EventTrait;
 use DateTime;
 use DateTimeImmutable;
@@ -14,6 +15,7 @@ use DateTimeInterface;
 
 class PlanFolder
 {
+    use EntityTrait;
     use EventTrait;
 
     private DateTimeImmutable $createdAt;

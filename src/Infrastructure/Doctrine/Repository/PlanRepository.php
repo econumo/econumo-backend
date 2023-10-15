@@ -109,10 +109,9 @@ class PlanRepository extends ServiceEntityRepository implements PlanRepositoryIn
         return $item;
     }
 
-    public function delete(Id $id): void
+    public function delete(Plan $plan): void
     {
-        $item = $this->get($id);
-        $this->getEntityManager()->remove($item);
+        $this->getEntityManager()->remove($plan);
         $this->getEntityManager()->flush();
     }
 

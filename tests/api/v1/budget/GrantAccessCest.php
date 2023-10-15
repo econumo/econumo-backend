@@ -18,7 +18,7 @@ class GrantAccessCest
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, ['planId' => '229f97a8-e9c9-4d45-8405-91b7f315f014', 'userId' => '77be9577-147b-4f05-9aa7-91d9b159de5b', 'role' => 'user']);
+        $I->sendPOST($this->url, ['planId' => '3a6d84be-d074-4a14-ab9a-86dfb083c91d', 'userId' => '77be9577-147b-4f05-9aa7-91d9b159de5b', 'role' => 'user']);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
 
@@ -37,8 +37,18 @@ class GrantAccessCest
      */
     public function requestShouldReturn401ResponseCode(ApiTester $I): void
     {
-        $I->sendPOST($this->url, ['planId' => '229f97a8-e9c9-4d45-8405-91b7f315f014', 'userId' => '77be9577-147b-4f05-9aa7-91d9b159de5b', 'role' => 'user']);
+        $I->sendPOST($this->url, ['planId' => '3a6d84be-d074-4a14-ab9a-86dfb083c91d', 'userId' => '77be9577-147b-4f05-9aa7-91d9b159de5b', 'role' => 'user']);
         $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
+    }
+
+    /**
+     * @throws ModuleException
+     */
+    public function requestShouldReturn403ResponseCode(ApiTester $I): void
+    {
+        $I->amAuthenticatedAsJohn();
+        $I->sendPOST($this->url, ['planId' => '3a6d84be-d074-4a14-ab9a-86dfb083c91d', 'userId' => '48044d88-5081-11ec-bf63-0242ac130002', 'role' => 'user']);
+        $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
     }
 
     /**
@@ -47,7 +57,7 @@ class GrantAccessCest
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, ['planId' => '229f97a8-e9c9-4d45-8405-91b7f315f014', 'userId' => '77be9577-147b-4f05-9aa7-91d9b159de5b', 'role' => 'user']);
+        $I->sendPOST($this->url, ['planId' => '3a6d84be-d074-4a14-ab9a-86dfb083c91d', 'userId' => '77be9577-147b-4f05-9aa7-91d9b159de5b', 'role' => 'user']);
         $I->seeResponseMatchesJsonType([
             'data' => [
                 'item' => $I->getPlanDtoJsonType(),

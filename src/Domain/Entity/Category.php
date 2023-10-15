@@ -8,12 +8,18 @@ use App\Domain\Entity\ValueObject\CategoryName;
 use App\Domain\Entity\ValueObject\CategoryType;
 use App\Domain\Entity\ValueObject\Icon;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Events\CategoryCreatedEvent;
+use App\Domain\Traits\EntityTrait;
+use App\Domain\Traits\EventTrait;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 
 class Category
 {
+    use EntityTrait;
+    use EventTrait;
+
     private int $position = 0;
 
     private bool $isArchived = false;
@@ -32,6 +38,7 @@ class Category
     ) {
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
+        $this->registerEvent(new CategoryCreatedEvent($user->getId(), $id));
     }
 
     public function getId(): Id

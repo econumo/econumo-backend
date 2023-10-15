@@ -16,6 +16,7 @@ use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\UserRole;
 use App\Domain\Exception\RevokeOwnerAccessException;
 use App\Domain\Repository\PlanRepositoryInterface;
+use App\Domain\Repository\UserRepositoryInterface;
 use App\Domain\Service\Budget\PlanAccessServiceInterface;
 use App\Domain\Service\Budget\PlanServiceInterface;
 use App\Application\Budget\Dto\AcceptAccessV1RequestDto;
@@ -30,7 +31,8 @@ readonly class AccessService
         private PlanServiceInterface $planService,
         private PlanRepositoryInterface $planRepository,
         private GrantAccessV1ResultAssembler $grantAccessV1ResultAssembler,
-        private readonly AcceptAccessV1ResultAssembler $acceptAccessV1ResultAssembler
+        private AcceptAccessV1ResultAssembler $acceptAccessV1ResultAssembler,
+        private UserRepositoryInterface $userRepository
     ) {
     }
 
@@ -61,6 +63,10 @@ readonly class AccessService
             throw new AccessDeniedException();
         }
         $sharedUserId = new Id($dto->userId);
+        $user = $this->userRepository->get($userId);
+        if (!$user->isUserIdConnected($sharedUserId)) {
+            throw new AccessDeniedException();
+        }
         $role = UserRole::createFromAlias($dto->role);
         $this->planService->grantAccess($planId, $sharedUserId, $role);
         $plan = $this->planRepository->get($planId);

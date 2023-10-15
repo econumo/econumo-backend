@@ -9,7 +9,7 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     required={"id", "ownerUserId", "name", "isArchived", "createdAt", "updatedAt", "envelopeId"}
+ *     required={"id", "ownerUserId", "name", "isArchived", "envelopeId"}
  * )
  */
 class EnvelopeTagResultDto
@@ -40,20 +40,6 @@ class EnvelopeTagResultDto
      * @OA\Property(example="0")
      */
     public int $isArchived;
-
-    /**
-     * Created at
-     * @var string
-     * @OA\Property(example="2021-01-01 12:15:00")
-     */
-    public string $createdAt;
-
-    /**
-     * Updated at
-     * @var string
-     * @OA\Property(example="2021-01-01 12:15:00")
-     */
-    public string $updatedAt;
 
     /**
      * Envelope ID

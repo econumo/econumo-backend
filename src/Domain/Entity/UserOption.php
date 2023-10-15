@@ -7,12 +7,15 @@ namespace App\Domain\Entity;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\ReportPeriod;
 use App\Domain\Exception\UserOptionException;
+use App\Domain\Traits\EntityTrait;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 
 class UserOption
 {
+    use EntityTrait;
+
     /**
      * @var string
      */

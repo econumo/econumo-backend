@@ -18,7 +18,7 @@ class AcceptAccessCest
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
         $I->amAuthenticatedAsDany();
-        $I->sendPOST($this->url, ['planId' => '229f97a8-e9c9-4d45-8405-91b7f315f014']);
+        $I->sendPOST($this->url, ['planId' => '3a6d84be-d074-4a14-ab9a-86dfb083c91d']);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
 
@@ -37,7 +37,7 @@ class AcceptAccessCest
      */
     public function requestShouldReturn401ResponseCode(ApiTester $I): void
     {
-        $I->sendPOST($this->url, ['planId' => '229f97a8-e9c9-4d45-8405-91b7f315f014']);
+        $I->sendPOST($this->url, ['planId' => '3a6d84be-d074-4a14-ab9a-86dfb083c91d']);
         $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
     }
 
@@ -47,7 +47,7 @@ class AcceptAccessCest
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
         $I->amAuthenticatedAsDany();
-        $I->sendPOST($this->url, ['planId' => '229f97a8-e9c9-4d45-8405-91b7f315f014']);
+        $I->sendPOST($this->url, ['planId' => '3a6d84be-d074-4a14-ab9a-86dfb083c91d']);
         $I->seeResponseMatchesJsonType([
             'data' => [
                 'item' => $I->getPlanDtoJsonType(),

@@ -229,4 +229,68 @@ class Api extends \Codeception\Module
             'isAccepted' => 'integer',
         ];
     }
+
+    public function getPlanFolderDtoJsonType(): array
+    {
+        return [
+            'id' => 'string',
+            'name' => 'string',
+            'position' => 'integer',
+        ];
+    }
+
+    public function getPlanEnvelopeDtoJsonType(): array
+    {
+        return [
+            'id' => 'string',
+            'name' => 'string',
+            'icon' => 'string',
+            'type' => 'string',
+            'currencyId' => 'string',
+            'folderId' => 'string|null',
+            'position' => 'integer',
+            'isArchived' => 'integer',
+        ];
+    }
+
+    public function getPlanEnvelopeCategoryDtoJsonType(): array
+    {
+        return [
+            'id' => 'string',
+            'ownerUserId' => 'string',
+            'name' => 'string',
+            'type' => 'string',
+            'icon' => 'string',
+            'isArchived' => 'integer',
+            'envelopeId' => 'string',
+        ];
+    }
+
+    public function getPlanEnvelopeTagDtoJsonType(): array
+    {
+        return [
+            'id' => 'string',
+            'ownerUserId' => 'string',
+            'name' => 'string',
+            'isArchived' => 'integer',
+            'envelopeId' => 'string',
+        ];
+    }
+
+    public function geDetailedPlanDtoJsonType(): array
+    {
+        return [
+            'id' => 'string',
+            'ownerUserId' => 'string',
+            'name' => 'string',
+            'createdAt' => 'string',
+            'updatedAt' => 'string',
+            'currencies' => 'array',
+            'folders' => 'array',
+            'envelopes' => 'array',
+            'categories' => 'array',
+            'tags' => 'array',
+            'sharedAccess' => 'array',
+        ];
+    }
 }

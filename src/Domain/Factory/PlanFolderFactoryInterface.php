@@ -14,7 +14,7 @@ use App\Domain\Entity\ValueObject\Icon;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\PlanFolderName;
 
-interface EnvelopeFolderFactoryInterface
+interface PlanFolderFactoryInterface
 {
     public function create(
         Id $planId,

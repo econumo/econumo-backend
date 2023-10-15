@@ -11,7 +11,7 @@ use App\Domain\Repository\PlanFolderRepositoryInterface;
 use App\Domain\Repository\PlanRepositoryInterface;
 use App\Domain\Service\DatetimeServiceInterface;
 
-class EnvelopeFolderFactory implements EnvelopeFolderFactoryInterface
+class PlanFolderFactory implements PlanFolderFactoryInterface
 {
     public function __construct(
         private PlanFolderRepositoryInterface $planFolderRepository,

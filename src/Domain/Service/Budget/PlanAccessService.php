@@ -66,8 +66,8 @@ readonly class PlanAccessService implements PlanAccessServiceInterface
     public function canManagePlanAccess(Id $userId, Id $planId): bool
     {
         try {
-            $role = $this->getPlanUserRole($userId, $planId);
-            return $role->isAdmin();
+            $plan = $this->planRepository->get($planId);
+            return $plan->getOwnerUserId()->isEqual($userId);
         } catch (AccessDeniedException $e) {
             return false;
         }

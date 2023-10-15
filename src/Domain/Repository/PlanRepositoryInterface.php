@@ -33,7 +33,7 @@ interface PlanRepositoryInterface
      */
     public function save(array $items): void;
 
-    public function delete(Id $id): void;
+    public function delete(Plan $plan): void;
 
     public function getReference(Id $id): Plan;
 }

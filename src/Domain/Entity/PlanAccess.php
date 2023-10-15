@@ -6,12 +6,15 @@ namespace App\Domain\Entity;
 
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\UserRole;
+use App\Domain\Traits\EntityTrait;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 
 class PlanAccess
 {
+    use EntityTrait;
+
     private Id $id;
 
     private bool $isAccepted = false;

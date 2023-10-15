@@ -10,6 +10,7 @@ use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\Identifier;
 use App\Domain\Entity\ValueObject\ReportPeriod;
 use App\Domain\Events\UserRegisteredEvent;
+use App\Domain\Traits\EntityTrait;
 use App\Domain\Traits\EventTrait;
 use DateTime;
 use DateTimeImmutable;
@@ -21,6 +22,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    use EntityTrait;
     use EventTrait;
 
     /**
@@ -134,6 +136,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function isUserConnected(self $user): bool
     {
         return $this->connections->contains($user);
+    }
+
+    public function isUserIdConnected(Id $userId): bool
+    {
+        foreach ($this->connections as $connection) {
+            if ($connection->getId()->isEqual($userId)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function connectUser(self $user): void

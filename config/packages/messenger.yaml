@@ -24,3 +24,5 @@ framework:
       'App\Domain\Events\RemindPasswordRequestedEvent': domain_events
       'App\Domain\Events\UserRegisteredEvent': domain_events
       'App\Domain\Events\PlanEnvelopeCreatedEvent': domain_events
+      'App\Domain\Events\CategoryCreatedEvent': domain_events
+      'App\Domain\Events\TagCreatedEvent': domain_events

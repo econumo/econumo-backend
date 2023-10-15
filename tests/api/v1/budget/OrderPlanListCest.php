@@ -21,11 +21,11 @@ class OrderPlanListCest
         $I->sendPOST($this->url, [
             'changes' => [
                 [
-                    'id' => '229f97a8-e9c9-4d45-8405-91b7f315f014',
+                    'id' => 'bceed17e-d492-40be-921a-e7fa6f663fa6',
                     'position' => 0
                 ],
                 [
-                    'id' => '05c8f3e1-d77f-4b37-b2ca-0fc5f0f0c7a9',
+                    'id' => '16c88ac2-b548-4446-9e27-51a28156b299',
                     'position' => 1
                 ],
             ]
@@ -51,11 +51,11 @@ class OrderPlanListCest
         $I->sendPOST($this->url, [
             'changes' => [
                 [
-                    'id' => '229f97a8-e9c9-4d45-8405-91b7f315f014',
+                    'id' => 'bceed17e-d492-40be-921a-e7fa6f663fa6',
                     'position' => 0
                 ],
                 [
-                    'id' => '05c8f3e1-d77f-4b37-b2ca-0fc5f0f0c7a9',
+                    'id' => '16c88ac2-b548-4446-9e27-51a28156b299',
                     'position' => 1
                 ],
             ]
@@ -72,11 +72,11 @@ class OrderPlanListCest
         $I->sendPOST($this->url, [
             'changes' => [
                 [
-                    'id' => '229f97a8-e9c9-4d45-8405-91b7f315f014',
+                    'id' => 'bceed17e-d492-40be-921a-e7fa6f663fa6',
                     'position' => 0
                 ],
                 [
-                    'id' => '05c8f3e1-d77f-4b37-b2ca-0fc5f0f0c7a9',
+                    'id' => '16c88ac2-b548-4446-9e27-51a28156b299',
                     'position' => 1
                 ],
             ]

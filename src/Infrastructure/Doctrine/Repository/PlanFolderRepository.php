@@ -42,7 +42,7 @@ class PlanFolderRepository extends ServiceEntityRepository implements PlanFolder
      */
     public function getByPlanId(Id $planId): array
     {
-        return $this->findBy(['plan' => $this->getEntityManager()->getReference(Plan::class, $planId)]);
+        return $this->findBy(['plan' => $this->getEntityManager()->getReference(Plan::class, $planId)], ['position' => 'ASC']);
     }
 
     public function get(Id $id): PlanFolder

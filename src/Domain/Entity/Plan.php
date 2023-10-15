@@ -6,12 +6,15 @@ namespace App\Domain\Entity;
 
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\PlanName;
+use App\Domain\Traits\EntityTrait;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 
 class Plan
 {
+    use EntityTrait;
+
     private DateTimeImmutable $createdAt;
 
     private DateTimeInterface $updatedAt;

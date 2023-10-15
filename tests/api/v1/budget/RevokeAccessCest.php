@@ -18,7 +18,7 @@ class RevokeAccessCest
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, ['planId' => '229f97a8-e9c9-4d45-8405-91b7f315f014', 'userId' => '77be9577-147b-4f05-9aa7-91d9b159de5b']);
+        $I->sendPOST($this->url, ['planId' => '3a6d84be-d074-4a14-ab9a-86dfb083c91d', 'userId' => '77be9577-147b-4f05-9aa7-91d9b159de5b']);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
 
@@ -37,7 +37,7 @@ class RevokeAccessCest
      */
     public function requestShouldReturn401ResponseCode(ApiTester $I): void
     {
-        $I->sendPOST($this->url, ['planId' => '229f97a8-e9c9-4d45-8405-91b7f315f014', 'userId' => '77be9577-147b-4f05-9aa7-91d9b159de5b']);
+        $I->sendPOST($this->url, ['planId' => '3a6d84be-d074-4a14-ab9a-86dfb083c91d', 'userId' => '77be9577-147b-4f05-9aa7-91d9b159de5b']);
         $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
     }
 
@@ -47,18 +47,8 @@ class RevokeAccessCest
     public function requestShouldReturn400ResponseCodeWhenRevokeOwnerAccess(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, ['planId' => '229f97a8-e9c9-4d45-8405-91b7f315f014', 'userId' => 'aff21334-96f0-4fb1-84d8-0223d0280954']);
+        $I->sendPOST($this->url, ['planId' => '3a6d84be-d074-4a14-ab9a-86dfb083c91d', 'userId' => 'aff21334-96f0-4fb1-84d8-0223d0280954']);
         $I->seeResponseCodeIs(HttpCode::BAD_REQUEST);
-    }
-
-    /**
-     * @throws ModuleException
-     */
-    public function requestShouldReturn403ResponseCodeWhenNotAdmin(ApiTester $I): void
-    {
-        $I->amAuthenticatedAsMargo();
-        $I->sendPOST($this->url, ['planId' => '229f97a8-e9c9-4d45-8405-91b7f315f014', 'userId' => '77be9577-147b-4f05-9aa7-91d9b159de5b']);
-        $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
     }
 
     /**
@@ -67,7 +57,7 @@ class RevokeAccessCest
     public function requestShouldReturn403ResponseCode(ApiTester $I): void
     {
         $I->amAuthenticatedAsMargo();
-        $I->sendPOST($this->url, ['planId' => '229f97a8-e9c9-4d45-8405-91b7f315f014', 'userId' => '77be9577-147b-4f05-9aa7-91d9b159de5b']);
+        $I->sendPOST($this->url, ['planId' => '3a6d84be-d074-4a14-ab9a-86dfb083c91d', 'userId' => '77be9577-147b-4f05-9aa7-91d9b159de5b']);
         $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
     }
 
@@ -77,7 +67,7 @@ class RevokeAccessCest
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, ['planId' => '229f97a8-e9c9-4d45-8405-91b7f315f014', 'userId' => '77be9577-147b-4f05-9aa7-91d9b159de5b']);
+        $I->sendPOST($this->url, ['planId' => '3a6d84be-d074-4a14-ab9a-86dfb083c91d', 'userId' => '77be9577-147b-4f05-9aa7-91d9b159de5b']);
         $I->seeResponseMatchesJsonType([
             'data' => [
                 'item' => $I->getPlanDtoJsonType(),

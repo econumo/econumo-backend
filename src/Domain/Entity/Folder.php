@@ -7,6 +7,7 @@ namespace App\Domain\Entity;
 use App\Domain\Entity\ValueObject\FolderName;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Events\AccountFolderCreatedEvent;
+use App\Domain\Traits\EntityTrait;
 use App\Domain\Traits\EventTrait;
 use DateTime;
 use DateTimeImmutable;
@@ -16,6 +17,7 @@ use Doctrine\Common\Collections\Collection;
 
 class Folder
 {
+    use EntityTrait;
     use EventTrait;
 
     private int $position = 1000;

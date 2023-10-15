@@ -18,7 +18,7 @@ class GetPlanCest
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendGET($this->url, ['id' => 'test']);
+        $I->sendGET($this->url, ['id' => 'bceed17e-d492-40be-921a-e7fa6f663fa6']);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
 
@@ -37,7 +37,7 @@ class GetPlanCest
      */
     public function requestShouldReturn401ResponseCode(ApiTester $I): void
     {
-        $I->sendGET($this->url, ['id' => 'test']);
+        $I->sendGET($this->url, ['id' => 'bceed17e-d492-40be-921a-e7fa6f663fa6']);
         $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
     }
 
@@ -47,11 +47,17 @@ class GetPlanCest
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendGET($this->url, ['id' => 'test']);
+        $I->sendGET($this->url, ['id' => 'bceed17e-d492-40be-921a-e7fa6f663fa6']);
         $I->seeResponseMatchesJsonType([
             'data' => [
-                'result' => 'string',
+                'item' => $I->geDetailedPlanDtoJsonType(),
             ],
         ]);
+        $I->seeResponseMatchesJsonType($I->getCurrencyDtoJsonType(), '$.data.item.currencies[0]');
+        $I->seeResponseMatchesJsonType($I->getPlanFolderDtoJsonType(), '$.data.item.folders[0]');
+        $I->seeResponseMatchesJsonType($I->getPlanEnvelopeDtoJsonType(), '$.data.item.envelopes[0]');
+        $I->seeResponseMatchesJsonType($I->getPlanEnvelopeCategoryDtoJsonType(), '$.data.item.categories[0]');
+        $I->seeResponseMatchesJsonType($I->getPlanEnvelopeTagDtoJsonType(), '$.data.item.tags[0]');
+        $I->seeResponseMatchesJsonType($I->getPlanSharedAccessDtoJsonType(), '$.data.item.sharedAccess[0]');
     }
 }

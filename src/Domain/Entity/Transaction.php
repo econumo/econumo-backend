@@ -8,12 +8,15 @@ use App\Domain\Entity\ValueObject\CurrencyCode;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\TransactionType;
 use App\Domain\Service\Dto\TransactionDto;
+use App\Domain\Traits\EntityTrait;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 
 class Transaction
 {
+    use EntityTrait;
+
     private string $amount;
 
     private ?string $amountRecipient;

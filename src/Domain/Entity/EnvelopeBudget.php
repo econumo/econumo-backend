@@ -9,6 +9,7 @@ use App\Domain\Entity\ValueObject\Icon;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\EnvelopeType;
 use App\Domain\Events\PlanEnvelopeCreatedEvent;
+use App\Domain\Traits\EntityTrait;
 use App\Domain\Traits\EventTrait;
 use DateTime;
 use DateTimeImmutable;
@@ -18,6 +19,8 @@ use Doctrine\Common\Collections\Collection;
 
 class EnvelopeBudget
 {
+    use EntityTrait;
+
     private DateTimeInterface $period;
 
     private DateTimeImmutable $createdAt;

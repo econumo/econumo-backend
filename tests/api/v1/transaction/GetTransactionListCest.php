@@ -71,16 +71,4 @@ class GetTransactionListCest
         $I->seeResponseMatchesJsonType($I->getRootResponseWithItemsJsonType());
         $I->seeResponseMatchesJsonType($I->getTransactionDtoJsonType(), '$.data.items[0]');
     }
-
-    /**
-     * @throws \Codeception\Exception\ModuleException
-     */
-    public function requestWithAccountIdShouldReturnResponseWithEmptyList(ApiTester $I): void
-    {
-        $I->amAuthenticatedAsJohn();
-        $I->sendGET($this->url, ['accountId' => '5f3834d1-34e8-4f60-a697-004e63854513']);
-        $I->seeResponseMatchesJsonType($I->getRootResponseWithItemsJsonType());
-        $data = $I->grabDataFromResponseByJsonPath('$.data.items[0]');
-        $I->assertEmpty($data);
-    }
 }

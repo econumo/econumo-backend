@@ -14,25 +14,22 @@ use App\Domain\Entity\ValueObject\UserRole;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Exception\PlanAlreadyExistsException;
 use App\Domain\Exception\RevokeOwnerAccessException;
-use App\Domain\Factory\EnvelopeFactoryInterface;
-use App\Domain\Factory\EnvelopeFolderFactoryInterface;
+use App\Domain\Factory\PlanFolderFactoryInterface;
 use App\Domain\Factory\PlanAccessFactoryInterface;
 use App\Domain\Factory\PlanFactoryInterface;
 use App\Domain\Factory\PlanOptionsFactoryInterface;
 use App\Domain\Repository\AccountRepositoryInterface;
-use App\Domain\Repository\CategoryRepositoryInterface;
 use App\Domain\Repository\CurrencyRepositoryInterface;
 use App\Domain\Repository\EnvelopeRepositoryInterface;
 use App\Domain\Repository\PlanAccessRepositoryInterface;
 use App\Domain\Repository\PlanFolderRepositoryInterface;
 use App\Domain\Repository\PlanOptionsRepositoryInterface;
 use App\Domain\Repository\PlanRepositoryInterface;
-use App\Domain\Repository\TagRepositoryInterface;
-use App\Domain\Repository\UserOptionRepositoryInterface;
 use App\Domain\Repository\UserRepositoryInterface;
 use App\Domain\Service\AntiCorruptionServiceInterface;
 use App\Domain\Service\Dto\PlanDto;
 use App\Domain\Service\UserServiceInterface;
+use Throwable;
 
 readonly class PlanService implements PlanServiceInterface
 {
@@ -45,16 +42,13 @@ readonly class PlanService implements PlanServiceInterface
         private PlanAccessRepositoryInterface $planAccessRepository,
         private UserServiceInterface $userService,
         private UserRepositoryInterface $userRepository,
-        private UserOptionRepositoryInterface $userOptionRepository,
         private PlanAccessFactoryInterface $planAccessFactory,
         private PlanFolderRepositoryInterface $planFolderRepository,
         private EnvelopeRepositoryInterface $envelopeRepository,
-        private CategoryRepositoryInterface $categoryRepository,
-        private TagRepositoryInterface $tagRepository,
         private AccountRepositoryInterface $accountRepository,
-        private EnvelopeFactoryInterface $envelopeFactory,
         private CurrencyRepositoryInterface $currencyRepository,
-        private EnvelopeFolderFactoryInterface $envelopeFolderFactory
+        private PlanFolderFactoryInterface $planFolderFactory,
+        private EnvelopeServiceInterface $envelopeService,
     ) {
     }
 
@@ -89,27 +83,22 @@ readonly class PlanService implements PlanServiceInterface
             $planOptions = $this->planOptionsFactory->create($plan->getId(), $userId, $position);
             $this->planOptionsRepository->save([$planOptions]);
 
-            $categoriesFolder = $this->envelopeFolderFactory->create($plan->getId(), new PlanFolderName('Expenses'), 0);
-            $tagsFolder = $this->envelopeFolderFactory->create($plan->getId(), new PlanFolderName('Tags'), 1);
-            $this->planFolderRepository->save([$categoriesFolder, $tagsFolder]);
+            $planFolder = $this->planFolderFactory->create($plan->getId(), new PlanFolderName('Expenses'), 0);
+            $this->planFolderRepository->save([$planFolder]);
 
-            $user = $this->userRepository->get($userId);
-            $userCurrency = $this->currencyRepository->getByCode($user->getCurrency());
-            $envelopes = [];
-            $categories = $this->categoryRepository->findByOwnerId($userId);
             $envelopePosition = 0;
-            foreach ($categories as $category) {
-                $envelopes[] = $this->envelopeFactory->createFromCategory($plan->getId(), $category, $userCurrency->getId(), $envelopePosition++, ($category->getType()->isIncome() ? null : $categoriesFolder->getId()));
-            }
-            $tags = $this->tagRepository->findByOwnerId($userId);
-            foreach ($tags as $tag) {
-                $envelopes[] = $this->envelopeFactory->createFromTag($plan->getId(), $tag, $userCurrency->getId(), $envelopePosition++, $tagsFolder->getId());
-            }
-            $this->envelopeRepository->save($envelopes);
+            $currencyId = $this->getAvailableCurrencyIds($userId)[0];
+            $this->envelopeService->createEnvelopesForUser(
+                $plan->getId(),
+                $userId,
+                $currencyId,
+                $envelopePosition,
+                $planFolder->getId()
+            );
 
             $this->userService->updateDefaultPlan($userId, $plan->getId());
             $this->antiCorruptionService->commit(__METHOD__);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->antiCorruptionService->rollback(__METHOD__);
             throw $e;
         }
@@ -147,7 +136,7 @@ readonly class PlanService implements PlanServiceInterface
 
             $this->planOptionsRepository->save($changed);
             $this->antiCorruptionService->commit(__METHOD__);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->antiCorruptionService->rollback(__METHOD__);
             throw $e;
         }
@@ -162,21 +151,21 @@ readonly class PlanService implements PlanServiceInterface
             if ($plan->getOwnerUserId()->isEqual($userId)) {
                 $access = $this->planAccessRepository->getByPlanId($planId);
                 foreach ($access as $item) {
-                    $this->updateUserDefaultPlanWhenItWasDeleted($item->getUserId(), $item->getPlanId());
+                    $this->revokeAccess($planId, $item->getUserId());
                 }
-                $this->planRepository->delete($planId);
+                $this->planRepository->delete($plan);
+                // todo fix
+//                $this->updateUserDefaultPlanWhenDeleted($userId, $planId);
             } else {
-                $access = $this->planAccessRepository->get($planId, $userId);
-                $this->planAccessRepository->delete($access);
+                $this->revokeAccess($planId, $userId);
                 try {
                     $options = $this->planOptionsRepository->get($planId, $userId);
                     $this->planOptionsRepository->delete($options);
                 } catch (NotFoundException $e) {
                 }
             }
-            $this->updateUserDefaultPlanWhenItWasDeleted($userId, $planId);
             $this->antiCorruptionService->commit(__METHOD__);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->antiCorruptionService->rollback(__METHOD__);
             throw $e;
         }
@@ -191,7 +180,7 @@ readonly class PlanService implements PlanServiceInterface
         return $plan;
     }
 
-    private function updateUserDefaultPlanWhenItWasDeleted(Id $userId, Id $planId): void
+    private function updateUserDefaultPlanWhenDeleted(Id $userId, Id $planId): void
     {
         $user = $this->userRepository->get($userId);
         if (!$user->getDefaultPlanId() || $user->getDefaultPlanId()->isEqual($planId)) {
@@ -204,6 +193,7 @@ readonly class PlanService implements PlanServiceInterface
                     }
                     $user->updateDefaultPlan($availablePlan->getId());
                     $planUpdated = true;
+                    break;
                 }
             }
             if (!$planUpdated) {
@@ -219,12 +209,42 @@ readonly class PlanService implements PlanServiceInterface
         if ($plan->getOwnerUserId()->isEqual($sharedUserId)) {
             throw new RevokeOwnerAccessException();
         }
-        $access = $this->planAccessRepository->get($planId, $sharedUserId);
-        $this->planAccessRepository->delete($access);
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
+        try {
+            $access = $this->planAccessRepository->get($planId, $sharedUserId);
+            $this->planAccessRepository->delete($access);
+            $this->updateUserDefaultPlanWhenDeleted($sharedUserId, $planId);
+
+            $envelopes = $this->envelopeRepository->getByPlanId($planId);
+            $changedEnvelopes = [];
+            foreach ($envelopes as $envelope) {
+                foreach ($envelope->getCategories() as $category) {
+                    if ($category->getUserId()->isEqual($sharedUserId)) {
+                        $envelope->removeCategory($category);
+                        $changedEnvelopes[$envelope->getId()->getValue()] = $envelope;
+                    }
+                }
+                foreach ($envelope->getTags() as $tag) {
+                    if ($tag->getUserId()->isEqual($sharedUserId)) {
+                        $envelope->removeTag($tag);
+                        $changedEnvelopes[$envelope->getId()->getValue()] = $envelope;
+                    }
+                }
+            }
+            if (count($changedEnvelopes) > 0) {
+                $this->envelopeRepository->save($changedEnvelopes);
+            }
+
+            $this->antiCorruptionService->commit(__METHOD__);
+        } catch (Throwable $e) {
+            $this->antiCorruptionService->rollback(__METHOD__);
+            throw $e;
+        }
     }
 
     public function grantAccess(Id $planId, Id $sharedUserId, UserRole $role): void
     {
+        //
         try {
             $access = $this->planAccessRepository->get($planId, $sharedUserId);
             $access->updateRole($role);
@@ -237,9 +257,45 @@ readonly class PlanService implements PlanServiceInterface
 
     public function acceptAccess(Id $planId, Id $userId): void
     {
-        $access = $this->planAccessRepository->get($planId, $userId);
-        $access->accept();
-        $this->planAccessRepository->save([$access]);
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
+        try {
+            $access = $this->planAccessRepository->get($planId, $userId);
+            $access->accept();
+            $this->planAccessRepository->save([$access]);
+            $this->userService->updateDefaultPlan($userId, $planId);
+
+            $envelopePosition = 0;
+            $envelopes = $this->envelopeRepository->getByPlanId($planId);
+            if (count($envelopes) > 0) {
+                $envelopePosition = $envelopes[count($envelopes) - 1]->getPosition() + 1;
+            }
+
+            $folders = $this->planFolderRepository->getByPlanId($planId);
+            $folderPosition = 0;
+            if (count($folders) > 0) {
+                $folderPosition = $folders[count($folders) - 1]->getPosition() + 1;
+            }
+            $user = $this->userRepository->get($userId);
+            $planFolder = $this->planFolderFactory->create(
+                $planId,
+                new PlanFolderName($user->getName()),
+                $folderPosition
+            );
+            $this->planFolderRepository->save([$planFolder]);
+            $currencyId = $this->getAvailableCurrencyIds($userId)[0];
+            $this->envelopeService->createEnvelopesForUser(
+                $planId,
+                $userId,
+                $currencyId,
+                $envelopePosition,
+                $planFolder->getId()
+            );
+
+            $this->antiCorruptionService->commit(__METHOD__);
+        } catch (Throwable $e) {
+            $this->antiCorruptionService->rollback(__METHOD__);
+            throw $e;
+        }
     }
 
     public function getPlan(Id $planId): PlanDto
@@ -294,5 +350,28 @@ readonly class PlanService implements PlanServiceInterface
         }
 
         return $dto;
+    }
+
+    /**
+     * @param Id $userId
+     * @return Id[]
+     */
+    private function getAvailableCurrencyIds(Id $userId): array
+    {
+        $result = [];
+        $accounts = $this->accountRepository->getUserAccounts($userId);
+        foreach ($accounts as $account) {
+            if (!in_array($account->getCurrencyId(), $result)) {
+                $result[] = $account->getCurrencyId();
+            }
+        }
+
+        if (!count($result)) {
+            $user = $this->userRepository->get($userId);
+            $userCurrency = $this->currencyRepository->getByCode($user->getCurrency());
+            $result[] = $userCurrency->getId();
+        }
+
+        return $result;
     }
 }

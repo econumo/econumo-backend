@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace App\Domain\Entity;
 
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Traits\EntityTrait;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 
 class PlanOptions
 {
+    use EntityTrait;
     private DateTimeImmutable $createdAt;
 
     private DateTimeInterface $updatedAt;

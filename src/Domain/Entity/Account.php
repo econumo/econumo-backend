@@ -9,12 +9,15 @@ use App\Domain\Entity\ValueObject\AccountType;
 use App\Domain\Entity\ValueObject\CurrencyCode;
 use App\Domain\Entity\ValueObject\Icon;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Traits\EntityTrait;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 
 class Account
 {
+    use EntityTrait;
+
     private string $balance;
 
     private bool $isDeleted = false;

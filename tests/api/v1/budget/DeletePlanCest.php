@@ -18,7 +18,7 @@ class DeletePlanCest
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, ['id' => '05c8f3e1-d77f-4b37-b2ca-0fc5f0f0c7a9']);
+        $I->sendPOST($this->url, ['id' => '16c88ac2-b548-4446-9e27-51a28156b299']);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
 
@@ -37,7 +37,7 @@ class DeletePlanCest
      */
     public function requestShouldReturn401ResponseCode(ApiTester $I): void
     {
-        $I->sendPOST($this->url, ['id' => '05c8f3e1-d77f-4b37-b2ca-0fc5f0f0c7a9']);
+        $I->sendPOST($this->url, ['id' => '16c88ac2-b548-4446-9e27-51a28156b299']);
         $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
     }
 
@@ -47,7 +47,7 @@ class DeletePlanCest
     public function requestShouldReturn403ResponseCode(ApiTester $I): void
     {
         $I->amAuthenticatedAsDany();
-        $I->sendPOST($this->url, ['id' => '05c8f3e1-d77f-4b37-b2ca-0fc5f0f0c7a9']);
+        $I->sendPOST($this->url, ['id' => '16c88ac2-b548-4446-9e27-51a28156b299']);
         $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
     }
 
@@ -57,7 +57,8 @@ class DeletePlanCest
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, ['id' => '05c8f3e1-d77f-4b37-b2ca-0fc5f0f0c7a9']);
+        $I->sendPOST($this->url, ['id' => '16c88ac2-b548-4446-9e27-51a28156b299']);
+        $I->seeResponseCodeIs(HttpCode::OK);
         $I->seeResponseMatchesJsonType([
             'data' => [],
         ]);
@@ -69,7 +70,8 @@ class DeletePlanCest
     public function requestShouldReturnResponseWithCorrectStructure2(ApiTester $I): void
     {
         $I->amAuthenticatedAsDany();
-        $I->sendPOST($this->url, ['id' => '229f97a8-e9c9-4d45-8405-91b7f315f014']);
+        $I->sendPOST($this->url, ['id' => 'bceed17e-d492-40be-921a-e7fa6f663fa6']);
+        $I->seeResponseCodeIs(HttpCode::OK);
         $I->seeResponseMatchesJsonType([
             'data' => [],
         ]);

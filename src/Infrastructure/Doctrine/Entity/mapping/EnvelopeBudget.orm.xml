@@ -12,7 +12,7 @@
         <field name="updatedAt" type="datetime" column="updated_at" nullable="false"/>
 
         <many-to-one field="envelope" target-entity="App\Domain\Entity\Envelope">
-            <join-column name="envelope_id" referenced-column-name="id" nullable="false"/>
+            <join-column name="envelope_id" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
         </many-to-one>
     </entity>
 </doctrine-mapping>

@@ -42,7 +42,7 @@ class EnvelopeRepository extends ServiceEntityRepository implements EnvelopeRepo
      */
     public function getByPlanId(Id $planId): array
     {
-        return $this->findBy(['plan' => $this->getEntityManager()->getReference(Plan::class, $planId)]);
+        return $this->findBy(['plan' => $this->getEntityManager()->getReference(Plan::class, $planId)], ['position' => 'ASC']);
     }
 
     public function get(Id $id): Envelope
@@ -80,5 +80,15 @@ class EnvelopeRepository extends ServiceEntityRepository implements EnvelopeRepo
     public function getReference(Id $id): Envelope
     {
         return $this->getEntityManager()->getReference(Envelope::class, $id);
+    }
+
+    public function getByCategoryId(Id $categoryId): array
+    {
+        // TODO: Implement getByCategoryId() method.
+    }
+
+    public function getByTagId(Id $tagId): array
+    {
+        // TODO: Implement getByTagId() method.
     }
 }

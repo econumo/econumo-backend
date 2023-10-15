@@ -9,6 +9,8 @@ use App\Domain\Entity\ValueObject\Icon;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\EnvelopeType;
 use App\Domain\Events\PlanEnvelopeCreatedEvent;
+use App\Domain\Exception\DomainException;
+use App\Domain\Traits\EntityTrait;
 use App\Domain\Traits\EventTrait;
 use DateTime;
 use DateTimeImmutable;
@@ -18,6 +20,7 @@ use Doctrine\Common\Collections\Collection;
 
 class Envelope
 {
+    use EntityTrait;
     use EventTrait;
 
     private const DEFAULT_ICON = 'tag';
@@ -218,6 +221,15 @@ class Envelope
         return false;
     }
 
+    public function getConnectedCategory(): Category
+    {
+        if ($this->isCategoryConnected()) {
+            return $this->categories->first();
+        }
+
+        throw new DomainException('Envelope is not connected to category');
+    }
+
     public function isTagConnected(): bool
     {
         if ($this->categories->count() === 0 && $this->tags->count() === 1) {
@@ -229,6 +241,15 @@ class Envelope
         }
 
         return false;
+    }
+
+    public function getConnectedTag(): Tag
+    {
+        if ($this->isTagConnected()) {
+            return $this->tags->first();
+        }
+
+        throw new DomainException('Envelope is not connected to tag');
     }
 
     public function isConnected(): bool

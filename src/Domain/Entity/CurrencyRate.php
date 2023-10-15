@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace App\Domain\Entity;
 
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Traits\EntityTrait;
 use DateTimeImmutable;
 use DateTimeInterface;
 
 class CurrencyRate
 {
+    use EntityTrait;
+
     private string $rate;
 
     private DateTimeImmutable $publishedAt;
