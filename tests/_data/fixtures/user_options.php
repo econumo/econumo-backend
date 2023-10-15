@@ -3,14 +3,6 @@
 $data = <<<'JSON'
 [
   {
-    "id": "f0f8ab37-d168-46dc-9b80-21173caa35d6",
-    "user_id": "aff21334-96f0-4fb1-84d8-0223d0280954",
-    "name": "currency",
-    "value": "USD",
-    "created_at": "2021-08-12 19:43:09",
-    "updated_at": "2021-08-12 19:43:09"
-  },
-  {
     "id": "cab99081-f58e-4846-a26f-c3b69fc715f4",
     "user_id": "aff21334-96f0-4fb1-84d8-0223d0280954",
     "name": "report_period",
@@ -73,6 +65,14 @@ $data = <<<'JSON'
     "value": "bceed17e-d492-40be-921a-e7fa6f663fa6",
     "created_at": "2021-08-12 19:43:09",
     "updated_at": "2023-10-15 02:26:41"
+  },
+  {
+    "id": "f0f8ab37-d168-46dc-9b80-21173caa35d6",
+    "user_id": "aff21334-96f0-4fb1-84d8-0223d0280954",
+    "name": "currency",
+    "value": "RUB",
+    "created_at": "2021-08-12 19:43:09",
+    "updated_at": "2023-10-15 04:36:22"
   }
 ]
 JSON;

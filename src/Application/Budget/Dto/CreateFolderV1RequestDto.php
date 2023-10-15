@@ -8,18 +8,18 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     required={"id", "name"}
+ *     required={"planId", "name"}
  * )
  */
-class CreatePlanV1RequestDto
+class CreateFolderV1RequestDto
 {
     /**
      * @OA\Property(example="16c88ac2-b548-4446-9e27-51a28156b299")
      */
-    public string $id;
+    public string $planId;
 
     /**
-     * @OA\Property(example="Amazon")
+     * @OA\Property(example="Expenses")
      */
     public string $name;
 }
