@@ -34,6 +34,11 @@ class PlanFolder
         $this->registerEvent(new PlanFolderCreatedEvent($id));
     }
 
+    public function getPlan(): Plan
+    {
+        return $this->plan;
+    }
+
     public function getId(): Id
     {
         return $this->id;

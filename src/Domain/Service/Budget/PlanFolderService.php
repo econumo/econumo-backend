@@ -7,14 +7,17 @@ namespace App\Domain\Service\Budget;
 
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\PlanFolderName;
+use App\Domain\Exception\PlanFolderIsNotEmptyException;
 use App\Domain\Factory\PlanFolderFactoryInterface;
+use App\Domain\Repository\EnvelopeRepositoryInterface;
 use App\Domain\Repository\PlanFolderRepositoryInterface;
 
 readonly class PlanFolderService implements PlanFolderServiceInterface
 {
     public function __construct(
         private PlanFolderRepositoryInterface $planFolderRepository,
-        private PlanFolderFactoryInterface $planFolderFactory
+        private PlanFolderFactoryInterface $planFolderFactory,
+        private EnvelopeRepositoryInterface $envelopeRepository
     ) {
     }
 
@@ -30,5 +33,17 @@ readonly class PlanFolderService implements PlanFolderServiceInterface
         $this->planFolderRepository->save([$folder]);
 
         return $folder->getId();
+    }
+
+    public function deleteFolder(Id $folderId): void
+    {
+        $folder = $this->planFolderRepository->get($folderId);
+        $envelopes = $this->envelopeRepository->getByPlanId($folder->getPlan()->getId());
+        foreach ($envelopes as $envelope) {
+            if ($envelope->getFolder() && $envelope->getFolder()->getId()->isEqual($folderId)) {
+                throw new PlanFolderIsNotEmptyException();
+            }
+        }
+        $this->planFolderRepository->delete($folder);
     }
 }

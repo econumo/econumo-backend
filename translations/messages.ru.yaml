@@ -34,3 +34,6 @@ user:
     not_correct: Неверный пароль
   user:
     already_exists: Уже зарегистрирован
+budget:
+  plan_folder:
+    is_not_empty: Папка не пуста

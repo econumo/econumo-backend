@@ -33,6 +33,14 @@ $data = <<<'JSON'
     "position": 0,
     "created_at": "2023-10-15 02:23:32",
     "updated_at": "2023-10-15 02:23:32"
+  },
+  {
+    "id": "62ccc225-b141-42a4-8063-825c8b72d135",
+    "plan_id": "bceed17e-d492-40be-921a-e7fa6f663fa6",
+    "name": "Empty folder",
+    "position": 2,
+    "created_at": "2023-10-15 02:23:32",
+    "updated_at": "2023-10-15 02:23:32"
   }
 ]
 JSON;
