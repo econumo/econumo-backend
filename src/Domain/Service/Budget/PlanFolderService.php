@@ -53,4 +53,27 @@ readonly class PlanFolderService implements PlanFolderServiceInterface
         $folder->updateName($name);
         $this->planFolderRepository->save([$folder]);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function orderFolders(Id $planId, array $changes): void
+    {
+        $folders = $this->planFolderRepository->getByPlanId($planId);
+        $changed = [];
+        foreach ($folders as $folder) {
+            foreach ($changes as $change) {
+                if ($folder->getId()->isEqual($change->getId())) {
+                    $folder->updatePosition($change->position);
+                    $changed[] = $folder;
+                    break;
+                }
+            }
+        }
+
+        if ($changed === []) {
+            return;
+        }
+        $this->planFolderRepository->save($changed);
+    }
 }

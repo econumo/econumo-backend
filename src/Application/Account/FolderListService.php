@@ -16,10 +16,15 @@ use App\Domain\Repository\FolderRepositoryInterface;
 use App\Domain\Service\FolderServiceInterface;
 use App\Domain\Service\Translation\TranslationServiceInterface;
 
-class FolderListService
+readonly class FolderListService
 {
-    public function __construct(private readonly GetFolderListV1ResultAssembler $getFolderListV1ResultAssembler, private readonly FolderRepositoryInterface $folderRepository, private readonly OrderFolderListV1ResultAssembler $orderFolderListV1ResultAssembler, private readonly FolderServiceInterface $folderService, private readonly TranslationServiceInterface $translationService)
-    {
+    public function __construct(
+        private GetFolderListV1ResultAssembler $getFolderListV1ResultAssembler,
+        private FolderRepositoryInterface $folderRepository,
+        private OrderFolderListV1ResultAssembler $orderFolderListV1ResultAssembler,
+        private FolderServiceInterface $folderService,
+        private TranslationServiceInterface $translationService
+    ) {
     }
 
     public function getFolderList(
