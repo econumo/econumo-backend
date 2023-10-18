@@ -5,11 +5,12 @@ declare(strict_types=1);
 
 namespace App\Domain\Service\Budget;
 
-
+use App\Domain\Entity\Envelope;
 use App\Domain\Entity\Plan;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\PlanFolderName;
 use App\Domain\Entity\ValueObject\PlanName;
+use App\Domain\Entity\ValueObject\PlanPeriodType;
 use App\Domain\Entity\ValueObject\UserRole;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Exception\PlanAlreadyExistsException;
@@ -25,11 +26,25 @@ use App\Domain\Repository\PlanAccessRepositoryInterface;
 use App\Domain\Repository\PlanFolderRepositoryInterface;
 use App\Domain\Repository\PlanOptionsRepositoryInterface;
 use App\Domain\Repository\PlanRepositoryInterface;
+use App\Domain\Repository\TransactionRepositoryInterface;
 use App\Domain\Repository\UserRepositoryInterface;
 use App\Domain\Service\AntiCorruptionServiceInterface;
+use App\Domain\Service\Currency\CurrencyRateServiceInterface;
+use App\Domain\Service\DatetimeServiceInterface;
+use App\Domain\Service\Dto\PlanDataBalanceDto;
+use App\Domain\Service\Dto\PlanDataCategoryDto;
+use App\Domain\Service\Dto\PlanDataCurrencyRateDto;
+use App\Domain\Service\Dto\PlanDataDto;
+use App\Domain\Service\Dto\PlanDataEnvelopeDto;
+use App\Domain\Service\Dto\PlanDataExchangeDto;
+use App\Domain\Service\Dto\PlanDataTagDto;
 use App\Domain\Service\Dto\PlanDto;
 use App\Domain\Service\UserServiceInterface;
+use DateTime;
+use DateTimeInterface;
 use Throwable;
+
+use function PHPUnit\Framework\isFinite;
 
 readonly class PlanService implements PlanServiceInterface
 {
@@ -46,9 +61,14 @@ readonly class PlanService implements PlanServiceInterface
         private PlanFolderRepositoryInterface $planFolderRepository,
         private EnvelopeRepositoryInterface $envelopeRepository,
         private AccountRepositoryInterface $accountRepository,
-        private CurrencyRepositoryInterface $currencyRepository,
         private PlanFolderFactoryInterface $planFolderFactory,
         private EnvelopeServiceInterface $envelopeService,
+        private CurrencyRateServiceInterface $currencyRateService,
+        private DatetimeServiceInterface $datetimeService,
+        private PlanAccountsService $planAccountsService,
+        private CurrencyRepositoryInterface $currencyRepository,
+        private PlanBalanceService $planBalanceService,
+        private PlanTransactionService $planTransactionService,
     ) {
     }
 
@@ -87,7 +107,7 @@ readonly class PlanService implements PlanServiceInterface
             $this->planFolderRepository->save([$planFolder]);
 
             $envelopePosition = 0;
-            $currencyId = $this->getAvailableCurrencyIds($userId)[0];
+            $currencyId = $this->getAvailableCurrencyIdsForUserId($userId)[0];
             $this->envelopeService->createEnvelopesForUser(
                 $plan->getId(),
                 $userId,
@@ -282,7 +302,7 @@ readonly class PlanService implements PlanServiceInterface
                 $folderPosition
             );
             $this->planFolderRepository->save([$planFolder]);
-            $currencyId = $this->getAvailableCurrencyIds($userId)[0];
+            $currencyId = $this->getAvailableCurrencyIdsForUserId($userId)[0];
             $this->envelopeService->createEnvelopesForUser(
                 $planId,
                 $userId,
@@ -356,20 +376,110 @@ readonly class PlanService implements PlanServiceInterface
      * @param Id $userId
      * @return Id[]
      */
-    private function getAvailableCurrencyIds(Id $userId): array
+    private function getAvailableCurrencyIdsForUserId(Id $userId): array
     {
         $result = [];
         $accounts = $this->accountRepository->getUserAccounts($userId);
         foreach ($accounts as $account) {
-            if (!in_array($account->getCurrencyId(), $result)) {
-                $result[] = $account->getCurrencyId();
-            }
+            $result[$account->getCurrencyId()->getValue()] = $account->getCurrencyId();
         }
 
         if (!count($result)) {
             $user = $this->userRepository->get($userId);
             $userCurrency = $this->currencyRepository->getByCode($user->getCurrency());
-            $result[] = $userCurrency->getId();
+            $result[$userCurrency->getId()->getValue()] = $userCurrency->getId();
+        }
+
+        return array_values($result);
+    }
+
+    public function getPlanData(
+        Id $planId,
+        PlanPeriodType $periodType,
+        DateTimeInterface $periodStart,
+        int $numberOfPeriods
+    ): array {
+        $result = [];
+        $rollingPeriodStart = DateTime::createFromInterface($periodStart);
+        $rollingPeriodEnd = clone $rollingPeriodStart;
+        $rollingPeriodEnd->modify('+1 ' . $periodType->getValue());
+        $rollingPeriodEnd->modify('-1 microsecond');
+        $currencyIds = $this->planAccountsService->getAvailableCurrencyIdsForPlanId($planId);
+        $envelopes = $this->envelopeRepository->getByPlanId($planId);
+        $currentDate = $this->datetimeService->getCurrentDatetime();
+        for ($i = 0; $i < $numberOfPeriods; $i++) {
+            $dto = new PlanDataDto();
+            $dto->periodStart = clone $rollingPeriodStart;
+            $dto->periodEnd = clone $rollingPeriodEnd;
+            $dto->balances = $this->planBalanceService->getBalance($planId, $dto->periodStart, $dto->periodEnd);
+
+            $dto->exchanges = [];
+            foreach ($currencyIds as $currencyId) {
+                $currencyExchangeDto = new PlanDataExchangeDto();
+                $currencyExchangeDto->currencyId = $currencyId;
+                // todo fix
+                $currencyExchangeDto->budget = 0;
+                if ($dto->periodStart <= $currentDate) {
+                    $currencyExchangeDto->amount = 0;
+                } else {
+                    $currencyExchangeDto->amount = 0;
+                }
+                $dto->exchanges[] = $currencyExchangeDto;
+            }
+
+            $dto->currencyRates = [];
+            foreach($this->currencyRateService->getAverageCurrencyRates($dto->periodStart, $dto->periodEnd) as $rate) {
+                $currencyRateDto = new PlanDataCurrencyRateDto();
+                $currencyRateDto->baseCurrencyId = $rate->baseCurrencyId;
+                $currencyRateDto->currencyId = $rate->currencyId;
+                $currencyRateDto->rate = $rate->rate;
+                $currencyRateDto->date = $rate->date;
+                $dto->currencyRates[] = $currencyRateDto;
+            }
+
+            $dto->envelopes = [];
+            $dto->categories = [];
+            $dto->tags = [];
+            $categoriesReport = $this->planTransactionService->getCategoriesReport($planId, $dto->periodStart, $dto->periodEnd);
+            $tagsReport = $this->planTransactionService->getTagsReport($planId, $dto->periodStart, $dto->periodEnd);
+            $envelopesBudgets = $this->envelopeService->getEnvelopesBudgets($planId, $dto->periodStart);
+            foreach ($envelopes as $envelope) {
+                $envelopeDto = new PlanDataEnvelopeDto();
+                $envelopeDto->id = $envelope->getId();
+                $envelopeDto->budget = 0;
+                if (isset($envelopesBudgets[$envelope->getId()->getValue()])) {
+                    $envelopeDto->budget = $envelopesBudgets[$envelope->getId()->getValue()]->getAmount();
+                }
+
+                $envelopeSpent = 0;
+                foreach ($envelope->getCategories() as $category) {
+                    $categoryDto = new PlanDataCategoryDto();
+                    $categoryDto->id = $category->getId();
+                    $categoryDto->currencyId = $envelope->getCurrency()->getId();
+                    $categoryDto->amount = $categoriesReport[$category->getId()->getValue()] ?? .0;
+                    $envelopeSpent += $categoryDto->amount;
+                    $dto->categories[] = $categoryDto;
+                }
+
+                foreach ($envelope->getTags() as $tag) {
+                    $tagDto = new PlanDataTagDto();
+                    $tagDto->id = $tag->getId();
+                    $tagDto->currencyId = $envelope->getCurrency()->getId();
+                    $tagDto->amount = $tagsReport[$tag->getId()->getValue()] ?? .0;
+                    $envelopeSpent += $tagDto->amount;
+                    $dto->tags[] = $tagDto;
+                }
+
+                // todo fix
+                $envelopeDto->available = $envelopeDto->budget - $envelopeSpent;
+                $dto->envelopes[] = $envelopeDto;
+            }
+
+            $result[] = $dto;
+            $rollingPeriodStart->modify('+1 ' . $periodType->getValue());
+            $rollingPeriodEnd = clone $rollingPeriodStart;
+            $rollingPeriodEnd->modify('+1 ' . $periodType->getValue());
+            $rollingPeriodEnd->modify('-1 microsecond');
         }
 
         return $result;

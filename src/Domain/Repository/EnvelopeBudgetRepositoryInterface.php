@@ -17,6 +17,11 @@ interface EnvelopeBudgetRepositoryInterface
      */
     public function getByEnvelopeIdAndPeriod(Id $envelopeId, DateTimeInterface $period): array;
 
+    /**
+     * @return EnvelopeBudget[]
+     */
+    public function getByPlanIdAndPeriod(Id $planId, DateTimeInterface $period): array;
+
     public function get(Id $id): EnvelopeBudget;
 
     /**

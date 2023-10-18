@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Domain\Service\Budget;
 
 use App\Domain\Entity\Category;
+use App\Domain\Entity\EnvelopeBudget;
 use App\Domain\Entity\Tag;
 use App\Domain\Entity\ValueObject\Id;
+use DateTimeInterface;
 
 interface EnvelopeServiceInterface
 {
@@ -15,4 +17,11 @@ interface EnvelopeServiceInterface
     public function createConnectedEnvelopesByTag(Tag $tag, Id $userId): void;
 
     public function createEnvelopesForUser(Id $planId, Id $userId, Id $currencyId, int &$envelopePosition, Id $folderId): void;
+
+    /**
+     * @param Id $planId
+     * @param DateTimeInterface $date
+     * @return EnvelopeBudget[]
+     */
+    public function getEnvelopesBudgets(Id $planId, DateTimeInterface $date): array;
 }

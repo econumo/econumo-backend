@@ -59,7 +59,12 @@ readonly class PlanAccessService implements PlanAccessServiceInterface
         if ($plan->getOwnerUserId()->isEqual($userId)) {
             return UserRole::admin();
         }
+
         $access = $this->planAccessRepository->get($planId, $userId);
+        if (!$access->isAccepted()) {
+            throw new AccessDeniedException();
+        }
+
         return $access->getRole();
     }
 

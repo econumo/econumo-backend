@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Doctrine\Repository;
 
 use App\Domain\Entity\EnvelopeBudget;
+use App\Domain\Entity\Plan;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\EnvelopeBudgetRepositoryInterface;
@@ -77,5 +78,19 @@ class EnvelopeBudgetRepository extends ServiceEntityRepository implements Envelo
     public function getByEnvelopeIdAndPeriod(Id $envelopeId, DateTimeInterface $period): array
     {
         return $this->findBy(['envelope' => $envelopeId, 'period' => $period]);
+    }
+
+    public function getByPlanIdAndPeriod(Id $planId, DateTimeInterface $period): array
+    {
+        $dateBuilder = $this->createQueryBuilder('eb')
+            ->select('eb')
+            ->leftJoin('eb.envelope', 'e')
+            ->where('eb.period = :period')
+            ->setParameter('period', $period)
+            ->andWhere('eb.envelope = e.plan')
+            ->andWhere('e.plan = :plan')
+            ->setParameter('plan', $this->getEntityManager()->getReference(Plan::class, $planId))
+        ;
+        return $dateBuilder->getQuery()->getResult();
     }
 }

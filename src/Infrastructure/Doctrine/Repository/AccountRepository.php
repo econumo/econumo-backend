@@ -10,10 +10,14 @@ use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\AccountRepositoryInterface;
+use DateTimeInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\FetchMode;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\ORMInvalidArgumentException;
 use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\ORM\Query\ResultSetMapping;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Ramsey\Uuid\Uuid;
 use RuntimeException;
@@ -116,5 +120,47 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
     public function getReference(Id $id): Account
     {
         return $this->getEntityManager()->getReference(Account::class, $id);
+    }
+
+    public function getAccountsBalancesOnDate(array $accountIds, DateTimeInterface $date): array
+    {
+        $parameters = [];
+        foreach ($accountIds as $accountId) {
+            $parameters[] = $accountId->getValue();
+        }
+        $parametersString = implode("', '", $parameters);
+        $dateString = $date->format('Y-m-d H:i:s');
+        $sql =<<<SQL
+SELECT a.id as account_id,
+       a.currency_id,
+     COALESCE(incomes, 0) + COALESCE(transfer_incomes, 0) - COALESCE(expenses, 0) - COALESCE(transfer_expenses, 0) as balance
+FROM accounts a
+       LEFT JOIN (
+           SELECT tmp.account_id, SUM(tmp.expenses) as expenses, SUM(tmp.incomes) as incomes, SUM(tmp.transfer_expenses) as transfer_expenses, SUM(tmp.transfer_incomes) as transfer_incomes FROM (
+                SELECT tr1.account_id,
+                       (SELECT SUM(t1.amount) FROM transactions t1 WHERE t1.account_id = tr1.account_id AND t1.type = 0) as expenses,
+                       (SELECT SUM(t2.amount) FROM transactions t2 WHERE t2.account_id = tr1.account_id AND t2.type = 1) as incomes,
+                       (SELECT SUM(t3.amount) FROM transactions t3 WHERE t3.account_id = tr1.account_id AND t3.type = 2) as transfer_expenses,
+                       NULL as transfer_incomes
+                FROM transactions tr1
+                WHERE tr1.spent_at <= '{$dateString}'
+                GROUP BY tr1.account_id
+                UNION ALL
+                SELECT tr2.account_recipient_id as account_id,
+                       NULL as expenses,
+                       NULL as incomes,
+                       NULL as transfer_expenses,
+                       (SELECT SUM(t4.amount_recipient) FROM transactions t4 WHERE t4.account_recipient_id = tr2.account_recipient_id AND t4.type = 2) as transfer_incomes
+                FROM transactions tr2
+                WHERE tr2.account_recipient_id IS NOT NULL AND tr2.spent_at <= '{$dateString}'
+                GROUP BY tr2.account_recipient_id) tmp GROUP BY tmp.account_id
+       ) t ON a.id = t.account_id AND a.id IN ('{$parametersString}');
+SQL;
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('account_id', 'account_id');
+        $rsm->addScalarResult('currency_id', 'currency_id');
+        $rsm->addScalarResult('balance', 'balance', 'float');
+        $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
+        return $query->getResult();
     }
 }

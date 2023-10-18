@@ -172,6 +172,10 @@ class Transaction
 
     public function updateCategory(?Category $category): void
     {
+        if ($this->type->isTransfer()) {
+            return;
+        }
+
         if ($this->category && $category && !$this->category->getId()->isEqual($category->getId())) {
             $this->category = $category;
             $this->updated();
@@ -195,6 +199,10 @@ class Transaction
 
     public function updatePayee(?Payee $payee): void
     {
+        if ($this->type->isTransfer()) {
+            return;
+        }
+
         if ($this->payee && $payee && !$this->payee->getId()->isEqual($payee->getId())) {
             $this->payee = $payee;
             $this->updated();
@@ -209,6 +217,10 @@ class Transaction
 
     public function updateTag(?Tag $tag): void
     {
+        if (!$this->type->isExpense()) {
+            return;
+        }
+
         if ($this->tag && $tag && !$this->tag->getId()->isEqual($tag->getId())) {
             $this->tag = $tag;
             $this->updated();

@@ -10,11 +10,13 @@ use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Factory\EnvelopeFactoryInterface;
 use App\Domain\Repository\CategoryRepositoryInterface;
 use App\Domain\Repository\CurrencyRepositoryInterface;
+use App\Domain\Repository\EnvelopeBudgetRepositoryInterface;
 use App\Domain\Repository\EnvelopeRepositoryInterface;
 use App\Domain\Repository\PlanFolderRepositoryInterface;
 use App\Domain\Repository\PlanRepositoryInterface;
 use App\Domain\Repository\TagRepositoryInterface;
 use App\Domain\Repository\UserRepositoryInterface;
+use DateTimeInterface;
 
 readonly class EnvelopeService implements EnvelopeServiceInterface
 {
@@ -27,6 +29,7 @@ readonly class EnvelopeService implements EnvelopeServiceInterface
         private PlanFolderRepositoryInterface $planFolderRepository,
         private CategoryRepositoryInterface $categoryRepository,
         private TagRepositoryInterface $tagRepository,
+        private EnvelopeBudgetRepositoryInterface $envelopeBudgetRepository,
     ) {
     }
 
@@ -140,5 +143,16 @@ readonly class EnvelopeService implements EnvelopeServiceInterface
             );
         }
         $this->envelopeRepository->save($envelopes);
+    }
+
+    public function getEnvelopesBudgets(Id $planId, DateTimeInterface $date): array
+    {
+        $items = $this->envelopeBudgetRepository->getByPlanIdAndPeriod($planId, $date);
+        $result = [];
+        foreach ($items as $item) {
+            $result[$item->getEnvelope()->getId()->getValue()] = $item;
+        }
+
+        return $result;
     }
 }

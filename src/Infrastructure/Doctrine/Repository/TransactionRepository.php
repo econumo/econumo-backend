@@ -17,6 +17,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\ORMInvalidArgumentException;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Ramsey\Uuid\Uuid;
@@ -193,5 +194,57 @@ SQL;
             $result = 0.0;
         }
         return $result;
+    }
+
+    public function countSpendingForCategories(
+        array $categoryIds,
+        DateTimeInterface $startDate,
+        DateTimeInterface $endDate
+    ): array {
+        $parameters = [];
+        foreach ($categoryIds as $categoryId) {
+            $parameters[] = $categoryId->getValue();
+        }
+        $categoriesString = implode("', '", $parameters);
+        $startDateString = $startDate->format('Y-m-d H:i:s');
+        $endDateString = $endDate->format('Y-m-d H:i:s');
+        $sql =<<<SQL
+SELECT sum(t.amount) as amount, t.category_id, a.currency_id FROM transactions t 
+LEFT JOIN accounts a ON t.account_id = a.id
+WHERE t.category_id IN ('{$categoriesString}') AND t.spent_at >= '{$startDateString}' AND t.spent_at <= '{$endDateString}' AND t.tag_id IS NULL
+GROUP BY a.currency_id, t.category_id
+SQL;
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('category_id', 'category_id');
+        $rsm->addScalarResult('currency_id', 'currency_id');
+        $rsm->addScalarResult('amount', 'amount', 'float');
+        $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
+        return $query->getResult();
+    }
+
+    public function countSpendingForTags(
+        array $tagsIds,
+        DateTimeInterface $startDate,
+        DateTimeInterface $endDate
+    ): array {
+        $parameters = [];
+        foreach ($tagsIds as $tagId) {
+            $parameters[] = $tagId->getValue();
+        }
+        $tagsString = implode("', '", $parameters);
+        $startDateString = $startDate->format('Y-m-d H:i:s');
+        $endDateString = $endDate->format('Y-m-d H:i:s');
+        $sql =<<<SQL
+SELECT sum(t.amount) as amount, t.tag_id, a.currency_id FROM transactions t 
+LEFT JOIN accounts a ON t.account_id = a.id
+WHERE t.tag_id IN ('{$tagsString}') AND t.spent_at >= '{$startDateString}' AND t.spent_at <= '{$endDateString}'
+GROUP BY a.currency_id, t.tag_id
+SQL;
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('tag_id', 'tag_id');
+        $rsm->addScalarResult('currency_id', 'currency_id');
+        $rsm->addScalarResult('amount', 'amount', 'float');
+        $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
+        return $query->getResult();
     }
 }

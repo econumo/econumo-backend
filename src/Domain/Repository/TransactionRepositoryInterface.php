@@ -40,4 +40,20 @@ interface TransactionRepositoryInterface
     public function delete(Transaction $transaction): void;
 
     public function replaceCategory(Id $oldCategoryId, Id $newCategoryId): void;
+
+    /**
+     * @param array $categoryIds
+     * @param DateTimeInterface $startDate
+     * @param DateTimeInterface $endDate
+     * @return array
+     */
+    public function countSpendingForCategories(array $categoryIds, DateTimeInterface $startDate, DateTimeInterface $endDate): array;
+
+    /**
+     * @param array $tagsIds
+     * @param DateTimeInterface $startDate
+     * @param DateTimeInterface $endDate
+     * @return array
+     */
+    public function countSpendingForTags(array $tagsIds, DateTimeInterface $startDate, DateTimeInterface $endDate): array;
 }

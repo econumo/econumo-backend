@@ -9,10 +9,11 @@ use _CG_APPROOT_\Application\_CG_MODULE_\Dto\_CG_ACTION__CG_SUBJECT__CG_VERSION_
 use _CG_APPROOT_\Application\_CG_MODULE_\Assembler\_CG_ACTION__CG_SUBJECT__CG_VERSION_ResultAssembler;
 use App\Domain\Entity\ValueObject\Id;
 
-class _CG_SUBJECT_Service
+readonly class _CG_SUBJECT_Service
 {
-    public function __construct(private readonly _CG_ACTION__CG_SUBJECT__CG_VERSION_ResultAssembler $_CG_ACTION_LCFIRST__CG_SUBJECT__CG_VERSION_ResultAssembler)
-    {
+    public function __construct(
+        private _CG_ACTION__CG_SUBJECT__CG_VERSION_ResultAssembler $_CG_ACTION_LCFIRST__CG_SUBJECT__CG_VERSION_ResultAssembler,
+    ) {
     }
 
     public function _CG_ACTION_LCFIRST__CG_SUBJECT_(

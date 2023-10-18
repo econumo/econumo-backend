@@ -134,4 +134,17 @@ class CurrencyRateRepository extends ServiceEntityRepository implements Currency
 
         return new Id($uuid->toString());
     }
+
+    public function getAverage(DateTimeInterface $startDate, DateTimeInterface $endDate, Id $baseCurrencyId): array
+    {
+        $dateBuilder = $this->createQueryBuilder('cr')
+            ->select('IDENTITY(cr.currency) as currencyId, AVG(cr.rate) as rate')
+            ->where('cr.publishedAt >= :startDate AND cr.publishedAt < :endDate')
+            ->setParameter('startDate', $startDate)
+            ->setParameter('endDate', $endDate)
+            ->andWhere('cr.baseCurrency = :baseCurrency')
+            ->setParameter('baseCurrency', $this->getEntityManager()->getReference(Currency::class, $baseCurrencyId))
+            ->groupBy('cr.currency, cr.baseCurrency');
+        return $dateBuilder->getQuery()->getArrayResult();
+    }
 }

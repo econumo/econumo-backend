@@ -3,20 +3,20 @@
 $data = <<<'JSON'
 [
   {
-    "id": "7cb3227d-22dc-4178-aeb4-02a8f815bdbd",
-    "user_id": "aff21334-96f0-4fb1-84d8-0223d0280954",
-    "type": 0,
-    "account_id": "6c7b8af8-2f8a-4d6b-855c-ca6ff26952ff",
+    "id": "b5185ed8-2c9e-4a6a-9e8b-7d07f04dc4b9",
+    "user_id": "77be9577-147b-4f05-9aa7-91d9b159de5b",
+    "type": 1,
+    "account_id": "a62c06a0-d2b5-4564-a09b-703912c01481",
     "account_recipient_id": null,
-    "amount": 1350.50,
+    "amount": 1000.01,
     "amount_recipient": null,
-    "category_id": "95587d1d-2c39-4efc-98f3-23c755da44a4",
-    "description": "",
-    "payee_id": "701ee173-7c7e-4f92-8af7-a27839c663e0",
-    "tag_id": "4b53d029-c1ed-46ad-8d86-1049542f4a7e",
-    "created_at": "2021-08-12 19:43:09",
-    "updated_at": "2021-08-12 19:43:09",
-    "spent_at": "2021-08-12 19:43:09"
+    "category_id": null,
+    "description": "Econumo: Start balance",
+    "payee_id": null,
+    "tag_id": null,
+    "created_at": "2020-01-01 00:00:00",
+    "updated_at": "2020-01-01 00:00:00",
+    "spent_at": "2020-01-01 00:00:00"
   },
   {
     "id": "d6e873f3-bbe5-4af8-904f-51bcf3d1068b",
@@ -30,41 +30,9 @@ $data = <<<'JSON'
     "description": "Econumo: Start balance",
     "payee_id": null,
     "tag_id": null,
-    "created_at": "2021-01-01 00:00:00",
-    "updated_at": "2021-01-01 00:00:00",
-    "spent_at": "2021-01-01 00:00:00"
-  },
-  {
-    "id": "1375475a-50b1-49d1-9c16-5d6f2137a2c1",
-    "user_id": "aff21334-96f0-4fb1-84d8-0223d0280954",
-    "type": 1,
-    "account_id": "4eec1ee6-1992-4222-b9ab-31ece5eaad5d",
-    "account_recipient_id": null,
-    "amount": 45194.03,
-    "amount_recipient": null,
-    "category_id": null,
-    "description": "Econumo: Start balance",
-    "payee_id": null,
-    "tag_id": null,
-    "created_at": "2021-01-01 00:00:00",
-    "updated_at": "2021-01-01 00:00:00",
-    "spent_at": "2021-01-01 00:00:00"
-  },
-  {
-    "id": "7907bc5e-a9e0-4af1-9ccb-afa2660de0a9",
-    "user_id": "48044d88-5081-11ec-bf63-0242ac130002",
-    "type": 1,
-    "account_id": "99ff78ec-5081-11ec-bf63-0242ac130002",
-    "account_recipient_id": null,
-    "amount": 1000.01,
-    "amount_recipient": null,
-    "category_id": null,
-    "description": "Econumo: Start balance",
-    "payee_id": null,
-    "tag_id": null,
-    "created_at": "2021-01-01 00:00:00",
-    "updated_at": "2021-01-01 00:00:00",
-    "spent_at": "2021-01-01 00:00:00"
+    "created_at": "2020-01-01 00:00:00",
+    "updated_at": "2020-01-01 00:00:00",
+    "spent_at": "2020-01-01 00:00:00"
   },
   {
     "id": "a03dfd35-2de1-4fa5-add1-02ccbe2fe298",
@@ -78,15 +46,15 @@ $data = <<<'JSON'
     "description": "Econumo: Start balance",
     "payee_id": null,
     "tag_id": null,
-    "created_at": "2021-01-01 00:00:00",
-    "updated_at": "2021-01-01 00:00:00",
-    "spent_at": "2021-01-01 00:00:00"
+    "created_at": "2020-01-01 00:00:00",
+    "updated_at": "2020-01-01 00:00:00",
+    "spent_at": "2020-01-01 00:00:00"
   },
   {
-    "id": "b5185ed8-2c9e-4a6a-9e8b-7d07f04dc4b9",
-    "user_id": "77be9577-147b-4f05-9aa7-91d9b159de5b",
+    "id": "7907bc5e-a9e0-4af1-9ccb-afa2660de0a9",
+    "user_id": "48044d88-5081-11ec-bf63-0242ac130002",
     "type": 1,
-    "account_id": "a62c06a0-d2b5-4564-a09b-703912c01481",
+    "account_id": "99ff78ec-5081-11ec-bf63-0242ac130002",
     "account_recipient_id": null,
     "amount": 1000.01,
     "amount_recipient": null,
@@ -94,9 +62,25 @@ $data = <<<'JSON'
     "description": "Econumo: Start balance",
     "payee_id": null,
     "tag_id": null,
-    "created_at": "2021-01-01 00:00:00",
-    "updated_at": "2021-01-01 00:00:00",
-    "spent_at": "2021-01-01 00:00:00"
+    "created_at": "2020-01-01 00:00:00",
+    "updated_at": "2020-01-01 00:00:00",
+    "spent_at": "2020-01-01 00:00:00"
+  },
+  {
+    "id": "1375475a-50b1-49d1-9c16-5d6f2137a2c1",
+    "user_id": "aff21334-96f0-4fb1-84d8-0223d0280954",
+    "type": 1,
+    "account_id": "4eec1ee6-1992-4222-b9ab-31ece5eaad5d",
+    "account_recipient_id": null,
+    "amount": 45194.03,
+    "amount_recipient": null,
+    "category_id": null,
+    "description": "Econumo: Start balance",
+    "payee_id": null,
+    "tag_id": null,
+    "created_at": "2020-01-01 00:00:00",
+    "updated_at": "2020-01-01 00:00:00",
+    "spent_at": "2020-01-01 00:00:00"
   },
   {
     "id": "00add411-9dba-4a52-b8d6-39408de1be64",
@@ -110,9 +94,9 @@ $data = <<<'JSON'
     "description": "Econumo: Start balance",
     "payee_id": null,
     "tag_id": null,
-    "created_at": "2021-01-01 00:00:00",
-    "updated_at": "2021-01-01 00:00:00",
-    "spent_at": "2021-01-01 00:00:00"
+    "created_at": "2020-01-01 00:00:00",
+    "updated_at": "2020-01-01 00:00:00",
+    "spent_at": "2020-01-01 00:00:00"
   },
   {
     "id": "190179bb-526c-4a06-855b-8806c2d0961d",
@@ -126,9 +110,9 @@ $data = <<<'JSON'
     "description": "",
     "payee_id": null,
     "tag_id": null,
-    "created_at": "2023-10-15 02:28:16",
-    "updated_at": "2023-10-15 02:28:16",
-    "spent_at": "2023-10-14 19:28:04"
+    "created_at": "2020-01-31 00:00:00",
+    "updated_at": "2020-01-31 00:00:00",
+    "spent_at": "2020-01-31 00:00:00"
   },
   {
     "id": "a0b5929f-854b-4b3f-b7fd-f39a68737292",
@@ -142,9 +126,9 @@ $data = <<<'JSON'
     "description": "",
     "payee_id": "1d43b436-46cd-417e-abc4-6ec2a9bf99be",
     "tag_id": null,
-    "created_at": "2023-10-15 02:28:31",
-    "updated_at": "2023-10-15 02:28:31",
-    "spent_at": "2023-10-14 19:28:20"
+    "created_at": "2020-01-31 00:00:00",
+    "updated_at": "2020-01-31 00:00:00",
+    "spent_at": "2020-01-31 00:00:00"
   },
   {
     "id": "c0080100-921d-4e01-a0bc-4ae6eff7214e",
@@ -158,9 +142,25 @@ $data = <<<'JSON'
     "description": "",
     "payee_id": null,
     "tag_id": null,
-    "created_at": "2023-10-15 02:28:51",
-    "updated_at": "2023-10-15 02:28:51",
-    "spent_at": "2023-10-14 19:28:39"
+    "created_at": "2020-01-31 00:00:00",
+    "updated_at": "2020-01-31 00:00:00",
+    "spent_at": "2020-01-31 00:00:00"
+  },
+  {
+    "id": "7cb3227d-22dc-4178-aeb4-02a8f815bdbd",
+    "user_id": "aff21334-96f0-4fb1-84d8-0223d0280954",
+    "type": 0,
+    "account_id": "6c7b8af8-2f8a-4d6b-855c-ca6ff26952ff",
+    "account_recipient_id": null,
+    "amount": 1350.50,
+    "amount_recipient": null,
+    "category_id": "95587d1d-2c39-4efc-98f3-23c755da44a4",
+    "description": "",
+    "payee_id": "701ee173-7c7e-4f92-8af7-a27839c663e0",
+    "tag_id": "4b53d029-c1ed-46ad-8d86-1049542f4a7e",
+    "created_at": "2020-01-31 00:00:00",
+    "updated_at": "2020-01-31 00:00:00",
+    "spent_at": "2020-01-31 00:00:00"
   }
 ]
 JSON;

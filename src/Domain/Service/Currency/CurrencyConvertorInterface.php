@@ -14,4 +14,6 @@ interface CurrencyConvertorInterface
     public function convertForUser(Id $userId, CurrencyCode $originalCurrency, float $sum): float;
 
     public function convert(CurrencyCode $originalCurrency, CurrencyCode $resultCurrency, float $sum): float;
+
+    public function convertForPeriod(Id $fromCurrencyId, Id $toCurrencyId, float $sum, \DateTimeInterface $periodStart, \DateTimeInterface $periodEnd): float;
 }
