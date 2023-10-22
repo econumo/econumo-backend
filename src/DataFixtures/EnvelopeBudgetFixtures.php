@@ -11,7 +11,8 @@ class EnvelopeBudgetFixtures extends AbstractFixture implements DependentFixture
     public function getDependencies(): array
     {
         return [
-            PlanFixtures::class
+            PlanFixtures::class,
+            EnvelopeFixtures::class,
         ];
     }
 }

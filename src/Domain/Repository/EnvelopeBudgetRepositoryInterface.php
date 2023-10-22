@@ -12,10 +12,7 @@ interface EnvelopeBudgetRepositoryInterface
 {
     public function getNextIdentity(): Id;
 
-    /**
-     * @return EnvelopeBudget[]
-     */
-    public function getByEnvelopeIdAndPeriod(Id $envelopeId, DateTimeInterface $period): array;
+    public function getByEnvelopeIdAndPeriod(Id $envelopeId, DateTimeInterface $period): EnvelopeBudget;
 
     /**
      * @return EnvelopeBudget[]

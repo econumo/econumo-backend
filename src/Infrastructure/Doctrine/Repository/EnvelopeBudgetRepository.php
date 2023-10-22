@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Doctrine\Repository;
 
+use App\Domain\Entity\Envelope;
 use App\Domain\Entity\EnvelopeBudget;
 use App\Domain\Entity\Plan;
 use App\Domain\Entity\ValueObject\Id;
@@ -76,9 +77,17 @@ class EnvelopeBudgetRepository extends ServiceEntityRepository implements Envelo
         return $this->getEntityManager()->getReference(EnvelopeBudget::class, $id);
     }
 
-    public function getByEnvelopeIdAndPeriod(Id $envelopeId, DateTimeInterface $period): array
+    public function getByEnvelopeIdAndPeriod(Id $envelopeId, DateTimeInterface $period): EnvelopeBudget
     {
-        return $this->findBy(['envelope' => $envelopeId, 'period' => $period]);
+        $item = $this->findOneBy([
+            'envelope' => $this->getEntityManager()->getReference(Envelope::class, $envelopeId),
+            'period' => \DateTimeImmutable::createFromInterface($period)
+        ]);
+        if (!$item instanceof EnvelopeBudget) {
+            throw new NotFoundException(sprintf('EnvelopeBudget with ID %s not found', $envelopeId));
+        }
+
+        return $item;
     }
 
     public function getByPlanIdAndPeriod(Id $planId, DateTimeInterface $period): array
@@ -88,10 +97,10 @@ class EnvelopeBudgetRepository extends ServiceEntityRepository implements Envelo
             ->leftJoin('eb.envelope', 'e')
             ->where('eb.period = :period')
             ->setParameter('period', $period)
-            ->andWhere('eb.envelope = e.plan')
             ->andWhere('e.plan = :plan')
             ->setParameter('plan', $this->getEntityManager()->getReference(Plan::class, $planId))
         ;
+
         return $dateBuilder->getQuery()->getResult();
     }
 

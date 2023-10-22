@@ -31,4 +31,8 @@ interface EnvelopeServiceInterface
      * @return array
      */
     public function getEnvelopesAvailable(Id $planId, DateTimeInterface $date): array;
+
+    public function updateEnvelopeBudget(Id $envelopeId, DateTimeInterface $period, float $amount): void;
+
+    public function transferEnvelopeBudget(Id $fromEnvelopeId, Id $toEnvelopeId, DateTimeInterface $period, float $amount): void;
 }
