@@ -44,7 +44,7 @@ readonly class PlanToDtoV1ResultAssembler
         $ownerUserAccess = new PlanSharedAccessItemResultDto();
         $ownerUserAccess->isAccepted = 1;
         $ownerUserAccess->role = UserRole::admin()->getAlias();
-        $ownerUserAccess->user = $this->userToDtoResultAssembler->assemble($plan->getUser());
+        $ownerUserAccess->user = $this->userToDtoResultAssembler->assemble($plan->getOwner());
         $item->sharedAccess[] = $ownerUserAccess;
         foreach ($access as $accessItem) {
             $item->sharedAccess[] = $this->sharedAccessToResultDtoAssembler->assemble($accessItem);

@@ -24,4 +24,11 @@ interface EnvelopeServiceInterface
      * @return EnvelopeBudget[]
      */
     public function getEnvelopesBudgets(Id $planId, DateTimeInterface $date): array;
+
+    /**
+     * @param Id $planId
+     * @param DateTimeInterface $date
+     * @return array
+     */
+    public function getEnvelopesAvailable(Id $planId, DateTimeInterface $date): array;
 }

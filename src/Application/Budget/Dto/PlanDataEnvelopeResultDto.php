@@ -26,5 +26,5 @@ class PlanDataEnvelopeResultDto
     /**
      * @OA\Property(example="13.07")
      */
-    public float $available;
+    public ?float $available = null;
 }

@@ -10,7 +10,7 @@ use App\Domain\Repository\TransactionRepositoryInterface;
 use App\Domain\Service\Currency\CurrencyConvertorInterface;
 use DateTimeInterface;
 
-readonly class PlanTransactionService
+readonly class PlanReportService
 {
     public function __construct(
         private TransactionRepositoryInterface $transactionRepository,

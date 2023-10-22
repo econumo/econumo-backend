@@ -31,6 +31,13 @@ class DetailedPlanResultDto
     public string $name;
 
     /**
+     * Plan start date
+     * @var string
+     * @OA\Property(example="2021-01-01 12:15:00")
+     */
+    public string $startDate;
+
+    /**
      * Created at
      * @var string
      * @OA\Property(example="2021-01-01 12:15:00")

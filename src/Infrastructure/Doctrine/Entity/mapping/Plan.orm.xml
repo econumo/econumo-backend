@@ -7,6 +7,7 @@
             table="plans">
         <id name="id" type="uuid" column="id"/>
         <field name="name" type="plan_name_type" column="name" length="64" nullable="false"/>
+        <field name="startDate" type="datetime" column="start_date" nullable="false"/>
         <field name="createdAt" type="datetime_immutable" column="created_at" nullable="false"/>
         <field name="updatedAt" type="datetime" column="updated_at" nullable="false"/>
 

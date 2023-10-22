@@ -28,6 +28,7 @@ class PlanFactory implements PlanFactoryInterface
             $this->planRepository->getNextIdentity(),
             $this->userRepository->getReference($userId),
             $name,
+            $this->datetimeService->getCurrentDatetime(),
             $this->datetimeService->getCurrentDatetime()
         );
     }

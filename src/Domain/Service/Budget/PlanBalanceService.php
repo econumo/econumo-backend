@@ -20,6 +20,24 @@ readonly class PlanBalanceService
     }
 
     /**
+     * @param id[] $currenciesIds
+     * @return PlanDataBalanceDto[]
+     */
+    public function getBalanceStubs(array $currenciesIds): array
+    {
+        $result = [];
+        foreach ($currenciesIds as $currencyId) {
+            $dto = new PlanDataBalanceDto();
+            $dto->currencyId = $currencyId;
+            $dto->startBalance = null;
+            $dto->endBalance = null;
+            $result[] = $dto;
+        }
+
+        return $result;
+    }
+
+    /**
      * @param Id $planId
      * @param DateTimeInterface $periodStart
      * @param DateTimeInterface $periodEnd

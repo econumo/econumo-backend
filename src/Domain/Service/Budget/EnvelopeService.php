@@ -15,6 +15,7 @@ use App\Domain\Repository\EnvelopeRepositoryInterface;
 use App\Domain\Repository\PlanFolderRepositoryInterface;
 use App\Domain\Repository\PlanRepositoryInterface;
 use App\Domain\Repository\TagRepositoryInterface;
+use App\Domain\Repository\TransactionRepositoryInterface;
 use App\Domain\Repository\UserRepositoryInterface;
 use DateTimeInterface;
 
@@ -30,6 +31,8 @@ readonly class EnvelopeService implements EnvelopeServiceInterface
         private CategoryRepositoryInterface $categoryRepository,
         private TagRepositoryInterface $tagRepository,
         private EnvelopeBudgetRepositoryInterface $envelopeBudgetRepository,
+        private TransactionRepositoryInterface $transactionRepository,
+        private PlanReportService $planReportService,
     ) {
     }
 
@@ -151,6 +154,42 @@ readonly class EnvelopeService implements EnvelopeServiceInterface
         $result = [];
         foreach ($items as $item) {
             $result[$item->getEnvelope()->getId()->getValue()] = $item;
+        }
+
+        return $result;
+    }
+
+    public function getEnvelopesAvailable(Id $planId, DateTimeInterface $date): array
+    {
+        $plan = $this->planRepository->get($planId);
+        $planStartDate = $plan->getStartDate();
+        $envelopes = $this->envelopeRepository->getByPlanId($plan->getId());
+        $result = [];
+        if ($planStartDate > $date) {
+            return $result;
+        }
+
+        $categoriesReport = $this->planReportService->getCategoriesReport($planId, $planStartDate, $date);
+        $tagsReport = $this->planReportService->getTagsReport($planId, $planStartDate, $date);
+        $budget = $this->envelopeBudgetRepository->getSumByPlanIdAndPeriod($planId, $date);
+
+        foreach ($envelopes as $envelope) {
+            $result[$envelope->getId()->getValue()] = null;
+            foreach ($envelope->getCategories() as $category) {
+                if (isset($categoriesReport[$category->getId()->getValue()])) {
+                    $result[$envelope->getId()->getValue()] += $categoriesReport[$category->getId()->getValue()];
+                }
+            }
+            foreach ($envelope->getTags() as $tag) {
+                if (isset($tagsReport[$tag->getId()->getValue()])) {
+                    $result[$envelope->getId()->getValue()] += $tagsReport[$tag->getId()->getValue()];
+                }
+            }
+        }
+        foreach ($result as $envelopeId => $amount) {
+            if (array_key_exists($envelopeId, $budget)) {
+                $result[$envelopeId] = $budget[$envelopeId]['budget'] - $amount;
+            }
         }
 
         return $result;

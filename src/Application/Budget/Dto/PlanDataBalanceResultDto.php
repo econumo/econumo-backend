@@ -21,7 +21,7 @@ class PlanDataBalanceResultDto
     /**
      * @OA\Property(example="13.07")
      */
-    public float $startBalance;
+    public ?float $startBalance = null;
 
     /**
      * @OA\Property(example="13.07")

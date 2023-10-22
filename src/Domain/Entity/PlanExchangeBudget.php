@@ -5,15 +5,12 @@ declare(strict_types=1);
 namespace App\Domain\Entity;
 
 use App\Domain\Entity\ValueObject\Id;
-use App\Domain\Traits\EntityTrait;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 
-class EnvelopeBudget
+class PlanExchangeBudget
 {
-    use EntityTrait;
-
     private DateTimeInterface $period;
 
     private DateTimeImmutable $createdAt;
@@ -22,7 +19,8 @@ class EnvelopeBudget
 
     public function __construct(
         private Id $id,
-        private Envelope $envelope,
+        private Plan $plan,
+        private Currency $currency,
         private float $amount,
         DateTimeInterface $period,
         DateTimeInterface $createdAt
@@ -42,19 +40,14 @@ class EnvelopeBudget
         return $this->period;
     }
 
-    public function getCreatedAt(): DateTimeInterface
+    public function getPlan(): Plan
     {
-        return $this->createdAt;
+        return $this->plan;
     }
 
-    public function getUpdatedAt(): DateTimeInterface
+    public function getCurrency(): Currency
     {
-        return $this->updatedAt;
-    }
-
-    public function getEnvelope(): Envelope
-    {
-        return $this->envelope;
+        return $this->currency;
     }
 
     public function getAmount(): float
@@ -73,5 +66,15 @@ class EnvelopeBudget
     private function updated(): void
     {
         $this->updatedAt = new DateTime();
+    }
+
+    public function getCreatedAt(): DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): DateTimeInterface
+    {
+        return $this->updatedAt;
     }
 }

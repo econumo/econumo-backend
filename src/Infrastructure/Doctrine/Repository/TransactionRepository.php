@@ -201,6 +201,10 @@ SQL;
         DateTimeInterface $startDate,
         DateTimeInterface $endDate
     ): array {
+        if (count($categoryIds) === 0) {
+            return [];
+        }
+
         $parameters = [];
         foreach ($categoryIds as $categoryId) {
             $parameters[] = $categoryId->getValue();
@@ -227,6 +231,10 @@ SQL;
         DateTimeInterface $startDate,
         DateTimeInterface $endDate
     ): array {
+        if (count($tagsIds) === 0) {
+            return [];
+        }
+
         $parameters = [];
         foreach ($tagsIds as $tagId) {
             $parameters[] = $tagId->getValue();

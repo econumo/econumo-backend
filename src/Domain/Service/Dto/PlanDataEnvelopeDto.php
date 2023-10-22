@@ -12,5 +12,5 @@ class PlanDataEnvelopeDto
 
     public float $budget;
 
-    public float $available;
+    public ?float $available = null;
 }

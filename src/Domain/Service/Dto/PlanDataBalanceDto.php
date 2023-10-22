@@ -10,7 +10,7 @@ class PlanDataBalanceDto
 {
     public Id $currencyId;
 
-    public float $startBalance;
+    public ?float $startBalance;
 
     public ?float $endBalance = null;
 }

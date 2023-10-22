@@ -13,6 +13,7 @@ use DateTimeInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\ORMInvalidArgumentException;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\Persistence\ManagerRegistry;
 use Ramsey\Uuid\Uuid;
 use RuntimeException;
@@ -92,5 +93,24 @@ class EnvelopeBudgetRepository extends ServiceEntityRepository implements Envelo
             ->setParameter('plan', $this->getEntityManager()->getReference(Plan::class, $planId))
         ;
         return $dateBuilder->getQuery()->getResult();
+    }
+
+    public function getSumByPlanIdAndPeriod(Id $planId, DateTimeInterface $period): array
+    {
+        $planIdString = $planId->getValue();
+        $periodString = $period->format('Y-m-d H:i:s');
+        $sql =<<<SQL
+SELECT e.id as envelope_id, COALESCE(SUM(eb.amount), 0) as budget FROM envelopes e
+LEFT JOIN plans p ON e.plan_id = p.id
+LEFT JOIN envelope_budgets eb ON e.id = eb.envelope_id AND eb.period >= p.start_date AND eb.period < '{$periodString}'
+WHERE e.plan_id = '{$planIdString}'
+GROUP BY e.id;
+SQL;
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('envelope_id', 'envelope_id');
+        $rsm->addScalarResult('budget', 'budget', 'float');
+        $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
+        $result = $query->getResult();
+        return array_column($result, null, 'envelope_id');
     }
 }

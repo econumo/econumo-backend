@@ -38,6 +38,7 @@ readonly class GetPlanV1ResultAssembler
         $dto->item->id = $plan->id->getValue();
         $dto->item->name = $plan->name->getValue();
         $dto->item->ownerUserId = $plan->ownerUserId->getValue();
+        $dto->item->startDate = $plan->startDate->format('Y-m-d H:i:s');
         $dto->item->createdAt = $plan->createdAt->format('Y-m-d H:i:s');
         $dto->item->updatedAt = $plan->updatedAt->format('Y-m-d H:i:s');
         $dto->item->envelopes = [];

@@ -16,6 +16,8 @@ class PlanDto
 
     public Id $ownerUserId;
 
+    public DateTimeInterface $startDate;
+
     public DateTimeInterface $createdAt;
 
     public DateTimeInterface $updatedAt;

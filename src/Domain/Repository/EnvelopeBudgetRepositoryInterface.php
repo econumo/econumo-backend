@@ -22,6 +22,13 @@ interface EnvelopeBudgetRepositoryInterface
      */
     public function getByPlanIdAndPeriod(Id $planId, DateTimeInterface $period): array;
 
+    /**
+     * @param Id $planId
+     * @param DateTimeInterface $period
+     * @return array
+     */
+    public function getSumByPlanIdAndPeriod(Id $planId, DateTimeInterface $period): array;
+
     public function get(Id $id): EnvelopeBudget;
 
     /**
