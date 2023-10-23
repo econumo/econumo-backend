@@ -275,4 +275,33 @@ readonly class EnvelopeService implements EnvelopeServiceInterface
             throw $e;
         }
     }
+
+    public function orderEnvelopes(Id $planId, array $changes): void
+    {
+        $folders = $this->planFolderRepository->getByPlanId($planId);
+        $envelopes = $this->envelopeRepository->getByPlanId($planId);
+        $changed = [];
+        foreach ($envelopes as $envelope) {
+            foreach ($changes as $change) {
+                if ($envelope->getId()->isEqual($change->getId())) {
+                    $envelope->updatePosition($change->position);
+                    if ($change->folderId !== null) {
+                        foreach ($folders as $folder) {
+                            if ($folder->getId()->isEqual($change->getFolderId())) {
+                                $envelope->updateFolder($folder);
+                                break;
+                            }
+                        }
+                    }
+                    $changed[] = $envelope;
+                    break;
+                }
+            }
+        }
+
+        if ($changed === []) {
+            return;
+        }
+        $this->envelopeRepository->save($changed);
+    }
 }

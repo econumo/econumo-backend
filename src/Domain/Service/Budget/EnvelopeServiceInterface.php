@@ -8,6 +8,7 @@ use App\Domain\Entity\Category;
 use App\Domain\Entity\EnvelopeBudget;
 use App\Domain\Entity\Tag;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Service\Dto\EnvelopePositionDto;
 use DateTimeInterface;
 
 interface EnvelopeServiceInterface
@@ -35,4 +36,11 @@ interface EnvelopeServiceInterface
     public function updateEnvelopeBudget(Id $envelopeId, DateTimeInterface $period, float $amount): void;
 
     public function transferEnvelopeBudget(Id $fromEnvelopeId, Id $toEnvelopeId, DateTimeInterface $period, float $amount): void;
+
+    /**
+     * @param Id $planId
+     * @param EnvelopePositionDto[] $changes
+     * @return void
+     */
+    public function orderEnvelopes(Id $planId, array $changes): void;
 }

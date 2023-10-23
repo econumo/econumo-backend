@@ -119,6 +119,25 @@ class Envelope
         }
     }
 
+    public function updatePosition(int $position): void
+    {
+        if ($this->position !== $position) {
+            $this->position = $position;
+            $this->updated();
+        }
+    }
+
+    public function updateFolder(PlanFolder $folder): void
+    {
+        if ($this->type->isIncome()) {
+            return;
+        }
+        if ($this->folder === null || !$this->folder->getId()->isEqual($folder->getId())) {
+            $this->folder = $folder;
+            $this->updated();
+        }
+    }
+
     public function getCreatedAt(): DateTimeInterface
     {
         return $this->createdAt;
