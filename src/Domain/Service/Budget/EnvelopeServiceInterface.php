@@ -8,6 +8,7 @@ use App\Domain\Entity\Category;
 use App\Domain\Entity\EnvelopeBudget;
 use App\Domain\Entity\Tag;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Exception\EnvelopeIsNotEmptyException;
 use App\Domain\Service\Dto\EnvelopePositionDto;
 use DateTimeInterface;
 
@@ -43,4 +44,11 @@ interface EnvelopeServiceInterface
      * @return void
      */
     public function orderEnvelopes(Id $planId, array $changes): void;
+
+    /**
+     * @param Id $envelopeId
+     * @return void
+     * @throws EnvelopeIsNotEmptyException
+     */
+    public function deleteEnvelope(Id $envelopeId): void;
 }

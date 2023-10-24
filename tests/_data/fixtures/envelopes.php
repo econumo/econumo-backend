@@ -385,6 +385,18 @@ $data = <<<'JSON'
     "icon": null,
     "created_at": "2023-10-15 02:23:32",
     "updated_at": "2023-10-23 03:28:11"
+  },
+  {
+    "id": "acb421b0-ea48-4efe-ab04-7bda5a5c68ae",
+    "plan_id": "bceed17e-d492-40be-921a-e7fa6f663fa6",
+    "currency_id": "fe5d9269-b69c-4841-9c04-136225447eca",
+    "folder_id": "62ccc225-b141-42a4-8063-825c8b72d135",
+    "type": 0,
+    "position": 12,
+    "name": "Empty envelope",
+    "icon": "empty",
+    "created_at": "2023-10-15 02:23:32",
+    "updated_at": "2023-10-23 03:28:11"
   }
 ]
 JSON;

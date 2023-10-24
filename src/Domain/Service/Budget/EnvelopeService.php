@@ -8,6 +8,7 @@ use App\Domain\Entity\Category;
 use App\Domain\Entity\Tag;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\DomainException;
+use App\Domain\Exception\EnvelopeIsNotEmptyException;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Factory\EnvelopeBudgetFactoryInterface;
 use App\Domain\Factory\EnvelopeFactoryInterface;
@@ -303,5 +304,15 @@ readonly class EnvelopeService implements EnvelopeServiceInterface
             return;
         }
         $this->envelopeRepository->save($changed);
+    }
+
+    public function deleteEnvelope(Id $envelopeId): void
+    {
+        $envelope = $this->envelopeRepository->get($envelopeId);
+        if (count($envelope->getCategories()) || count($envelope->getTags())) {
+            throw new EnvelopeIsNotEmptyException();
+        }
+
+        $this->envelopeRepository->delete($envelope);
     }
 }
