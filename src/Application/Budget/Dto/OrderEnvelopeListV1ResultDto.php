@@ -14,7 +14,7 @@ use OpenApi\Annotations as OA;
 class OrderEnvelopeListV1ResultDto
 {
     /**
-     * PlanDataEnvelopeResultDto[]
+     * @var PlanDataEnvelopeResultDto[]
      * @OA\Property()
      */
     public array $items = [];

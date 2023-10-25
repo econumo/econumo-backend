@@ -284,11 +284,11 @@ readonly class EnvelopeService implements EnvelopeServiceInterface
         $changed = [];
         foreach ($envelopes as $envelope) {
             foreach ($changes as $change) {
-                if ($envelope->getId()->isEqual($change->getId())) {
+                if ($envelope->getId()->isEqual(new Id ($change->id))) {
                     $envelope->updatePosition($change->position);
                     if ($change->folderId !== null) {
                         foreach ($folders as $folder) {
-                            if ($folder->getId()->isEqual($change->getFolderId())) {
+                            if ($change->folderId && $folder->getId()->isEqual(new Id($change->folderId))) {
                                 $envelope->updateFolder($folder);
                                 break;
                             }

@@ -13,14 +13,4 @@ class EnvelopePositionDto
     public ?string $folderId = null;
 
     public int $position;
-
-    public function getId(): Id
-    {
-        return new Id($this->id);
-    }
-
-    public function getFolderId(): Id
-    {
-        return new Id($this->folderId);
-    }
 }
