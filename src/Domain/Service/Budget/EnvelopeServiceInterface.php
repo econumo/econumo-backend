@@ -7,6 +7,8 @@ namespace App\Domain\Service\Budget;
 use App\Domain\Entity\Category;
 use App\Domain\Entity\EnvelopeBudget;
 use App\Domain\Entity\Tag;
+use App\Domain\Entity\ValueObject\EnvelopeName;
+use App\Domain\Entity\ValueObject\Icon;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\EnvelopeIsNotEmptyException;
 use App\Domain\Service\Dto\EnvelopePositionDto;
@@ -51,4 +53,22 @@ interface EnvelopeServiceInterface
      * @throws EnvelopeIsNotEmptyException
      */
     public function deleteEnvelope(Id $envelopeId): void;
+
+    /**
+     * @param Id $envelopeId
+     * @param EnvelopeName $name
+     * @param Icon $icon
+     * @param Id $currencyId
+     * @param Id[] $categoriesIds
+     * @param Id[] $tagsIds
+     * @return void
+     */
+    public function updateEnvelope(
+        Id $envelopeId,
+        EnvelopeName $name,
+        Icon $icon,
+        Id $currencyId,
+        array $categoriesIds,
+        array $tagsIds
+    ): void;
 }

@@ -113,8 +113,24 @@ class Envelope
 
     public function updateName(EnvelopeName $name): void
     {
-        if (!$this->name->isEqual($name)) {
+        if (!$this->name || !$this->name->isEqual($name)) {
             $this->name = $name;
+            $this->updated();
+        }
+    }
+
+    public function updateIcon(Icon $icon): void
+    {
+        if (!$this->icon || !$this->icon->isEqual($icon)) {
+            $this->icon = $icon;
+            $this->updated();
+        }
+    }
+
+    public function updateCurrency(Currency $currency): void
+    {
+        if (!$this->currency->getId()->isEqual($currency->getId())) {
+            $this->currency = $currency;
             $this->updated();
         }
     }

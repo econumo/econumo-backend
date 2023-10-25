@@ -60,6 +60,10 @@ class EnvelopeRepository extends ServiceEntityRepository implements EnvelopeRepo
      */
     public function save(array $items): void
     {
+        if (count($items) === 0) {
+            return;
+        }
+
         try {
             foreach ($items as $item) {
                 $this->getEntityManager()->persist($item);
