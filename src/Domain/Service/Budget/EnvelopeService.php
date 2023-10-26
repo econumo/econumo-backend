@@ -7,6 +7,7 @@ namespace App\Domain\Service\Budget;
 use App\Domain\Entity\Category;
 use App\Domain\Entity\Tag;
 use App\Domain\Entity\ValueObject\EnvelopeName;
+use App\Domain\Entity\ValueObject\EnvelopeType;
 use App\Domain\Entity\ValueObject\Icon;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\DomainException;
@@ -429,5 +430,82 @@ readonly class EnvelopeService implements EnvelopeServiceInterface
             $this->antiCorruptionService->rollback(__METHOD__);
             throw $e;
         }
+    }
+
+    public function createEnvelope(
+        Id $planId,
+        EnvelopeType $type,
+        EnvelopeName $name,
+        Icon $icon,
+        Id $currencyId,
+        array $categoriesIds,
+        array $tagsIds,
+        ?Id $folderId
+    ): Id {
+        $envelope = $this->envelopeFactory->create(
+            $planId,
+            $type,
+            $currencyId,
+            0,
+            $folderId,
+            $name,
+            $icon
+        );
+
+        $availableCategories = [];
+        $availableTags = [];
+        $removeCategories = [];
+        $removeTags = [];
+        foreach ($this->envelopeRepository->getByPlanId($envelope->getPlan()->getId()) as $item) {
+            foreach ($item->getCategories() as $category) {
+                $availableCategories[$category->getId()->getValue()] = $category;
+                foreach ($categoriesIds as $categoryId) {
+                    if ($category->getId()->isEqual($categoryId)) {
+                        $removeCategories[$category->getId()->getValue()] = [$item, $category];
+                        break;
+                    }
+                }
+            }
+            foreach ($item->getTags() as $tag) {
+                $availableTags[$tag->getId()->getValue()] = $tag;
+                foreach ($tagsIds as $tagId) {
+                    if ($tag->getId()->isEqual($tagId)) {
+                        $removeTags[$tag->getId()->getValue()] = [$item, $tag];
+                        break;
+                    }
+                }
+            }
+        }
+
+        foreach ($categoriesIds as $categoryId) {
+            foreach ($availableCategories as $availableCategory) {
+                if ($availableCategory->getId()->isEqual($categoryId)) {
+                    $envelope->addCategory($this->categoryRepository->getReference($categoryId));
+                    break;
+                }
+            }
+        }
+
+        foreach ($tagsIds as $tagId) {
+            foreach ($availableTags as $availableTag) {
+                if ($availableTag->getId()->isEqual($tagId)) {
+                    $envelope->addTag($this->tagRepository->getReference($tagId));
+                    break;
+                }
+            }
+        }
+
+        $affectedEnvelopes = ['new' => $envelope];
+        foreach ($removeCategories as $item) {
+            $item[0]->removeCategory($item[1]);
+            $affectedEnvelopes[$envelope->getId()->getValue()] = $item[0];
+        }
+        foreach ($removeTags as $item) {
+            $item[0]->removeTag($item[1]);
+            $affectedEnvelopes[$envelope->getId()->getValue()] = $item[0];
+        }
+
+        $this->envelopeRepository->save($affectedEnvelopes);
+        return $envelope->getId();
     }
 }

@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Domain\Service\Budget;
 
 use App\Domain\Entity\Category;
+use App\Domain\Entity\Envelope;
 use App\Domain\Entity\EnvelopeBudget;
 use App\Domain\Entity\Tag;
 use App\Domain\Entity\ValueObject\EnvelopeName;
+use App\Domain\Entity\ValueObject\EnvelopeType;
 use App\Domain\Entity\ValueObject\Icon;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\EnvelopeIsNotEmptyException;
@@ -71,4 +73,26 @@ interface EnvelopeServiceInterface
         array $categoriesIds,
         array $tagsIds
     ): void;
+
+    /**
+     * @param Id $planId
+     * @param EnvelopeType $type
+     * @param EnvelopeName $name
+     * @param Icon $icon
+     * @param Id $currencyId
+     * @param Id[] $categoriesIds
+     * @param Id[] $tagsIds
+     * @param Id|null $folderId
+     * @return Id envelope ID
+     */
+    public function createEnvelope(
+        Id $planId,
+        EnvelopeType $type,
+        EnvelopeName $name,
+        Icon $icon,
+        Id $currencyId,
+        array $categoriesIds,
+        array $tagsIds,
+        ?Id $folderId
+    ): Id;
 }
