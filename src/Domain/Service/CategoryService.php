@@ -72,8 +72,16 @@ readonly class CategoryService implements CategoryServiceInterface
 
     public function deleteCategory(Id $categoryId): void
     {
-        $category = $this->categoryRepository->get($categoryId);
-        $this->categoryRepository->delete($category);
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
+        try {
+            $category = $this->categoryRepository->get($categoryId);
+            $this->envelopeService->deleteConnectedEnvelopeByCategory($categoryId);
+            $this->categoryRepository->delete($category);
+            $this->antiCorruptionService->commit(__METHOD__);
+        } catch (\Throwable $throwable) {
+            $this->antiCorruptionService->rollback(__METHOD__);
+            throw $throwable;
+        }
     }
 
     public function replaceCategory(Id $categoryId, Id $newCategoryId): void
@@ -91,7 +99,7 @@ readonly class CategoryService implements CategoryServiceInterface
         $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
             $this->transactionRepository->replaceCategory($categoryId, $newCategoryId);
-            $this->categoryRepository->delete($category);
+            $this->deleteCategory($categoryId);
             $this->antiCorruptionService->commit(__METHOD__);
         } catch (\Throwable $throwable) {
             $this->antiCorruptionService->rollback(__METHOD__);

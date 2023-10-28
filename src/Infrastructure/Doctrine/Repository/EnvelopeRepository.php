@@ -12,6 +12,7 @@ use App\Domain\Repository\EnvelopeRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\ORMInvalidArgumentException;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\Persistence\ManagerRegistry;
 use Ramsey\Uuid\Uuid;
 use RuntimeException;
@@ -84,5 +85,31 @@ class EnvelopeRepository extends ServiceEntityRepository implements EnvelopeRepo
     public function getReference(Id $id): Envelope
     {
         return $this->getEntityManager()->getReference(Envelope::class, $id);
+    }
+
+    public function getByCategoryId(Id $categoryId): array
+    {
+        $categoryIdString = $categoryId->getValue();
+        $sql =<<<SQL
+SELECT ec.envelope_id FROM envelope_categories ec WHERE ec.category_id = '{$categoryIdString}';
+SQL;
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('envelope_id', 'envelope_id');
+        $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
+        $envelopeIds = $query->getSingleColumnResult();
+        return $this->findBy(['id' => $envelopeIds], ['position' => 'ASC']);
+    }
+
+    public function getByTagId(Id $tagId): array
+    {
+        $tagIdString = $tagId->getValue();
+        $sql =<<<SQL
+SELECT et.envelope_id FROM envelope_tags et WHERE et.tag_id = '{$tagIdString}';
+SQL;
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('envelope_id', 'envelope_id');
+        $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
+        $envelopeIds = array_column($query->getResult(), 'envelope_id');
+        return $this->findBy(['id' => $envelopeIds], ['position' => 'ASC']);
     }
 }

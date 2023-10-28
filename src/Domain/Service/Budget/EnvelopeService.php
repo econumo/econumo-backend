@@ -540,4 +540,38 @@ readonly class EnvelopeService implements EnvelopeServiceInterface
             throw $e;
         }
     }
+
+    public function deleteConnectedEnvelopeByCategory(Id $categoryId): void
+    {
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
+        $envelopes = $this->envelopeRepository->getByCategoryId($categoryId);
+        try {
+            foreach ($envelopes as $envelope) {
+                if ($envelope->isCategoryConnected()) {
+                    $this->envelopeRepository->delete($envelope);
+                }
+            }
+            $this->antiCorruptionService->commit(__METHOD__);
+        } catch (Throwable $e) {
+            $this->antiCorruptionService->rollback(__METHOD__);
+            throw $e;
+        }
+    }
+
+    public function deleteConnectedEnvelopeByTag(Id $tagId): void
+    {
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
+        $envelopes = $this->envelopeRepository->getByTagId($tagId);
+        try {
+            foreach ($envelopes as $envelope) {
+                if ($envelope->isTagConnected()) {
+                    $this->envelopeRepository->delete($envelope);
+                }
+            }
+            $this->antiCorruptionService->commit(__METHOD__);
+        } catch (Throwable $e) {
+            $this->antiCorruptionService->rollback(__METHOD__);
+            throw $e;
+        }
+    }
 }

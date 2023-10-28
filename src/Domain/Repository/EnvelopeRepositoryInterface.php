@@ -16,6 +16,16 @@ interface EnvelopeRepositoryInterface
      */
     public function getByPlanId(Id $planId): array;
 
+    /**
+     * @return Envelope[]
+     */
+    public function getByCategoryId(Id $categoryId): array;
+
+    /**
+     * @return Envelope[]
+     */
+    public function getByTagId(Id $tagId): array;
+
     public function get(Id $id): Envelope;
 
     /**

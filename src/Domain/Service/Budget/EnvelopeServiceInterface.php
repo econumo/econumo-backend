@@ -24,6 +24,10 @@ interface EnvelopeServiceInterface
 
     public function createEnvelopesForUser(Id $planId, Id $userId, Id $currencyId, int &$envelopePosition, Id $folderId): void;
 
+    public function deleteConnectedEnvelopeByCategory(Id $categoryId): void;
+
+    public function deleteConnectedEnvelopeByTag(Id $tagId): void;
+
     /**
      * @param Id $planId
      * @param DateTimeInterface $date

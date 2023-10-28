@@ -100,8 +100,16 @@ readonly class TagService implements TagServiceInterface
 
     public function deleteTag(Id $tagId): void
     {
-        $tag = $this->tagRepository->get($tagId);
-        $this->tagRepository->delete($tag);
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
+        try {
+            $category = $this->tagRepository->get($tagId);
+            $this->envelopeService->deleteConnectedEnvelopeByTag($tagId);
+            $this->tagRepository->delete($category);
+            $this->antiCorruptionService->commit(__METHOD__);
+        } catch (\Throwable $throwable) {
+            $this->antiCorruptionService->rollback(__METHOD__);
+            throw $throwable;
+        }
     }
 
     public function archiveTag(Id $tagId): void
