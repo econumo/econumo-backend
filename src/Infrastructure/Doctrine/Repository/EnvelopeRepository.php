@@ -85,14 +85,4 @@ class EnvelopeRepository extends ServiceEntityRepository implements EnvelopeRepo
     {
         return $this->getEntityManager()->getReference(Envelope::class, $id);
     }
-
-    public function getByCategoryId(Id $categoryId): array
-    {
-        // TODO: Implement getByCategoryId() method.
-    }
-
-    public function getByTagId(Id $tagId): array
-    {
-        // TODO: Implement getByTagId() method.
-    }
 }
