@@ -5,13 +5,13 @@ declare(strict_types=1);
 
 namespace App\Domain\Service\Budget;
 
-use App\Domain\Entity\Envelope;
 use App\Domain\Entity\Plan;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\PlanFolderName;
 use App\Domain\Entity\ValueObject\PlanName;
 use App\Domain\Entity\ValueObject\PlanPeriodType;
 use App\Domain\Entity\ValueObject\UserRole;
+use App\Domain\Exception\DomainException;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Exception\PlanAlreadyExistsException;
 use App\Domain\Exception\RevokeOwnerAccessException;
@@ -108,7 +108,7 @@ readonly class PlanService implements PlanServiceInterface
             $this->planFolderRepository->save([$planFolder]);
 
             $envelopePosition = 0;
-            $currencyId = $this->getAvailableCurrencyIdsForUserId($userId)[0];
+            $currencyId = $this->getUserCurrency($userId);
             $this->envelopeService->createEnvelopesForUser(
                 $plan->getId(),
                 $userId,
@@ -165,24 +165,38 @@ readonly class PlanService implements PlanServiceInterface
 
     public function deletePlan(Id $userId, Id $planId): void
     {
+        $plan = $this->planRepository->get($planId);
+        if ($plan->getOwnerUserId()->isEqual($userId)) {
+            $user = $this->userRepository->get($userId);
+            if ($user->getDefaultPlanId() && $user->getDefaultPlanId()->isEqual($planId)) {
+                $plans = $this->planRepository->getAvailableForUserId($userId);
+                $newUserDefaultPlan = null;
+                if (count($plans) > 0) {
+                    foreach ($plans as $item) {
+                        if ($item->getId()->isEqual($planId)) {
+                            continue;
+                        }
+                        $newUserDefaultPlan = $item->getId();
+                        break;
+                    }
+                }
+                $user->updateDefaultPlan($newUserDefaultPlan);
+                $this->userRepository->save([$user]);
+            }
+        }
         $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
-            $plan = $this->planRepository->get($planId);
-
             if ($plan->getOwnerUserId()->isEqual($userId)) {
                 $access = $this->planAccessRepository->getByPlanId($planId);
                 foreach ($access as $item) {
                     $this->revokeAccess($planId, $item->getUserId());
                 }
-                $this->planRepository->delete($plan);
-                $plans = $this->planRepository->getAvailableForUserId($userId);
-                if (count($plans) > 0) {
-                    $this->userService->updateDefaultPlan($userId, $plans[0]->getId());
-                } else {
-                    $user = $this->userRepository->get($userId);
-                    $user->updateDefaultPlan(null);
-                    $this->userRepository->save([$user]);
+                try {
+                    $options = $this->planOptionsRepository->get($planId, $userId);
+                    $this->planOptionsRepository->delete($options);
+                } catch (NotFoundException $e) {
                 }
+                $this->planRepository->delete($plan);
             } else {
                 $this->revokeAccess($planId, $userId);
                 try {
@@ -319,7 +333,7 @@ readonly class PlanService implements PlanServiceInterface
                 $folderPosition
             );
             $this->planFolderRepository->save([$planFolder]);
-            $currencyId = $this->getAvailableCurrencyIdsForUserId($userId)[0];
+            $currencyId = $this->getUserCurrency($userId);
             $this->envelopeService->createEnvelopesForUser(
                 $planId,
                 $userId,
@@ -368,20 +382,14 @@ readonly class PlanService implements PlanServiceInterface
         $dto->currencies = [];
         foreach ($planAccess as $item) {
             if ($item->isAccepted()) {
-                foreach ($this->accountRepository->getUserAccounts($item->getUserId()) as $account) {
-                    if ($account->isExcludedFromBudget()) {
-                        continue;
-                    }
+                foreach ($this->accountRepository->getUserAccountsForBudgeting($item->getUserId()) as $account) {
                     if (!in_array($account->getCurrencyId(), $dto->currencies)) {
                         $dto->currencies[] = $account->getCurrencyId();
                     }
                 }
             }
         }
-        foreach ($this->accountRepository->getUserAccounts($plan->getOwnerUserId()) as $account) {
-            if ($account->isExcludedFromBudget()) {
-                continue;
-            }
+        foreach ($this->accountRepository->getUserAccountsForBudgeting($plan->getOwnerUserId()) as $account) {
             if (!in_array($account->getCurrencyId(), $dto->currencies)) {
                 $dto->currencies[] = $account->getCurrencyId();
             }
@@ -392,29 +400,21 @@ readonly class PlanService implements PlanServiceInterface
 
     /**
      * @param Id $userId
-     * @return Id[]
+     * @return Id
      */
-    private function getAvailableCurrencyIdsForUserId(Id $userId): array
+    private function getUserCurrency(Id $userId): Id
     {
-        $result = [];
         $user = $this->userRepository->get($userId);
         $userCurrency = $this->currencyRepository->getByCode($user->getCurrency());
-        $result[] = $userCurrency->getId();
+        if ($userCurrency) {
+            return $userCurrency->getId();
+        }
 
-        $accountCurrencies = [$userCurrency->getId()->getValue() => $userCurrency->getId()];
-        $accounts = $this->accountRepository->getUserAccounts($userId);
+        $accounts = $this->accountRepository->getUserAccountsForBudgeting($userId);
         foreach ($accounts as $account) {
-            $accountCurrencies[$account->getCurrencyId()->getValue()] = $account->getCurrencyId();
+            return $account->getCurrencyId();
         }
-
-        foreach ($accountCurrencies as $accountCurrency) {
-            if ($accountCurrency->isEqual($userCurrency->getId())) {
-                continue;
-            }
-            $result[] = $accountCurrency;
-        }
-
-        return $result;
+        throw new DomainException('User currency not found');
     }
 
     public function getPlanData(

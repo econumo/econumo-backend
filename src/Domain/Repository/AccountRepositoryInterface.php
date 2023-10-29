@@ -22,6 +22,11 @@ interface AccountRepositoryInterface
      */
     public function getUserAccounts(Id $userId): array;
 
+    /**
+     * @return Account[]
+     */
+    public function getUserAccountsForBudgeting(Id $userId): array;
+
     public function get(Id $id): Account;
 
     /**

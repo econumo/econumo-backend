@@ -61,7 +61,7 @@ class PlanRepository extends ServiceEntityRepository implements PlanRepositoryIn
     public function getAvailableForUserId(Id $userId): array
     {
         $builder = $this->createQueryBuilder('p');
-        return $builder
+        $plans = $builder
             ->select('p')
             ->leftJoin(PlanAccess::class, 'pa', Join::WITH, 'pa.plan = p')
             ->where($builder->expr()->orX(
@@ -71,6 +71,21 @@ class PlanRepository extends ServiceEntityRepository implements PlanRepositoryIn
             ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId))
             ->getQuery()
             ->getResult();
+        $userPlans = $this->getUserPlans($userId);
+        foreach ($userPlans as $userPlan) {
+            $exists = false;
+            foreach ($plans as $plan) {
+                if ($plan->getId()->isEqual($userPlan->getId())) {
+                    $exists = true;
+                    break;
+                }
+            }
+            if (!$exists) {
+                $plans[] = $userPlan;
+            }
+        }
+
+        return $plans;
     }
 
     /**
@@ -78,14 +93,10 @@ class PlanRepository extends ServiceEntityRepository implements PlanRepositoryIn
      */
     public function getUserPlans(Id $userId): array
     {
-        $builder = $this->createQueryBuilder('a');
+        $builder = $this->createQueryBuilder('p');
         return $builder
             ->select('p')
-            ->leftJoin(PlanAccess::class, 'pa', Join::WITH, 'pa.plan = p')
-            ->where($builder->expr()->orX(
-                $builder->expr()->eq('p.user', ':user'),
-                $builder->expr()->eq('pa.user', ':user'),
-            ))
+            ->where('p.user = :user')
             ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId))
             ->getQuery()
             ->getResult();

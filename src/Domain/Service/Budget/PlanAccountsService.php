@@ -6,16 +6,16 @@ namespace App\Domain\Service\Budget;
 
 use App\Domain\Entity\Account;
 use App\Domain\Entity\ValueObject\Id;
-use App\Infrastructure\Doctrine\Repository\AccountRepository;
-use App\Infrastructure\Doctrine\Repository\PlanAccessRepository;
-use App\Infrastructure\Doctrine\Repository\PlanRepository;
+use App\Domain\Repository\AccountRepositoryInterface;
+use App\Domain\Repository\PlanAccessRepositoryInterface;
+use App\Domain\Repository\PlanRepositoryInterface;
 
 readonly class PlanAccountsService
 {
     public function __construct(
-        private PlanAccessRepository $planAccessRepository,
-        private PlanRepository $planRepository,
-        private AccountRepository $accountRepository,
+        private PlanAccessRepositoryInterface $planAccessRepository,
+        private PlanRepositoryInterface $planRepository,
+        private AccountRepositoryInterface $accountRepository,
     ) {
     }
 
@@ -27,22 +27,27 @@ readonly class PlanAccountsService
     {
         $result = [];
         $access = $this->planAccessRepository->getByPlanId($planId);
+        $accessUserId = [];
         foreach ($access as $planAccess) {
             if (!$planAccess->isAccepted()) {
                 continue;
             }
+            $accessUserId[$planAccess->getUserId()->getValue()] = $planAccess->getUserId();
 
-            $accounts = $this->accountRepository->getUserAccounts($planAccess->getUserId());
+            $accounts = $this->accountRepository->getUserAccountsForBudgeting($planAccess->getUserId());
             foreach ($accounts as $account) {
-                if (!$account->isExcludedFromBudget()) {
-                    $result[$account->getId()->getValue()] = $account;
-                }
+                $result[$account->getId()->getValue()] = $account;
             }
         }
 
         $plan = $this->planRepository->get($planId);
-        $accounts = $this->accountRepository->getUserAccounts($plan->getOwnerUserId());
+        $accessUserId[$plan->getOwnerUserId()->getValue()] = $plan->getOwnerUserId();
+        $accounts = $this->accountRepository->getUserAccountsForBudgeting($plan->getOwnerUserId());
         foreach ($accounts as $account) {
+            if (!isset($accessUserId[$account->getUserId()->getValue()])) {
+                continue;
+            }
+
             $result[$account->getId()->getValue()] = $account;
         }
 

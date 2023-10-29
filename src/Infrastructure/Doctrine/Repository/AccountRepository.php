@@ -125,6 +125,10 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
 
     public function getAccountsBalancesOnDate(array $accountIds, DateTimeInterface $date): array
     {
+        if ($accountIds === []) {
+            return [];
+        }
+
         $parameters = [];
         foreach ($accountIds as $accountId) {
             $parameters[] = $accountId->getValue();
@@ -163,5 +167,18 @@ SQL;
         $rsm->addScalarResult('balance', 'balance', 'float');
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
         return $query->getResult();
+    }
+
+    public function getUserAccountsForBudgeting(Id $userId): array
+    {
+        $builder = $this->createQueryBuilder('a');
+        return $builder
+            ->select('a')
+            ->where('a.user = :user')
+            ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId))
+            ->andWhere('a.isDeleted = false')
+            ->andWhere('a.isExcludedFromBudget = false')
+            ->getQuery()
+            ->getResult();
     }
 }

@@ -46,11 +46,14 @@ readonly class PlanBalanceService
     public function getBalance(Id $planId, DateTimeInterface $periodStart, DateTimeInterface $periodEnd): array
     {
         $accounts = $this->planAccountsService->getAvailableAccountsForPlanId($planId);
-        $currencies = $this->planAccountsService->getAvailableCurrencyIdsForPlanId($planId);
+        $currencies = [];
         $accountIds = [];
         foreach ($accounts as $account) {
-            $accountIds[] = $account->getId();
+            $accountIds[$account->getId()->getValue()] = $account->getId();
+            $currencies[$account->getCurrencyId()->getValue()] = $account->getCurrencyId();
         }
+        $accountIds = array_values($accountIds);
+        $currencies = array_values($currencies);
 
         $currentDateTime = $this->datetimeService->getCurrentDatetime();
         if ($periodStart < $currentDateTime) {
