@@ -51,7 +51,9 @@ readonly class PlanAccountsService
             $result[$account->getId()->getValue()] = $account;
         }
 
-        return array_values($result);
+        $result = array_values($result);
+        usort($result, fn (Account $a, Account $b) => $a->getBalance() <=> $b->getBalance());
+        return array_reverse($result);
     }
 
     /**

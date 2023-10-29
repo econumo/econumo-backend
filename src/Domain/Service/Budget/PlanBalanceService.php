@@ -106,6 +106,7 @@ readonly class PlanBalanceService
             }
             $balanceData[$item['currency_id']] += (float)$item['balance'];
         }
+        arsort($balanceData, SORT_NUMERIC);
 
         return $balanceData;
     }
