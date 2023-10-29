@@ -394,7 +394,7 @@ $data = <<<'JSON'
     "type": 0,
     "position": 12,
     "name": "Empty envelope",
-    "icon": "empty",
+    "icon": "factory",
     "created_at": "2023-10-15 02:23:32",
     "updated_at": "2023-10-23 03:28:11"
   }
