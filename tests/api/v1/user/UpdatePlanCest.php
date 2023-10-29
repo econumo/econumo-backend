@@ -18,7 +18,7 @@ class UpdatePlanCest
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, ['value' => '05c8f3e1-d77f-4b37-b2ca-0fc5f0f0c7a9']);
+        $I->sendPOST($this->url, ['value' => '3a6d84be-d074-4a14-ab9a-86dfb083c91d']);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
 
@@ -37,7 +37,7 @@ class UpdatePlanCest
      */
     public function requestShouldReturn401ResponseCode(ApiTester $I): void
     {
-        $I->sendPOST($this->url, ['value' => '05c8f3e1-d77f-4b37-b2ca-0fc5f0f0c7a9']);
+        $I->sendPOST($this->url, ['value' => '3a6d84be-d074-4a14-ab9a-86dfb083c91d']);
         $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
     }
 
@@ -47,7 +47,7 @@ class UpdatePlanCest
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, ['value' => '05c8f3e1-d77f-4b37-b2ca-0fc5f0f0c7a9']);
+        $I->sendPOST($this->url, ['value' => '3a6d84be-d074-4a14-ab9a-86dfb083c91d']);
         $I->seeResponseMatchesJsonType([
             'data' => [
                 'user' => $I->getCurrentUserDtoJsonType(),

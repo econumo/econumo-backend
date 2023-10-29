@@ -37,6 +37,14 @@ $data = <<<'JSON'
   {
     "id": "62ccc225-b141-42a4-8063-825c8b72d135",
     "plan_id": "bceed17e-d492-40be-921a-e7fa6f663fa6",
+    "name": "Created folder",
+    "position": 2,
+    "created_at": "2023-10-15 02:23:32",
+    "updated_at": "2023-10-15 02:23:32"
+  },
+  {
+    "id": "860f0c50-bb33-42c1-955d-b3ce112462b8",
+    "plan_id": "16c88ac2-b548-4446-9e27-51a28156b299",
     "name": "Empty folder",
     "position": 2,
     "created_at": "2023-10-15 02:23:32",

@@ -14,12 +14,11 @@ class UpdatePlanCest
 
     /**
      * @throws ModuleException
-     * @skip
      */
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, ['id' => 'bceed17e-d492-40be-921a-e7fa6f663fa6', 'name' => 'Super']);
+        $I->sendPOST($this->url, ['id' => '3a6d84be-d074-4a14-ab9a-86dfb083c91d', 'name' => 'Super']);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
 
@@ -38,7 +37,7 @@ class UpdatePlanCest
      */
     public function requestShouldReturn401ResponseCode(ApiTester $I): void
     {
-        $I->sendPOST($this->url, ['id' => 'bceed17e-d492-40be-921a-e7fa6f663fa6', 'name' => 'Super']);
+        $I->sendPOST($this->url, ['id' => '3a6d84be-d074-4a14-ab9a-86dfb083c91d', 'name' => 'Super']);
         $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
     }
 
@@ -48,18 +47,17 @@ class UpdatePlanCest
     public function requestShouldReturn403ResponseCode(ApiTester $I): void
     {
         $I->amAuthenticatedAsSansa();
-        $I->sendPOST($this->url, ['id' => 'bceed17e-d492-40be-921a-e7fa6f663fa6', 'name' => 'Super']);
+        $I->sendPOST($this->url, ['id' => '3a6d84be-d074-4a14-ab9a-86dfb083c91d', 'name' => 'Super']);
         $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
     }
 
     /**
      * @throws ModuleException
-     * @skip
      */
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, ['id' => 'bceed17e-d492-40be-921a-e7fa6f663fa6', 'name' => 'Super']);
+        $I->sendPOST($this->url, ['id' => '3a6d84be-d074-4a14-ab9a-86dfb083c91d', 'name' => 'Super']);
         $I->seeResponseCodeIs(HttpCode::OK);
         $I->seeResponseMatchesJsonType([
             'data' => [

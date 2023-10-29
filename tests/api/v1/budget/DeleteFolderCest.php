@@ -18,7 +18,7 @@ class DeleteFolderCest
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, ['id' => '62ccc225-b141-42a4-8063-825c8b72d135']);
+        $I->sendPOST($this->url, ['id' => '860f0c50-bb33-42c1-955d-b3ce112462b8']);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
 
@@ -37,7 +37,7 @@ class DeleteFolderCest
      */
     public function requestShouldReturn401ResponseCode(ApiTester $I): void
     {
-        $I->sendPOST($this->url, ['id' => '62ccc225-b141-42a4-8063-825c8b72d135']);
+        $I->sendPOST($this->url, ['id' => '860f0c50-bb33-42c1-955d-b3ce112462b8']);
         $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
     }
 
@@ -47,7 +47,7 @@ class DeleteFolderCest
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, ['id' => '62ccc225-b141-42a4-8063-825c8b72d135']);
+        $I->sendPOST($this->url, ['id' => '860f0c50-bb33-42c1-955d-b3ce112462b8']);
         $I->seeResponseMatchesJsonType(['data' => [],]);
     }
 
