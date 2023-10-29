@@ -50,7 +50,7 @@ class GetPlanCest
         $I->sendGET($this->url, ['id' => 'bceed17e-d492-40be-921a-e7fa6f663fa6']);
         $I->seeResponseMatchesJsonType([
             'data' => [
-                'item' => $I->geDetailedPlanDtoJsonType(),
+                'item' => $I->getDetailedPlanDtoJsonType(),
             ],
         ]);
         $I->seeResponseMatchesJsonType($I->getCurrencyDtoJsonType(), '$.data.item.currencies[0]');
