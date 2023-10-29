@@ -574,4 +574,38 @@ readonly class EnvelopeService implements EnvelopeServiceInterface
             throw $e;
         }
     }
+
+    public function copyEnvelopePlan(Id $planId, DateTimeInterface $fromPeriod, DateTimeInterface $toPeriod): void
+    {
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
+        try {
+            $toEnvelopeBudgets = $this->envelopeBudgetRepository->getByPlanIdAndPeriod($planId, $toPeriod);
+            foreach ($toEnvelopeBudgets as $toEnvelopeBudget) {
+                $this->envelopeBudgetRepository->delete($toEnvelopeBudget);
+            }
+
+            $envelopeBudgets = [];
+            $fromEnvelopeBudgets = $this->envelopeBudgetRepository->getByPlanIdAndPeriod($planId, $fromPeriod);
+            foreach ($fromEnvelopeBudgets as $fromEnvelopeBudget) {
+                try {
+                    $toEnvelopeBudget = $this->envelopeBudgetRepository->getByEnvelopeIdAndPeriod(
+                        $fromEnvelopeBudget->getEnvelope()->getId(),
+                        $toPeriod
+                    );
+                } catch (NotFoundException) {
+                    $toEnvelopeBudget = $this->envelopeBudgetFactory->create(
+                        $fromEnvelopeBudget->getEnvelope()->getId(),
+                        $toPeriod,
+                        $fromEnvelopeBudget->getAmount()
+                    );
+                }
+                $envelopeBudgets[$toEnvelopeBudget->getId()->getValue()] = $toEnvelopeBudget;
+            }
+            $this->envelopeBudgetRepository->save($envelopeBudgets);
+            $this->antiCorruptionService->commit(__METHOD__);
+        } catch (Throwable $e) {
+            $this->antiCorruptionService->rollback(__METHOD__);
+            throw $e;
+        }
+    }
 }

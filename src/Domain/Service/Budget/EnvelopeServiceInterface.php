@@ -99,4 +99,6 @@ interface EnvelopeServiceInterface
         array $tagsIds,
         ?Id $folderId
     ): Id;
+
+    public function copyEnvelopePlan(Id $planId, DateTimeInterface $fromPeriod, DateTimeInterface $toPeriod): void;
 }

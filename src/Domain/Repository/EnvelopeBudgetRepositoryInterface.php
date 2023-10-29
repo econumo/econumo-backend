@@ -6,12 +6,19 @@ namespace App\Domain\Repository;
 
 use App\Domain\Entity\EnvelopeBudget;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Exception\NotFoundException;
 use DateTimeInterface;
 
 interface EnvelopeBudgetRepositoryInterface
 {
     public function getNextIdentity(): Id;
 
+    /**
+     * @param Id $envelopeId
+     * @param DateTimeInterface $period
+     * @return EnvelopeBudget
+     * @throws NotFoundException
+     */
     public function getByEnvelopeIdAndPeriod(Id $envelopeId, DateTimeInterface $period): EnvelopeBudget;
 
     /**
