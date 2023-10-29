@@ -397,18 +397,24 @@ readonly class PlanService implements PlanServiceInterface
     private function getAvailableCurrencyIdsForUserId(Id $userId): array
     {
         $result = [];
+        $user = $this->userRepository->get($userId);
+        $userCurrency = $this->currencyRepository->getByCode($user->getCurrency());
+        $result[] = $userCurrency->getId();
+
+        $accountCurrencies = [$userCurrency->getId()->getValue() => $userCurrency->getId()];
         $accounts = $this->accountRepository->getUserAccounts($userId);
         foreach ($accounts as $account) {
-            $result[$account->getCurrencyId()->getValue()] = $account->getCurrencyId();
+            $accountCurrencies[$account->getCurrencyId()->getValue()] = $account->getCurrencyId();
         }
 
-        if (!count($result)) {
-            $user = $this->userRepository->get($userId);
-            $userCurrency = $this->currencyRepository->getByCode($user->getCurrency());
-            $result[$userCurrency->getId()->getValue()] = $userCurrency->getId();
+        foreach ($accountCurrencies as $accountCurrency) {
+            if ($accountCurrency->isEqual($userCurrency->getId())) {
+                continue;
+            }
+            $result[] = $accountCurrency;
         }
 
-        return array_values($result);
+        return $result;
     }
 
     public function getPlanData(

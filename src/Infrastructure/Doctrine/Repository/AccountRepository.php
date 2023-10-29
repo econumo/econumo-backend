@@ -92,6 +92,7 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
                 $builder->expr()->eq('aa.user', ':user'),
             ))
             ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId))
+            ->andWhere('a.isDeleted = false')
             ->getQuery()
             ->getResult();
     }
