@@ -45,10 +45,9 @@ readonly class PlanBalanceService
      */
     public function getBalance(Id $planId, DateTimeInterface $periodStart, DateTimeInterface $periodEnd): array
     {
-        $accounts = $this->planAccountsService->getAvailableAccountsForPlanId($planId);
         $currencies = [];
         $accountIds = [];
-        foreach ($accounts as $account) {
+        foreach ($this->planAccountsService->getAvailableAccountsForPlanId($planId) as $account) {
             $accountIds[$account->getId()->getValue()] = $account->getId();
             $currencies[$account->getCurrencyId()->getValue()] = $account->getCurrencyId();
         }
@@ -75,12 +74,18 @@ readonly class PlanBalanceService
         }
 
         $result = [];
-        foreach ($startBalanceData as $currencyId => $value) {
-            $dto = new PlanDataBalanceDto();
-            $dto->currencyId = new Id($currencyId);
-            $dto->startBalance = $value === null ? null : (float)$value;
-            $dto->endBalance = $endBalanceData[$currencyId] === null ? null : (float)$endBalanceData[$currencyId];
-            $result[] = $dto;
+        foreach ($currencies as $currencyId) {
+            foreach ($startBalanceData as $startBalanceCurrencyId => $value) {
+                if ($currencyId->getValue() !== $startBalanceCurrencyId) {
+                    continue;
+                }
+
+                $dto = new PlanDataBalanceDto();
+                $dto->currencyId = new Id($startBalanceCurrencyId);
+                $dto->startBalance = $value === null ? null : (float)$value;
+                $dto->endBalance = $endBalanceData[$startBalanceCurrencyId] === null ? null : (float)$endBalanceData[$startBalanceCurrencyId];
+                $result[] = $dto;
+            }
         }
 
         return $result;
