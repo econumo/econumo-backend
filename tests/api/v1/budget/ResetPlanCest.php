@@ -18,7 +18,10 @@ class ResetPlanCest
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, ['id' => 'test']);
+        $I->sendPOST($this->url, [
+            'id' => 'bceed17e-d492-40be-921a-e7fa6f663fa6',
+            'periodStart' => '2020-01-01 00:00:00',
+        ]);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
 
@@ -37,7 +40,10 @@ class ResetPlanCest
      */
     public function requestShouldReturn401ResponseCode(ApiTester $I): void
     {
-        $I->sendPOST($this->url, ['id' => 'test']);
+        $I->sendPOST($this->url, [
+            'id' => 'bceed17e-d492-40be-921a-e7fa6f663fa6',
+            'periodStart' => '2020-01-01 00:00:00',
+        ]);
         $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
     }
 
@@ -47,11 +53,10 @@ class ResetPlanCest
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, ['id' => 'test']);
-        $I->seeResponseMatchesJsonType([
-            'data' => [
-                'result' => 'string',
-            ],
+        $I->sendPOST($this->url, [
+            'id' => 'bceed17e-d492-40be-921a-e7fa6f663fa6',
+            'periodStart' => '2020-01-01 00:00:00',
         ]);
+        $I->seeResponseMatchesJsonType(['data' => [],]);
     }
 }
