@@ -277,7 +277,7 @@ class Api extends \Codeception\Module
         ];
     }
 
-    public function geDetailedPlanDtoJsonType(): array
+    public function getDetailedPlanDtoJsonType(): array
     {
         return [
             'id' => 'string',
@@ -291,6 +291,76 @@ class Api extends \Codeception\Module
             'categories' => 'array',
             'tags' => 'array',
             'sharedAccess' => 'array',
+        ];
+    }
+
+    public function getPlanDataDtoJsonType(): array
+    {
+        return [
+            'periodStart' => 'string',
+            'periodEnd' => 'string',
+            'balances' => 'array',
+            'exchanges' => 'array',
+            'currencyRates' => 'array',
+            'envelopes' => 'array',
+            'categories' => 'array',
+            'tags' => 'array',
+        ];
+    }
+
+    public function getPlanDataBalanceDtoJsonType(): array
+    {
+        return [
+            'currencyId' => 'string',
+            'startBalance' => 'float|integer|null',
+            'endBalance' => 'float|integer|null',
+            'currentBalance' => 'float|integer|null'
+        ];
+    }
+
+    public function getPlanDataExchangeDtoJsonType(): array
+    {
+        return [
+            'currencyId' => 'string',
+            'budget' => 'float|integer',
+            'amount' => 'float|integer',
+        ];
+    }
+
+    public function getPlanDataCurrencyRateDtoJsonType(): array
+    {
+        return [
+            'currencyId' => 'string',
+            'baseCurrencyId' => 'string',
+            'rate' => 'float',
+            'date' => 'string'
+        ];
+    }
+
+    public function getPlanDataEnvelopeDtoJsonType(): array
+    {
+        return [
+            'id' => 'string',
+            'budget' => 'float|integer',
+            'available' => 'float|integer|null'
+        ];
+    }
+
+    public function getPlanDataCategoryDtoJsonType(): array
+    {
+        return [
+            'id' => 'string',
+            'currencyId' => 'string',
+            'amount' => 'float|integer'
+        ];
+    }
+
+    public function getPlanDataTagDtoJsonType(): array
+    {
+        return [
+            'id' => 'string',
+            'currencyId' => 'string',
+            'amount' => 'float|integer'
         ];
     }
 }
