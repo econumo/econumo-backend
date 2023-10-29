@@ -175,8 +175,14 @@ readonly class PlanService implements PlanServiceInterface
                     $this->revokeAccess($planId, $item->getUserId());
                 }
                 $this->planRepository->delete($plan);
-                // todo fix
-//                $this->updateUserDefaultPlanWhenDeleted($userId, $planId);
+                $plans = $this->planRepository->getAvailableForUserId($userId);
+                if (count($plans) > 0) {
+                    $this->userService->updateDefaultPlan($userId, $plans[0]->getId());
+                } else {
+                    $user = $this->userRepository->get($userId);
+                    $user->updateDefaultPlan(null);
+                    $this->userRepository->save([$user]);
+                }
             } else {
                 $this->revokeAccess($planId, $userId);
                 try {
