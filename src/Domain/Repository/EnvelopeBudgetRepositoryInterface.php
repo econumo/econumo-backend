@@ -26,6 +26,8 @@ interface EnvelopeBudgetRepositoryInterface
      */
     public function getByPlanIdAndPeriod(Id $planId, DateTimeInterface $period): array;
 
+    public function deleteByPlanId(Id $planId): void;
+
     /**
      * @param Id $planId
      * @param DateTimeInterface $period

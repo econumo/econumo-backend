@@ -21,6 +21,7 @@ use App\Domain\Factory\PlanFactoryInterface;
 use App\Domain\Factory\PlanOptionsFactoryInterface;
 use App\Domain\Repository\AccountRepositoryInterface;
 use App\Domain\Repository\CurrencyRepositoryInterface;
+use App\Domain\Repository\EnvelopeBudgetRepositoryInterface;
 use App\Domain\Repository\EnvelopeRepositoryInterface;
 use App\Domain\Repository\PlanAccessRepositoryInterface;
 use App\Domain\Repository\PlanFolderRepositoryInterface;
@@ -39,6 +40,7 @@ use App\Domain\Service\Dto\PlanDataTagDto;
 use App\Domain\Service\Dto\PlanDto;
 use App\Domain\Service\UserServiceInterface;
 use DateTime;
+use DateTimeImmutable;
 use DateTimeInterface;
 use Throwable;
 
@@ -67,6 +69,7 @@ readonly class PlanService implements PlanServiceInterface
         private CurrencyRepositoryInterface $currencyRepository,
         private PlanBalanceService $planBalanceService,
         private PlanReportService $planReportService,
+        private EnvelopeBudgetRepositoryInterface $envelopeBudgetRepository,
     ) {
     }
 
@@ -489,5 +492,20 @@ readonly class PlanService implements PlanServiceInterface
         }
 
         return $result;
+    }
+
+    public function resetPlan(Id $planId, DateTimeImmutable $periodStart): void
+    {
+        $plan = $this->planRepository->get($planId);
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
+        try {
+            $this->envelopeBudgetRepository->deleteByPlanId($plan->getId());
+            $plan->updateStartDate($periodStart);
+            $this->planRepository->save([$plan]);
+            $this->antiCorruptionService->commit(__METHOD__);
+        } catch (Throwable $e) {
+            $this->antiCorruptionService->rollback(__METHOD__);
+            throw $e;
+        }
     }
 }

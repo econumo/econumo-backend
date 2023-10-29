@@ -61,7 +61,7 @@ class EnvelopeBudgetRepository extends ServiceEntityRepository implements Envelo
             }
 
             $this->getEntityManager()->flush();
-        } catch (ORMException | ORMInvalidArgumentException $e) {
+        } catch (ORMException|ORMInvalidArgumentException $e) {
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
     }
@@ -98,8 +98,7 @@ class EnvelopeBudgetRepository extends ServiceEntityRepository implements Envelo
             ->where('eb.period = :period')
             ->setParameter('period', $period)
             ->andWhere('e.plan = :plan')
-            ->setParameter('plan', $this->getEntityManager()->getReference(Plan::class, $planId))
-        ;
+            ->setParameter('plan', $this->getEntityManager()->getReference(Plan::class, $planId));
 
         return $dateBuilder->getQuery()->getResult();
     }
@@ -108,7 +107,7 @@ class EnvelopeBudgetRepository extends ServiceEntityRepository implements Envelo
     {
         $planIdString = $planId->getValue();
         $periodString = $period->format('Y-m-d H:i:s');
-        $sql =<<<SQL
+        $sql = <<<SQL
 SELECT e.id as envelope_id, COALESCE(SUM(eb.amount), 0) as budget FROM envelopes e
 LEFT JOIN plans p ON e.plan_id = p.id
 LEFT JOIN envelope_budgets eb ON e.id = eb.envelope_id AND eb.period >= p.start_date AND eb.period < '{$periodString}'
@@ -121,5 +120,18 @@ SQL;
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
         $result = $query->getResult();
         return array_column($result, null, 'envelope_id');
+    }
+
+    public function deleteByPlanId(Id $planId): void
+    {
+        $planIdString = $planId->getValue();
+        $sql = <<<SQL
+DELETE FROM envelope_budgets eb 
+USING envelopes e 
+WHERE eb.envelope_id = e.id AND e.plan_id = '{$planIdString}';
+SQL;
+        $rsm = new ResultSetMapping();
+        $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
+        $query->execute();
     }
 }

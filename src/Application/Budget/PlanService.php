@@ -21,6 +21,10 @@ use App\Application\Budget\Assembler\UpdatePlanV1ResultAssembler;
 use App\Application\Budget\Dto\GetPlanV1RequestDto;
 use App\Application\Budget\Dto\GetPlanV1ResultDto;
 use App\Application\Budget\Assembler\GetPlanV1ResultAssembler;
+use App\Application\Budget\Dto\ResetPlanV1RequestDto;
+use App\Application\Budget\Dto\ResetPlanV1ResultDto;
+use App\Application\Budget\Assembler\ResetPlanV1ResultAssembler;
+use DateTimeImmutable;
 
 readonly class PlanService
 {
@@ -30,9 +34,9 @@ readonly class PlanService
         private DeletePlanV1ResultAssembler $deletePlanV1ResultAssembler,
         private UpdatePlanV1ResultAssembler $updatePlanV1ResultAssembler,
         private PlanAccessServiceInterface $planAccessService,
-        private GetPlanV1ResultAssembler $getPlanV1ResultAssembler
-    )
-    {
+        private GetPlanV1ResultAssembler $getPlanV1ResultAssembler,
+        private ResetPlanV1ResultAssembler $resetPlanV1ResultAssembler,
+    ) {
     }
 
     public function createPlan(
@@ -79,5 +83,22 @@ readonly class PlanService
 
         $plan = $this->planService->getPlan($planId);
         return $this->getPlanV1ResultAssembler->assemble($dto, $plan, $userId);
+    }
+
+    public function resetPlan(
+        ResetPlanV1RequestDto $dto,
+        Id $userId
+    ): ResetPlanV1ResultDto {
+        $planId = new Id($dto->id);
+        if (!$this->planAccessService->canReadPlan($userId, $planId)) {
+            throw new AccessDeniedException();
+        }
+
+        $periodStart = DateTimeImmutable::createFromFormat(
+            'Y-m-d H:i:s',
+            DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dto->periodStart)->format('Y-m-01 00:00:00')
+        );
+        $this->planService->resetPlan($planId, $periodStart);
+        return $this->resetPlanV1ResultAssembler->assemble($dto);
     }
 }

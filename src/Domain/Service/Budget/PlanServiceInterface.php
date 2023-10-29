@@ -14,6 +14,7 @@ use App\Domain\Entity\ValueObject\UserRole;
 use App\Domain\Service\Dto\PlanDataDto;
 use App\Domain\Service\Dto\PlanDto;
 use App\Domain\Service\Dto\PositionDto;
+use DateTimeImmutable;
 use DateTimeInterface;
 
 interface PlanServiceInterface
@@ -47,4 +48,6 @@ interface PlanServiceInterface
      * @return PlanDataDto[]
      */
     public function getPlanData(Id $planId, PlanPeriodType $periodType, DateTimeInterface $periodStart, int $numberOfPeriods): array;
+
+    public function resetPlan(Id $planId, DateTimeImmutable $periodStart): void;
 }
