@@ -28,7 +28,7 @@ return [
     [
         'id' => '3798a279-c4b5-4488-bada-16c31d41f6a6',
         'user_id' => '48044d88-5081-11ec-bf63-0242ac130002',
-        'name' => 'Margo Accounts',
+        'name' => 'Sansa Accounts',
         'position' => 0,
         'created_at' => '2021-12-16 19:00:00',
         'updated_at' => '2021-12-16 19:00:00',

@@ -16,7 +16,7 @@ class LoginUserCest
 //     */
 //    public function requestShouldReturn200ResponseCode(ApiTester $I): void
 //    {
-//        $I->sendPOST($this->url, ['username' => 'john@snow.test', 'password' => 'pass',]);
+//        $I->sendPOST($this->url, ['username' => 'john@econumo.test', 'password' => 'pass',]);
 //        $I->seeResponseCodeIs(HttpCode::OK);
 //    }
 //
@@ -25,7 +25,7 @@ class LoginUserCest
 //     */
 //    public function requestShouldReturn400ResponseCode(ApiTester $I): void
 //    {
-//        $I->sendPOST($this->url, ['username' => 'john@snow.test', 'password' => 'pass', 'id' => 'test',]);
+//        $I->sendPOST($this->url, ['username' => 'john@econumo.test', 'password' => 'pass', 'id' => 'test',]);
 //        $I->seeResponseCodeIs(HttpCode::BAD_REQUEST);
 //    }
 //
@@ -34,7 +34,7 @@ class LoginUserCest
 //     */
 //    public function requestShouldReturn401ResponseCode(ApiTester $I): void
 //    {
-//        $I->sendPOST($this->url, ['username' => 'john@snow.test', 'password' => 'wrong',]);
+//        $I->sendPOST($this->url, ['username' => 'john@econumo.test', 'password' => 'wrong',]);
 //        $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
 //    }
 //
@@ -43,7 +43,7 @@ class LoginUserCest
 //     */
 //    public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
 //    {
-//        $I->sendPOST($this->url, ['username' => 'john@snow.test', 'password' => 'pass',]);
+//        $I->sendPOST($this->url, ['username' => 'john@econumo.test', 'password' => 'pass',]);
 //        $I->seeResponseMatchesJsonType([
 //            'token' => 'string',
 //            'user' => $I->getCurrentUserDtoJsonType(),

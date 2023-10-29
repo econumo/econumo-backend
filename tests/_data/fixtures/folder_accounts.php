@@ -26,7 +26,7 @@ return [
         'account_id' => 'a62c06a0-d2b5-4564-a09b-703912c01481',
     ],
     [
-        'folder_id' => '3798a279-c4b5-4488-bada-16c31d41f6a6', // Margo Accounts
+        'folder_id' => '3798a279-c4b5-4488-bada-16c31d41f6a6', // Sansa Accounts
         'account_id' => '99ff78ec-5081-11ec-bf63-0242ac130002',
     ],
 ];

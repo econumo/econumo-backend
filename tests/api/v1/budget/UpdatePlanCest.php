@@ -47,7 +47,7 @@ class UpdatePlanCest
      */
     public function requestShouldReturn403ResponseCode(ApiTester $I): void
     {
-        $I->amAuthenticatedAsMargo();
+        $I->amAuthenticatedAsSansa();
         $I->sendPOST($this->url, ['id' => 'bceed17e-d492-40be-921a-e7fa6f663fa6', 'name' => 'Super']);
         $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
     }

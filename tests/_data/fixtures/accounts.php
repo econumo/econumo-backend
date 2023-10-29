@@ -12,7 +12,8 @@ $data = <<<'JSON'
     "created_at": "2021-08-12 19:43:09",
     "updated_at": "2021-08-12 19:43:09",
     "icon": "credit_card",
-    "is_deleted": 0
+    "is_deleted": 0,
+    "is_excluded_from_budget": 0
   },
   {
     "id": "a62c06a0-d2b5-4564-a09b-703912c01481",
@@ -24,11 +25,12 @@ $data = <<<'JSON'
     "created_at": "2021-08-12 19:43:09",
     "updated_at": "2021-08-12 19:43:09",
     "icon": "account_balance_wallet",
-    "is_deleted": 0
+    "is_deleted": 0,
+    "is_excluded_from_budget": 0
   },
   {
     "id": "99ff78ec-5081-11ec-bf63-0242ac130002",
-    "name": "Margo cash",
+    "name": "Sansa cash",
     "currency_id": "fe5d9269-b69c-4841-9c04-136225447eca",
     "balance": 1000.01,
     "type": 1,
@@ -36,7 +38,8 @@ $data = <<<'JSON'
     "created_at": "2021-10-12 19:43:09",
     "updated_at": "2021-10-12 19:43:09",
     "icon": "account_balance_wallet",
-    "is_deleted": 0
+    "is_deleted": 0,
+    "is_excluded_from_budget": 0
   },
   {
     "id": "5f3834d1-34e8-4f60-a697-004e63854513",
@@ -48,7 +51,8 @@ $data = <<<'JSON'
     "created_at": "2021-08-12 19:43:09",
     "updated_at": "2021-08-12 19:43:09",
     "icon": "account_balance_wallet",
-    "is_deleted": 0
+    "is_deleted": 0,
+    "is_excluded_from_budget": 0
   },
   {
     "id": "4eec1ee6-1992-4222-b9ab-31ece5eaad5d",
@@ -60,7 +64,8 @@ $data = <<<'JSON'
     "created_at": "2021-08-12 19:43:09",
     "updated_at": "2021-08-12 19:43:09",
     "icon": "account_balance",
-    "is_deleted": 0
+    "is_deleted": 0,
+    "is_excluded_from_budget": 0
   },
   {
     "id": "6c7b8af8-2f8a-4d6b-855c-ca6ff26952ff",
@@ -72,7 +77,8 @@ $data = <<<'JSON'
     "created_at": "2021-08-12 19:43:09",
     "updated_at": "2021-08-12 19:43:09",
     "icon": "credit_card",
-    "is_deleted": 0
+    "is_deleted": 0,
+    "is_excluded_from_budget": 0
   }
 ]
 JSON;

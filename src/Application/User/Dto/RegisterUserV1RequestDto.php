@@ -14,7 +14,7 @@ use OpenApi\Annotations as OA;
 class RegisterUserV1RequestDto
 {
     /**
-     * @OA\Property(example="john@snow.test")
+     * @OA\Property(example="john@econumo.test")
      */
     public string $email;
 

@@ -29,7 +29,7 @@ class CurrentUserResultDto
     /**
      * User e-mail
      * @var string
-     * @OA\Property(example="john@snow.test")
+     * @OA\Property(example="john@econumo.test")
      */
     public string $email;
 

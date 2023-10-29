@@ -11,26 +11,10 @@ $data = <<<'JSON'
     "updated_at": "2021-08-12 19:43:09"
   },
   {
-    "id": "432439ed-525f-485a-831c-0929b354560d",
-    "user_id": "77be9577-147b-4f05-9aa7-91d9b159de5b",
-    "name": "currency",
-    "value": "USD",
-    "created_at": "2021-10-07 12:22:18",
-    "updated_at": "2021-10-07 12:22:18"
-  },
-  {
     "id": "541c5dd4-2db1-49c0-9dae-8820cd22b330",
     "user_id": "77be9577-147b-4f05-9aa7-91d9b159de5b",
     "name": "report_period",
     "value": "monthly",
-    "created_at": "2021-08-12 19:43:09",
-    "updated_at": "2021-08-12 19:43:09"
-  },
-  {
-    "id": "0fb1c5cd-9ab5-4b4f-939e-59a214346658",
-    "user_id": "77be9577-147b-4f05-9aa7-91d9b159de5b",
-    "name": "default_plan",
-    "value": "229f97a8-e9c9-4d45-8405-91b7f315f014",
     "created_at": "2021-08-12 19:43:09",
     "updated_at": "2021-08-12 19:43:09"
   },
@@ -73,6 +57,22 @@ $data = <<<'JSON'
     "value": "RUB",
     "created_at": "2021-08-12 19:43:09",
     "updated_at": "2023-10-15 04:36:22"
+  },
+  {
+    "id": "0fb1c5cd-9ab5-4b4f-939e-59a214346658",
+    "user_id": "77be9577-147b-4f05-9aa7-91d9b159de5b",
+    "name": "default_plan",
+    "value": "bceed17e-d492-40be-921a-e7fa6f663fa6",
+    "created_at": "2021-08-12 19:43:09",
+    "updated_at": "2023-10-29 04:47:47"
+  },
+  {
+    "id": "432439ed-525f-485a-831c-0929b354560d",
+    "user_id": "77be9577-147b-4f05-9aa7-91d9b159de5b",
+    "name": "currency",
+    "value": "RUB",
+    "created_at": "2021-10-07 12:22:18",
+    "updated_at": "2023-10-29 04:48:13"
   }
 ]
 JSON;

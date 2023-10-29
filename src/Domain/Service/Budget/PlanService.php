@@ -236,17 +236,24 @@ readonly class PlanService implements PlanServiceInterface
             $this->planAccessRepository->delete($access);
             $this->updateUserDefaultPlanWhenDeleted($sharedUserId, $planId);
 
+            $envelopesToDelete = [];
             $envelopes = $this->envelopeRepository->getByPlanId($planId);
             $changedEnvelopes = [];
             foreach ($envelopes as $envelope) {
                 foreach ($envelope->getCategories() as $category) {
                     if ($category->getUserId()->isEqual($sharedUserId)) {
+                        if ($envelope->isCategoryConnected()) {
+                            $envelopesToDelete[$envelope->getId()->getValue()] = $envelope;
+                        }
                         $envelope->removeCategory($category);
                         $changedEnvelopes[$envelope->getId()->getValue()] = $envelope;
                     }
                 }
                 foreach ($envelope->getTags() as $tag) {
                     if ($tag->getUserId()->isEqual($sharedUserId)) {
+                        if ($envelope->isTagConnected()) {
+                            $envelopesToDelete[$envelope->getId()->getValue()] = $envelope;
+                        }
                         $envelope->removeTag($tag);
                         $changedEnvelopes[$envelope->getId()->getValue()] = $envelope;
                     }
@@ -254,6 +261,9 @@ readonly class PlanService implements PlanServiceInterface
             }
             if (count($changedEnvelopes) > 0) {
                 $this->envelopeRepository->save($changedEnvelopes);
+            }
+            foreach ($envelopesToDelete as $envelope) {
+                $this->envelopeRepository->delete($envelope);
             }
 
             $this->antiCorruptionService->commit(__METHOD__);
@@ -353,7 +363,7 @@ readonly class PlanService implements PlanServiceInterface
         foreach ($planAccess as $item) {
             if ($item->isAccepted()) {
                 foreach ($this->accountRepository->getUserAccounts($item->getUserId()) as $account) {
-                    if ($account->isExcludedFromBudgeting()) {
+                    if ($account->isExcludedFromBudget()) {
                         continue;
                     }
                     if (!in_array($account->getCurrencyId(), $dto->currencies)) {
@@ -363,7 +373,7 @@ readonly class PlanService implements PlanServiceInterface
             }
         }
         foreach ($this->accountRepository->getUserAccounts($plan->getOwnerUserId()) as $account) {
-            if ($account->isExcludedFromBudgeting()) {
+            if ($account->isExcludedFromBudget()) {
                 continue;
             }
             if (!in_array($account->getCurrencyId(), $dto->currencies)) {

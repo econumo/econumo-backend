@@ -13,14 +13,14 @@ use App\Domain\Service\AntiCorruptionServiceInterface;
 use App\Domain\Service\Budget\PlanServiceInterface;
 use Throwable;
 
-class ConnectionService implements ConnectionServiceInterface
+readonly class ConnectionService implements ConnectionServiceInterface
 {
     public function __construct(
-        private readonly UserRepositoryInterface $userRepository,
-        private readonly AntiCorruptionServiceInterface $antiCorruptionService,
-        private readonly ConnectionAccountServiceInterface $connectionAccountService,
-        private readonly PlanServiceInterface $planService,
-        private readonly PlanRepositoryInterface $planRepository
+        private UserRepositoryInterface $userRepository,
+        private AntiCorruptionServiceInterface $antiCorruptionService,
+        private ConnectionAccountServiceInterface $connectionAccountService,
+        private PlanServiceInterface $planService,
+        private PlanRepositoryInterface $planRepository
     ) {
     }
 

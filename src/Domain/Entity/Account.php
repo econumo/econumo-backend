@@ -33,7 +33,8 @@ class Account
         private Currency $currency,
         private AccountType $type,
         private Icon $icon,
-        DateTimeInterface $createdAt
+        DateTimeInterface $createdAt,
+        private bool $isExcludedFromBudget = false
     ) {
         $this->balance = '0';
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
@@ -55,9 +56,9 @@ class Account
         return $this->name;
     }
 
-    public function isExcludedFromBudgeting(): bool
+    public function isExcludedFromBudget(): bool
     {
-        return false;
+        return $this->isExcludedFromBudget;
     }
 
     public function getCurrencyId(): Id
@@ -139,6 +140,14 @@ class Account
     {
         if (!$this->icon->isEqual($icon)) {
             $this->icon = $icon;
+            $this->updated();
+        }
+    }
+
+    public function updateExcludeFromBudget(bool $value): void
+    {
+        if ($this->isExcludedFromBudget !== $value) {
+            $this->isExcludedFromBudget = $value;
             $this->updated();
         }
     }

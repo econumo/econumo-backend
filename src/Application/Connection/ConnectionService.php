@@ -10,10 +10,12 @@ use App\Application\Connection\Assembler\DeleteConnectionV1ResultAssembler;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Service\Connection\ConnectionServiceInterface;
 
-class ConnectionService
+readonly class ConnectionService
 {
-    public function __construct(private readonly DeleteConnectionV1ResultAssembler $deleteConnectionV1ResultAssembler, private readonly ConnectionServiceInterface $connectionService)
-    {
+    public function __construct(
+        private DeleteConnectionV1ResultAssembler $deleteConnectionV1ResultAssembler,
+        private ConnectionServiceInterface $connectionService
+    ) {
     }
 
     public function deleteConnection(

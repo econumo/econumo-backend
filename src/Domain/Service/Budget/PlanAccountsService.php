@@ -34,7 +34,7 @@ readonly class PlanAccountsService
 
             $accounts = $this->accountRepository->getUserAccounts($planAccess->getUserId());
             foreach ($accounts as $account) {
-                if (!$account->isExcludedFromBudgeting()) {
+                if (!$account->isExcludedFromBudget()) {
                     $result[$account->getId()->getValue()] = $account;
                 }
             }
