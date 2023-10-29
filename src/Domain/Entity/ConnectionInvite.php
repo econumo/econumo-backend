@@ -6,10 +6,13 @@ namespace App\Domain\Entity;
 
 use App\Domain\Entity\ValueObject\ConnectionCode;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Traits\EntityTrait;
 use DateTime;
 
 class ConnectionInvite
 {
+    use EntityTrait;
+
     /**
      * @var string
      */

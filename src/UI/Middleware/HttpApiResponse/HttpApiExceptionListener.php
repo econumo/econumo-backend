@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\UI\Middleware\HttpApiResponse;
 
-use App\Application\Exception\AccessDeniedException;
 use App\Application\Exception\ValidationException;
+use App\Domain\Exception\AccessDeniedException as DomainAccessDeniedException;
 use App\UI\Service\Response\ResponseFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,7 +30,7 @@ class HttpApiExceptionListener
                     (int) $exception->getCode(),
                     $exception->getErrors()
                 );
-            } elseif ($exception instanceof AccessDeniedException || $exception instanceof AccessDeniedHttpException) {
+            } elseif ($exception instanceof DomainAccessDeniedException || $exception instanceof AccessDeniedHttpException) {
                 $response = ResponseFactory::createErrorResponse(
                     $event->getRequest(),
                     $exception->getMessage(),

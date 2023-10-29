@@ -6,11 +6,11 @@ namespace App\Application\User\Assembler;
 
 use App\Application\Account\Assembler\AccountToDtoV1ResultAssembler;
 use App\Application\Account\Assembler\FolderToDtoV1ResultAssembler;
-use App\Application\Category\Assembler\CategoryToDtoResultAssembler;
+use App\Application\Category\Assembler\UserCategoryToDtoResultAssembler;
 use App\Application\Currency\Assembler\CurrencyRateToDtoV1ResultAssembler;
 use App\Application\Currency\Assembler\CurrencyToDtoV1ResultAssembler;
 use App\Application\Payee\Assembler\PayeeToDtoV1ResultAssembler;
-use App\Application\Tag\Assembler\TagToDtoResultAssembler;
+use App\Application\Tag\Assembler\TagToUserTagDtoResultAssembler;
 use App\Application\Transaction\Assembler\TransactionToDtoResultAssembler;
 use App\Application\User\Dto\GetChangesListV1RequestDto;
 use App\Application\User\Dto\GetChangesListV1ResultDto;
@@ -26,7 +26,7 @@ use App\Domain\Entity\ValueObject\Id;
 
 class GetChangesListV1ResultAssembler
 {
-    public function __construct(private readonly FolderToDtoV1ResultAssembler $folderToDtoV1ResultAssembler, private readonly AccountToDtoV1ResultAssembler $accountToDtoV1ResultAssembler, private readonly CategoryToDtoResultAssembler $categoryToDtoResultAssembler, private readonly TagToDtoResultAssembler $tagToDtoResultAssembler, private readonly PayeeToDtoV1ResultAssembler $payeeToDtoV1ResultAssembler, private readonly CurrencyToDtoV1ResultAssembler $currencyToDtoV1ResultAssembler, private readonly CurrencyRateToDtoV1ResultAssembler $currencyRateToDtoV1ResultAssembler, private readonly TransactionToDtoResultAssembler $transactionToDtoResultAssembler)
+    public function __construct(private readonly FolderToDtoV1ResultAssembler $folderToDtoV1ResultAssembler, private readonly AccountToDtoV1ResultAssembler $accountToDtoV1ResultAssembler, private readonly UserCategoryToDtoResultAssembler $categoryToDtoResultAssembler, private readonly TagToUserTagDtoResultAssembler $tagToDtoResultAssembler, private readonly PayeeToDtoV1ResultAssembler $payeeToDtoV1ResultAssembler, private readonly CurrencyToDtoV1ResultAssembler $currencyToDtoV1ResultAssembler, private readonly CurrencyRateToDtoV1ResultAssembler $currencyRateToDtoV1ResultAssembler, private readonly TransactionToDtoResultAssembler $transactionToDtoResultAssembler)
     {
     }
 

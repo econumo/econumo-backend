@@ -31,4 +31,10 @@ interface TagRepositoryInterface
     public function getReference(Id $id): Tag;
 
     public function delete(Tag $tag): void;
+
+    /**
+     * @param Id[] $ids
+     * @return Tag[]
+     */
+    public function getByIds(array $ids): array;
 }

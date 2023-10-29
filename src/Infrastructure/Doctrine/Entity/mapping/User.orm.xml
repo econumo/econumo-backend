@@ -23,6 +23,6 @@
             </join-table>
         </many-to-many>
 
-        <one-to-many field="options" target-entity="App\Domain\Entity\UserOption" mapped-by="user" />
+        <one-to-many field="options" target-entity="App\Domain\Entity\UserOption" mapped-by="user" orphan-removal="true" />
     </entity>
 </doctrine-mapping>

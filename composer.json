@@ -1,6 +1,8 @@
 {
     "type": "project",
-    "license": "proprietary",
+    "license": "GPL-3.0-only",
+    "name": "econumo/api-backend",
+    "description": "Econumo API Backend",
     "require": {
         "php": "^8.2.0",
         "ext-curl": "*",

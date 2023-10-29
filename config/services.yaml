@@ -30,6 +30,11 @@ services:
         arguments:
             $baseCurrency: '%env(string:CURRENCY_BASE)%'
 
+    App\Domain\Service\Currency\CurrencyRateServiceInterface:
+        class: \App\Domain\Service\Currency\CurrencyRateService
+        arguments:
+            $baseCurrency: '%env(string:CURRENCY_BASE)%'
+
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
     App\UI\Controller\:

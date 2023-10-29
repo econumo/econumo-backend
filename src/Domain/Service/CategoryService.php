@@ -15,13 +15,19 @@ use App\Domain\Factory\CategoryFactoryInterface;
 use App\Domain\Repository\AccountRepositoryInterface;
 use App\Domain\Repository\CategoryRepositoryInterface;
 use App\Domain\Repository\TransactionRepositoryInterface;
-use App\Domain\Service\Dto\PositionDto;
+use App\Domain\Service\Budget\EnvelopeServiceInterface;
 use DateTimeInterface;
 
-class CategoryService implements CategoryServiceInterface
+readonly class CategoryService implements CategoryServiceInterface
 {
-    public function __construct(private readonly CategoryFactoryInterface $categoryFactory, private readonly CategoryRepositoryInterface $categoryRepository, private readonly AccountRepositoryInterface $accountRepository, private readonly AntiCorruptionServiceInterface $antiCorruptionService, private readonly TransactionRepositoryInterface $transactionRepository)
-    {
+    public function __construct(
+        private CategoryFactoryInterface $categoryFactory,
+        private CategoryRepositoryInterface $categoryRepository,
+        private AccountRepositoryInterface $accountRepository,
+        private AntiCorruptionServiceInterface $antiCorruptionService,
+        private TransactionRepositoryInterface $transactionRepository,
+        private EnvelopeServiceInterface $envelopeService,
+    ) {
     }
 
     public function createCategory(Id $userId, CategoryName $name, CategoryType $type, Icon $icon): Category
@@ -33,10 +39,18 @@ class CategoryService implements CategoryServiceInterface
             }
         }
 
-        $category = $this->categoryFactory->create($userId, $name, $type, $icon);
-        $category->updatePosition(count($categories));
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
+        try {
+            $category = $this->categoryFactory->create($userId, $name, $type, $icon);
+            $category->updatePosition(count($categories));
+            $this->categoryRepository->save([$category]);
+            $this->envelopeService->createConnectedEnvelopesByCategory($category, $userId);
 
-        $this->categoryRepository->save([$category]);
+            $this->antiCorruptionService->commit(__METHOD__);
+        } catch (\Throwable $throwable) {
+            $this->antiCorruptionService->rollback(__METHOD__);
+            throw $throwable;
+        }
 
         return $category;
     }
@@ -58,8 +72,16 @@ class CategoryService implements CategoryServiceInterface
 
     public function deleteCategory(Id $categoryId): void
     {
-        $category = $this->categoryRepository->get($categoryId);
-        $this->categoryRepository->delete($category);
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
+        try {
+            $category = $this->categoryRepository->get($categoryId);
+            $this->envelopeService->deleteConnectedEnvelopeByCategory($categoryId);
+            $this->categoryRepository->delete($category);
+            $this->antiCorruptionService->commit(__METHOD__);
+        } catch (\Throwable $throwable) {
+            $this->antiCorruptionService->rollback(__METHOD__);
+            throw $throwable;
+        }
     }
 
     public function replaceCategory(Id $categoryId, Id $newCategoryId): void
@@ -74,13 +96,13 @@ class CategoryService implements CategoryServiceInterface
             throw new ReplaceCategoryException();
         }
 
-        $this->antiCorruptionService->beginTransaction();
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
             $this->transactionRepository->replaceCategory($categoryId, $newCategoryId);
-            $this->categoryRepository->delete($category);
-            $this->antiCorruptionService->commit();
+            $this->deleteCategory($categoryId);
+            $this->antiCorruptionService->commit(__METHOD__);
         } catch (\Throwable $throwable) {
-            $this->antiCorruptionService->rollback();
+            $this->antiCorruptionService->rollback(__METHOD__);
             throw $throwable;
         }
     }

@@ -6,6 +6,7 @@ namespace App\Domain\Repository;
 
 use App\Domain\Entity\Account;
 use App\Domain\Entity\ValueObject\Id;
+use DateTimeInterface;
 
 interface AccountRepositoryInterface
 {
@@ -31,4 +32,11 @@ interface AccountRepositoryInterface
     public function delete(Id $id): void;
 
     public function getReference(Id $id): Account;
+
+    /**
+     * @param Id[] $accountIds
+     * @param DateTimeInterface $date
+     * @return array
+     */
+    public function getAccountsBalancesOnDate(array $accountIds, DateTimeInterface $date): array;
 }

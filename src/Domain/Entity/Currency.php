@@ -6,6 +6,7 @@ namespace App\Domain\Entity;
 
 use App\Domain\Entity\ValueObject\CurrencyCode;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Traits\EntityTrait;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Symfony\Component\Intl\Currencies;
@@ -13,6 +14,8 @@ use Symfony\Component\Intl\Exception\MissingResourceException;
 
 class Currency
 {
+    use EntityTrait;
+
     private DateTimeImmutable $createdAt;
 
     public function __construct(private Id $id, private CurrencyCode $code, private string $symbol, DateTimeInterface $createdAt)

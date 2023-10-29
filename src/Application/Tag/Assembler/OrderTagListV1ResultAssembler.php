@@ -11,7 +11,7 @@ use App\Domain\Repository\TagRepositoryInterface;
 
 class OrderTagListV1ResultAssembler
 {
-    public function __construct(private readonly TagRepositoryInterface $tagRepository, private readonly TagToDtoResultAssembler $tagToDtoResultAssembler)
+    public function __construct(private readonly TagRepositoryInterface $tagRepository, private readonly TagToUserTagDtoResultAssembler $tagToDtoResultAssembler)
     {
     }
 

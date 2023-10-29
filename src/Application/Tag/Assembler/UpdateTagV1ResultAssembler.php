@@ -10,7 +10,7 @@ use App\Domain\Entity\ValueObject\Id;
 
 class UpdateTagV1ResultAssembler
 {
-    public function __construct(private readonly TagIdToDtoResultAssembler $tagIdToDtoResultAssembler)
+    public function __construct(private readonly TagIdToUserTagDtoResultAssembler $tagIdToDtoResultAssembler)
     {
     }
 

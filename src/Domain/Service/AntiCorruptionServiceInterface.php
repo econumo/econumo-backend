@@ -8,9 +8,9 @@ namespace App\Domain\Service;
 
 interface AntiCorruptionServiceInterface
 {
-    public function beginTransaction(): void;
+    public function beginTransaction(string $name): void;
 
-    public function commit(): void;
+    public function commit(string $name): void;
 
-    public function rollback(): void;
+    public function rollback(string $name): void;
 }

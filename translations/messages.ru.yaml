@@ -34,3 +34,9 @@ user:
     not_correct: Неверный пароль
   user:
     already_exists: Уже зарегистрирован
+budget:
+  plan_folder:
+    is_not_empty: Папка не пуста
+  folder_list:
+    empty_list: Список папок пуст
+    ordering_error: Ошибка сортировки

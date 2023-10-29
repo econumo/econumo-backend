@@ -10,6 +10,7 @@ use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\Identifier;
 use App\Domain\Entity\ValueObject\ReportPeriod;
 use App\Domain\Events\UserRegisteredEvent;
+use App\Domain\Traits\EntityTrait;
 use App\Domain\Traits\EventTrait;
 use DateTime;
 use DateTimeImmutable;
@@ -21,6 +22,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    use EntityTrait;
     use EventTrait;
 
     /**
@@ -136,6 +138,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->connections->contains($user);
     }
 
+    public function isUserIdConnected(Id $userId): bool
+    {
+        foreach ($this->connections as $connection) {
+            if ($connection->getId()->isEqual($userId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function connectUser(self $user): void
     {
         if ($user->getId()->isEqual($this->getId())) {
@@ -209,6 +221,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return new CurrencyCode(UserOption::DEFAULT_CURRENCY);
     }
 
+    public function getDefaultPlanId(): ?Id
+    {
+        foreach ($this->options as $option) {
+            if ($option->getName() === UserOption::DEFAULT_PLAN) {
+                if (!$option->getValue()) {
+                    return null;
+                }
+                return new Id($option->getValue());
+            }
+        }
+
+        return null;
+    }
+
     public function updateCurrency(CurrencyCode $currencyCode): void
     {
         foreach ($this->options as $option) {
@@ -223,6 +249,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         foreach ($this->options as $option) {
             if ($option->getName() === UserOption::CURRENCY) {
                 $option->updateValue($reportPeriod->getValue());
+            }
+        }
+    }
+
+    public function updateDefaultPlan(?Id $planId): void
+    {
+        foreach ($this->options as $option) {
+            if ($option->getName() === UserOption::DEFAULT_PLAN) {
+                if ($planId === null) {
+                    $option->updateValue(null);
+                } else {
+                    $option->updateValue($planId->getValue());
+                }
+                return;
             }
         }
     }

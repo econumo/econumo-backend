@@ -80,4 +80,9 @@ class CurrencyRepository extends ServiceEntityRepository implements CurrencyRepo
     {
         return $this->findOneBy(['code' => $code]);
     }
+
+    public function getByIds(array $ids): array
+    {
+        return $this->findBy(['id' => $ids]);
+    }
 }

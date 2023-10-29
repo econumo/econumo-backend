@@ -9,12 +9,15 @@ use App\Domain\Entity\ValueObject\AccountType;
 use App\Domain\Entity\ValueObject\CurrencyCode;
 use App\Domain\Entity\ValueObject\Icon;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Traits\EntityTrait;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 
 class Account
 {
+    use EntityTrait;
+
     private string $balance;
 
     private bool $isDeleted = false;
@@ -30,7 +33,8 @@ class Account
         private Currency $currency,
         private AccountType $type,
         private Icon $icon,
-        DateTimeInterface $createdAt
+        DateTimeInterface $createdAt,
+        private bool $isExcludedFromBudget = false
     ) {
         $this->balance = '0';
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
@@ -50,6 +54,11 @@ class Account
     public function getName(): AccountName
     {
         return $this->name;
+    }
+
+    public function isExcludedFromBudget(): bool
+    {
+        return $this->isExcludedFromBudget;
     }
 
     public function getCurrencyId(): Id
@@ -131,6 +140,14 @@ class Account
     {
         if (!$this->icon->isEqual($icon)) {
             $this->icon = $icon;
+            $this->updated();
+        }
+    }
+
+    public function updateExcludeFromBudget(bool $value): void
+    {
+        if ($this->isExcludedFromBudget !== $value) {
+            $this->isExcludedFromBudget = $value;
             $this->updated();
         }
     }

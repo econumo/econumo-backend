@@ -10,7 +10,7 @@ use App\Domain\Entity\Category;
 
 class CreateCategoryV1ResultAssembler
 {
-    public function __construct(private readonly CategoryToDtoResultAssembler $categoryToDtoV1ResultAssembler)
+    public function __construct(private readonly UserCategoryToDtoResultAssembler $categoryToDtoV1ResultAssembler)
     {
     }
 

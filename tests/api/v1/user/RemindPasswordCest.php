@@ -16,7 +16,7 @@ class RemindPasswordCest
      */
     public function requestShouldReturn200ResponseCodeForExistingUser(ApiTester $I): void
     {
-        $I->sendPOST($this->url, ['username' => 'john@snow.test']);
+        $I->sendPOST($this->url, ['username' => 'john@econumo.test']);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
 
@@ -43,7 +43,7 @@ class RemindPasswordCest
      */
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
-        $I->sendPOST($this->url, ['username' => 'john@snow.test']);
+        $I->sendPOST($this->url, ['username' => 'john@econumo.test']);
         $I->seeResponseMatchesJsonType(['data' => []]);
     }
 }

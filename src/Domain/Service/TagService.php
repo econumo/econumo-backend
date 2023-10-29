@@ -13,13 +13,19 @@ use App\Domain\Exception\TagAlreadyExistsException;
 use App\Domain\Factory\TagFactoryInterface;
 use App\Domain\Repository\AccountRepositoryInterface;
 use App\Domain\Repository\TagRepositoryInterface;
+use App\Domain\Service\Budget\EnvelopeServiceInterface;
 use App\Domain\Service\Dto\PositionDto;
 use DateTimeInterface;
 
-class TagService implements TagServiceInterface
+readonly class TagService implements TagServiceInterface
 {
-    public function __construct(private readonly TagFactoryInterface $tagFactory, private readonly TagRepositoryInterface $tagRepository, private readonly AccountRepositoryInterface $accountRepository)
-    {
+    public function __construct(
+        private TagFactoryInterface $tagFactory,
+        private TagRepositoryInterface $tagRepository,
+        private AccountRepositoryInterface $accountRepository,
+        private AntiCorruptionServiceInterface $antiCorruptionService,
+        private EnvelopeServiceInterface $envelopeService,
+    ) {
     }
 
     public function createTag(Id $userId, TagName $name): Tag
@@ -31,10 +37,19 @@ class TagService implements TagServiceInterface
             }
         }
 
-        $tag = $this->tagFactory->create($userId, $name);
-        $tag->updatePosition(count($tags));
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
+        try {
+            $tag = $this->tagFactory->create($userId, $name);
+            $tag->updatePosition(count($tags));
+            $this->tagRepository->save([$tag]);
+            $this->envelopeService->createConnectedEnvelopesByTag($tag, $userId);
 
-        $this->tagRepository->save([$tag]);
+            $this->antiCorruptionService->commit(__METHOD__);
+        } catch (\Throwable $throwable) {
+            $this->antiCorruptionService->rollback(__METHOD__);
+            throw $throwable;
+        }
+
         return $tag;
     }
 
@@ -85,8 +100,16 @@ class TagService implements TagServiceInterface
 
     public function deleteTag(Id $tagId): void
     {
-        $tag = $this->tagRepository->get($tagId);
-        $this->tagRepository->delete($tag);
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
+        try {
+            $category = $this->tagRepository->get($tagId);
+            $this->envelopeService->deleteConnectedEnvelopeByTag($tagId);
+            $this->tagRepository->delete($category);
+            $this->antiCorruptionService->commit(__METHOD__);
+        } catch (\Throwable $throwable) {
+            $this->antiCorruptionService->rollback(__METHOD__);
+            throw $throwable;
+        }
     }
 
     public function archiveTag(Id $tagId): void

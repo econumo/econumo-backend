@@ -41,7 +41,7 @@ class AccountAccessInviteService implements AccountAccessInviteServiceInterface
             throw new AccountAccessException('Access for yourself is prohibited');
         }
 
-        $this->antiCorruptionService->beginTransaction();
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
             try {
                 $oldInvite = $this->accountAccessInviteRepository->get($accountId, $recipient->getId());
@@ -57,9 +57,9 @@ class AccountAccessInviteService implements AccountAccessInviteServiceInterface
                 $role
             );
             $this->accountAccessInviteRepository->save([$invite]);
-            $this->antiCorruptionService->commit();
+            $this->antiCorruptionService->commit(__METHOD__);
         } catch (\Throwable $throwable) {
-            $this->antiCorruptionService->rollback();
+            $this->antiCorruptionService->rollback(__METHOD__);
             throw $throwable;
         }
 
@@ -70,7 +70,7 @@ class AccountAccessInviteService implements AccountAccessInviteServiceInterface
     {
         $invite = $this->accountAccessInviteRepository->getByUserAndCode($userId, $code);
         $account = $this->accountRepository->get($invite->getAccountId());
-        $this->antiCorruptionService->beginTransaction();
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
             $access = $this->accountAccessFactory->create(
                 $account->getId(),
@@ -83,9 +83,9 @@ class AccountAccessInviteService implements AccountAccessInviteServiceInterface
             $accountOptions = $this->accountOptionsFactory->create($account->getId(), $userId, 0);
             $this->accountOptionsRepository->save([$accountOptions]);
 
-            $this->antiCorruptionService->commit();
+            $this->antiCorruptionService->commit(__METHOD__);
         } catch (\Throwable $throwable) {
-            $this->antiCorruptionService->rollback();
+            $this->antiCorruptionService->rollback(__METHOD__);
             throw $throwable;
         }
 

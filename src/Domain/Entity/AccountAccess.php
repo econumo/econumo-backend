@@ -6,12 +6,15 @@ namespace App\Domain\Entity;
 
 use App\Domain\Entity\ValueObject\AccountUserRole;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Traits\EntityTrait;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 
 class AccountAccess
 {
+    use EntityTrait;
+
     private Id $id;
 
     private DateTimeImmutable $createdAt;

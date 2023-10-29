@@ -14,7 +14,7 @@ use OpenApi\Annotations as OA;
 class RemindPasswordV1RequestDto
 {
     /**
-     * @OA\Property(example="john@snow.test")
+     * @OA\Property(example="john@econumo.test")
      */
     public string $username;
 }

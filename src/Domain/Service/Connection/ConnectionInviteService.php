@@ -49,7 +49,7 @@ class ConnectionInviteService implements ConnectionInviteServiceInterface
             throw new DomainException('Inviting yourself?');
         }
 
-        $this->antiCorruptionService->beginTransaction();
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
             $owner = $this->userRepository->get($connectionInvite->getUserId());
             $guest = $this->userRepository->get($userId);
@@ -61,9 +61,9 @@ class ConnectionInviteService implements ConnectionInviteServiceInterface
             $connectionInvite->clearCode();
             $this->connectionInviteRepository->save([$connectionInvite]);
 
-            $this->antiCorruptionService->commit();
+            $this->antiCorruptionService->commit(__METHOD__);
         } catch (\Throwable $throwable) {
-            $this->antiCorruptionService->rollback();
+            $this->antiCorruptionService->rollback(__METHOD__);
             throw $throwable;
         }
     }

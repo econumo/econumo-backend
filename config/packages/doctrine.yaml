@@ -24,7 +24,11 @@ doctrine:
             currency_code_type: App\Infrastructure\Doctrine\Type\CurrencyCodeType
             payee_name_type: App\Infrastructure\Doctrine\Type\PayeeNameType
             tag_name_type: App\Infrastructure\Doctrine\Type\TagNameType
-#            budget_name_type: App\Infrastructure\Doctrine\Type\BudgetNameType
+            plan_name_type: App\Infrastructure\Doctrine\Type\PlanNameType
+            user_role_type: App\Infrastructure\Doctrine\Type\UserRoleType
+            plan_folder_name_type: App\Infrastructure\Doctrine\Type\PlanFolderNameType
+            envelope_name_type: App\Infrastructure\Doctrine\Type\EnvelopeNameType
+            envelope_type: App\Infrastructure\Doctrine\Type\EnvelopeType
         server_version: 13
 
     orm:

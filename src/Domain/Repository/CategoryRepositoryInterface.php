@@ -31,4 +31,10 @@ interface CategoryRepositoryInterface
     public function getReference(Id $id): Category;
 
     public function delete(Category $category): void;
+
+    /**
+     * @param Id[] $ids
+     * @return Category[]
+     */
+    public function getByIds(array $ids): array;
 }

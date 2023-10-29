@@ -7,12 +7,15 @@ namespace App\Domain\Entity;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\ReportPeriod;
 use App\Domain\Exception\UserOptionException;
+use App\Domain\Traits\EntityTrait;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 
 class UserOption
 {
+    use EntityTrait;
+
     /**
      * @var string
      */
@@ -33,13 +36,19 @@ class UserOption
      */
     final public const DEFAULT_REPORT_PERIOD = ReportPeriod::MONTHLY;
 
+    /**
+     * @var string
+     */
+    final public const DEFAULT_PLAN = 'default_plan';
+
 
     /**
      * @var string[]
      */
     public const OPTIONS = [
         self::CURRENCY,
-        self::REPORT_PERIOD
+        self::REPORT_PERIOD,
+        self::DEFAULT_PLAN,
     ];
 
     private readonly DateTimeImmutable $createdAt;
@@ -75,7 +84,7 @@ class UserOption
         }
     }
 
-    public function updateValue(string $value): void
+    public function updateValue(?string $value): void
     {
         if ($this->value === $value) {
             return;

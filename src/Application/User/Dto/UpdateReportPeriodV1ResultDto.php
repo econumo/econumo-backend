@@ -13,5 +13,8 @@ use OpenApi\Annotations as OA;
  */
 class UpdateReportPeriodV1ResultDto
 {
+    /**
+     * @OA\Property()
+     */
     public CurrentUserResultDto $user;
 }

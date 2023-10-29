@@ -33,7 +33,7 @@ class _CG_ACTION__CG_SUBJECT__CG_VERSION_Controller extends AbstractController
      *     in="query",
      *     required=true,
      *     @OA\Schema(type="string"),
-     *     description="ID чего-либо",
+     *     description="_CG_SUBJECT_ ID",
      * ),
      * @OA\Response(
      *     response=200,

@@ -6,6 +6,9 @@ namespace App\Domain\Entity;
 
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\TagName;
+use App\Domain\Events\TagCreatedEvent;
+use App\Domain\Traits\EntityTrait;
+use App\Domain\Traits\EventTrait;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -13,6 +16,9 @@ use DateTimeInterface;
 
 class Tag
 {
+    use EntityTrait;
+    use EventTrait;
+
     private int $position = 0;
 
     private bool $isArchived = false;
@@ -29,6 +35,7 @@ class Tag
     ) {
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
+        $this->registerEvent(new TagCreatedEvent($user->getId(), $id));
     }
 
     public function getId(): Id

@@ -8,9 +8,9 @@ use App\Application\User\Dto\UpdateReportPeriodV1RequestDto;
 use App\Application\User\Dto\UpdateReportPeriodV1ResultDto;
 use App\Domain\Entity\User;
 
-class UpdateReportPeriodV1ResultAssembler
+readonly class UpdateReportPeriodV1ResultAssembler
 {
-    public function __construct(private readonly CurrentUserToDtoResultAssembler $currentUserToDtoResultAssembler)
+    public function __construct(private CurrentUserToDtoResultAssembler $currentUserToDtoResultAssembler)
     {
     }
 

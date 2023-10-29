@@ -15,7 +15,7 @@ class RemindPasswordCest
 
     public function requestShouldProduceEvent(FunctionalTester $I): void
     {
-        $I->sendPOST($this->url, ['username' => 'john@snow.test']);
+        $I->sendPOST($this->url, ['username' => 'john@econumo.test']);
         $I->seeResponseCodeIs(HttpCode::OK);
 
         /** @var ReceiverInterface $transport */
