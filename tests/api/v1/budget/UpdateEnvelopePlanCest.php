@@ -18,7 +18,11 @@ class UpdateEnvelopePlanCest
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, ['id' => 'test']);
+        $I->sendPOST($this->url, [
+            'envelopeId' => '10d26248-9518-46eb-84ca-6ab8d4cbcdbb',
+            'period' => '2019-12-01 00:00:00',
+            'amount' => 10500.0
+        ]);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
 
@@ -37,7 +41,11 @@ class UpdateEnvelopePlanCest
      */
     public function requestShouldReturn401ResponseCode(ApiTester $I): void
     {
-        $I->sendPOST($this->url, ['id' => 'test']);
+        $I->sendPOST($this->url, [
+            'envelopeId' => '10d26248-9518-46eb-84ca-6ab8d4cbcdbb',
+            'period' => '2019-12-01 00:00:00',
+            'amount' => 10500.0
+        ]);
         $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
     }
 
@@ -47,11 +55,11 @@ class UpdateEnvelopePlanCest
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, ['id' => 'test']);
-        $I->seeResponseMatchesJsonType([
-            'data' => [
-                'result' => 'string',
-            ],
+        $I->sendPOST($this->url, [
+            'envelopeId' => '10d26248-9518-46eb-84ca-6ab8d4cbcdbb',
+            'period' => '2019-12-01 00:00:00',
+            'amount' => 10500.0
         ]);
+        $I->seeResponseMatchesJsonType(['data' => []]);
     }
 }
