@@ -332,7 +332,7 @@ class Api extends \Codeception\Module
         return [
             'currencyId' => 'string',
             'baseCurrencyId' => 'string',
-            'rate' => 'float',
+            'rate' => 'float|integer',
             'date' => 'string'
         ];
     }
