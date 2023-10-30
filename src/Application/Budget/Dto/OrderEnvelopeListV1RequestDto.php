@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Budget\Dto;
 
-use App\Domain\Service\Dto\PositionDto;
+use App\Domain\Service\Dto\EnvelopePositionDto;
 use OpenApi\Annotations as OA;
 use Nelmio\ApiDocBundle\Annotation\Model;
 
@@ -21,7 +21,7 @@ class OrderEnvelopeListV1RequestDto
     public string $planId;
 
     /**
-     * @var PositionDto[]
+     * @var EnvelopePositionDto[]
      * @OA\Property(type="array", @OA\Items(type="object", ref=@Model(type=\App\Domain\Service\Dto\EnvelopePositionDto::class)))
      */
     public array $changes = [];
