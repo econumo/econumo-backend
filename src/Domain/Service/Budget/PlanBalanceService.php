@@ -41,9 +41,10 @@ readonly class PlanBalanceService
      * @param Id $planId
      * @param DateTimeInterface $periodStart
      * @param DateTimeInterface $periodEnd
+     * @param DateTimeInterface $currentPeriod
      * @return PlanDataBalanceDto[]
      */
-    public function getBalance(Id $planId, DateTimeInterface $periodStart, DateTimeInterface $periodEnd): array
+    public function getBalance(Id $planId, DateTimeInterface $periodStart, DateTimeInterface $periodEnd, DateTimeInterface $currentPeriod): array
     {
         $currencies = [];
         $accountIds = [];
@@ -54,8 +55,7 @@ readonly class PlanBalanceService
         $accountIds = array_values($accountIds);
         $currencies = array_values($currencies);
 
-        $currentDateTime = $this->datetimeService->getCurrentDatetime();
-        if ($periodStart < $currentDateTime) {
+        if ($periodStart < $currentPeriod) {
             $startBalanceData = $this->getBalanceData($accountIds, $periodStart);
         } else {
             $startBalanceData = [];
@@ -64,7 +64,7 @@ readonly class PlanBalanceService
             }
         }
 
-        if ($periodEnd < $currentDateTime || ($currentDateTime > $periodStart && $currentDateTime < $periodEnd)) {
+        if ($periodEnd < $currentPeriod || ($currentPeriod > $periodStart && $currentPeriod < $periodEnd)) {
             $endBalanceData = $this->getBalanceData($accountIds, $periodEnd);
         } else {
             $endBalanceData = [];
@@ -72,6 +72,8 @@ readonly class PlanBalanceService
                 $endBalanceData[$currencyId->getValue()] = null;
             }
         }
+
+        $currentBalanceData = $this->getBalanceData($accountIds, $currentPeriod);
 
         $result = [];
         foreach ($currencies as $currencyId) {
@@ -84,6 +86,7 @@ readonly class PlanBalanceService
                 $dto->currencyId = new Id($startBalanceCurrencyId);
                 $dto->startBalance = $value === null ? null : (float)$value;
                 $dto->endBalance = $endBalanceData[$startBalanceCurrencyId] === null ? null : (float)$endBalanceData[$startBalanceCurrencyId];
+                $dto->currentBalance = $currentBalanceData[$startBalanceCurrencyId] === null ? null : (float)$currentBalanceData[$startBalanceCurrencyId];
                 $result[] = $dto;
             }
         }

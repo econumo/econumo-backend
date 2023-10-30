@@ -29,7 +29,7 @@ readonly class PlanDataToResultDtoAssembler
             $balanceDto->currencyId = $balance->currencyId->getValue();
             $balanceDto->startBalance = $balance->startBalance;
             $balanceDto->endBalance = $balance->endBalance;
-            $balanceDto->currentBalance = .0;
+            $balanceDto->currentBalance = $balance->currentBalance;
             $dto->balances[] = $balanceDto;
         }
 

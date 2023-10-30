@@ -439,7 +439,7 @@ readonly class PlanService implements PlanServiceInterface
             $dto->periodStart = clone $rollingPeriodStart;
             $dto->periodEnd = clone $rollingPeriodEnd;
             if ($i === 0) {
-                $dto->balances = $this->planBalanceService->getBalance($planId, $dto->periodStart, $dto->periodEnd);
+                $dto->balances = $this->planBalanceService->getBalance($planId, $dto->periodStart, $dto->periodEnd, $currentDate);
             } else {
                 $dto->balances = $this->planBalanceService->getBalanceStubs($currencyIds);
             }

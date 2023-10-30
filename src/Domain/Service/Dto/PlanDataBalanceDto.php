@@ -13,4 +13,6 @@ class PlanDataBalanceDto
     public ?float $startBalance;
 
     public ?float $endBalance = null;
+
+    public ?float $currentBalance = null;
 }
