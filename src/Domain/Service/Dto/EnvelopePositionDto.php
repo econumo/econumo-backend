@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domain\Service\Dto;
 
-use App\Domain\Entity\ValueObject\Id;
-
 class EnvelopePositionDto
 {
     public string $id;
@@ -13,9 +11,4 @@ class EnvelopePositionDto
     public ?string $folderId = null;
 
     public int $position;
-
-    public function getId(): Id
-    {
-        return new Id($this->id);
-    }
 }

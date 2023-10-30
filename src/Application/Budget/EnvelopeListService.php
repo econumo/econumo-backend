@@ -35,7 +35,7 @@ readonly class EnvelopeListService
         }
         $planId = new Id($dto->planId);
         foreach ($dto->changes as $change) {
-            $envelope = $this->envelopeRepository->get($change->getId());
+            $envelope = $this->envelopeRepository->get(new Id($change->id));
             if (!$envelope->getPlan()->getId()->isEqual($planId)) {
                 throw new ValidationException($this->translationService->trans('budget.envelope_list.ordering_error'));
             }
