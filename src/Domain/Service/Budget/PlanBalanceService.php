@@ -64,7 +64,7 @@ readonly class PlanBalanceService
             }
         }
 
-        if ($periodEnd < $currentDateTime) {
+        if ($periodEnd < $currentDateTime || ($currentDateTime > $periodStart && $currentDateTime < $periodEnd)) {
             $endBalanceData = $this->getBalanceData($accountIds, $periodEnd);
         } else {
             $endBalanceData = [];
