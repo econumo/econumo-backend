@@ -6,6 +6,7 @@ namespace App\Domain\Service\Budget;
 
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Repository\AccountRepositoryInterface;
+use App\Domain\Repository\TransactionRepositoryInterface;
 use App\Domain\Service\DatetimeServiceInterface;
 use App\Domain\Service\Dto\PlanDataBalanceDto;
 use DateTimeInterface;
@@ -16,6 +17,7 @@ readonly class PlanBalanceService
         private PlanAccountsService $planAccountsService,
         private AccountRepositoryInterface $accountRepository,
         private DatetimeServiceInterface $datetimeService,
+        private TransactionRepositoryInterface $transactionRepository
     ) {
     }
 
@@ -60,16 +62,27 @@ readonly class PlanBalanceService
         } else {
             $startBalanceData = [];
             foreach ($currencies as $currencyId) {
-                $startBalanceData[$currencyId->getValue()] = null;
+                $startBalanceData[$currencyId->getValue()] = [
+                    'balance' => null,
+                    'income' => null,
+                    'expenses' => null,
+                    'exchanges' => null
+                ];
             }
         }
 
         if ($periodEnd < $currentPeriod || ($currentPeriod > $periodStart && $currentPeriod < $periodEnd)) {
             $endBalanceData = $this->getBalanceData($accountIds, $periodEnd);
+            $endBalanceData = array_replace_recursive($endBalanceData, $this->getAccountsReports($accountIds, $periodStart, $periodEnd));
         } else {
             $endBalanceData = [];
             foreach ($currencies as $currencyId) {
-                $endBalanceData[$currencyId->getValue()] = null;
+                $endBalanceData[$currencyId->getValue()] = [
+                    'balance' => null,
+                    'income' => null,
+                    'expenses' => null,
+                    'exchanges' => null
+                ];
             }
         }
 
@@ -84,9 +97,13 @@ readonly class PlanBalanceService
 
                 $dto = new PlanDataBalanceDto();
                 $dto->currencyId = new Id($startBalanceCurrencyId);
-                $dto->startBalance = $value === null ? null : (float)$value;
-                $dto->endBalance = $endBalanceData[$startBalanceCurrencyId] === null ? null : (float)$endBalanceData[$startBalanceCurrencyId];
-                $dto->currentBalance = $currentBalanceData[$startBalanceCurrencyId] === null ? null : (float)$currentBalanceData[$startBalanceCurrencyId];
+                $dto->startBalance = $value['balance'] === null ? null : (float)$value['balance'];
+                $dto->endBalance = $endBalanceData[$startBalanceCurrencyId]['balance'] === null ? null : (float)$endBalanceData[$startBalanceCurrencyId]['balance'];
+                $dto->currentBalance = $currentBalanceData[$startBalanceCurrencyId]['balance'] === null ? null : (float)$currentBalanceData[$startBalanceCurrencyId]['balance'];
+
+                $dto->income = $endBalanceData[$startBalanceCurrencyId]['income'] === null ? null : (float)$endBalanceData[$startBalanceCurrencyId]['income'];
+                $dto->expenses = $endBalanceData[$startBalanceCurrencyId]['expenses'] === null ? null : (float)$endBalanceData[$startBalanceCurrencyId]['expenses'];
+                $dto->exchanges = $endBalanceData[$startBalanceCurrencyId]['exchanges'] === null ? null : (float)$endBalanceData[$startBalanceCurrencyId]['exchanges'];
                 $result[] = $dto;
             }
         }
@@ -96,21 +113,53 @@ readonly class PlanBalanceService
 
     /**
      * @param array $accountIds
-     * @param DateTimeInterface $date
+     * @param DateTimeInterface $periodEnd
      * @return array
      */
-    private function getBalanceData(array $accountIds, DateTimeInterface $date): array
+    private function getBalanceData(array $accountIds, DateTimeInterface $periodEnd): array
     {
-        $data = $this->accountRepository->getAccountsBalancesOnDate($accountIds, $date);
+        $balances = $this->accountRepository->getAccountsBalancesOnDate($accountIds, $periodEnd);
         $balanceData = [];
-        foreach ($data as $item) {
+        foreach ($balances as $item) {
             if (!isset($balanceData[$item['currency_id']])) {
-                $balanceData[$item['currency_id']] = 0;
+                $balanceData[$item['currency_id']] = [
+                    'income' => null,
+                    'expenses' => null,
+                    'exchanges' => null,
+                    'balance' => 0.0
+                ];
             }
-            $balanceData[$item['currency_id']] += (float)$item['balance'];
+            $balanceData[$item['currency_id']]['balance'] += (float)$item['balance'];
         }
         arsort($balanceData, SORT_NUMERIC);
 
         return $balanceData;
+    }
+
+    /**
+     * @param array $accountIds
+     * @param DateTimeInterface $periodStart
+     * @param DateTimeInterface $periodEnd
+     * @return array
+     */
+    private function getAccountsReports(array $accountIds, DateTimeInterface $periodStart, DateTimeInterface $periodEnd): array
+    {
+        $reports = $this->transactionRepository->getAccountsReport($accountIds, $periodStart, $periodEnd);
+        $result = [];
+        foreach ($reports as $item) {
+            if (!isset($result[$item['currency_id']])) {
+                $result[$item['currency_id']] = [
+                    'income' => 0.0,
+                    'expenses' => 0.0,
+                    'exchanges' => 0.0,
+                ];
+            }
+            $result[$item['currency_id']]['income'] += (float)$item['incomes'];
+            $result[$item['currency_id']]['expenses'] += (float)$item['expenses'];
+            $result[$item['currency_id']]['exchanges'] += (float)$item['transfer_incomes'];
+            $result[$item['currency_id']]['exchanges'] -= (float)$item['transfer_expenses'];
+        }
+
+        return $result;
     }
 }

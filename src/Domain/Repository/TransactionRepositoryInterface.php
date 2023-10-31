@@ -56,4 +56,12 @@ interface TransactionRepositoryInterface
      * @return array
      */
     public function countSpendingForTags(array $tagsIds, DateTimeInterface $startDate, DateTimeInterface $endDate): array;
+
+    /**
+     * @param array $accountIds
+     * @param DateTimeInterface $periodStart
+     * @param DateTimeInterface $periodEnd
+     * @return array
+     */
+    public function getAccountsReport(array $accountIds, DateTimeInterface $periodStart, DateTimeInterface $periodEnd): array;
 }

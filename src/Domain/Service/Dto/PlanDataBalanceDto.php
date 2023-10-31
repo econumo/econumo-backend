@@ -15,4 +15,10 @@ class PlanDataBalanceDto
     public ?float $endBalance = null;
 
     public ?float $currentBalance = null;
+
+    public ?float $income = null;
+
+    public ?float $expenses = null;
+
+    public ?float $exchanges = null;
 }

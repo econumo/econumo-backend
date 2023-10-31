@@ -32,4 +32,19 @@ class PlanDataBalanceResultDto
      * @OA\Property(example="13.07")
      */
     public ?float $currentBalance = null;
+
+    /**
+     * @OA\Property(example="13.07")
+     */
+    public ?float $income = null;
+
+    /**
+     * @OA\Property(example="13.07")
+     */
+    public ?float $expenses = null;
+
+    /**
+     * @OA\Property(example="13.07")
+     */
+    public ?float $exchanges = null;
 }

@@ -138,14 +138,14 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
         $sql =<<<SQL
 SELECT a.id as account_id,
        a.currency_id,
-     COALESCE(incomes, 0) + COALESCE(transfer_incomes, 0) - COALESCE(expenses, 0) - COALESCE(transfer_expenses, 0) as balance
+       COALESCE(incomes, 0) + COALESCE(transfer_incomes, 0) - COALESCE(expenses, 0) - COALESCE(transfer_expenses, 0) as balance
 FROM accounts a
        LEFT JOIN (
            SELECT tmp.account_id, SUM(tmp.expenses) as expenses, SUM(tmp.incomes) as incomes, SUM(tmp.transfer_expenses) as transfer_expenses, SUM(tmp.transfer_incomes) as transfer_incomes FROM (
                 SELECT tr1.account_id,
-                       (SELECT SUM(t1.amount) FROM transactions t1 WHERE t1.account_id = tr1.account_id AND t1.type = 0) as expenses,
-                       (SELECT SUM(t2.amount) FROM transactions t2 WHERE t2.account_id = tr1.account_id AND t2.type = 1) as incomes,
-                       (SELECT SUM(t3.amount) FROM transactions t3 WHERE t3.account_id = tr1.account_id AND t3.type = 2) as transfer_expenses,
+                       (SELECT SUM(t1.amount) FROM transactions t1 WHERE t1.account_id = tr1.account_id AND t1.type = 0 AND t1.spent_at <= '{$dateString}') as expenses,
+                       (SELECT SUM(t2.amount) FROM transactions t2 WHERE t2.account_id = tr1.account_id AND t2.type = 1 AND t2.spent_at <= '{$dateString}') as incomes,
+                       (SELECT SUM(t3.amount) FROM transactions t3 WHERE t3.account_id = tr1.account_id AND t3.type = 2 AND t3.spent_at <= '{$dateString}') as transfer_expenses,
                        NULL as transfer_incomes
                 FROM transactions tr1
                 WHERE tr1.spent_at <= '{$dateString}'
@@ -155,7 +155,7 @@ FROM accounts a
                        NULL as expenses,
                        NULL as incomes,
                        NULL as transfer_expenses,
-                       (SELECT SUM(t4.amount_recipient) FROM transactions t4 WHERE t4.account_recipient_id = tr2.account_recipient_id AND t4.type = 2) as transfer_incomes
+                       (SELECT SUM(t4.amount_recipient) FROM transactions t4 WHERE t4.account_recipient_id = tr2.account_recipient_id AND t4.type = 2 AND t4.spent_at <= '{$dateString}') as transfer_incomes
                 FROM transactions tr2
                 WHERE tr2.account_recipient_id IS NOT NULL AND tr2.spent_at <= '{$dateString}'
                 GROUP BY tr2.account_recipient_id) tmp GROUP BY tmp.account_id

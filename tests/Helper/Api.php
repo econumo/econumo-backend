@@ -314,7 +314,10 @@ class Api extends \Codeception\Module
             'currencyId' => 'string',
             'startBalance' => 'float|integer|null',
             'endBalance' => 'float|integer|null',
-            'currentBalance' => 'float|integer|null'
+            'currentBalance' => 'float|integer|null',
+            'income' => 'float|integer|null',
+            'expenses' => 'float|integer|null',
+            'exchanges' => 'float|integer|null'
         ];
     }
 
