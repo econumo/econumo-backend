@@ -247,7 +247,7 @@ class Envelope
     {
         if ($this->categories->count() === 1 && $this->tags->count() === 0) {
             $connectedName = $this->getConnectedCategoryName();
-            $connectedIcon = $this->getConnectedTagIcon();
+            $connectedIcon = $this->getConnectedCategoryIcon();
             if (($this->name === null || $this->name->isEqual($connectedName)) && ($this->icon === null || $this->icon->isEqual($connectedIcon))) {
                 return true;
             }
