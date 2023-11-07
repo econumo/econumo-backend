@@ -40,7 +40,7 @@ readonly class EnvelopeListService
                 throw new ValidationException($this->translationService->trans('budget.envelope_list.ordering_error'));
             }
         }
-        if (!$this->planAccessService->canUpdatePlan($userId, $planId)) {
+        if (!$this->planAccessService->canManagePlan($userId, $planId)) {
             throw new AccessDeniedException();
         }
 

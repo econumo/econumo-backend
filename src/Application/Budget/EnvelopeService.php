@@ -65,7 +65,7 @@ readonly class EnvelopeService
     ): UpdateEnvelopeV1ResultDto {
         $envelopeId = new Id($dto->id);
         $envelope = $this->envelopeRepository->get($envelopeId);
-        if (!$this->planAccessService->canUpdatePlan($userId, $envelope->getPlan()->getId())) {
+        if (!$this->planAccessService->canManagePlan($userId, $envelope->getPlan()->getId())) {
             throw new AccessDeniedException();
         }
 
@@ -83,7 +83,7 @@ readonly class EnvelopeService
         Id $userId
     ): CreateEnvelopeV1ResultDto {
         $planId = new Id($dto->planId);
-        if (!$this->planAccessService->canUpdatePlan($userId, $planId)) {
+        if (!$this->planAccessService->canManagePlan($userId, $planId)) {
             throw new AccessDeniedException();
         }
 

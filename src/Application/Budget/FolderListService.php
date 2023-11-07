@@ -40,7 +40,7 @@ readonly class FolderListService
                 throw new ValidationException($this->translationService->trans('budget.folder_list.ordering_error'));
             }
         }
-        if (!$this->planAccessService->canUpdatePlan($userId, $planId)) {
+        if (!$this->planAccessService->canManagePlan($userId, $planId)) {
             throw new AccessDeniedException();
         }
 

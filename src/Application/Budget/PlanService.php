@@ -64,7 +64,7 @@ readonly class PlanService
         Id $userId
     ): UpdatePlanV1ResultDto {
         $planId = new Id($dto->id);
-        if (!$this->planAccessService->canUpdatePlan($userId, $planId)) {
+        if (!$this->planAccessService->canManagePlan($userId, $planId)) {
             throw new AccessDeniedException();
         }
 

@@ -41,7 +41,7 @@ readonly class FolderService
         Id $userId
     ): CreateFolderV1ResultDto {
         $planId = new Id($dto->planId);
-        if (!$this->planAccessService->canUpdatePlan($userId, $planId)) {
+        if (!$this->planAccessService->canManagePlan($userId, $planId)) {
             throw new AccessDeniedException();
         }
         $folderId = $this->planFolderService->createFolder($planId, new PlanFolderName($dto->name));
@@ -55,7 +55,7 @@ readonly class FolderService
         $folderId = new Id($dto->id);
         $folder = $this->planFolderRepository->get($folderId);
         $planId = $folder->getPlan()->getId();
-        if (!$this->planAccessService->canUpdatePlan($userId, $planId)) {
+        if (!$this->planAccessService->canManagePlan($userId, $planId)) {
             throw new AccessDeniedException();
         }
         try {
@@ -73,7 +73,7 @@ readonly class FolderService
         $folderId = new Id($dto->id);
         $folder = $this->planFolderRepository->get($folderId);
         $planId = $folder->getPlan()->getId();
-        if (!$this->planAccessService->canUpdatePlan($userId, $planId)) {
+        if (!$this->planAccessService->canManagePlan($userId, $planId)) {
             throw new AccessDeniedException();
         }
         $this->planFolderService->updateFolder($folderId, new PlanFolderName($dto->name));
