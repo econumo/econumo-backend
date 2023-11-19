@@ -13,9 +13,10 @@ if [[ -n "${NEW_RELIC_API_KEY}" ]]; then
       -exec sed -i \
           -e "s/REPLACE_WITH_REAL_KEY/${NEW_RELIC_LICENSE_KEY}/" \
           -e "s/newrelic.appname[[:space:]]=[[:space:]].*/newrelic.appname = \"${NEW_RELIC_APPNAME}\"/" \
-          -e 's/;newrelic.daemon.app_connect_timeout =.*/newrelic.daemon.app_connect_timeout=15s/' \
-          -e 's/;newrelic.daemon.start_timeout =.*/newrelic.daemon.start_timeout=5s/' {} \;
-#          -e "s/newrelic.daemon.address[[:space:]]=[[:space:]].*/newrelic.daemon.address = \"${NEW_RELIC_AGENT_HOST}:31339\"/" {} \;
+          -e "s/newrelic.daemon.address[[:space:]]=[[:space:]].*/newrelic.daemon.address = \"${NEW_RELIC_AGENT_HOST}:31339\"/" {} \;
+#          -e 's/;newrelic.daemon.app_connect_timeout =.*/newrelic.daemon.app_connect_timeout=15s/' \
+#          -e 's/;newrelic.daemon.start_timeout =.*/newrelic.daemon.start_timeout=5s/' {} \;
+
 fi
 
 /usr/bin/supervisord -n -c /etc/supervisord.conf
