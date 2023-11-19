@@ -13,6 +13,7 @@ use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\ReportPeriod;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Exception\UserRegisteredException;
+use App\Domain\Exception\UserRegistrationDisabledException;
 use App\Domain\Factory\ConnectionInviteFactoryInterface;
 use App\Domain\Factory\FolderFactoryInterface;
 use App\Domain\Factory\UserFactoryInterface;
@@ -23,28 +24,34 @@ use App\Domain\Repository\PlanRepositoryInterface;
 use App\Domain\Repository\UserOptionRepositoryInterface;
 use App\Domain\Repository\UserRepositoryInterface;
 use App\Domain\Service\Translation\TranslationServiceInterface;
+use App\Domain\Service\User\UserRegistrationServiceInterface;
 
-class UserService implements UserServiceInterface
+readonly class UserService implements UserServiceInterface
 {
     public function __construct(
-        private readonly UserFactoryInterface $userFactory,
-        private readonly UserRepositoryInterface $userRepository,
-        private readonly EventDispatcherInterface $eventDispatcher,
-        private readonly FolderFactoryInterface $folderFactory,
-        private readonly FolderRepositoryInterface $folderRepository,
-        private readonly AntiCorruptionServiceInterface $antiCorruptionService,
-        private readonly TranslationServiceInterface $translator,
-        private readonly ConnectionInviteFactoryInterface $connectionInviteFactory,
-        private readonly ConnectionInviteRepositoryInterface $connectionInviteRepository,
-        private readonly UserOptionFactoryInterface $userOptionFactory,
-        private readonly UserOptionRepositoryInterface $userOptionRepository,
-        private readonly PlanRepositoryInterface $planRepository
+        private UserFactoryInterface $userFactory,
+        private UserRepositoryInterface $userRepository,
+        private EventDispatcherInterface $eventDispatcher,
+        private FolderFactoryInterface $folderFactory,
+        private FolderRepositoryInterface $folderRepository,
+        private AntiCorruptionServiceInterface $antiCorruptionService,
+        private TranslationServiceInterface $translator,
+        private ConnectionInviteFactoryInterface $connectionInviteFactory,
+        private ConnectionInviteRepositoryInterface $connectionInviteRepository,
+        private UserOptionFactoryInterface $userOptionFactory,
+        private UserOptionRepositoryInterface $userOptionRepository,
+        private PlanRepositoryInterface $planRepository,
+        private UserRegistrationServiceInterface $userRegistrationService
     )
     {
     }
 
     public function register(Email $email, string $password, string $name): User
     {
+        if (!$this->userRegistrationService->isRegistrationAllowed()) {
+            throw new UserRegistrationDisabledException();
+        }
+
         try {
             $this->userRepository->getByEmail($email);
             throw new UserRegisteredException();

@@ -13,6 +13,7 @@ use App\Application\User\Assembler\LogoutUserV1ResultAssembler;
 use App\Domain\Entity\User;
 use App\Domain\Entity\ValueObject\Email;
 use App\Domain\Exception\UserRegisteredException;
+use App\Domain\Exception\UserRegistrationDisabledException;
 use App\Domain\Service\Translation\TranslationServiceInterface;
 use App\Domain\Service\UserServiceInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
@@ -47,6 +48,8 @@ class UserService
             return $this->registerUserV1ResultAssembler->assemble($dto, $user);
         } catch (UserRegisteredException $userRegisteredException) {
             throw new ValidationException($this->translationService->trans('user.user.already_exists'), 400, $userRegisteredException);
+        } catch (UserRegistrationDisabledException $userRegistrationDisabledException) {
+            throw new ValidationException('Registration disabled', 400, $userRegistrationDisabledException);
         }
     }
 }

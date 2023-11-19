@@ -52,6 +52,11 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 100 }
 
+    App\Domain\Service\User\UserRegistrationServiceInterface:
+        class: App\Domain\Service\User\UserRegistrationService
+        arguments:
+            $isRegistrationAllowed: '%env(bool:ALLOW_REGISTRATION)%'
+
     App\Infrastructure\Auth\AuthenticationUpdateTokenPayload:
         arguments:
             $baseCurrency: '%env(string:CURRENCY_BASE)%'
