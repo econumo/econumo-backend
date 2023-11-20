@@ -29,6 +29,7 @@ doctrine:
             plan_folder_name_type: App\Infrastructure\Doctrine\Type\PlanFolderNameType
             envelope_name_type: App\Infrastructure\Doctrine\Type\EnvelopeNameType
             envelope_type: App\Infrastructure\Doctrine\Type\EnvelopeType
+            user_password_request_code_type: App\Infrastructure\Doctrine\Type\UserPasswordRequestCodeType
         server_version: 13
 
     orm:

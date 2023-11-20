@@ -13,23 +13,34 @@ use App\Application\User\Dto\UpdatePasswordV1ResultDto;
 use App\Application\User\Assembler\UpdatePasswordV1ResultAssembler;
 use App\Domain\Entity\ValueObject\Email;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Entity\ValueObject\UserPasswordRequestCode;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Exception\UserPasswordNotValidException;
-use App\Domain\Service\PasswordUserRequestServiceInterface;
+use App\Domain\Exception\UserPasswordRequestExpiredException;
+use App\Domain\Service\PasswordUserReminderServiceInterface;
 use App\Domain\Service\Translation\TranslationServiceInterface;
 use App\Domain\Service\User\UserPasswordServiceInterface;
+use App\Application\User\Dto\ResetPasswordV1RequestDto;
+use App\Application\User\Dto\ResetPasswordV1ResultDto;
+use App\Application\User\Assembler\ResetPasswordV1ResultAssembler;
 
-class PasswordService
+readonly class PasswordService
 {
-    public function __construct(private readonly RemindPasswordV1ResultAssembler $remindPasswordV1ResultAssembler, private readonly PasswordUserRequestServiceInterface $passwordUserRequestService, private readonly UpdatePasswordV1ResultAssembler $updatePasswordV1ResultAssembler, private readonly UserPasswordServiceInterface $userPasswordService, private readonly TranslationServiceInterface $translationService)
-    {
+    public function __construct(
+        private RemindPasswordV1ResultAssembler $remindPasswordV1ResultAssembler,
+        private UpdatePasswordV1ResultAssembler $updatePasswordV1ResultAssembler,
+        private UserPasswordServiceInterface $userPasswordService,
+        private TranslationServiceInterface $translationService,
+        private ResetPasswordV1ResultAssembler $resetPasswordV1ResultAssembler,
+        private PasswordUserReminderServiceInterface $passwordUserReminderService
+    ) {
     }
 
     public function remindPassword(
         RemindPasswordV1RequestDto $dto
     ): RemindPasswordV1ResultDto {
         try {
-            $this->passwordUserRequestService->remindPassword(new Email($dto->username));
+            $this->passwordUserReminderService->remindPassword(new Email($dto->username));
         } catch (NotFoundException) {
             // hide error from user
         }
@@ -48,5 +59,19 @@ class PasswordService
         }
 
         return $this->updatePasswordV1ResultAssembler->assemble($dto);
+    }
+
+    public function resetPassword(
+        ResetPasswordV1RequestDto $dto
+    ): ResetPasswordV1ResultDto {
+        try {
+            $this->passwordUserReminderService->resetPassword(new Email($dto->username), new UserPasswordRequestCode($dto->code), $dto->password);
+        } catch (UserPasswordRequestExpiredException $e) {
+            throw new ValidationException('The code is expired');
+        } catch (\Throwable) {
+            throw new ValidationException('Reset password error');
+        }
+
+        return $this->resetPasswordV1ResultAssembler->assemble($dto);
     }
 }
