@@ -12,9 +12,6 @@ class RemindPasswordV1ResultAssembler
     public function assemble(
         RemindPasswordV1RequestDto $dto
     ): RemindPasswordV1ResultDto {
-        $result = new RemindPasswordV1ResultDto();
-        $result->result = 'test';
-
-        return $result;
+        return new RemindPasswordV1ResultDto();
     }
 }

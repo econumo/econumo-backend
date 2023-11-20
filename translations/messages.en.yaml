@@ -5,8 +5,10 @@ email:
   reset_password_confirmation_code:
     subject: Reset password confirmation code
     body: |
+      Hi {{name}},
       Your confirmation code is {{code}}.
 
       If you didn't request this code, please ignore this email.
+
       Thanks,
       Econumo Team
