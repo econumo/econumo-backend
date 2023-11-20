@@ -45,7 +45,7 @@ readonly class EmailService implements EmailServiceInterface
      */
     private function send(EmailContainer $container): void
     {
-        if (!empty($this->fromEmail)) {
+        if (empty($this->fromEmail)) {
             return;
         }
 
