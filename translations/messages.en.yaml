@@ -1,3 +1,12 @@
 account:
   correction:
     message: Balance adjustment
+email:
+  reset_password_confirmation_code:
+    subject: Reset password confirmation code
+    body: |
+      Your confirmation code is {{code}}.
+
+      If you didn't request this code, please ignore this email.
+      Thanks,
+      Econumo Team

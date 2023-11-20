@@ -86,4 +86,16 @@ class UserPasswordRequestRepository extends ServiceEntityRepository implements U
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
     }
+
+    public function getByUser(Id $userId): UserPasswordRequest
+    {
+        $item = $this->findOneBy([
+            'user' => $this->getEntityManager()->getReference(User::class, $userId->getValue()),
+        ]);
+        if (!$item instanceof UserPasswordRequest) {
+            throw new NotFoundException(sprintf('PasswordUserRequest with ID %s not found', $userId->getValue()));
+        }
+
+        return $item;
+    }
 }

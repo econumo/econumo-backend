@@ -28,4 +28,4 @@ curl -X 'POST' \
 }'
 ```
 
-If you want to change base currency (by default USD) - update the value of `CURRENCY_BASE` in the `.env`. 
+If you want to change base currency (by default USD) - update the value of `ECONUMO_CURRENCY_BASE` in the `.env`. 

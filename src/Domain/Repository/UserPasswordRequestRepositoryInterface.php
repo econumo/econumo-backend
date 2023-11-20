@@ -14,6 +14,8 @@ interface UserPasswordRequestRepositoryInterface
 
     public function getByUserAndCode(Id $userId, UserPasswordRequestCode $code): UserPasswordRequest;
 
+    public function getByUser(Id $userId): UserPasswordRequest;
+
     /**
      * @param UserPasswordRequest[] $items
      */

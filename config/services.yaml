@@ -23,17 +23,17 @@ services:
     App\Domain\Service\Currency\CurrencyServiceInterface:
         class: \App\Domain\Service\Currency\CurrencyService
         arguments:
-            $baseCurrency: '%env(string:CURRENCY_BASE)%'
+            $baseCurrency: '%env(string:ECONUMO_CURRENCY_BASE)%'
 
     App\Domain\Service\Currency\CurrencyConvertorInterface:
         class: \App\Domain\Service\Currency\CurrencyConvertor
         arguments:
-            $baseCurrency: '%env(string:CURRENCY_BASE)%'
+            $baseCurrency: '%env(string:ECONUMO_CURRENCY_BASE)%'
 
     App\Domain\Service\Currency\CurrencyRateServiceInterface:
         class: \App\Domain\Service\Currency\CurrencyRateService
         arguments:
-            $baseCurrency: '%env(string:CURRENCY_BASE)%'
+            $baseCurrency: '%env(string:ECONUMO_CURRENCY_BASE)%'
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
@@ -55,11 +55,17 @@ services:
     App\Domain\Service\User\UserRegistrationServiceInterface:
         class: App\Domain\Service\User\UserRegistrationService
         arguments:
-            $isRegistrationAllowed: '%env(bool:ALLOW_REGISTRATION)%'
+            $isRegistrationAllowed: '%env(bool:ECONUMO_ALLOW_REGISTRATION)%'
+
+    App\Domain\Service\EmailServiceInterface:
+        class: App\Infrastructure\Symfony\Mailer\EmailService
+        arguments:
+            $fromEmail: '%env(string:ECONUMO_FROM_EMAIL)%'
+            $replyToEmail: '%env(string:ECONUMO_REPLY_TO_EMAIL)%'
 
     App\Infrastructure\Auth\AuthenticationUpdateTokenPayload:
         arguments:
-            $baseCurrency: '%env(string:CURRENCY_BASE)%'
+            $baseCurrency: '%env(string:ECONUMO_CURRENCY_BASE)%'
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_created, method: onTokenCreated }
 
