@@ -1,17 +1,25 @@
-name: "Build and publish to Docker Hub"
 on:
-    push:
-        branches:
-            - master
+    workflow_call:
+        inputs:
+            DOCKER_IMAGE_APP:
+                required: true
+                type: string
+        secrets:
+            DOCKER_LOGIN:
+                required: true
+            DOCKER_PASSWORD:
+                required: true
+            APP_QASE_TOKEN:
+                required: true
 
 jobs:
-    docker_hub_publish:
-        name: docker_hub_publish
+    build_and_test:
+        name: build_and_test
         runs-on: ubuntu-latest
         env:
             DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}
             DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-            DOCKER_IMAGE_APP: "econumo/api-backend:latest"
+            DOCKER_IMAGE_APP: ${{ inputs.DOCKER_IMAGE_APP }}
 
         services:
             postgresql:
@@ -44,16 +52,17 @@ jobs:
                     docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:fixtures:load --purge-with-truncate -n --env=test
                     docker run --network="host" --add-host=db:127.0.0.1 --env QASE_ENABLE=${QASE_ENABLE} --env QASE_TOKEN=${QASE_TOKEN} --env QASE_PROJECT=${QASE_PROJECT} ${DOCKER_IMAGE_APP} vendor/bin/codecept run
                 env:
-                    QASE_ENABLE: "true"
+                    QASE_ENABLE: "false"
                     QASE_TOKEN: ${{ secrets.APP_QASE_TOKEN }}
                     QASE_PROJECT: "EA"
 
-            -   name: Build APP image for publishing
+            -   name: Run RECTOR
                 if: success()
                 run: |
-                    docker build --cache-from ${DOCKER_IMAGE_APP} --tag ${DOCKER_IMAGE_APP} --target prod -f build/docker/app/Dockerfile .
+                    docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} vendor/bin/rector process --dry-run
 
-            -   name: Publish DOCKER image
-                if: success()
-                run: |
-                    docker push ${DOCKER_IMAGE_APP}
+#            -   name: Run PSALM analysis
+#                if: success()
+#                run: |
+#                    docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} vendor/bin/psalm --long-progress --output-format=github
+
