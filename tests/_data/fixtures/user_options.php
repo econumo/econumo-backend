@@ -64,7 +64,7 @@ $data = <<<'JSON'
     "name": "default_plan",
     "value": "bceed17e-d492-40be-921a-e7fa6f663fa6",
     "created_at": "2021-08-12 19:43:09",
-    "updated_at": "2023-10-29 04:47:47"
+    "updated_at": "2023-10-20 04:47:47"
   },
   {
     "id": "432439ed-525f-485a-831c-0929b354560d",
@@ -72,10 +72,13 @@ $data = <<<'JSON'
     "name": "currency",
     "value": "RUB",
     "created_at": "2021-10-07 12:22:18",
-    "updated_at": "2023-10-29 04:48:13"
+    "updated_at": "2023-10-20 04:48:13"
   }
 ]
 JSON;
+
+$date = new DateTimeImmutable('-1 month');
+$data = preg_replace('/\d{4}-\d{2}-/', $date->format('Y-m-'), $data);
 
 return json_decode($data, true);
 

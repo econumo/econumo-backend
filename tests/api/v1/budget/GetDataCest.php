@@ -18,9 +18,10 @@ class GetDataCest
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
+        $date = new \DateTimeImmutable('-1 month');
         $I->sendGet($this->url, [
             'id' => 'bceed17e-d492-40be-921a-e7fa6f663fa6',
-            'periodStart' => '2020-01-01 00:00:00',
+            'periodStart' => $date->format('Y-m-01 00:00:00'),
             'periodType' => 'month',
             'numberOfPeriods' => '2',
         ]);
@@ -57,9 +58,10 @@ class GetDataCest
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
+        $date = new \DateTimeImmutable('-1 month');
         $I->sendGet($this->url, [
             'id' => 'bceed17e-d492-40be-921a-e7fa6f663fa6',
-            'periodStart' => '2020-01-01 00:00:00',
+            'periodStart' => $date->format('Y-m-01 00:00:00'),
             'periodType' => 'month',
             'numberOfPeriods' => '2',
         ]);

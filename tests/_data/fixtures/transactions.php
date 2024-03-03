@@ -110,9 +110,9 @@ $data = <<<'JSON'
     "description": "",
     "payee_id": null,
     "tag_id": null,
-    "created_at": "2020-01-31 00:00:00",
-    "updated_at": "2020-01-31 00:00:00",
-    "spent_at": "2020-01-31 00:00:00"
+    "created_at": "2020-01-28 00:00:00",
+    "updated_at": "2020-01-28 00:00:00",
+    "spent_at": "2020-01-28 00:00:00"
   },
   {
     "id": "a0b5929f-854b-4b3f-b7fd-f39a68737292",
@@ -126,9 +126,9 @@ $data = <<<'JSON'
     "description": "",
     "payee_id": "1d43b436-46cd-417e-abc4-6ec2a9bf99be",
     "tag_id": null,
-    "created_at": "2020-01-31 00:00:00",
-    "updated_at": "2020-01-31 00:00:00",
-    "spent_at": "2020-01-31 00:00:00"
+    "created_at": "2020-01-28 00:00:00",
+    "updated_at": "2020-01-28 00:00:00",
+    "spent_at": "2020-01-28 00:00:00"
   },
   {
     "id": "c0080100-921d-4e01-a0bc-4ae6eff7214e",
@@ -142,9 +142,9 @@ $data = <<<'JSON'
     "description": "",
     "payee_id": null,
     "tag_id": null,
-    "created_at": "2020-01-31 00:00:00",
-    "updated_at": "2020-01-31 00:00:00",
-    "spent_at": "2020-01-31 00:00:00"
+    "created_at": "2020-01-28 00:00:00",
+    "updated_at": "2020-01-28 00:00:00",
+    "spent_at": "2020-01-28 00:00:00"
   },
   {
     "id": "7cb3227d-22dc-4178-aeb4-02a8f815bdbd",
@@ -158,12 +158,15 @@ $data = <<<'JSON'
     "description": "",
     "payee_id": "701ee173-7c7e-4f92-8af7-a27839c663e0",
     "tag_id": "4b53d029-c1ed-46ad-8d86-1049542f4a7e",
-    "created_at": "2020-01-31 00:00:00",
-    "updated_at": "2020-01-31 00:00:00",
-    "spent_at": "2020-01-31 00:00:00"
+    "created_at": "2020-01-28 00:00:00",
+    "updated_at": "2020-01-28 00:00:00",
+    "spent_at": "2020-01-28 00:00:00"
   }
 ]
 JSON;
+
+$date = new DateTimeImmutable('-1 month');
+$data = preg_replace('/\d{4}-\d{2}-/', $date->format('Y-m-'), $data);
 
 return json_decode($data, true);
 

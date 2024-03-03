@@ -16,10 +16,13 @@ $data = <<<'JSON'
     "code": "39e83221911d",
     "created_at": "2023-11-20 01:51:51",
     "updated_at": "2023-11-20 01:51:51",
-    "expired_at": "2223-11-20 02:01:51"
+    "expired_at": "3000-11-20 02:01:51"
   }
 ]
 JSON;
+
+$date = new DateTimeImmutable('-1 month');
+$data = preg_replace('/2\d{3}-\d{2}-/', $date->format('Y-m-'), $data);
 
 return json_decode($data, true);
 

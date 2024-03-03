@@ -18,10 +18,12 @@ class CopyEnvelopePlanCest
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
+        $fromDate = (new \DateTimeImmutable('-1 month'))->format('Y-m-01 00:00:00');
+        $toDate = (new \DateTimeImmutable())->format('Y-m-01 00:00:00');
         $I->sendPOST($this->url, [
             'planId' => 'bceed17e-d492-40be-921a-e7fa6f663fa6',
-            'fromPeriod' => '2020-01-01 00:00:00',
-            'toPeriod' => '2020-02-01 00:00:00',
+            'fromPeriod' => $fromDate,
+            'toPeriod' => $toDate,
         ]);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
@@ -55,10 +57,12 @@ class CopyEnvelopePlanCest
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
+        $fromDate = (new \DateTimeImmutable('-1 month'))->format('Y-m-01 00:00:00');
+        $toDate = (new \DateTimeImmutable())->format('Y-m-01 00:00:00');
         $I->sendPOST($this->url, [
             'planId' => 'bceed17e-d492-40be-921a-e7fa6f663fa6',
-            'fromPeriod' => '2020-01-01 00:00:00',
-            'toPeriod' => '2020-02-01 00:00:00',
+            'fromPeriod' => $fromDate,
+            'toPeriod' => $toDate,
         ]);
         $I->seeResponseMatchesJsonType([
             'data' => [
