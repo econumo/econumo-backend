@@ -151,13 +151,16 @@ readonly class PlanBalanceService
                 $result[$item['currency_id']] = [
                     'income' => 0.0,
                     'expenses' => 0.0,
+                    'transfers' => 0.0,
                     'exchanges' => 0.0,
                 ];
             }
             $result[$item['currency_id']]['income'] += (float)$item['incomes'];
             $result[$item['currency_id']]['expenses'] += (float)$item['expenses'];
-            $result[$item['currency_id']]['exchanges'] += (float)$item['transfer_incomes'];
-            $result[$item['currency_id']]['exchanges'] -= (float)$item['transfer_expenses'];
+            $result[$item['currency_id']]['transfers'] += (float)$item['transfer_incomes'];
+            $result[$item['currency_id']]['transfers'] -= (float)$item['transfer_expenses'];
+            $result[$item['currency_id']]['exchanges'] += (float)$item['exchange_incomes'];
+            $result[$item['currency_id']]['exchanges'] -= (float)$item['exchange_expenses'];
         }
 
         return $result;

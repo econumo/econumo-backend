@@ -274,16 +274,20 @@ SELECT a.id as account_id,
        a.currency_id,
        COALESCE(incomes, 0) as incomes,
        COALESCE(transfer_incomes, 0) as transfer_incomes,
+       COALESCE(exchange_incomes, 0) as exchange_incomes,
        COALESCE(expenses, 0) as expenses,
-       COALESCE(transfer_expenses, 0) as transfer_expenses
+       COALESCE(transfer_expenses, 0) as transfer_expenses,
+       COALESCE(exchange_expenses, 0) as exchange_expenses
 FROM accounts a
        LEFT JOIN (
-           SELECT tmp.account_id, SUM(tmp.expenses) as expenses, SUM(tmp.incomes) as incomes, SUM(tmp.transfer_expenses) as transfer_expenses, SUM(tmp.transfer_incomes) as transfer_incomes FROM (
+           SELECT tmp.account_id, SUM(tmp.expenses) as expenses, SUM(tmp.incomes) as incomes, SUM(tmp.transfer_expenses) as transfer_expenses, SUM(tmp.transfer_incomes) as transfer_incomes, SUM(tmp.exchange_expenses) as exchange_expenses, SUM(tmp.exchange_incomes) as exchange_incomes FROM (
                 SELECT tr1.account_id,
                        (SELECT SUM(t1.amount) FROM transactions t1 WHERE t1.account_id = tr1.account_id AND t1.type = 0 AND t1.spent_at >= '{$periodStartString}' AND t1.spent_at <= '{$periodEndString}') as expenses,
                        (SELECT SUM(t2.amount) FROM transactions t2 WHERE t2.account_id = tr1.account_id AND t2.type = 1 AND t2.spent_at >= '{$periodStartString}' AND t2.spent_at <= '{$periodEndString}') as incomes,
                        (SELECT SUM(t3.amount) FROM transactions t3 WHERE t3.account_id = tr1.account_id AND t3.type = 2 AND t3.spent_at >= '{$periodStartString}' AND t3.spent_at <= '{$periodEndString}') as transfer_expenses,
-                       NULL as transfer_incomes
+                       NULL as transfer_incomes,
+                       NULL as exchange_incomes,
+                       (SELECT SUM(t4.amount) FROM transactions t4 WHERE t4.account_id = tr1.account_id AND t4.type = 2 AND t4.amount != t4.amount_recipient AND t4.spent_at >= '{$periodStartString}' AND t4.spent_at <= '{$periodEndString}') as exchange_expenses
                 FROM transactions tr1
                 WHERE tr1.spent_at >= '{$periodStartString}' AND tr1.spent_at <= '{$periodEndString}'
                 GROUP BY tr1.account_id
@@ -292,7 +296,9 @@ FROM accounts a
                        NULL as expenses,
                        NULL as incomes,
                        NULL as transfer_expenses,
-                       (SELECT SUM(t4.amount_recipient) FROM transactions t4 WHERE t4.account_recipient_id = tr2.account_recipient_id AND t4.type = 2 AND t4.spent_at >= '{$periodStartString}' AND t4.spent_at <= '{$periodEndString}') as transfer_incomes
+                       (SELECT SUM(t5.amount_recipient) FROM transactions t5 WHERE t5.account_recipient_id = tr2.account_recipient_id AND t5.type = 2 AND t5.spent_at >= '{$periodStartString}' AND t5.spent_at <= '{$periodEndString}') as transfer_incomes,
+                       (SELECT SUM(t6.amount_recipient) FROM transactions t6 WHERE t6.account_recipient_id = tr2.account_recipient_id AND t6.type = 2 AND t6.amount != t6.amount_recipient AND t6.spent_at >= '{$periodStartString}' AND t6.spent_at <= '{$periodEndString}') as exchange_incomes,
+                       NULL as exchange_expenses
                 FROM transactions tr2
                 WHERE tr2.account_recipient_id IS NOT NULL AND tr2.spent_at >= '{$periodStartString}' AND tr2.spent_at <= '{$periodEndString}'
                 GROUP BY tr2.account_recipient_id) tmp GROUP BY tmp.account_id
@@ -303,8 +309,10 @@ SQL;
         $rsm->addScalarResult('currency_id', 'currency_id');
         $rsm->addScalarResult('incomes', 'incomes', 'float');
         $rsm->addScalarResult('transfer_incomes', 'transfer_incomes', 'float');
+        $rsm->addScalarResult('exchange_incomes', 'exchange_incomes', 'float');
         $rsm->addScalarResult('expenses', 'expenses', 'float');
         $rsm->addScalarResult('transfer_expenses', 'transfer_expenses', 'float');
+        $rsm->addScalarResult('exchange_expenses', 'exchange_expenses', 'float');
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
         return $query->getResult();
     }
