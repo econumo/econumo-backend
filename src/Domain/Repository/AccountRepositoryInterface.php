@@ -43,5 +43,5 @@ interface AccountRepositoryInterface
      * @param DateTimeInterface $date
      * @return array
      */
-    public function getAccountsBalancesOnDate(array $accountIds, DateTimeInterface $date): array;
+    public function getAccountsBalancesBeforeDate(array $accountIds, DateTimeInterface $date): array;
 }

@@ -123,7 +123,7 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
         return $this->getEntityManager()->getReference(Account::class, $id);
     }
 
-    public function getAccountsBalancesOnDate(array $accountIds, DateTimeInterface $date): array
+    public function getAccountsBalancesBeforeDate(array $accountIds, DateTimeInterface $date): array
     {
         if ($accountIds === []) {
             return [];
@@ -143,21 +143,21 @@ FROM accounts a
        LEFT JOIN (
            SELECT tmp.account_id, SUM(tmp.expenses) as expenses, SUM(tmp.incomes) as incomes, SUM(tmp.transfer_expenses) as transfer_expenses, SUM(tmp.transfer_incomes) as transfer_incomes FROM (
                 SELECT tr1.account_id,
-                       (SELECT SUM(t1.amount) FROM transactions t1 WHERE t1.account_id = tr1.account_id AND t1.type = 0 AND t1.spent_at <= '{$dateString}') as expenses,
-                       (SELECT SUM(t2.amount) FROM transactions t2 WHERE t2.account_id = tr1.account_id AND t2.type = 1 AND t2.spent_at <= '{$dateString}') as incomes,
-                       (SELECT SUM(t3.amount) FROM transactions t3 WHERE t3.account_id = tr1.account_id AND t3.type = 2 AND t3.spent_at <= '{$dateString}') as transfer_expenses,
+                       (SELECT SUM(t1.amount) FROM transactions t1 WHERE t1.account_id = tr1.account_id AND t1.type = 0 AND t1.spent_at < '{$dateString}') as expenses,
+                       (SELECT SUM(t2.amount) FROM transactions t2 WHERE t2.account_id = tr1.account_id AND t2.type = 1 AND t2.spent_at < '{$dateString}') as incomes,
+                       (SELECT SUM(t3.amount) FROM transactions t3 WHERE t3.account_id = tr1.account_id AND t3.type = 2 AND t3.spent_at < '{$dateString}') as transfer_expenses,
                        NULL as transfer_incomes
                 FROM transactions tr1
-                WHERE tr1.spent_at <= '{$dateString}'
+                WHERE tr1.spent_at < '{$dateString}'
                 GROUP BY tr1.account_id
                 UNION ALL
                 SELECT tr2.account_recipient_id as account_id,
                        NULL as expenses,
                        NULL as incomes,
                        NULL as transfer_expenses,
-                       (SELECT SUM(t4.amount_recipient) FROM transactions t4 WHERE t4.account_recipient_id = tr2.account_recipient_id AND t4.type = 2 AND t4.spent_at <= '{$dateString}') as transfer_incomes
+                       (SELECT SUM(t4.amount_recipient) FROM transactions t4 WHERE t4.account_recipient_id = tr2.account_recipient_id AND t4.type = 2 AND t4.spent_at < '{$dateString}') as transfer_incomes
                 FROM transactions tr2
-                WHERE tr2.account_recipient_id IS NOT NULL AND tr2.spent_at <= '{$dateString}'
+                WHERE tr2.account_recipient_id IS NOT NULL AND tr2.spent_at < '{$dateString}'
                 GROUP BY tr2.account_recipient_id) tmp GROUP BY tmp.account_id
        ) t ON a.id = t.account_id AND a.id IN ('{$parametersString}');
 SQL;

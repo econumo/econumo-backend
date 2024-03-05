@@ -118,7 +118,7 @@ readonly class PlanBalanceService
      */
     private function getBalanceData(array $accountIds, DateTimeInterface $periodEnd): array
     {
-        $balances = $this->accountRepository->getAccountsBalancesOnDate($accountIds, $periodEnd);
+        $balances = $this->accountRepository->getAccountsBalancesBeforeDate($accountIds, $periodEnd);
         $balanceData = [];
         foreach ($balances as $item) {
             if (!isset($balanceData[$item['currency_id']])) {

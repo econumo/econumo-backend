@@ -427,7 +427,7 @@ readonly class PlanService implements PlanServiceInterface
         $rollingPeriodStart = DateTime::createFromInterface($periodStart);
         $rollingPeriodEnd = clone $rollingPeriodStart;
         $rollingPeriodEnd->modify('+1 ' . $periodType->getValue());
-        $rollingPeriodEnd->modify('-1 microsecond');
+//        $rollingPeriodEnd->modify('-1 microsecond');
         $currencyIds = $this->planAccountsService->getAvailableCurrencyIdsForPlanId($planId);
         $envelopes = $this->envelopeRepository->getByPlanId($planId);
         $currentDate = $this->datetimeService->getCurrentDatetime();
@@ -510,7 +510,7 @@ readonly class PlanService implements PlanServiceInterface
             $rollingPeriodStart->modify('+1 ' . $periodType->getValue());
             $rollingPeriodEnd = clone $rollingPeriodStart;
             $rollingPeriodEnd->modify('+1 ' . $periodType->getValue());
-            $rollingPeriodEnd->modify('-1 microsecond');
+//            $rollingPeriodEnd->modify('-1 microsecond');
         }
 
         return $result;
