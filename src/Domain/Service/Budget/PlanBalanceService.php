@@ -71,7 +71,7 @@ readonly class PlanBalanceService
             }
         }
 
-        if ($periodEnd < $currentPeriod || ($currentPeriod > $periodStart && $currentPeriod < $periodEnd)) {
+        if ($periodEnd < $currentPeriod) {
             $endBalanceData = $this->getBalanceData($accountIds, $periodEnd);
             $endBalanceData = array_replace_recursive($endBalanceData, $this->getAccountsReports($accountIds, $periodStart, $periodEnd));
         } else {
@@ -86,7 +86,10 @@ readonly class PlanBalanceService
             }
         }
 
-        $currentBalanceData = $this->getBalanceData($accountIds, $currentPeriod);
+        $currentBalanceData = [];
+        if ($periodStart->format('Y-m-01') === $currentPeriod->format('Y-m-01')) {
+            $currentBalanceData = $this->getBalanceData($accountIds, $currentPeriod);
+        }
 
         $result = [];
         foreach ($currencies as $currencyId) {
@@ -99,7 +102,7 @@ readonly class PlanBalanceService
                 $dto->currencyId = new Id($startBalanceCurrencyId);
                 $dto->startBalance = $value['balance'] === null ? null : (float)$value['balance'];
                 $dto->endBalance = $endBalanceData[$startBalanceCurrencyId]['balance'] === null ? null : (float)$endBalanceData[$startBalanceCurrencyId]['balance'];
-                $dto->currentBalance = $currentBalanceData[$startBalanceCurrencyId]['balance'] === null ? null : (float)$currentBalanceData[$startBalanceCurrencyId]['balance'];
+                $dto->currentBalance = $currentBalanceData === [] ? null : ($currentBalanceData[$startBalanceCurrencyId]['balance'] === null ? null : (float)$currentBalanceData[$startBalanceCurrencyId]['balance']);
 
                 $dto->income = $endBalanceData[$startBalanceCurrencyId]['income'] === null ? null : (float)$endBalanceData[$startBalanceCurrencyId]['income'];
                 $dto->expenses = $endBalanceData[$startBalanceCurrencyId]['expenses'] === null ? null : (float)$endBalanceData[$startBalanceCurrencyId]['expenses'];
