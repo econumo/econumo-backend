@@ -71,9 +71,15 @@ readonly class PlanBalanceService
             }
         }
 
-        if ($periodEnd < $currentPeriod) {
+        $isCurrentPeriod = ($currentPeriod >= $periodStart && $currentPeriod < $periodEnd);
+        if ($periodEnd < $currentPeriod || $isCurrentPeriod) {
             $endBalanceData = $this->getBalanceData($accountIds, $periodEnd);
             $endBalanceData = array_replace_recursive($endBalanceData, $this->getAccountsReports($accountIds, $periodStart, $periodEnd));
+            if ($isCurrentPeriod) {
+                foreach ($endBalanceData as $currencyId => $value) {
+                    $endBalanceData[$currencyId]['balance'] = null;
+                }
+            }
         } else {
             $endBalanceData = [];
             foreach ($currencies as $currencyId) {
@@ -85,11 +91,7 @@ readonly class PlanBalanceService
                 ];
             }
         }
-
-        $currentBalanceData = [];
-        if ($periodStart->format('Y-m-01') === $currentPeriod->format('Y-m-01')) {
-            $currentBalanceData = $this->getBalanceData($accountIds, $currentPeriod);
-        }
+        $currentBalanceData = !$isCurrentPeriod ? [] : $this->getBalanceData($accountIds, $currentPeriod);
 
         $result = [];
         foreach ($currencies as $currencyId) {
