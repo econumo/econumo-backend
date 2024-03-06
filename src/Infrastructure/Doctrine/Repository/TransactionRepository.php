@@ -316,4 +316,74 @@ SQL;
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
         return $query->getResult();
     }
+
+    public function getHoardsReport(
+        array $reportAccountIds,
+        array $hoardAccountIds,
+        DateTimeInterface $periodStart,
+        DateTimeInterface $periodEnd
+    ): array {
+        if ($reportAccountIds === [] || $hoardAccountIds === []) {
+            return [];
+        }
+
+        $reportAccounts = [];
+        foreach ($reportAccountIds as $accountId) {
+            $reportAccounts[] = $accountId->getValue();
+        }
+        $hoardAccounts = [];
+        foreach ($hoardAccountIds as $accountId) {
+            $hoardAccounts[] = $accountId->getValue();
+        }
+        $reportAccountsString = implode("', '", $reportAccounts);
+        $hoardAccountsString = implode("', '", $hoardAccounts);
+        $periodStartString = $periodStart->format('Y-m-d H:i:s');
+        $periodEndString = $periodEnd->format('Y-m-d H:i:s');
+
+        $sql =<<<SQL
+SELECT SUM(t.amount_recipient) as amount, a.currency_id FROM transactions t
+LEFT JOIN accounts a ON t.account_recipient_id = a.id
+WHERE t.amount = t.acount_recipient AND t.account_recipient_id IN ('{$hoardAccountsString}') AND t.account_id IN ('{$reportAccountsString}') AND t.type = 2 AND t.spent_at >= '{$periodStartString}' AND t.spent_at < '{$periodEndString}'
+GROUP BY a.currency_id;
+SQL;
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('currency_id', 'currency_id');
+        $rsm->addScalarResult('amount', 'amount', 'float');
+        $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
+        $toHoard = $query->getResult();
+
+        $sql =<<<SQL
+SELECT SUM(t.amount) as amount, a.currency_id FROM transactions t
+LEFT JOIN accounts a ON t.account_id = a.id
+WHERE t.amount = t.acount_recipient AND t.account_recipient_id IN ('{$reportAccountsString}') AND t.account_id IN ('{$hoardAccountsString}') AND t.type = 2 AND t.spent_at >= '{$periodStartString}' AND t.spent_at < '{$periodEndString}'
+GROUP BY a.currency_id;
+SQL;
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('currency_id', 'currency_id');
+        $rsm->addScalarResult('amount', 'amount', 'float');
+        $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
+        $fromHoard = $query->getResult();
+
+        $result = [];
+        foreach ($toHoard as $item) {
+            if (!isset($result[$item['currency_id']])) {
+                $result[$item['currency_id']] = [
+                    'to_hoards' => 0.0,
+                    'from_hoards' => 0.0,
+                ];
+            }
+            $result[$item['currency_id']]['to_hoards'] += (float)$item['amount'];
+        }
+        foreach ($fromHoard as $item) {
+            if (!isset($result[$item['currency_id']])) {
+                $result[$item['currency_id']] = [
+                    'to_hoards' => 0.0,
+                    'from_hoards' => 0.0,
+                ];
+            }
+            $result[$item['currency_id']]['from_hoards'] += (float)$item['amount'];
+        }
+
+        return $result;
+    }
 }

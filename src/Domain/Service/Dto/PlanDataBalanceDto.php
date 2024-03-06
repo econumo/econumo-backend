@@ -21,4 +21,6 @@ class PlanDataBalanceDto
     public ?float $expenses = null;
 
     public ?float $exchanges = null;
+
+    public ?float $hoards = null;
 }

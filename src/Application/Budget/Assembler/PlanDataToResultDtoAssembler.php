@@ -33,6 +33,7 @@ readonly class PlanDataToResultDtoAssembler
             $balanceDto->income = $balance->income;
             $balanceDto->expenses = $balance->expenses;
             $balanceDto->exchanges = $balance->exchanges;
+            $balanceDto->hoards = $balance->hoards;
             $dto->balances[] = $balanceDto;
         }
 

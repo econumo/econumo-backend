@@ -58,6 +58,43 @@ readonly class PlanAccountsService
 
     /**
      * @param Id $planId
+     * @return Account[]
+     */
+    public function getHoardAccountsForPlanId(Id $planId): array
+    {
+        $result = [];
+        $access = $this->planAccessRepository->getByPlanId($planId);
+        $accessUserId = [];
+        foreach ($access as $planAccess) {
+            if (!$planAccess->isAccepted()) {
+                continue;
+            }
+            $accessUserId[$planAccess->getUserId()->getValue()] = $planAccess->getUserId();
+
+            $accounts = $this->accountRepository->getExcludedUserAccountsForBudgeting($planAccess->getUserId());
+            foreach ($accounts as $account) {
+                $result[$account->getId()->getValue()] = $account;
+            }
+        }
+
+        $plan = $this->planRepository->get($planId);
+        $accessUserId[$plan->getOwnerUserId()->getValue()] = $plan->getOwnerUserId();
+        $accounts = $this->accountRepository->getExcludedUserAccountsForBudgeting($plan->getOwnerUserId());
+        foreach ($accounts as $account) {
+            if (!isset($accessUserId[$account->getUserId()->getValue()])) {
+                continue;
+            }
+
+            $result[$account->getId()->getValue()] = $account;
+        }
+
+        $result = array_values($result);
+        usort($result, fn (Account $a, Account $b) => $a->getBalance() <=> $b->getBalance());
+        return array_reverse($result);
+    }
+
+    /**
+     * @param Id $planId
      * @return Id[]
      */
     public function getAvailableCurrencyIdsForPlanId(Id $planId): array

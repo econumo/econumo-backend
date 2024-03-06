@@ -47,4 +47,9 @@ class PlanDataBalanceResultDto
      * @OA\Property(example="13.07")
      */
     public ?float $exchanges = null;
+
+    /**
+     * @OA\Property(example="13.07")
+     */
+    public ?float $hoards = null;
 }

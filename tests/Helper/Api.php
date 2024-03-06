@@ -317,7 +317,8 @@ class Api extends \Codeception\Module
             'currentBalance' => 'float|integer|null',
             'income' => 'float|integer|null',
             'expenses' => 'float|integer|null',
-            'exchanges' => 'float|integer|null'
+            'exchanges' => 'float|integer|null',
+            'hoards' => 'float|integer|null'
         ];
     }
 

@@ -42,7 +42,7 @@ interface TransactionRepositoryInterface
     public function replaceCategory(Id $oldCategoryId, Id $newCategoryId): void;
 
     /**
-     * @param array $categoryIds
+     * @param Id[] $categoryIds
      * @param DateTimeInterface $startDate
      * @param DateTimeInterface $endDate
      * @return array
@@ -50,7 +50,7 @@ interface TransactionRepositoryInterface
     public function countSpendingForCategories(array $categoryIds, DateTimeInterface $startDate, DateTimeInterface $endDate): array;
 
     /**
-     * @param array $tagsIds
+     * @param Id[] $tagsIds
      * @param DateTimeInterface $startDate
      * @param DateTimeInterface $endDate
      * @return array
@@ -58,10 +58,19 @@ interface TransactionRepositoryInterface
     public function countSpendingForTags(array $tagsIds, DateTimeInterface $startDate, DateTimeInterface $endDate): array;
 
     /**
-     * @param array $accountIds
+     * @param Id[] $accountIds
      * @param DateTimeInterface $periodStart
      * @param DateTimeInterface $periodEnd
      * @return array
      */
     public function getAccountsReport(array $accountIds, DateTimeInterface $periodStart, DateTimeInterface $periodEnd): array;
+
+    /**
+     * @param Id[] $reportAccountIds
+     * @param Id[] $hoardAccountIds
+     * @param DateTimeInterface $periodStart
+     * @param DateTimeInterface $periodEnd
+     * @return array
+     */
+    public function getHoardsReport(array $reportAccountIds, array $hoardAccountIds, DateTimeInterface $periodStart, DateTimeInterface $periodEnd): array;
 }

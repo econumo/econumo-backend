@@ -181,4 +181,17 @@ SQL;
             ->getQuery()
             ->getResult();
     }
+
+    public function getExcludedUserAccountsForBudgeting(Id $userId): array
+    {
+        $builder = $this->createQueryBuilder('a');
+        return $builder
+            ->select('a')
+            ->where('a.user = :user')
+            ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId))
+            ->andWhere('a.isDeleted = false')
+            ->andWhere('a.isExcludedFromBudget = true')
+            ->getQuery()
+            ->getResult();
+    }
 }
