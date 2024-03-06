@@ -343,7 +343,7 @@ SQL;
         $sql =<<<SQL
 SELECT SUM(t.amount_recipient) as amount, a.currency_id FROM transactions t
 LEFT JOIN accounts a ON t.account_recipient_id = a.id
-WHERE t.amount = t.acount_recipient AND t.account_recipient_id IN ('{$hoardAccountsString}') AND t.account_id IN ('{$reportAccountsString}') AND t.type = 2 AND t.spent_at >= '{$periodStartString}' AND t.spent_at < '{$periodEndString}'
+WHERE t.amount = t.amount_recipient AND t.account_recipient_id IN ('{$hoardAccountsString}') AND t.account_id IN ('{$reportAccountsString}') AND t.type = 2 AND t.spent_at >= '{$periodStartString}' AND t.spent_at < '{$periodEndString}'
 GROUP BY a.currency_id;
 SQL;
         $rsm = new ResultSetMapping();
@@ -355,7 +355,7 @@ SQL;
         $sql =<<<SQL
 SELECT SUM(t.amount) as amount, a.currency_id FROM transactions t
 LEFT JOIN accounts a ON t.account_id = a.id
-WHERE t.amount = t.acount_recipient AND t.account_recipient_id IN ('{$reportAccountsString}') AND t.account_id IN ('{$hoardAccountsString}') AND t.type = 2 AND t.spent_at >= '{$periodStartString}' AND t.spent_at < '{$periodEndString}'
+WHERE t.amount = t.amount_recipient AND t.account_recipient_id IN ('{$reportAccountsString}') AND t.account_id IN ('{$hoardAccountsString}') AND t.type = 2 AND t.spent_at >= '{$periodStartString}' AND t.spent_at < '{$periodEndString}'
 GROUP BY a.currency_id;
 SQL;
         $rsm = new ResultSetMapping();
