@@ -166,9 +166,15 @@ readonly class PlanBalanceService
             ];
         }
         $reports = $this->transactionRepository->getHoardsReport($reportAccountIds, $hoardAccountIds, $periodStart, $periodEnd);
-        foreach ($reports as $item) {
-            $result[$item['currency_id']]['to_hoards'] += (float)$item['to_hoards'];
-            $result[$item['currency_id']]['from_hoards'] += (float)$item['from_hoards'];
+        foreach ($reports as $currencyId => $item) {
+            if (!isset($result[$currencyId])) {
+                $result[$currencyId] = [
+                    'to_hoards' => 0.0,
+                    'from_hoards' => 0.0,
+                ];
+            }
+            $result[$currencyId]['to_hoards'] += (float)$item['to_hoards'];
+            $result[$currencyId]['from_hoards'] += (float)$item['from_hoards'];
         }
 
         return $result;
