@@ -7,6 +7,7 @@ namespace App\Domain\Factory;
 use App\Domain\Entity\Transaction;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\TransactionType;
+use App\Domain\Exception\RecipientIsRequiredException;
 use App\Domain\Repository\AccountRepositoryInterface;
 use App\Domain\Repository\CategoryRepositoryInterface;
 use App\Domain\Repository\PayeeRepositoryInterface;
@@ -24,6 +25,9 @@ class TransactionFactory implements TransactionFactoryInterface
 
     public function create(TransactionDto $dto): Transaction
     {
+        if ($dto->type->isTransfer() && $dto->accountRecipientId === null) {
+            throw new RecipientIsRequiredException('Recipient account is required for transfer transaction');
+        }
         return new Transaction(
             $this->transactionRepository->getNextIdentity(),
             $this->userRepository->getReference($dto->userId),
