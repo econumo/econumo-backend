@@ -11,6 +11,7 @@ use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Repository\TransactionRepositoryInterface;
 use App\Domain\Service\AccountAccessServiceInterface;
 use App\Domain\Service\TransactionServiceInterface;
+use DateTimeImmutable;
 
 class TransactionListService
 {
@@ -26,8 +27,13 @@ class TransactionListService
             $this->accountAccessService->checkViewTransactionsAccess($userId, new Id($dto->accountId));
             $transactions = $this->transactionRepository->findByAccountId(new Id($dto->accountId));
         } else {
-//            $transactions = $this->transactionRepository->findAvailableForUserId($userId);
-            $transactions = $this->transactionService->getTransactionsForVisibleAccounts($userId);
+            if ($dto->periodStart && $dto->periodEnd) {
+                $periodStart = new DateTimeImmutable($dto->periodStart);
+                $periodEnd = new DateTimeImmutable($dto->periodEnd);
+                $transactions = $this->transactionService->getTransactionsForVisibleAccounts($userId, $periodStart, $periodEnd);
+            } else {
+                $transactions = $this->transactionService->getTransactionsForVisibleAccounts($userId);
+            }
         }
 
         return $this->getTransactionListV1ResultAssembler->assemble($dto, $userId, $transactions);

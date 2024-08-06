@@ -17,11 +17,11 @@ interface TransactionServiceInterface
 
     public function deleteTransaction(Transaction $transaction): void;
 
-    public function updateBalance(Id $accountId, float $correction, \DateTimeInterface $updatedAt, string $comment = ''): Transaction;
+    public function updateBalance(Id $accountId, float $correction, DateTimeInterface $updatedAt, string $comment = ''): Transaction;
 
     /**
      * @param Id $userId
      * @return Transaction[]
      */
-    public function getTransactionsForVisibleAccounts(Id $userId): array;
+    public function getTransactionsForVisibleAccounts(Id $userId, DateTimeInterface $periodStart = null, DateTimeInterface $periodEnd = null): array;
 }

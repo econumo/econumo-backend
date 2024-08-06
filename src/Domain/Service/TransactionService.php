@@ -128,7 +128,7 @@ class TransactionService implements TransactionServiceInterface
     /**
      * @inheritDoc
      */
-    public function getTransactionsForVisibleAccounts(Id $userId): array
+    public function getTransactionsForVisibleAccounts(Id $userId, DateTimeInterface $periodStart = null, DateTimeInterface $periodEnd = null): array
     {
         $folders = $this->folderRepository->getByUserId($userId);
         $accounts = $this->accountRepository->getUserAccounts($userId);
@@ -145,6 +145,6 @@ class TransactionService implements TransactionServiceInterface
             }
         }
 
-        return $this->transactionRepository->findAvailableForUserId($userId, $excludeAccountIds);
+        return $this->transactionRepository->findAvailableForUserId($userId, $excludeAccountIds, $periodStart, $periodEnd);
     }
 }

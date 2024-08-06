@@ -28,7 +28,7 @@ interface TransactionRepositoryInterface
      * @param Id[] $excludeAccounts
      * @return Transaction[]
      */
-    public function findAvailableForUserId(Id $userId, array $excludeAccounts = []): array;
+    public function findAvailableForUserId(Id $userId, array $excludeAccounts = [], DateTimeInterface $periodStart = null, DateTimeInterface $periodEnd = null): array;
 
     /**
      * @return Transaction[]

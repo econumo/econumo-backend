@@ -90,7 +90,12 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
     /**
      * @inheritDoc
      */
-    public function findAvailableForUserId(Id $userId, array $excludeAccounts = []): array
+    public function findAvailableForUserId(
+        Id $userId,
+        array $excludeAccounts = [],
+        DateTimeInterface $periodStart = null,
+        DateTimeInterface $periodEnd = null,
+    ): array
     {
         $sharedAccountsQuery = $this->getEntityManager()
             ->createQuery('SELECT IDENTITY(aa.account) as accountId FROM App\Domain\Entity\AccountAccess aa WHERE aa.user = :user')
@@ -119,6 +124,12 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
         $query = $this->createQueryBuilder('t')
             ->where('t.account IN(:accounts) OR t.accountRecipient IN(:accounts)')
             ->setParameter('accounts', $filteredAccounts);
+        if ($periodStart && $periodEnd) {
+            $query->andWhere('t.spentAt >= :periodStart')
+                ->andWhere('t.spentAt < :periodEnd')
+                ->setParameter('periodStart', $periodStart)
+                ->setParameter('periodEnd', $periodEnd);
+        }
 
         return $query->getQuery()->getResult();
     }

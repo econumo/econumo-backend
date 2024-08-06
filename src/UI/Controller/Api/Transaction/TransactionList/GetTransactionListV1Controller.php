@@ -35,6 +35,20 @@ class GetTransactionListV1Controller extends AbstractController
      *     @OA\Schema(type="string"),
      *     description="Account id",
      * ),
+     * @OA\Parameter(
+     *       name="periodStart",
+     *       in="query",
+     *       required=true,
+     *       @OA\Schema(type="string"),
+     *       description="Period start",
+     *   ),
+     * @OA\Parameter(
+     *       name="periodEnd",
+     *       in="query",
+     *       required=true,
+     *       @OA\Schema(type="string"),
+     *       description="Period end",
+     *   ),
      * @OA\Response(
      *     response=200,
      *     description="OK",
