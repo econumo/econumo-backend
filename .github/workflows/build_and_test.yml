@@ -36,11 +36,11 @@ jobs:
             -   name: Test APP image
                 if: success()
                 run: |
-                    docker run ${DOCKER_IMAGE_APP} bin/console doctrine:database:create --env=test
-                    docker run ${DOCKER_IMAGE_APP} bin/console doctrine:migration:migrate -n --env=test
-                    docker run ${DOCKER_IMAGE_APP} bin/console  doctrine:schema:validate --skip-sync --env=test
-                    docker run ${DOCKER_IMAGE_APP} bin/console doctrine:fixtures:load --append -n --env=test
-                    docker run --env QASE_ENABLE=${QASE_ENABLE} --env QASE_TOKEN=${QASE_TOKEN} --env QASE_PROJECT=${QASE_PROJECT} ${DOCKER_IMAGE_APP} vendor/bin/codecept run
+                    docker run --env QASE_ENABLE=${QASE_ENABLE} --env QASE_TOKEN=${QASE_TOKEN} --env QASE_PROJECT=${QASE_PROJECT} ${DOCKER_IMAGE_APP} bin/console doctrine:database:create --env=test \
+                        && bin/console doctrine:migration:migrate -n --env=test \
+                        && bin/console  doctrine:schema:validate --skip-sync --env=test \
+                        && bin/console doctrine:fixtures:load --purge-with-truncate -n --env=test \
+                        && vendor/bin/codecept run
                 env:
                     QASE_ENABLE: "false"
                     QASE_TOKEN: ${{ secrets.APP_QASE_TOKEN }}
