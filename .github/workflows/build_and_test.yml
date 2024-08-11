@@ -36,10 +36,10 @@ jobs:
             -   name: Test APP image
                 if: success()
                 run: |
-                    docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:database:create --env=test
-                    docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:migration:migrate -n --env=test
-                    docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} bin/console doctrine:fixtures:load --purge-with-truncate -n --env=test
-                    docker run --network="host" --add-host=db:127.0.0.1 --env QASE_ENABLE=${QASE_ENABLE} --env QASE_TOKEN=${QASE_TOKEN} --env QASE_PROJECT=${QASE_PROJECT} ${DOCKER_IMAGE_APP} vendor/bin/codecept run
+                    docker run ${DOCKER_IMAGE_APP} bin/console doctrine:database:create --env=test
+                    docker run ${DOCKER_IMAGE_APP} bin/console doctrine:migration:migrate -n --env=test
+                    docker run ${DOCKER_IMAGE_APP} bin/console doctrine:fixtures:load --purge-with-truncate -n --env=test
+                    docker run --env QASE_ENABLE=${QASE_ENABLE} --env QASE_TOKEN=${QASE_TOKEN} --env QASE_PROJECT=${QASE_PROJECT} ${DOCKER_IMAGE_APP} vendor/bin/codecept run
                 env:
                     QASE_ENABLE: "false"
                     QASE_TOKEN: ${{ secrets.APP_QASE_TOKEN }}
@@ -48,7 +48,7 @@ jobs:
             -   name: Run RECTOR
                 if: success()
                 run: |
-                    docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE_APP} vendor/bin/rector process --dry-run
+                    docker run ${DOCKER_IMAGE_APP} vendor/bin/rector process --dry-run
 
 #            -   name: Run PSALM analysis
 #                if: success()
