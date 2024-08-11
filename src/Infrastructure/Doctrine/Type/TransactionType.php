@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Infrastructure\Doctrine\Type;
@@ -16,6 +17,19 @@ class TransactionType extends SmallIntType
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
         return $value === null ? null : new ValueObject((int)$value);
+    }
+
+    /**
+     * @inheritdoc
+     * @param int|null $value
+     */
+    public function convertToDatabaseValue($value, AbstractPlatform $platform)
+    {
+        if ($value instanceof ValueObject) {
+            return $value->getValue();
+        }
+
+        return $value;
     }
 
     /**

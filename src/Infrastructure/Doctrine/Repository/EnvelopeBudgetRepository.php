@@ -126,9 +126,12 @@ SQL;
     {
         $planIdString = $planId->getValue();
         $sql = <<<SQL
-DELETE FROM envelope_budgets eb 
-USING envelopes e 
-WHERE eb.envelope_id = e.id AND e.plan_id = '{$planIdString}';
+DELETE FROM envelope_budgets 
+WHERE envelope_id IN (
+    SELECT e.id 
+    FROM envelopes e 
+    WHERE e.plan_id = "{$planIdString}"
+);
 SQL;
         $rsm = new ResultSetMapping();
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);

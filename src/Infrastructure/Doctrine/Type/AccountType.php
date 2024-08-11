@@ -20,6 +20,19 @@ class AccountType extends SmallIntType
 
     /**
      * @inheritdoc
+     * @param int|null $value
+     */
+    public function convertToDatabaseValue($value, AbstractPlatform $platform)
+    {
+        if ($value instanceof ValueObject) {
+            return $value->getValue();
+        }
+
+        return $value;
+    }
+
+    /**
+     * @inheritdoc
      */
     public function getName(): string
     {

@@ -63,7 +63,7 @@ tasks:
             - docker-compose up -d
             - cmd: docker-compose exec -uwww-data app bin/console doctrine:database:drop --force --env=test -vvv
               ignore_error: true
-            - docker-compose exec -uwww-data app bin/console doctrine:database:create --if-not-exists --env=test -vvv
+            - docker-compose exec -uwww-data app bin/console doctrine:database:create --env=test -vvv
             - docker-compose exec -uwww-data app bin/console doctrine:migration:migrate -n --env=test -vvv
             - docker-compose exec -uwww-data app bin/console doctrine:fixtures:load --purge-with-truncate -n --env=test -vvv
             - cmd: docker-compose exec -uwww-data app vendor/bin/codecept run {{.CLI_ARGS}} --steps -v
