@@ -6,3 +6,4 @@ ekino_new_relic:
     license_key: "%env(NEW_RELIC_LICENSE_KEY)%"
     exceptions: true
     deprecations: false
+    logging: true
