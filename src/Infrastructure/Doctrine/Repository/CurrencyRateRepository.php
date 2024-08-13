@@ -12,6 +12,7 @@ use App\Domain\Repository\CurrencyRateRepositoryInterface;
 use DateTimeInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\ORMInvalidArgumentException;
@@ -59,11 +60,13 @@ class CurrencyRateRepository extends ServiceEntityRepository implements Currency
             $ratesDate = \DateTime::createFromFormat('Y-m-d', $lastDate);
         }
 
-        return $this->createQueryBuilder('cr')
+        $query = $this->createQueryBuilder('cr')
             ->andWhere('cr.publishedAt = :date')
-            ->setParameter('date', $ratesDate)
-            ->getQuery()
-            ->getResult();
+            ->setParameter('date', $ratesDate, Types::DATE_MUTABLE)
+            ->getQuery();
+        $result = $query->getResult();
+
+        return $result;
     }
 
     public function get(Id $currencyId, DateTimeInterface $date): CurrencyRate

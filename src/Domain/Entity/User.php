@@ -17,6 +17,7 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -167,7 +168,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getConnections(): Collection
     {
-        return $this->connections;
+        $criteria = Criteria::create()
+            ->orderBy(['name' => Criteria::ASC]);
+        return $this->connections->matching($criteria);
     }
 
     public function createOption(UserOption $option): UserOption

@@ -20,7 +20,7 @@ final class Version20231019035622 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
+        $this->skipIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql('ALTER TABLE envelope_budgets DROP CONSTRAINT FK_C2967EB44706CB17');
         $this->addSql('ALTER TABLE envelope_budgets ALTER id TYPE UUID');
@@ -88,7 +88,7 @@ final class Version20231019035622 extends AbstractMigration
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
+        $this->skipIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql('ALTER TABLE envelope_budgets DROP CONSTRAINT fk_c2967eb44706cb17');
         $this->addSql('ALTER TABLE envelope_budgets ADD CONSTRAINT fk_c2967eb44706cb17 FOREIGN KEY (envelope_id) REFERENCES envelopes (id) NOT DEFERRABLE INITIALLY IMMEDIATE');

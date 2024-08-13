@@ -20,7 +20,7 @@ final class Version20220220121754 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', "Migration can only be executed safely on 'postgresql'.");
+        $this->skipIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', "Migration can only be executed safely on 'postgresql'.");
 
         $this->addSql('CREATE TABLE currency_rates (id UUID NOT NULL, currency_id UUID NOT NULL, base_currency_id UUID NOT NULL, rate NUMERIC(12, 8) NOT NULL, published_at DATE NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_1336A95A38248176 ON currency_rates (currency_id)');
@@ -34,7 +34,7 @@ final class Version20220220121754 extends AbstractMigration
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', "Migration can only be executed safely on 'postgresql'.");
+        $this->skipIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', "Migration can only be executed safely on 'postgresql'.");
 
         $this->addSql('DROP TABLE currency_rates');
     }

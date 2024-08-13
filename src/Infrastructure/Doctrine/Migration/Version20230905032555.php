@@ -20,7 +20,7 @@ final class Version20230905032555 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
+        $this->skipIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
         $sql = <<<SQL
 INSERT INTO transactions (id, user_id, type, account_id, account_recipient_id, amount, amount_recipient, category_id, description, payee_id, tag_id, created_at, updated_at, spent_at)
@@ -61,7 +61,7 @@ SQL;
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
+        $this->skipIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql('DELETE FROM transactions WHERE description = \'Econumo: Start balance\'');
     }

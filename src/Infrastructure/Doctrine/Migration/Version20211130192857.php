@@ -20,7 +20,7 @@ final class Version20211130192857 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', "Migration can only be executed safely on 'postgresql'.");
+        $this->skipIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', "Migration can only be executed safely on 'postgresql'.");
 
         $this->addSql('CREATE TABLE folder_accounts (folder_id UUID NOT NULL, account_id UUID NOT NULL, PRIMARY KEY(folder_id, account_id))');
         $this->addSql('CREATE INDEX IDX_37D3D46162CB942 ON folder_accounts (folder_id)');
@@ -34,7 +34,7 @@ final class Version20211130192857 extends AbstractMigration
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', "Migration can only be executed safely on 'postgresql'.");
+        $this->skipIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', "Migration can only be executed safely on 'postgresql'.");
 
         $this->addSql('DROP TABLE folder_accounts');
         $this->addSql('ALTER TABLE folders DROP CONSTRAINT FK_FE37D30FA76ED395');

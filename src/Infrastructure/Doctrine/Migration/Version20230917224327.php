@@ -20,7 +20,7 @@ final class Version20230917224327 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
+        $this->skipIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql("INSERT INTO user_options (id, user_id, name, value, created_at, updated_at) SELECT gen_random_uuid(), u.id, 'currency', 'USD', NOW(), NOW() FROM users u ON CONFLICT DO NOTHING;");
         $this->addSql("INSERT INTO user_options (id, user_id, name, value, created_at, updated_at) SELECT gen_random_uuid(), u.id, 'report_period', 'monthly', NOW(), NOW() FROM users u ON CONFLICT DO NOTHING;");
@@ -30,6 +30,6 @@ final class Version20230917224327 extends AbstractMigration
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
+        $this->skipIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
     }
 }
