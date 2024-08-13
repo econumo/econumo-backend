@@ -8,6 +8,8 @@ services:
             dockerfile: ./build/docker/app/Dockerfile
             target: dev
         working_dir: /var/www
+        depends_on:
+            - db
         volumes:
             - .:/var/www:cached
             - ./var/:/var/www/var:delegated
@@ -20,3 +22,19 @@ services:
             - PHP_ERROR_REPORTING=32767
             - PHP_IDE_CONFIG=serverName=econumo
             - PHP_XDEBUG_REMOTE_HOST=docker.for.mac.localhost
+
+    db:
+        image: postgres:13-alpine
+        ports:
+            - "8083:5432"
+        volumes:
+            - db-data:/var/lib/postgresql/data
+        environment:
+            - POSTGRES_HOST=${DATABASE_HOST}
+            - POSTGRES_PORT=${DATABASE_PORT}
+            - POSTGRES_USER=${DATABASE_USER}
+            - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+            - POSTGRES_DB=${DATABASE_NAME}
+
+volumes:
+    db-data:

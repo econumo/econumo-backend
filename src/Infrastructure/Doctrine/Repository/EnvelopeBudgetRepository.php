@@ -130,7 +130,7 @@ DELETE FROM envelope_budgets
 WHERE envelope_id IN (
     SELECT e.id 
     FROM envelopes e 
-    WHERE e.plan_id = "{$planIdString}"
+    WHERE e.plan_id = '{$planIdString}'
 );
 SQL;
         $rsm = new ResultSetMapping();
