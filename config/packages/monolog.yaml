@@ -1,7 +1,4 @@
----
 monolog:
-    channels:
-        - 'http_api_exceptions'
     handlers:
         main:
             type: fingers_crossed
@@ -14,7 +11,7 @@ monolog:
             path: "%kernel.logs_dir%/%kernel.environment%.log"
             level: debug
             channels:
-                - '!http_api_exceptions'
+                - '!deprecation'
         console:
             type: console
             process_psr_3_messages: false
@@ -29,8 +26,3 @@ monolog:
         deprecation:
             type: stream
             path: "%kernel.logs_dir%/deprecations.log"
-        http_api_exceptions:
-            type: stream
-            path: '%kernel.logs_dir%/http_api_exceptions.log'
-            level: debug
-            channels: ['http_api_exceptions']

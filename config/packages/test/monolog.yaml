@@ -7,6 +7,5 @@ monolog:
             excluded_http_codes: [404, 405]
             channels: ["!event"]
         nested:
-            type: stream
-            path: "%kernel.logs_dir%/%kernel.environment%.log"
+            type: error_log
             level: debug

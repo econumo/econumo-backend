@@ -1,4 +1,3 @@
----
 monolog:
     handlers:
         main:
@@ -7,10 +6,8 @@ monolog:
             handler: prod
             include_stacktraces: true
         prod:
-            type: stream
+            type: error_log
         deprecation_filter:
             handler: black_hole
-#        http_api_exceptions:
-#            level: error
         black_hole:
             type: "null"
