@@ -18,6 +18,7 @@ class ResponseFactory
         int $httpCode = Response::HTTP_OK
     ): Response {
         return static::createJsonResponse([
+            'success' => true,
             'message' => $message,
             'data' => $data,
         ], $httpCode);
@@ -31,6 +32,7 @@ class ResponseFactory
         int $httpCode = Response::HTTP_BAD_REQUEST
     ): Response {
         return static::createJsonResponse([
+            'success' => false,
             'message' => $message,
             'code' => $code,
             'errors' => $errors,
@@ -45,6 +47,7 @@ class ResponseFactory
         int $httpCode = Response::HTTP_INTERNAL_SERVER_ERROR
     ): Response {
         $data = [
+            'success' => false,
             'message' => $message,
             'code' => $code
         ];
