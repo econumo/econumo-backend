@@ -7,10 +7,8 @@ namespace App\Domain\Service\Connection;
 
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\DomainException;
-use App\Domain\Repository\PlanRepositoryInterface;
 use App\Domain\Repository\UserRepositoryInterface;
 use App\Domain\Service\AntiCorruptionServiceInterface;
-use App\Domain\Service\Budget\PlanServiceInterface;
 use Throwable;
 
 readonly class ConnectionService implements ConnectionServiceInterface
@@ -18,9 +16,7 @@ readonly class ConnectionService implements ConnectionServiceInterface
     public function __construct(
         private UserRepositoryInterface $userRepository,
         private AntiCorruptionServiceInterface $antiCorruptionService,
-        private ConnectionAccountServiceInterface $connectionAccountService,
-        private PlanServiceInterface $planService,
-        private PlanRepositoryInterface $planRepository
+        private ConnectionAccountServiceInterface $connectionAccountService
     ) {
     }
 
@@ -49,18 +45,6 @@ readonly class ConnectionService implements ConnectionServiceInterface
             foreach ($this->connectionAccountService->getIssuedAccountAccess($initiator->getId()) as $accountAccess) {
                 if ($accountAccess->getUserId()->isEqual($connectedUser->getId())) {
                     $this->connectionAccountService->revokeAccountAccess($accountAccess->getUserId(), $accountAccess->getAccountId());
-                }
-            }
-
-            foreach ($this->planRepository->getAvailableForUserId($initiatorUserId) as $plan) {
-                if ($plan->getOwnerUserId()->isEqual($connectedUserId)) {
-                    $this->planService->revokeAccess($plan->getId(), $initiatorUserId);
-                }
-            }
-
-            foreach ($this->planRepository->getAvailableForUserId($connectedUserId) as $plan) {
-                if ($plan->getOwnerUserId()->isEqual($initiatorUserId)) {
-                    $this->planService->revokeAccess($plan->getId(), $connectedUserId);
                 }
             }
 

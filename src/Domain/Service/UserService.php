@@ -20,7 +20,6 @@ use App\Domain\Factory\UserFactoryInterface;
 use App\Domain\Factory\UserOptionFactoryInterface;
 use App\Domain\Repository\ConnectionInviteRepositoryInterface;
 use App\Domain\Repository\FolderRepositoryInterface;
-use App\Domain\Repository\PlanRepositoryInterface;
 use App\Domain\Repository\UserOptionRepositoryInterface;
 use App\Domain\Repository\UserRepositoryInterface;
 use App\Domain\Service\Translation\TranslationServiceInterface;
@@ -40,7 +39,6 @@ readonly class UserService implements UserServiceInterface
         private ConnectionInviteRepositoryInterface $connectionInviteRepository,
         private UserOptionFactoryInterface $userOptionFactory,
         private UserOptionRepositoryInterface $userOptionRepository,
-        private PlanRepositoryInterface $planRepository,
         private UserRegistrationServiceInterface $userRegistrationService
     )
     {
@@ -130,9 +128,7 @@ readonly class UserService implements UserServiceInterface
     {
         $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
-            $plan = $this->planRepository->get($planId);
             $user = $this->userRepository->get($userId);
-            $user->updateDefaultPlan($plan->getId());
             $this->userRepository->save([$user]);
             $this->antiCorruptionService->commit(__METHOD__);
         } catch (\Throwable $throwable) {

@@ -13,8 +13,6 @@ use App\Domain\Exception\TagAlreadyExistsException;
 use App\Domain\Factory\TagFactoryInterface;
 use App\Domain\Repository\AccountRepositoryInterface;
 use App\Domain\Repository\TagRepositoryInterface;
-use App\Domain\Service\Budget\EnvelopeServiceInterface;
-use App\Domain\Service\Dto\PositionDto;
 use DateTimeInterface;
 
 readonly class TagService implements TagServiceInterface
@@ -23,8 +21,7 @@ readonly class TagService implements TagServiceInterface
         private TagFactoryInterface $tagFactory,
         private TagRepositoryInterface $tagRepository,
         private AccountRepositoryInterface $accountRepository,
-        private AntiCorruptionServiceInterface $antiCorruptionService,
-        private EnvelopeServiceInterface $envelopeService,
+        private AntiCorruptionServiceInterface $antiCorruptionService
     ) {
     }
 
@@ -42,7 +39,6 @@ readonly class TagService implements TagServiceInterface
             $tag = $this->tagFactory->create($userId, $name);
             $tag->updatePosition(count($tags));
             $this->tagRepository->save([$tag]);
-            $this->envelopeService->createConnectedEnvelopesByTag($tag, $userId);
 
             $this->antiCorruptionService->commit(__METHOD__);
         } catch (\Throwable $throwable) {
@@ -103,7 +99,6 @@ readonly class TagService implements TagServiceInterface
         $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
             $category = $this->tagRepository->get($tagId);
-            $this->envelopeService->deleteConnectedEnvelopeByTag($tagId);
             $this->tagRepository->delete($category);
             $this->antiCorruptionService->commit(__METHOD__);
         } catch (\Throwable $throwable) {

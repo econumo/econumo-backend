@@ -15,7 +15,6 @@ use App\Domain\Factory\CategoryFactoryInterface;
 use App\Domain\Repository\AccountRepositoryInterface;
 use App\Domain\Repository\CategoryRepositoryInterface;
 use App\Domain\Repository\TransactionRepositoryInterface;
-use App\Domain\Service\Budget\EnvelopeServiceInterface;
 use DateTimeInterface;
 
 readonly class CategoryService implements CategoryServiceInterface
@@ -25,8 +24,7 @@ readonly class CategoryService implements CategoryServiceInterface
         private CategoryRepositoryInterface $categoryRepository,
         private AccountRepositoryInterface $accountRepository,
         private AntiCorruptionServiceInterface $antiCorruptionService,
-        private TransactionRepositoryInterface $transactionRepository,
-        private EnvelopeServiceInterface $envelopeService,
+        private TransactionRepositoryInterface $transactionRepository
     ) {
     }
 
@@ -44,7 +42,6 @@ readonly class CategoryService implements CategoryServiceInterface
             $category = $this->categoryFactory->create($userId, $name, $type, $icon);
             $category->updatePosition(count($categories));
             $this->categoryRepository->save([$category]);
-            $this->envelopeService->createConnectedEnvelopesByCategory($category, $userId);
 
             $this->antiCorruptionService->commit(__METHOD__);
         } catch (\Throwable $throwable) {
@@ -75,7 +72,6 @@ readonly class CategoryService implements CategoryServiceInterface
         $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
             $category = $this->categoryRepository->get($categoryId);
-            $this->envelopeService->deleteConnectedEnvelopeByCategory($categoryId);
             $this->categoryRepository->delete($category);
             $this->antiCorruptionService->commit(__METHOD__);
         } catch (\Throwable $throwable) {
