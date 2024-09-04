@@ -39,7 +39,7 @@ class UserOption
     /**
      * @var string
      */
-    final public const DEFAULT_PLAN = 'default_plan';
+    final public const DEFAULT_BUDGET = 'default_budget';
 
 
     /**
@@ -48,7 +48,7 @@ class UserOption
     public const OPTIONS = [
         self::CURRENCY,
         self::REPORT_PERIOD,
-        self::DEFAULT_PLAN,
+        self::DEFAULT_BUDGET,
     ];
 
     private readonly DateTimeImmutable $createdAt;

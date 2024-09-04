@@ -71,7 +71,7 @@ readonly class UserService implements UserServiceInterface
                 [
                     $this->userOptionFactory->create($user, UserOption::CURRENCY, UserOption::DEFAULT_CURRENCY),
                     $this->userOptionFactory->create($user, UserOption::REPORT_PERIOD, UserOption::DEFAULT_REPORT_PERIOD),
-                    $this->userOptionFactory->create($user, UserOption::DEFAULT_PLAN, null)
+                    $this->userOptionFactory->create($user, UserOption::DEFAULT_BUDGET, null)
                 ]
             );
 
@@ -124,11 +124,12 @@ readonly class UserService implements UserServiceInterface
         }
     }
 
-    public function updateDefaultPlan(Id $userId, Id $planId): void
+    public function updateDefaultBudget(Id $userId, Id $budgetId): void
     {
         $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
             $user = $this->userRepository->get($userId);
+            $user->updateDefaultBudget($budgetId);
             $this->userRepository->save([$user]);
             $this->antiCorruptionService->commit(__METHOD__);
         } catch (\Throwable $throwable) {

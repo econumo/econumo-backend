@@ -28,7 +28,7 @@ readonly class PlanService
         Id $userId
     ): UpdatePlanV1ResultDto {
         try {
-            $this->userService->updateDefaultPlan($userId, new Id($dto->value));
+            $this->userService->updateDefaultBudget($userId, new Id($dto->value));
             $user = $this->userRepository->get($userId);
             return $this->updatePlanV1ResultAssembler->assemble($dto, $user);
         } catch (NotFoundException) {

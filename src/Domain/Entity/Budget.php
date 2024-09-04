@@ -36,7 +36,7 @@ class Budget
         DateTimeInterface $startDate,
         DateTimeInterface $createdAt
     ) {
-        $this->startDate = DateTime::createFromFormat('Y-m-d H:i:s', $startDate->format('Y-m-d H:i:s'));
+        $this->startDate = DateTime::createFromFormat('Y-m-d H:i:s', $startDate->format('Y-m-01 00:00:00'));
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->excludedAccounts = new ArrayCollection();

@@ -227,7 +227,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getDefaultPlanId(): ?Id
     {
         foreach ($this->options as $option) {
-            if ($option->getName() === UserOption::DEFAULT_PLAN) {
+            if ($option->getName() === UserOption::DEFAULT_BUDGET) {
                 if (!$option->getValue()) {
                     return null;
                 }
@@ -256,14 +256,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
     }
 
-    public function updateDefaultPlan(?Id $planId): void
+    public function updateDefaultBudget(?Id $budgetId): void
     {
         foreach ($this->options as $option) {
-            if ($option->getName() === UserOption::DEFAULT_PLAN) {
-                if ($planId === null) {
+            if ($option->getName() === UserOption::DEFAULT_BUDGET) {
+                if ($budgetId === null) {
                     $option->updateValue(null);
                 } else {
-                    $option->updateValue($planId->getValue());
+                    $option->updateValue($budgetId->getValue());
                 }
                 return;
             }
