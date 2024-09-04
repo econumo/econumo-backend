@@ -26,6 +26,7 @@ doctrine:
             tag_name_type: App\Infrastructure\Doctrine\Type\TagNameType
             user_role_type: App\Infrastructure\Doctrine\Type\UserRoleType
             user_password_request_code_type: App\Infrastructure\Doctrine\Type\UserPasswordRequestCodeType
+            budget_name_type: App\Infrastructure\Doctrine\Type\BudgetNameType
         server_version: 13
 
     orm:

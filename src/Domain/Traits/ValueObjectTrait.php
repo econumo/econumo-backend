@@ -9,7 +9,7 @@ use App\Domain\Entity\ValueObject\ValueObjectInterface;
 
 trait ValueObjectTrait
 {
-    private string $value;
+    protected string $value;
 
     public static function validate(string $value): void
     {

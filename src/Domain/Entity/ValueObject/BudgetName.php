@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domain\Entity\ValueObject;
 
-class AccountName extends GenericName
+class BudgetName extends GenericName
 {
 }
