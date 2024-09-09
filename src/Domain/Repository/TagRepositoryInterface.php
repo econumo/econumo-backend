@@ -21,6 +21,11 @@ interface TagRepositoryInterface
      */
     public function findByOwnerId(Id $userId): array;
 
+    /**
+     * @return Tag[]
+     */
+    public function findByOwnersIds(array $userIds): array;
+
     public function get(Id $id): Tag;
 
     /**

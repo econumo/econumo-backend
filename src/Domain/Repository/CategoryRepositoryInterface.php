@@ -37,4 +37,10 @@ interface CategoryRepositoryInterface
      * @return Category[]
      */
     public function getByIds(array $ids): array;
+
+    /**
+     * @param Id[] $userIds
+     * @return Category[]
+     */
+    public function findByOwnersIds(array $userIds): array;
 }

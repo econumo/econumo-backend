@@ -43,7 +43,7 @@ class TagRepository extends ServiceEntityRepository implements TagRepositoryInte
      */
     public function findAvailableForUserId(Id $userId): array
     {
-        $dql =<<<'DQL'
+        $dql = <<<'DQL'
 SELECT IDENTITY(a.user) as user_id FROM App\Domain\Entity\AccountAccess aa
 JOIN App\Domain\Entity\Account a WITH a = aa.account AND aa.user = :user
 GROUP BY user_id
@@ -52,7 +52,8 @@ DQL;
             ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId));
         $ids = array_column($query->getScalarResult(), 'user_id');
         $ids[] = $userId->getValue();
-        $users = array_map(fn($id): ?User => $this->getEntityManager()->getReference(User::class, new Id($id)), array_unique($ids));
+        $users = array_map(fn($id): ?User => $this->getEntityManager()->getReference(User::class, new Id($id)),
+            array_unique($ids));
 
         return $this->createQueryBuilder('c')
             ->andWhere('c.user IN(:users)')
@@ -91,7 +92,7 @@ DQL;
             }
 
             $this->getEntityManager()->flush();
-        } catch (ORMException | ORMInvalidArgumentException $e) {
+        } catch (ORMException|ORMInvalidArgumentException $e) {
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
     }
@@ -110,5 +111,18 @@ DQL;
     public function getByIds(array $ids): array
     {
         return $this->findBy(['id' => $ids]);
+    }
+
+    public function findByOwnersIds(array $userIds): array
+    {
+        $users = [];
+        foreach ($userIds as $userId) {
+            $users[] = $this->getEntityManager()->getReference(User::class, $userId);
+        }
+        $builder = $this->createQueryBuilder('t');
+        $builder->select('t')
+            ->where($builder->expr()->in('t.user', ':users'))
+            ->setParameter('users', $users);
+        return $builder->getQuery()->getResult();
     }
 }

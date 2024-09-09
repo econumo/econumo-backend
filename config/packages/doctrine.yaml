@@ -28,6 +28,7 @@ doctrine:
             user_password_request_code_type: App\Infrastructure\Doctrine\Type\UserPasswordRequestCodeType
             budget_name_type: App\Infrastructure\Doctrine\Type\BudgetNameType
             budget_folder_name_type: App\Infrastructure\Doctrine\Type\BudgetFolderNameType
+            budget_envelope_name_type: App\Infrastructure\Doctrine\Type\BudgetEnvelopeNameType
         server_version: 13
 
     orm:

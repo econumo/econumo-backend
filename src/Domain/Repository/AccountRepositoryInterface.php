@@ -49,4 +49,10 @@ interface AccountRepositoryInterface
      * @return array
      */
     public function getAccountsBalancesBeforeDate(array $accountIds, DateTimeInterface $date): array;
+
+    /**
+     * @param Id[] $userIds
+     * @return Account[]
+     */
+    public function findByOwnersIds(array $userIds): array;
 }

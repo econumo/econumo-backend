@@ -194,4 +194,17 @@ SQL;
             ->getQuery()
             ->getResult();
     }
+
+    public function findByOwnersIds(array $userIds): array
+    {
+        $users = [];
+        foreach ($userIds as $userId) {
+            $users[] = $this->getEntityManager()->getReference(User::class, $userId);
+        }
+        $builder = $this->createQueryBuilder('a');
+        $builder->select('a')
+            ->where($builder->expr()->in('a.user', ':users'))
+            ->setParameter('users', $users);
+        return $builder->getQuery()->getResult();
+    }
 }

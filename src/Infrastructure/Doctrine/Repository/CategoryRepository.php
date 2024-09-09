@@ -111,4 +111,17 @@ DQL;
     {
         return $this->findBy(['id' => $ids]);
     }
+
+    public function findByOwnersIds(array $userIds): array
+    {
+        $users = [];
+        foreach ($userIds as $userId) {
+            $users[] = $this->getEntityManager()->getReference(User::class, $userId);
+        }
+        $builder = $this->createQueryBuilder('c');
+        $builder->select('c')
+            ->where($builder->expr()->in('c.user', ':users'))
+            ->setParameter('users', $users);
+        return $builder->getQuery()->getResult();
+    }
 }
