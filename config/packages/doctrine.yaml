@@ -29,6 +29,7 @@ doctrine:
             budget_name_type: App\Infrastructure\Doctrine\Type\BudgetNameType
             budget_folder_name_type: App\Infrastructure\Doctrine\Type\BudgetFolderNameType
             budget_envelope_name_type: App\Infrastructure\Doctrine\Type\BudgetEnvelopeNameType
+            budget_entity_type: App\Infrastructure\Doctrine\Type\BudgetEntityType
         server_version: 13
 
     orm:

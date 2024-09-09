@@ -14,7 +14,6 @@ final readonly class BudgetEnvelopeCreatedEvent
     public function __construct(
         private Id $id,
         private Id $budgetId,
-        private Id $currencyId,
         private BudgetEnvelopeName $name,
         private Icon $icon,
         private DateTimeInterface $createdAt
@@ -24,11 +23,6 @@ final readonly class BudgetEnvelopeCreatedEvent
     public function getId(): Id
     {
         return $this->id;
-    }
-
-    public function getPosition(): int
-    {
-        return $this->position;
     }
 
     public function getName(): ?BudgetEnvelopeName

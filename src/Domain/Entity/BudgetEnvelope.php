@@ -33,7 +33,6 @@ class BudgetEnvelope
     public function __construct(
         private Id $id,
         private Budget $budget,
-        private Currency $currency,
         private BudgetEnvelopeName $name,
         private Icon $icon,
         DateTimeInterface $createdAt
@@ -41,7 +40,7 @@ class BudgetEnvelope
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->categories = new ArrayCollection();
-        $this->registerEvent(new BudgetEnvelopeCreatedEvent($id, $budget->getId(), $currency->getId(), $name, $icon, $createdAt));
+        $this->registerEvent(new BudgetEnvelopeCreatedEvent($id, $budget->getId(), $name, $icon, $createdAt));
     }
 
     public function getId(): Id
@@ -64,11 +63,6 @@ class BudgetEnvelope
         return $this->budget;
     }
 
-    public function getCurrency(): Currency
-    {
-        return $this->currency;
-    }
-
     public function updateName(BudgetEnvelopeName $name): void
     {
         if (!$this->name || !$this->name->isEqual($name)) {
@@ -81,14 +75,6 @@ class BudgetEnvelope
     {
         if (!$this->icon || !$this->icon->isEqual($icon)) {
             $this->icon = $icon;
-            $this->updated();
-        }
-    }
-
-    public function updateCurrency(Currency $currency): void
-    {
-        if (!$this->currency->getId()->isEqual($currency->getId())) {
-            $this->currency = $currency;
             $this->updated();
         }
     }
