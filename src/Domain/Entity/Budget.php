@@ -33,6 +33,11 @@ class Budget
      */
     private Collection $budgetAccess;
 
+    /**
+     * @var Collection|BudgetFolder[]
+     */
+    private Collection $budgetFolders;
+
     public function __construct(
         private User $user,
         private Id $id,
@@ -51,6 +56,7 @@ class Budget
             }
         }
         $this->budgetAccess = new ArrayCollection();
+        $this->budgetFolders = new ArrayCollection();
     }
 
     public function getId(): Id
@@ -116,5 +122,13 @@ class Budget
     public function getAccessList(): Collection
     {
         return $this->budgetAccess;
+    }
+
+    /**
+     * @return Collection|BudgetFolder[]
+     */
+    public function getFolderList(): Collection
+    {
+        return $this->budgetFolders;
     }
 }

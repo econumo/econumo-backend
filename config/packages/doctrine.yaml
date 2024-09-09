@@ -27,6 +27,7 @@ doctrine:
             user_role_type: App\Infrastructure\Doctrine\Type\UserRoleType
             user_password_request_code_type: App\Infrastructure\Doctrine\Type\UserPasswordRequestCodeType
             budget_name_type: App\Infrastructure\Doctrine\Type\BudgetNameType
+            budget_folder_name_type: App\Infrastructure\Doctrine\Type\BudgetFolderNameType
         server_version: 13
 
     orm:

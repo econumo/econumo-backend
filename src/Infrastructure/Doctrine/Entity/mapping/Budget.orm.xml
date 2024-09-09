@@ -30,5 +30,11 @@
                 <cascade-remove/>
             </cascade>
         </one-to-many>
+        <one-to-many field="budgetFolders" target-entity="App\Domain\Entity\BudgetFolder" mapped-by="budget">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+        </one-to-many>
     </entity>
 </doctrine-mapping>

@@ -6,7 +6,7 @@ namespace App\Domain\Events;
 
 use App\Domain\Entity\ValueObject\Id;
 
-final readonly class PlanFolderCreatedEvent
+final readonly class BudgetFolderCreatedEvent
 {
     public function __construct(private Id $folderId)
     {

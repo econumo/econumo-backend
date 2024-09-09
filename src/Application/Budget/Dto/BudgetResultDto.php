@@ -9,7 +9,7 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     required={"id", "ownerUserId", "name", "startDate", "createdAt", "updatedAt", "excludedAccounts", "currencies", "sharedAccess"}
+ *     required={"id", "ownerUserId", "name", "startDate", "createdAt", "updatedAt", "excludedAccounts", "currencies", "folders", "sharedAccess"}
  * )
  */
 class BudgetResultDto
@@ -65,13 +65,13 @@ class BudgetResultDto
      */
     public array $currencies = [];
 
-//    /**
-//     * Budget folders
-//     * @var PlanFolderResultDto[]
-//     * @OA\Property()
-//     */
-//    public array $folders = [];
-//
+    /**
+     * Budget folders
+     * @var BudgetFolderResultDto[]
+     * @OA\Property()
+     */
+    public array $folders = [];
+
 //    /**
 //     * Budget envelopes
 //     * @var EnvelopeResultDto[]
