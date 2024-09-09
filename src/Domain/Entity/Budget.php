@@ -28,6 +28,11 @@ class Budget
      */
     private Collection $excludedAccounts;
 
+    /**
+     * @var Collection|BudgetAccess[]
+     */
+    private Collection $budgetAccess;
+
     public function __construct(
         private User $user,
         private Id $id,
@@ -45,6 +50,7 @@ class Budget
                 $this->excludeAccount($excludedAccount);
             }
         }
+        $this->budgetAccess = new ArrayCollection();
     }
 
     public function getId(): Id
@@ -102,5 +108,13 @@ class Budget
     {
         $this->excludedAccounts->removeElement($account);
         return $this;
+    }
+
+    /**
+     * @return Collection|BudgetAccess[]
+     */
+    public function getAccessList(): Collection
+    {
+        return $this->budgetAccess;
     }
 }

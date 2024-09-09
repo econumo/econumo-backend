@@ -11,8 +11,12 @@ use App\Domain\Entity\Account;
 use App\Domain\Entity\Budget;
 use App\Domain\Entity\ValueObject\Id;
 
-class BudgetToResultDtoAssembler
+readonly class BudgetToResultDtoAssembler
 {
+    public function __construct(private BudgetAccessToResultDtoAssembler $budgetAccessToResultDtoAssembler)
+    {
+    }
+
     public function assemble(Id $userId, Budget $budget): BudgetResultDto
     {
         $result = new BudgetResultDto();
@@ -24,6 +28,11 @@ class BudgetToResultDtoAssembler
         $result->updatedAt = $budget->getUpdatedAt()->format('Y-m-d H:i:s');
         foreach ($budget->getExcludedAccounts($userId) as $account) {
             $result->excludedAccounts[] = $account->getId()->getValue();
+        }
+        $result->currencies = []; // @TODO fix
+        $result->sharedAccess = [];
+        foreach ($budget->getAccessList() as $budgetAccess) {
+            $result->sharedAccess[] = $this->budgetAccessToResultDtoAssembler->assemble($budgetAccess);
         }
 
         return $result;

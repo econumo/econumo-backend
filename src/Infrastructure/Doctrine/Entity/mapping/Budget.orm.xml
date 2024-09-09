@@ -15,7 +15,7 @@
             <join-column name="user_id" referenced-column-name="id" nullable="false"/>
         </many-to-one>
         <many-to-many field="excludedAccounts" target-entity="App\Domain\Entity\Account">
-            <join-table name="budget_excluded_accounts">
+            <join-table name="budgets_excluded_accounts">
                 <join-columns>
                     <join-column name="budget_id" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
                 </join-columns>
@@ -24,5 +24,11 @@
                 </inverse-join-columns>
             </join-table>
         </many-to-many>
+        <one-to-many field="budgetAccess" target-entity="App\Domain\Entity\BudgetAccess" mapped-by="budget">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+        </one-to-many>
     </entity>
 </doctrine-mapping>
