@@ -10,9 +10,9 @@ use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 
-class BudgetEntityOption
+class BudgetEntityAmount
 {
-    private DateTimeInterface $finishedAt;
+    private DateTimeImmutable $period;
 
     private DateTimeImmutable $createdAt;
 
@@ -22,24 +22,18 @@ class BudgetEntityOption
         private Id $entityId,
         private BudgetEntityType $entityType,
         private Budget $budget,
-        private ?Currency $currency,
-        private int $position,
-        ?DateTimeInterface $finishedAt,
+        private float $amount,
+        DateTimeInterface $period,
         DateTimeInterface $createdAt
     ) {
+        $this->period = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $period->format('Y-m-01 00:00:00'));
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
-        $this->finishedAt = DateTime::createFromFormat('Y-m-d H:i:s', $finishedAt->format('Y-m-01 00:00:00'));
     }
 
     public function getBudget(): Budget
     {
         return $this->budget;
-    }
-
-    public function getCurrency(): ?Currency
-    {
-        return $this->currency;
     }
 
     public function getEntityId(): Id
@@ -52,22 +46,22 @@ class BudgetEntityOption
         return $this->entityType;
     }
 
-    public function getPosition(): int
+    public function getAmount(): float
     {
-        return $this->position;
+        return $this->amount;
     }
 
-    public function updatePosition(int $position): void
+    public function updateAmount(float $amount): void
     {
-        if ($this->position !== $position) {
-            $this->position = $position;
+        if ($this->amount !== $amount) {
+            $this->amount = $amount;
             $this->updated();
         }
     }
 
-    public function getFinishedAt(): DateTimeInterface
+    public function getPeriod(): DateTimeImmutable
     {
-        return $this->finishedAt;
+        return $this->period;
     }
 
     private function updated(): void

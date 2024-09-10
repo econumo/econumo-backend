@@ -17,7 +17,7 @@ class Budget
 {
     use EntityTrait;
 
-    private DateTimeInterface $startDate;
+    private DateTimeInterface $startedAt;
 
     private DateTimeImmutable $createdAt;
 
@@ -46,7 +46,7 @@ class Budget
         DateTimeInterface $startDate,
         DateTimeInterface $createdAt
     ) {
-        $this->startDate = DateTime::createFromFormat('Y-m-d H:i:s', $startDate->format('Y-m-01 00:00:00'));
+        $this->startedAt = DateTime::createFromFormat('Y-m-d H:i:s', $startDate->format('Y-m-01 00:00:00'));
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->excludedAccounts = new ArrayCollection();
@@ -69,9 +69,9 @@ class Budget
         return $this->name;
     }
 
-    public function getStartDate(): DateTimeInterface
+    public function getStartedAt(): DateTimeInterface
     {
-        return $this->startDate;
+        return $this->startedAt;
     }
 
     public function getCreatedAt(): DateTimeImmutable

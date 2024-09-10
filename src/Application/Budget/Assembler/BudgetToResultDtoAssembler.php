@@ -24,7 +24,7 @@ readonly class BudgetToResultDtoAssembler
         $result->id = $budget->getId()->getValue();
         $result->name = $budget->getName()->getValue();
         $result->ownerUserId = $budget->getUser()->getId()->getValue();
-        $result->startDate = $budget->getStartDate()->format('Y-m-d H:i:s');
+        $result->startedAt = $budget->getStartedAt()->format('Y-m-d H:i:s');
         $result->createdAt = $budget->getCreatedAt()->format('Y-m-d H:i:s');
         $result->updatedAt = $budget->getUpdatedAt()->format('Y-m-d H:i:s');
         foreach ($budget->getExcludedAccounts($userId) as $account) {

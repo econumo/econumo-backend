@@ -35,7 +35,7 @@ class BudgetResultDto
      * @var string
      * @OA\Property(example="2021-01-01 12:15:00")
      */
-    public string $startDate;
+    public string $startedAt;
 
     /**
      * Created at

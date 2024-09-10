@@ -53,7 +53,7 @@ readonly class BudgetDtoAssembler
             $budget->getId(),
             $budget->getUser()->getId(),
             $budget->getName(),
-            $budget->getStartDate(),
+            $budget->getStartedAt(),
             $budget->getExcludedAccounts($userId),
             $currencies,
             $budget->getFolderList(),

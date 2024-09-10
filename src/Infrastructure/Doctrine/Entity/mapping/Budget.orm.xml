@@ -7,7 +7,7 @@
             name="App\Domain\Entity\Budget" table="budgets">
         <id name="id" type="uuid" column="id"/>
         <field name="name" type="budget_name_type" column="name" length="64" nullable="false"/>
-        <field name="startDate" type="datetime" column="start_date" nullable="false"/>
+        <field name="startedAt" type="datetime" column="started_at" nullable="false"/>
         <field name="createdAt" type="datetime_immutable" column="created_at" nullable="false"/>
         <field name="updatedAt" type="datetime" column="updated_at" nullable="false"/>
 
