@@ -29,7 +29,7 @@ readonly class BudgetService
             fn(string $id) => new Id($id),
             $dto->excludedAccounts
         );
-        $budget = $this->budgetService->createBudget($userId, $id, $name, $excludedAccountsIds);
-        return $this->createBudgetV1ResultAssembler->assemble($userId, $budget);
+        $budgetDto = $this->budgetService->createBudget($userId, $id, $name, $excludedAccountsIds);
+        return $this->createBudgetV1ResultAssembler->assemble($userId, $budgetDto);
     }
 }

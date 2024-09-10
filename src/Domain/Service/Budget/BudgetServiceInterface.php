@@ -20,7 +20,7 @@ interface BudgetServiceInterface
      * @param Id[] $excludedAccountsIds
      * @return Budget
      */
-    public function createBudget(Id $userId, Id $budgetId, BudgetName $name, array $excludedAccountsIds = []): Budget;
+    public function createBudget(Id $userId, Id $budgetId, BudgetName $name, array $excludedAccountsIds = []): BudgetDto;
 
     /**
      * @param Id $budgetId

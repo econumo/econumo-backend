@@ -16,7 +16,7 @@ interface BudgetFactoryInterface
      * @param Id $id
      * @param BudgetName $name
      * @param Id[] $excludedAccountsIds
-     * @param DateTimeInterface $startDate
+     * @param DateTimeInterface $startedAt
      * @return Budget
      */
     public function create(
@@ -24,6 +24,6 @@ interface BudgetFactoryInterface
         Id $id,
         BudgetName $name,
         array $excludedAccountsIds,
-        DateTimeInterface $startDate
+        DateTimeInterface $startedAt
     ): Budget;
 }

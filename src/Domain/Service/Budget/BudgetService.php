@@ -28,7 +28,7 @@ readonly class BudgetService implements BudgetServiceInterface
     ) {
     }
 
-    public function createBudget(Id $userId, Id $budgetId, BudgetName $name, array $excludedAccountsIds = []): Budget
+    public function createBudget(Id $userId, Id $budgetId, BudgetName $name, array $excludedAccountsIds = []): BudgetDto
     {
         $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
@@ -47,7 +47,7 @@ readonly class BudgetService implements BudgetServiceInterface
             throw $e;
         }
 
-        return $budget;
+        return $this->budgetDtoAssembler->assemble($userId, $budget);
     }
 
     public function getBudget(Id $userId, Id $budgetId): BudgetDto

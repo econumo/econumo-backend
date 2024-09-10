@@ -5,22 +5,22 @@ declare(strict_types=1);
 namespace App\Application\Budget\Assembler;
 
 use App\Application\Budget\Dto\CreateBudgetV1ResultDto;
-use App\Domain\Entity\Budget;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Service\Budget\Dto\BudgetDto;
 
 readonly class CreateBudgetV1ResultAssembler
 {
     public function __construct(
-        private BudgetToResultDtoAssembler $budgetToResultDtoAssembler
+        private BudgetDtoToResultDtoAssembler $budgetDtoToResultDtoAssembler
     ) {
     }
 
     public function assemble(
         Id $userId,
-        Budget $budget
+        BudgetDto $budgetDto
     ): CreateBudgetV1ResultDto {
         $result = new CreateBudgetV1ResultDto();
-        $result->item = $this->budgetToResultDtoAssembler->assemble($userId, $budget);
+        $result->item = $this->budgetDtoToResultDtoAssembler->assemble($userId, $budgetDto);
         return $result;
     }
 }

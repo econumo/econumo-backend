@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Application\Budget\Dto;
 
-use App\Application\Currency\Dto\CurrencyResultDto;
+use App\Domain\Entity\ValueObject\Id;
 use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     required={"id", "ownerUserId", "name", "startDate", "createdAt", "updatedAt", "excludedAccounts", "currencies", "folders", "sharedAccess"}
+ *     required={"id", "ownerUserId", "name", "startDate", "createdAt", "updatedAt", "excludedAccounts", "currencies", "folders", "envelopes", "categories", "tags", "sharedAccess"}
  * )
  */
 class BudgetResultDto
@@ -38,20 +38,6 @@ class BudgetResultDto
     public string $startedAt;
 
     /**
-     * Created at
-     * @var string
-     * @OA\Property(example="2021-01-01 12:15:00")
-     */
-    public string $createdAt;
-
-    /**
-     * Updated at
-     * @var string
-     * @OA\Property(example="2021-01-01 12:15:00")
-     */
-    public string $updatedAt;
-
-    /**
      * Excluded accounts
      * @var string[]
      * @OA\Property()
@@ -60,7 +46,7 @@ class BudgetResultDto
 
     /**
      * Budget currencies
-     * @var CurrencyResultDto[]
+     * @var Id[]
      * @OA\Property()
      */
     public array $currencies = [];
@@ -72,26 +58,33 @@ class BudgetResultDto
      */
     public array $folders = [];
 
-//    /**
-//     * Budget envelopes
-//     * @var EnvelopeResultDto[]
-//     * @OA\Property()
-//     */
-//    public array $envelopes = [];
-//
-//    /**
-//     * Budget categories
-//     * @var EnvelopeCategoryResultDto[]
-//     * @OA\Property()
-//     */
-//    public array $categories = [];
-//
-//    /**
-//     * Budget tags
-//     * @var EnvelopeTagResultDto[]
-//     * @OA\Property()
-//     */
-//    public array $tags = [];
+    /**
+     * Budget envelopes
+     * @var BudgetEnvelopeResultDto[]
+     * @OA\Property()
+     */
+    public array $envelopes = [];
+
+    /**
+     * Budget categories
+     * @var Id[]
+     * @OA\Property()
+     */
+    public array $categories = [];
+
+    /**
+     * Budget tags
+     * @var Id[]
+     * @OA\Property()
+     */
+    public array $tags = [];
+
+    /**
+     * Budget options
+     * @var BudgetEntityOptionResultDto[]
+     * @OA\Property()
+     */
+    public array $entityOptions = [];
 
     /**
      * Account access

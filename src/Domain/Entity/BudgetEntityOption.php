@@ -65,7 +65,7 @@ class BudgetEntityOption
         }
     }
 
-    public function getFinishedAt(): DateTimeInterface
+    public function getFinishedAt(): ?DateTimeInterface
     {
         return $this->finishedAt;
     }

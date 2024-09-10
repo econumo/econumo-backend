@@ -28,7 +28,7 @@ readonly class BudgetFactory implements BudgetFactoryInterface
         Id $id,
         BudgetName $name,
         array $excludedAccountsIds,
-        DateTimeInterface $startDate
+        DateTimeInterface $startedAt
     ): Budget {
         $accounts = [];
         foreach ($excludedAccountsIds as $excludedAccountId) {
@@ -40,7 +40,7 @@ readonly class BudgetFactory implements BudgetFactoryInterface
             $id,
             $name,
             $accounts,
-            $startDate,
+            $startedAt,
             $this->datetimeService->getCurrentDatetime()
         );
     }
