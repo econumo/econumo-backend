@@ -30,6 +30,8 @@ class BudgetEnvelope
      */
     private Collection $categories;
 
+    private bool $isArchived = false;
+
     public function __construct(
         private Id $id,
         private Budget $budget,

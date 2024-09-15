@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Doctrine\Repository;
 
+use App\Domain\Entity\Budget;
 use App\Domain\Entity\BudgetEntityAmount;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Repository\BudgetEntityAmountRepositoryInterface;
 use App\Infrastructure\Doctrine\Repository\Traits\DeleteTrait;
+use App\Infrastructure\Doctrine\Repository\Traits\GetReferenceTrait;
 use App\Infrastructure\Doctrine\Repository\Traits\NextIdentityTrait;
 use App\Infrastructure\Doctrine\Repository\Traits\SaveTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -24,6 +26,7 @@ class BudgetEntityAmountRepository extends ServiceEntityRepository implements Bu
     use NextIdentityTrait;
     use SaveTrait;
     use DeleteTrait;
+    use GetReferenceTrait;
 
     public function __construct(ManagerRegistry $registry)
     {
@@ -32,6 +35,6 @@ class BudgetEntityAmountRepository extends ServiceEntityRepository implements Bu
 
     public function getByBudgetId(Id $budgetId): array
     {
-        return $this->findBy(['budget' => $this->getReference($budgetId)]);
+        return $this->findBy(['budget' => $this->getReference(Budget::class, $budgetId)]);
     }
 }

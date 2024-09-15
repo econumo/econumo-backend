@@ -16,8 +16,8 @@ readonly class BudgetEntityOptionToResultDtoAssembler
         $result->entityId = $option->getEntityId()->getValue();
         $result->entityType = $option->getEntityType()->getAlias();
         $result->position = $option->getPosition();
-        $result->currencyId = ($option->getCurrency() === null ? '' : $option->getCurrency()->getId());
-        $result->finishedAt = ($option->getFinishedAt() === null ? '' : $option->getFinishedAt()->format('Y-m-d H:i:s'));
+        $result->currencyId = ($option->getCurrency()?->getId()->getValue());
+        $result->folderId = ($option->getFolder()?->getId()->getValue());
 
         return $result;
     }

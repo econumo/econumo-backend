@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Doctrine\Repository;
 
+use App\Domain\Entity\Budget;
 use App\Domain\Entity\BudgetEnvelope;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\NotFoundException;
@@ -33,7 +34,7 @@ class BudgetEnvelopeRepository extends ServiceEntityRepository implements Budget
 
     public function getByBudgetId(Id $budgetId): array
     {
-        return $this->findBy(['budget' => $this->getReference($budgetId)]);
+        return $this->findBy(['budget' => $this->getEntityManager()->getReference(Budget::class, $budgetId)]);
     }
 
     public function get(Id $id): BudgetEnvelope

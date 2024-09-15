@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domain\Service\Budget;
 
-use App\Domain\Entity\Budget;
 use App\Domain\Entity\ValueObject\BudgetName;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Factory\BudgetFactoryInterface;
@@ -24,7 +23,8 @@ readonly class BudgetService implements BudgetServiceInterface
         private DatetimeServiceInterface $datetimeService,
         private UserServiceInterface $userService,
         private AntiCorruptionServiceInterface $antiCorruptionService,
-        private BudgetDtoAssembler $budgetDtoAssembler
+        private BudgetDtoAssembler $budgetDtoAssembler,
+        private BudgetEntityServiceInterface $budgetEntityService
     ) {
     }
 
@@ -40,6 +40,8 @@ readonly class BudgetService implements BudgetServiceInterface
                 $this->datetimeService->getCurrentDatetime()
             );
             $this->budgetRepository->save([$budget]);
+            $categoriesOptions = $this->budgetEntityService->createCategoriesOptions($userId, $budgetId);
+            $this->budgetEntityService->createTagsOptions($userId, $budgetId, count($categoriesOptions));
             $this->userService->updateDefaultBudget($userId, $budgetId);
             $this->antiCorruptionService->commit(__METHOD__);
         } catch (Throwable $e) {

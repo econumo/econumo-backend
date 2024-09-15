@@ -10,19 +10,21 @@
 
         <field name="createdAt" type="datetime_immutable" column="created_at" nullable="false"/>
         <field name="updatedAt" type="datetime" column="updated_at" nullable="false"/>
-        <field name="position" type="smallint" column="position" nullable="false">
+        <field name="position" type="smallint" column="position" nullable="true">
             <options>
                 <option name="unsigned">true</option>
-                <option name="default">0</option>
+                <option name="default">null</option>
             </options>
         </field>
-        <field name="finishedAt" type="datetime" column="finished_at" nullable="true"/>
 
         <many-to-one field="budget" target-entity="App\Domain\Entity\Budget">
             <join-column name="budget_id" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
         </many-to-one>
         <many-to-one field="currency" target-entity="App\Domain\Entity\Currency">
             <join-column name="currency_id" referenced-column-name="id" nullable="true" on-delete="SET NULL"/>
+        </many-to-one>
+        <many-to-one field="folder" target-entity="App\Domain\Entity\BudgetFolder">
+            <join-column name="folder_id" referenced-column-name="id" nullable="true" on-delete="SET NULL"/>
         </many-to-one>
     </entity>
 </doctrine-mapping>

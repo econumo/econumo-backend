@@ -214,10 +214,35 @@ class Api extends \Codeception\Module
             'id' => 'string',
             'ownerUserId' => 'string',
             'name' => 'string',
-            'startDate' => 'string',
-            'createdAt' => 'string',
-            'updatedAt' => 'string',
+            'startedAt' => 'string',
             'excludedAccounts' => 'array',
+            'currencies' => 'array',
+            'folders' => 'array',
+            'envelopes' => 'array',
+            'categories' => 'array',
+            'tags' => 'array',
+            'entityOptions' => 'array',
+            'sharedAccess' => 'array',
+        ];
+    }
+
+    public function getBudgetEnvelopeDtoJsonType(): array
+    {
+        return [
+            'id' => 'string',
+            'name' => 'string',
+            'icon' => 'string',
+        ];
+    }
+
+    public function getBudgetEntityOptionDtoJsonType(): array
+    {
+        return [
+            'entityId' => 'string',
+            'entityType' => 'string',
+            'position' => 'integer',
+            'currencyId' => 'string|null',
+            'folderId' => 'string|null',
         ];
     }
 }

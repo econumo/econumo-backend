@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Entity;
 
+use App\Domain\Entity\ValueObject\Icon;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Entity\ValueObject\TagName;
 use App\Domain\Events\TagCreatedEvent;
@@ -46,6 +47,11 @@ class Tag
     public function getName(): TagName
     {
         return $this->name;
+    }
+
+    public function getIcon(): Icon
+    {
+        return new Icon('tag');
     }
 
     public function getPosition(): int

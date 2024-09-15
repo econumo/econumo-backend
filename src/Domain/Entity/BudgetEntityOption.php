@@ -12,8 +12,6 @@ use DateTimeInterface;
 
 class BudgetEntityOption
 {
-    private DateTimeInterface $finishedAt;
-
     private DateTimeImmutable $createdAt;
 
     private DateTimeInterface $updatedAt;
@@ -23,13 +21,12 @@ class BudgetEntityOption
         private BudgetEntityType $entityType,
         private Budget $budget,
         private ?Currency $currency,
+        private ?BudgetFolder $folder,
         private int $position,
-        ?DateTimeInterface $finishedAt,
         DateTimeInterface $createdAt
     ) {
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
-        $this->finishedAt = DateTime::createFromFormat('Y-m-d H:i:s', $finishedAt->format('Y-m-01 00:00:00'));
     }
 
     public function getBudget(): Budget
@@ -40,6 +37,11 @@ class BudgetEntityOption
     public function getCurrency(): ?Currency
     {
         return $this->currency;
+    }
+
+    public function getFolder(): ?BudgetFolder
+    {
+        return $this->folder;
     }
 
     public function getEntityId(): Id
@@ -63,11 +65,6 @@ class BudgetEntityOption
             $this->position = $position;
             $this->updated();
         }
-    }
-
-    public function getFinishedAt(): ?DateTimeInterface
-    {
-        return $this->finishedAt;
     }
 
     private function updated(): void

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Application\Budget\Dto;
 
-use App\Domain\Entity\ValueObject\Id;
 use OpenApi\Annotations as OA;
 
 /**
@@ -46,7 +45,7 @@ class BudgetResultDto
 
     /**
      * Budget currencies
-     * @var Id[]
+     * @var string[]
      * @OA\Property()
      */
     public array $currencies = [];
@@ -67,14 +66,14 @@ class BudgetResultDto
 
     /**
      * Budget categories
-     * @var Id[]
+     * @var string[]
      * @OA\Property()
      */
     public array $categories = [];
 
     /**
      * Budget tags
-     * @var Id[]
+     * @var string[]
      * @OA\Property()
      */
     public array $tags = [];

@@ -8,9 +8,9 @@ use Codeception\Exception\ModuleException;
 use App\Tests\ApiTester;
 use Codeception\Util\HttpCode;
 
-class CreateBudgetCest
+class GetBudgetCest
 {
-    private string $url = '/api/v1/budget/create-budget';
+    private string $url = '/api/v1/budget/get-budget';
 
     /**
      * @throws ModuleException
@@ -18,11 +18,7 @@ class CreateBudgetCest
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, [
-            'id' => '9b29b760-ddca-46fb-a754-8743fc2c49a7',
-            'name' => 'Personal Budget',
-            'excludedAccounts' => ['5f3834d1-34e8-4f60-a697-004e63854513'],
-        ]);
+        $I->sendGET($this->url, ['id' => 'test']);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
 
@@ -32,7 +28,7 @@ class CreateBudgetCest
     public function requestShouldReturn400ResponseCode(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, ['unexpected_param' => 'test']);
+        $I->sendGET($this->url, ['unexpected_param' => 'test']);
         $I->seeResponseCodeIs(HttpCode::BAD_REQUEST);
     }
 
@@ -41,7 +37,7 @@ class CreateBudgetCest
      */
     public function requestShouldReturn401ResponseCode(ApiTester $I): void
     {
-        $I->sendPOST($this->url, ['id' => 'test']);
+        $I->sendGET($this->url, ['id' => 'test']);
         $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
     }
 
@@ -51,16 +47,11 @@ class CreateBudgetCest
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, [
-            'id' => '9b29b760-ddca-46fb-a754-8743fc2c49a7',
-            'name' => 'Personal Budget',
-            'excludedAccounts' => ['5f3834d1-34e8-4f60-a697-004e63854513'],
-        ]);
+        $I->sendGET($this->url, ['id' => 'test']);
         $I->seeResponseMatchesJsonType([
             'data' => [
-                'item' => $I->getBudgetDtoJsonType(),
+                'result' => 'string',
             ],
         ]);
-        $I->seeResponseMatchesJsonType($I->getBudgetEntityOptionDtoJsonType(), '$.data.item.entityOptions[0]');
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Doctrine\Repository;
 
+use App\Domain\Entity\Budget;
 use App\Domain\Entity\BudgetEntityOption;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Repository\BudgetEntityOptionRepositoryInterface;
@@ -32,6 +33,6 @@ class BudgetEntityOptionRepository extends ServiceEntityRepository implements Bu
 
     public function getByBudgetId(Id $budgetId): array
     {
-        return $this->findBy(['budget' => $this->getReference($budgetId)]);
+        return $this->findBy(['budget' => $this->getEntityManager()->getReference(Budget::class, $budgetId)]);
     }
 }

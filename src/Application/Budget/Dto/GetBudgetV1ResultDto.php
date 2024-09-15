@@ -11,7 +11,7 @@ use OpenApi\Annotations as OA;
  *     required={"item"}
  * )
  */
-class CreateBudgetV1ResultDto
+class GetBudgetV1ResultDto
 {
     /**
      * @OA\Property()
