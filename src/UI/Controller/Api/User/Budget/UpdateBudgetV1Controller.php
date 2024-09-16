@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\UI\Controller\Api\User\Plan;
+namespace App\UI\Controller\Api\User\Budget;
 
-use App\Application\User\PlanService;
-use App\Application\User\Dto\UpdatePlanV1RequestDto;
-use App\UI\Controller\Api\User\Plan\Validation\UpdatePlanV1Form;
+use App\Application\User\BudgetService;
+use App\Application\User\Dto\UpdateBudgetV1RequestDto;
+use App\UI\Controller\Api\User\Budget\Validation\UpdateBudgetV1Form;
 use App\Application\Exception\ValidationException;
 use App\Domain\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,17 +18,17 @@ use Symfony\Component\Routing\Annotation\Route;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Annotations as OA;
 
-class UpdatePlanV1Controller extends AbstractController
+class UpdateBudgetV1Controller extends AbstractController
 {
-    public function __construct(private readonly PlanService $planService, private readonly ValidatorInterface $validator)
+    public function __construct(private readonly BudgetService $budgetService, private readonly ValidatorInterface $validator)
     {
     }
 
     /**
-     * Update the default plan
+     * Update the default budget
      *
      * @OA\Tag(name="User"),
-     * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\Application\User\Dto\UpdatePlanV1RequestDto::class))),
+     * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\Application\User\Dto\UpdateBudgetV1RequestDto::class))),
      * @OA\Response(
      *     response=200,
      *     description="OK",
@@ -39,7 +39,7 @@ class UpdatePlanV1Controller extends AbstractController
      *             @OA\Schema(
      *                 @OA\Property(
      *                     property="data",
-     *                     ref=@Model(type=\App\Application\User\Dto\UpdatePlanV1ResultDto::class)
+     *                     ref=@Model(type=\App\Application\User\Dto\UpdateBudgetV1ResultDto::class)
      *                 )
      *             )
      *         }
@@ -53,14 +53,14 @@ class UpdatePlanV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/user/update-plan', methods: ['POST'])]
+    #[Route(path: '/api/v1/user/update-budget', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
-        $dto = new UpdatePlanV1RequestDto();
-        $this->validator->validate(UpdatePlanV1Form::class, $request->request->all(), $dto);
+        $dto = new UpdateBudgetV1RequestDto();
+        $this->validator->validate(UpdateBudgetV1Form::class, $request->request->all(), $dto);
         /** @var User $user */
         $user = $this->getUser();
-        $result = $this->planService->updatePlan($dto, $user->getId());
+        $result = $this->budgetService->updateBudget($dto, $user->getId());
 
         return ResponseFactory::createOkResponse($request, $result);
     }
