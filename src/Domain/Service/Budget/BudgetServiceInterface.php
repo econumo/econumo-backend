@@ -10,6 +10,7 @@ use App\Domain\Entity\Budget;
 use App\Domain\Entity\ValueObject\BudgetName;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Service\Budget\Dto\BudgetDto;
+use App\Domain\Service\Budget\Dto\BudgetPreviewDto;
 
 interface BudgetServiceInterface
 {
@@ -23,8 +24,15 @@ interface BudgetServiceInterface
     public function createBudget(Id $userId, Id $budgetId, BudgetName $name, array $excludedAccountsIds = []): BudgetDto;
 
     /**
+     * @param Id $userId
      * @param Id $budgetId
      * @return BudgetDto
      */
     public function getBudget(Id $userId, Id $budgetId): BudgetDto;
+
+    /**
+     * @param Id $userId
+     * @return BudgetPreviewDto[]
+     */
+    public function getBudgetList(Id $userId): array;
 }

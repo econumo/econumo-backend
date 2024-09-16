@@ -9,7 +9,7 @@ use App\Domain\Entity\BudgetEntityAmount;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Repository\BudgetEntityAmountRepositoryInterface;
 use App\Infrastructure\Doctrine\Repository\Traits\DeleteTrait;
-use App\Infrastructure\Doctrine\Repository\Traits\GetReferenceTrait;
+use App\Infrastructure\Doctrine\Repository\Traits\GetEntityReferenceTrait;
 use App\Infrastructure\Doctrine\Repository\Traits\NextIdentityTrait;
 use App\Infrastructure\Doctrine\Repository\Traits\SaveTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -26,7 +26,7 @@ class BudgetEntityAmountRepository extends ServiceEntityRepository implements Bu
     use NextIdentityTrait;
     use SaveTrait;
     use DeleteTrait;
-    use GetReferenceTrait;
+    use GetEntityReferenceTrait;
 
     public function __construct(ManagerRegistry $registry)
     {

@@ -55,11 +55,18 @@ class BudgetAccessRepository extends ServiceEntityRepository implements BudgetAc
         return $item;
     }
 
-    public function getPendingAccesses(Id $userId): array
+    public function getPendingAccess(Id $userId): array
     {
         return $this->findBy([
             'user' => $this->getEntityManager()->getReference(User::class, $userId),
             'isAccepted' => false
+        ]);
+    }
+
+    public function getByUser(Id $userId): array
+    {
+        return $this->findBy([
+            'user' => $this->getEntityManager()->getReference(User::class, $userId)
         ]);
     }
 }

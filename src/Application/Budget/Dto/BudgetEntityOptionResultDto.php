@@ -7,7 +7,7 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     required={"entityId", "entityType", "position", "currencyId", "folderId}
+ *     required={"entityId", "entityType", "position", "currencyId", "folderId"}
  * )
  */
 class BudgetEntityOptionResultDto

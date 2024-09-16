@@ -7,9 +7,9 @@ namespace App\Infrastructure\Doctrine\Repository\Traits;
 
 use App\Domain\Entity\ValueObject\Id;
 
-trait GetReferenceTrait
+trait GetEntityReferenceTrait
 {
-    public function getReference(string $entityName, Id $id)
+    public function getEntityReference(string $entityName, Id $id)
     {
         return $this->getEntityManager()->getReference($entityName, $id);
     }

@@ -10,6 +10,7 @@ use App\Domain\Factory\BudgetFactoryInterface;
 use App\Domain\Repository\BudgetRepositoryInterface;
 use App\Domain\Service\AntiCorruptionServiceInterface;
 use App\Domain\Service\Budget\Assembler\BudgetDtoAssembler;
+use App\Domain\Service\Budget\Assembler\BudgetPreviewDtoAssembler;
 use App\Domain\Service\Budget\Dto\BudgetDto;
 use App\Domain\Service\DatetimeServiceInterface;
 use App\Domain\Service\UserServiceInterface;
@@ -24,7 +25,8 @@ readonly class BudgetService implements BudgetServiceInterface
         private UserServiceInterface $userService,
         private AntiCorruptionServiceInterface $antiCorruptionService,
         private BudgetDtoAssembler $budgetDtoAssembler,
-        private BudgetEntityServiceInterface $budgetEntityService
+        private BudgetEntityServiceInterface $budgetEntityService,
+        private BudgetPreviewDtoAssembler  $budgetPreviewDtoAssembler
     ) {
     }
 
@@ -56,5 +58,16 @@ readonly class BudgetService implements BudgetServiceInterface
     {
         $budget = $this->budgetRepository->get($budgetId);
         return $this->budgetDtoAssembler->assemble($userId, $budget);
+    }
+
+    public function getBudgetList(Id $userId): array
+    {
+        $budgets = $this->budgetRepository->getByUserId($userId);
+        $result = [];
+        foreach ($budgets as $budget) {
+            $result[] = $this->budgetPreviewDtoAssembler->assemble($budget);
+        }
+
+        return $result;
     }
 }

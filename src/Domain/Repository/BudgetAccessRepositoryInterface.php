@@ -37,7 +37,13 @@ interface BudgetAccessRepositoryInterface
     /**
      * @return BudgetAccess[]
      */
-    public function getPendingAccesses(Id $userId): array;
+    public function getPendingAccess(Id $userId): array;
 
     public function getReference(Id $id): BudgetAccess;
+
+    /**
+     * @param Id $userId
+     * @return BudgetAccess[]
+     */
+    public function getByUser(Id $userId): array;
 }
