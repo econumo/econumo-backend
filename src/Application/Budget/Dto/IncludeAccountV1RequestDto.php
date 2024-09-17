@@ -11,7 +11,7 @@ use OpenApi\Annotations as OA;
  *     required={"id", "accountId"}
  * )
  */
-class ExcludeAccountV1RequestDto
+class IncludeAccountV1RequestDto
 {
     /**
      * Budget ID

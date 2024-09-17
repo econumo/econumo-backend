@@ -53,4 +53,6 @@ interface BudgetServiceInterface
     public function updateBudget(Id $budgetId, BudgetName $name): BudgetPreviewDto;
 
     public function excludeAccount(Id $userId, Id $budgetId, Id $accountId): BudgetPreviewDto;
+
+    public function includeAccount(Id $userId, Id $budgetId, Id $accountId): BudgetPreviewDto;
 }

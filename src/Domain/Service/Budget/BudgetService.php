@@ -101,4 +101,17 @@ readonly class BudgetService implements BudgetServiceInterface
         $this->budgetRepository->save([$budget]);
         return $this->budgetPreviewDtoAssembler->assemble($budget);
     }
+
+    public function includeAccount(Id $userId, Id $budgetId, Id $accountId): BudgetPreviewDto
+    {
+        $account = $this->accountRepository->get($accountId);
+        if (!$account->getUserId()->isEqual($userId)) {
+            throw new AccessDeniedException();
+        }
+
+        $budget = $this->budgetRepository->get($budgetId);
+        $budget->includeAccount($account);
+        $this->budgetRepository->save([$budget]);
+        return $this->budgetPreviewDtoAssembler->assemble($budget);
+    }
 }
