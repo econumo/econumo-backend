@@ -12,6 +12,7 @@ use App\Domain\Service\AntiCorruptionServiceInterface;
 use App\Domain\Service\Budget\Assembler\BudgetDtoAssembler;
 use App\Domain\Service\Budget\Assembler\BudgetPreviewDtoAssembler;
 use App\Domain\Service\Budget\Dto\BudgetDto;
+use App\Domain\Service\Budget\Dto\BudgetPreviewDto;
 use App\Domain\Service\DatetimeServiceInterface;
 use App\Domain\Service\UserServiceInterface;
 use Throwable;
@@ -75,5 +76,13 @@ readonly class BudgetService implements BudgetServiceInterface
     public function deleteBudget(Id $budgetId): void
     {
         $this->budgetDeletionService->deleteBudget($budgetId);
+    }
+
+    public function updateBudget(Id $budgetId, BudgetName $name): BudgetPreviewDto
+    {
+        $budget = $this->budgetRepository->get($budgetId);
+        $budget->updateName($name);
+        $this->budgetRepository->save([$budget]);
+        return $this->budgetPreviewDtoAssembler->assemble($budget);
     }
 }

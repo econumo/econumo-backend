@@ -44,4 +44,11 @@ interface BudgetServiceInterface
      * @param Id $budgetId
      */
     public function deleteBudget(Id $budgetId): void;
+
+    /**
+     * @param Id $budgetId
+     * @param BudgetName $name
+     * @return BudgetPreviewDto
+     */
+    public function updateBudget(Id $budgetId, BudgetName $name): BudgetPreviewDto;
 }

@@ -69,6 +69,14 @@ class Budget
         return $this->name;
     }
 
+    public function updateName(BudgetName $name): void
+    {
+        if (!$this->name->isEqual($name)) {
+            $this->name = $name;
+            $this->updated();
+        }
+    }
+
     public function getStartedAt(): DateTimeInterface
     {
         return $this->startedAt;
@@ -130,5 +138,10 @@ class Budget
     public function getFolderList(): Collection
     {
         return $this->budgetFolders;
+    }
+
+    private function updated(): void
+    {
+        $this->updatedAt = new DateTime();
     }
 }

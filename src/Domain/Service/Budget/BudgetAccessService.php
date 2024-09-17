@@ -61,4 +61,18 @@ readonly class BudgetAccessService implements BudgetAccessServiceInterface
 
         return false;
     }
+
+    public function canUpdateBudget(Id $userId, Id $budgetId): bool
+    {
+        try {
+            $role = $this->getBudgetRole($userId, $budgetId);
+            if ($role->isOwner() || $role->isAdmin() || $role->isUser()) {
+                return true;
+            }
+        } catch (AccessDeniedException $e) {
+            return false;
+        }
+
+        return false;
+    }
 }
