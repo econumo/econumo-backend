@@ -19,6 +19,9 @@ readonly class BudgetDeletionService
     public function deleteBudget(Id $budgetId): void
     {
         $budget = $this->budgetRepository->get($budgetId);
+        $access = $budget->getAccessList();
+        $budgetOwner = $budget->getUser();
         $this->budgetRepository->delete([$budget]);
+        // @todo change the default budget for all budget users
     }
 }
