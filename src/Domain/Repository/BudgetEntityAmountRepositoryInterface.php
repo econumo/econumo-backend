@@ -27,4 +27,6 @@ interface BudgetEntityAmountRepositoryInterface
      * @return void
      */
     public function delete(array $items): void;
+
+    public function deleteByBudgetId(Id $budgetId): void;
 }

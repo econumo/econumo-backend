@@ -77,6 +77,12 @@ class Budget
         }
     }
 
+    public function startFrom(DateTimeInterface $startedAt): void
+    {
+        $this->startedAt = DateTime::createFromFormat('Y-m-d H:i:s', $startedAt->format('Y-m-01 00:00:00'));
+        $this->updated();
+    }
+
     public function getStartedAt(): DateTimeInterface
     {
         return $this->startedAt;

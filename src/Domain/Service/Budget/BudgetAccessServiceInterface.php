@@ -15,5 +15,7 @@ interface BudgetAccessServiceInterface
 
     public function canUpdateBudget(Id $userId, Id $budgetId): bool;
 
+    public function canResetBudget(Id $userId, Id $budgetId): bool;
+
     public function getBudgetRole(Id $userId, Id $budgetId): UserRole;
 }

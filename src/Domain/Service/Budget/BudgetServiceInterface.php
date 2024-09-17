@@ -10,6 +10,7 @@ use App\Domain\Entity\ValueObject\BudgetName;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Service\Budget\Dto\BudgetDto;
 use App\Domain\Service\Budget\Dto\BudgetPreviewDto;
+use DateTimeInterface;
 
 interface BudgetServiceInterface
 {
@@ -55,4 +56,6 @@ interface BudgetServiceInterface
     public function excludeAccount(Id $userId, Id $budgetId, Id $accountId): BudgetPreviewDto;
 
     public function includeAccount(Id $userId, Id $budgetId, Id $accountId): BudgetPreviewDto;
+
+    public function resetBudget(Id $budgetId, DateTimeInterface $startedAt): BudgetPreviewDto;
 }

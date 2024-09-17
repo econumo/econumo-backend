@@ -9,6 +9,7 @@ use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\AccessDeniedException;
 use App\Domain\Factory\BudgetFactoryInterface;
 use App\Domain\Repository\AccountRepositoryInterface;
+use App\Domain\Repository\BudgetEntityAmountRepositoryInterface;
 use App\Domain\Repository\BudgetRepositoryInterface;
 use App\Domain\Service\AntiCorruptionServiceInterface;
 use App\Domain\Service\Budget\Assembler\BudgetDtoAssembler;
@@ -17,6 +18,7 @@ use App\Domain\Service\Budget\Dto\BudgetDto;
 use App\Domain\Service\Budget\Dto\BudgetPreviewDto;
 use App\Domain\Service\DatetimeServiceInterface;
 use App\Domain\Service\UserServiceInterface;
+use DateTimeInterface;
 use Throwable;
 
 readonly class BudgetService implements BudgetServiceInterface
@@ -32,6 +34,7 @@ readonly class BudgetService implements BudgetServiceInterface
         private BudgetPreviewDtoAssembler $budgetPreviewDtoAssembler,
         private BudgetDeletionService $budgetDeletionService,
         private AccountRepositoryInterface $accountRepository,
+        private BudgetEntityAmountRepositoryInterface $budgetEntityAmountRepository,
     ) {
     }
 
@@ -112,6 +115,23 @@ readonly class BudgetService implements BudgetServiceInterface
         $budget = $this->budgetRepository->get($budgetId);
         $budget->includeAccount($account);
         $this->budgetRepository->save([$budget]);
+        return $this->budgetPreviewDtoAssembler->assemble($budget);
+    }
+
+    public function resetBudget(Id $budgetId, DateTimeInterface $startedAt): BudgetPreviewDto
+    {
+        $budget = $this->budgetRepository->get($budgetId);
+        try {
+            $this->antiCorruptionService->beginTransaction(__METHOD__);
+            $this->budgetEntityAmountRepository->deleteByBudgetId($budgetId);
+
+            $budget->startFrom($startedAt);
+            $this->budgetRepository->save([$budget]);
+            $this->antiCorruptionService->commit(__METHOD__);
+        } catch (Throwable $e) {
+            $this->antiCorruptionService->rollback(__METHOD__);
+            throw $e;
+        }
         return $this->budgetPreviewDtoAssembler->assemble($budget);
     }
 }
