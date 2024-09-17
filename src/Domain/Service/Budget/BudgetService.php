@@ -6,7 +6,9 @@ namespace App\Domain\Service\Budget;
 
 use App\Domain\Entity\ValueObject\BudgetName;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Exception\AccessDeniedException;
 use App\Domain\Factory\BudgetFactoryInterface;
+use App\Domain\Repository\AccountRepositoryInterface;
 use App\Domain\Repository\BudgetRepositoryInterface;
 use App\Domain\Service\AntiCorruptionServiceInterface;
 use App\Domain\Service\Budget\Assembler\BudgetDtoAssembler;
@@ -29,6 +31,7 @@ readonly class BudgetService implements BudgetServiceInterface
         private BudgetEntityServiceInterface $budgetEntityService,
         private BudgetPreviewDtoAssembler $budgetPreviewDtoAssembler,
         private BudgetDeletionService $budgetDeletionService,
+        private AccountRepositoryInterface $accountRepository,
     ) {
     }
 
@@ -82,6 +85,19 @@ readonly class BudgetService implements BudgetServiceInterface
     {
         $budget = $this->budgetRepository->get($budgetId);
         $budget->updateName($name);
+        $this->budgetRepository->save([$budget]);
+        return $this->budgetPreviewDtoAssembler->assemble($budget);
+    }
+
+    public function excludeAccount(Id $userId, Id $budgetId, Id $accountId): BudgetPreviewDto
+    {
+        $account = $this->accountRepository->get($accountId);
+        if (!$account->getUserId()->isEqual($userId)) {
+            throw new AccessDeniedException();
+        }
+
+        $budget = $this->budgetRepository->get($budgetId);
+        $budget->excludeAccount($account);
         $this->budgetRepository->save([$budget]);
         return $this->budgetPreviewDtoAssembler->assemble($budget);
     }
