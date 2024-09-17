@@ -12,6 +12,9 @@ use App\Domain\Entity\ValueObject\BudgetName;
 use App\Application\Budget\Dto\GetBudgetV1RequestDto;
 use App\Application\Budget\Dto\GetBudgetV1ResultDto;
 use App\Application\Budget\Assembler\GetBudgetV1ResultAssembler;
+use App\Application\Budget\Dto\DeleteBudgetV1RequestDto;
+use App\Application\Budget\Dto\DeleteBudgetV1ResultDto;
+use App\Application\Budget\Assembler\DeleteBudgetV1ResultAssembler;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Service\Budget\BudgetAccessServiceInterface;
 use App\Domain\Service\Budget\BudgetServiceInterface;
@@ -23,6 +26,7 @@ readonly class BudgetService
         private BudgetServiceInterface $budgetService,
         private GetBudgetV1ResultAssembler $getBudgetV1ResultAssembler,
         private BudgetAccessServiceInterface $budgetAccessService,
+        private DeleteBudgetV1ResultAssembler $deleteBudgetV1ResultAssembler,
     ) {
     }
 
@@ -51,5 +55,18 @@ readonly class BudgetService
 
         $budgetDto = $this->budgetService->getBudget($userId, $budgetId);
         return $this->getBudgetV1ResultAssembler->assemble($userId, $budgetDto);
+    }
+
+    public function deleteBudget(
+        DeleteBudgetV1RequestDto $dto,
+        Id $userId
+    ): DeleteBudgetV1ResultDto {
+        $budgetId = new Id($dto->id);
+        if (!$this->budgetAccessService->canDeleteBudget($userId, $budgetId)) {
+            throw new AccessDeniedException();
+        }
+
+        $this->budgetService->deleteBudget($budgetId);
+        return $this->deleteBudgetV1ResultAssembler->assemble();
     }
 }

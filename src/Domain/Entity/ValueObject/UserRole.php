@@ -12,6 +12,10 @@ final class UserRole implements JsonSerializable, ValueObjectInterface, \Stringa
     /**
      * @var int
      */
+    public const OWNER = -1;
+    /**
+     * @var int
+     */
     public const ADMIN = 0;
 
     /**
@@ -28,12 +32,18 @@ final class UserRole implements JsonSerializable, ValueObjectInterface, \Stringa
      * @var string[]
      */
     public const MAPPING = [
+        self::OWNER => 'owner',
         self::ADMIN => 'admin',
         self::USER => 'user',
         self::GUEST => 'guest',
     ];
 
     private int $value;
+
+    public static function owner(): self
+    {
+        return new self(self::OWNER);
+    }
 
     public static function admin(): self
     {
@@ -74,6 +84,11 @@ final class UserRole implements JsonSerializable, ValueObjectInterface, \Stringa
         return self::MAPPING[$this->value];
     }
 
+    public function isOwner(): bool
+    {
+        return $this->value === self::OWNER;
+    }
+
     public function isAdmin(): bool
     {
         return $this->value === self::ADMIN;
@@ -91,7 +106,7 @@ final class UserRole implements JsonSerializable, ValueObjectInterface, \Stringa
 
     public static function isValid(int $value): bool
     {
-        return in_array($value, [self::ADMIN, self::USER, self::GUEST], true);
+        return in_array($value, [self::ADMIN, self::USER, self::GUEST, self::OWNER], true);
     }
 
     /**

@@ -21,7 +21,7 @@ readonly class BudgetAccessService implements BudgetAccessServiceInterface
     public function canReadBudget(Id $userId, Id $budgetId): bool
     {
         try {
-            $this->getBudgetAccess($userId, $budgetId);
+            $this->getBudgetRole($userId, $budgetId);
         } catch (AccessDeniedException $e) {
             return false;
         }
@@ -29,11 +29,11 @@ readonly class BudgetAccessService implements BudgetAccessServiceInterface
         return true;
     }
 
-    private function getBudgetAccess(Id $userId, Id $budgetId): UserRole
+    public function getBudgetRole(Id $userId, Id $budgetId): UserRole
     {
         $budget = $this->budgetRepository->get($budgetId);
         if ($budget->getUser()->getId()->isEqual($userId)) {
-            return UserRole::admin();
+            return UserRole::owner();
         }
 
         $accessList = $budget->getAccessList();
@@ -46,5 +46,19 @@ readonly class BudgetAccessService implements BudgetAccessServiceInterface
             }
         }
         throw new AccessDeniedException();
+    }
+
+    public function canDeleteBudget(Id $userId, Id $budgetId): bool
+    {
+        try {
+            $role = $this->getBudgetRole($userId, $budgetId);
+            if ($role->isAdmin() || $role->isOwner()) {
+                return true;
+            }
+        } catch (AccessDeniedException $e) {
+            return false;
+        }
+
+        return false;
     }
 }

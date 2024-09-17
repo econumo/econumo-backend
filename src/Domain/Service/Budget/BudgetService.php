@@ -26,7 +26,8 @@ readonly class BudgetService implements BudgetServiceInterface
         private AntiCorruptionServiceInterface $antiCorruptionService,
         private BudgetDtoAssembler $budgetDtoAssembler,
         private BudgetEntityServiceInterface $budgetEntityService,
-        private BudgetPreviewDtoAssembler  $budgetPreviewDtoAssembler
+        private BudgetPreviewDtoAssembler $budgetPreviewDtoAssembler,
+        private BudgetDeletionService $budgetDeletionService,
     ) {
     }
 
@@ -69,5 +70,10 @@ readonly class BudgetService implements BudgetServiceInterface
         }
 
         return $result;
+    }
+
+    public function deleteBudget(Id $budgetId): void
+    {
+        $this->budgetDeletionService->deleteBudget($budgetId);
     }
 }
