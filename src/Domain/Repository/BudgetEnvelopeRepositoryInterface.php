@@ -15,7 +15,7 @@ interface BudgetEnvelopeRepositoryInterface
     /**
      * @return BudgetEnvelope[]
      */
-    public function getByBudgetId(Id $budgetId): array;
+    public function getByBudgetId(Id $budgetId, bool $onlyActive = null): array;
 
     /**
      * @throws NotFoundException

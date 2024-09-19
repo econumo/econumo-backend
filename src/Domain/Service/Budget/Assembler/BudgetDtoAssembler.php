@@ -6,6 +6,7 @@ namespace App\Domain\Service\Budget\Assembler;
 
 use App\Domain\Entity\Account;
 use App\Domain\Entity\Budget;
+use App\Domain\Entity\BudgetEnvelope;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Repository\AccountRepositoryInterface;
 use App\Domain\Repository\BudgetEntityOptionRepositoryInterface;
@@ -38,8 +39,10 @@ readonly class BudgetDtoAssembler
         $allExcludedAccountsFlat = $this->getAllExcludedAccountsFlat($budget);
         $userIds = $this->getBudgetUserIds($budget);
         $currencies = $this->getCurrencies($userIds, $allExcludedAccountsFlat);
+        $envelopes = $this->getEnvelopes($budget);
         $categories = $this->getCategories($userIds);
         $tags = $this->getTags($userIds);
+        $entityOptions = $this->budgetEntityOptionRepository->getByBudgetId($budget->getId());
 
         return new BudgetDto(
             $budget->getId(),
@@ -49,10 +52,10 @@ readonly class BudgetDtoAssembler
             $excludedAccountIds,
             $currencies,
             $budget->getFolderList()->toArray(),
-            $this->budgetEnvelopeRepository->getByBudgetId($budget->getId()),
+            $envelopes,
             $categories,
             $tags,
-            $this->budgetEntityOptionRepository->getByBudgetId($budget->getId()),
+            $entityOptions,
             $budget->getAccessList()->toArray()
         );
     }
@@ -94,7 +97,9 @@ readonly class BudgetDtoAssembler
     {
         $categories = [];
         foreach ($this->categoryRepository->findByOwnersIds($userIds) as $category) {
-            $categories[$category->getId()->getValue()] = $category->getId();
+            if (!$category->isArchived()) {
+                $categories[$category->getId()->getValue()] = $category->getId();
+            }
         }
         return array_values($categories);
     }
@@ -103,8 +108,20 @@ readonly class BudgetDtoAssembler
     {
         $tags = [];
         foreach ($this->tagRepository->findByOwnersIds($userIds) as $tag) {
-            $tags[$tag->getId()->getValue()] = $tag->getId();
+            if (!$tag->isArchived()) {
+                $tags[$tag->getId()->getValue()] = $tag->getId();
+            }
         }
         return array_values($tags);
+    }
+
+    /**
+     * @param Budget $budget
+     * @return BudgetEnvelope[]
+     */
+    private function getEnvelopes(Budget $budget): array
+    {
+        $envelopes = $this->budgetEnvelopeRepository->getByBudgetId($budget->getId(), true);
+        return $envelopes;
     }
 }

@@ -10,6 +10,7 @@ use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Repository\BudgetEnvelopeRepositoryInterface;
 use App\Infrastructure\Doctrine\Repository\Traits\DeleteTrait;
+use App\Infrastructure\Doctrine\Repository\Traits\GetEntityReferenceTrait;
 use App\Infrastructure\Doctrine\Repository\Traits\NextIdentityTrait;
 use App\Infrastructure\Doctrine\Repository\Traits\SaveTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -26,15 +27,25 @@ class BudgetEnvelopeRepository extends ServiceEntityRepository implements Budget
     use NextIdentityTrait;
     use SaveTrait;
     use DeleteTrait;
+    use GetEntityReferenceTrait;
 
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, BudgetEnvelope::class);
     }
 
-    public function getByBudgetId(Id $budgetId): array
+    public function getByBudgetId(Id $budgetId, bool $onlyActive = null): array
     {
-        return $this->findBy(['budget' => $this->getEntityManager()->getReference(Budget::class, $budgetId)]);
+        if ($onlyActive === null) {
+            return $this->findBy([
+                'budget' => $this->getEntityReference(Budget::class, $budgetId)
+            ]);
+        } else {
+            return $this->findBy([
+                'budget' => $this->getEntityReference(Budget::class, $budgetId),
+                'isArchived' => !!$onlyActive
+            ]);
+        }
     }
 
     public function get(Id $id): BudgetEnvelope
