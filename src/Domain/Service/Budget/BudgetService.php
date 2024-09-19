@@ -73,7 +73,7 @@ readonly class BudgetService implements BudgetServiceInterface
         $budgets = $this->budgetRepository->getByUserId($userId);
         $result = [];
         foreach ($budgets as $budget) {
-            $result[] = $this->budgetPreviewDtoAssembler->assemble($budget);
+            $result[] = $this->budgetPreviewDtoAssembler->assemble($userId, $budget);
         }
 
         return $result;
@@ -84,12 +84,12 @@ readonly class BudgetService implements BudgetServiceInterface
         $this->budgetDeletionService->deleteBudget($budgetId);
     }
 
-    public function updateBudget(Id $budgetId, BudgetName $name): BudgetPreviewDto
+    public function updateBudget(Id $userId, Id $budgetId, BudgetName $name): BudgetPreviewDto
     {
         $budget = $this->budgetRepository->get($budgetId);
         $budget->updateName($name);
         $this->budgetRepository->save([$budget]);
-        return $this->budgetPreviewDtoAssembler->assemble($budget);
+        return $this->budgetPreviewDtoAssembler->assemble($userId, $budget);
     }
 
     public function excludeAccount(Id $userId, Id $budgetId, Id $accountId): BudgetPreviewDto
@@ -102,7 +102,7 @@ readonly class BudgetService implements BudgetServiceInterface
         $budget = $this->budgetRepository->get($budgetId);
         $budget->excludeAccount($account);
         $this->budgetRepository->save([$budget]);
-        return $this->budgetPreviewDtoAssembler->assemble($budget);
+        return $this->budgetPreviewDtoAssembler->assemble($userId, $budget);
     }
 
     public function includeAccount(Id $userId, Id $budgetId, Id $accountId): BudgetPreviewDto
@@ -115,10 +115,10 @@ readonly class BudgetService implements BudgetServiceInterface
         $budget = $this->budgetRepository->get($budgetId);
         $budget->includeAccount($account);
         $this->budgetRepository->save([$budget]);
-        return $this->budgetPreviewDtoAssembler->assemble($budget);
+        return $this->budgetPreviewDtoAssembler->assemble($userId, $budget);
     }
 
-    public function resetBudget(Id $budgetId, DateTimeInterface $startedAt): BudgetPreviewDto
+    public function resetBudget(Id $userId, Id $budgetId, DateTimeInterface $startedAt): BudgetPreviewDto
     {
         $budget = $this->budgetRepository->get($budgetId);
         try {
@@ -132,6 +132,6 @@ readonly class BudgetService implements BudgetServiceInterface
             $this->antiCorruptionService->rollback(__METHOD__);
             throw $e;
         }
-        return $this->budgetPreviewDtoAssembler->assemble($budget);
+        return $this->budgetPreviewDtoAssembler->assemble($userId, $budget);
     }
 }

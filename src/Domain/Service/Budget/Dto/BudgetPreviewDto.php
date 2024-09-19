@@ -16,6 +16,8 @@ readonly class BudgetPreviewDto
         public Id $ownerUserId,
         public BudgetName $budgetName,
         public DateTimeInterface $startedAt,
+        /** @var Id[] */
+        public array $excludedAccounts,
         /** @var BudgetAccess[] */
         public array $sharedAccess
     ) {

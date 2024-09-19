@@ -46,16 +46,11 @@ interface BudgetServiceInterface
      */
     public function deleteBudget(Id $budgetId): void;
 
-    /**
-     * @param Id $budgetId
-     * @param BudgetName $name
-     * @return BudgetPreviewDto
-     */
-    public function updateBudget(Id $budgetId, BudgetName $name): BudgetPreviewDto;
+    public function updateBudget(Id $userId, Id $budgetId, BudgetName $name): BudgetPreviewDto;
 
     public function excludeAccount(Id $userId, Id $budgetId, Id $accountId): BudgetPreviewDto;
 
     public function includeAccount(Id $userId, Id $budgetId, Id $accountId): BudgetPreviewDto;
 
-    public function resetBudget(Id $budgetId, DateTimeInterface $startedAt): BudgetPreviewDto;
+    public function resetBudget(Id $userId, Id $budgetId, DateTimeInterface $startedAt): BudgetPreviewDto;
 }

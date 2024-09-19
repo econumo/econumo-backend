@@ -120,13 +120,18 @@ class Budget
     {
         if (!$this->excludedAccounts->contains($account)) {
             $this->excludedAccounts->add($account);
+            $this->updated();
         }
         return $this;
     }
 
     public function includeAccount(Account $account): self
     {
-        $this->excludedAccounts->removeElement($account);
+        if ($this->excludedAccounts->contains($account)) {
+            $this->excludedAccounts->removeElement($account);
+            $this->updated();
+        }
+
         return $this;
     }
 

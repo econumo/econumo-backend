@@ -88,7 +88,7 @@ readonly class BudgetService
             throw new AccessDeniedException();
         }
 
-        $budgetDto = $this->budgetService->updateBudget($budgetId, new BudgetName($dto->name));
+        $budgetDto = $this->budgetService->updateBudget($userId, $budgetId, new BudgetName($dto->name));
         return $this->updateBudgetV1ResultAssembler->assemble($budgetDto);
     }
 
@@ -101,7 +101,7 @@ readonly class BudgetService
             throw new AccessDeniedException();
         }
         $startedAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dto->startedAt);
-        $budgetDto = $this->budgetService->resetBudget($budgetId, $startedAt);
+        $budgetDto = $this->budgetService->resetBudget($userId, $budgetId, $startedAt);
         return $this->resetBudgetV1ResultAssembler->assemble($budgetDto);
     }
 }

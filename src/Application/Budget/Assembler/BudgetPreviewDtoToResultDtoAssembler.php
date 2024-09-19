@@ -23,6 +23,10 @@ readonly class BudgetPreviewDtoToResultDtoAssembler
         $item->ownerUserId = $budgetPreviewDto->ownerUserId->getValue();
         $item->name = $budgetPreviewDto->budgetName->getValue();
         $item->startedAt = $budgetPreviewDto->startedAt->format('Y-m-d H:i:s');
+        $item->excludedAccounts = [];
+        foreach ($budgetPreviewDto->excludedAccounts as $account) {
+            $item->excludedAccounts[] = $account->getValue();
+        }
         $item->sharedAccess = [];
         foreach ($budgetPreviewDto->sharedAccess as $access) {
             $item->sharedAccess[] = $this->budgetAccessToResultDtoAssembler->assemble($access);
