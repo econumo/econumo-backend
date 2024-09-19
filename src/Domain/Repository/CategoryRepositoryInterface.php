@@ -42,5 +42,5 @@ interface CategoryRepositoryInterface
      * @param Id[] $userIds
      * @return Category[]
      */
-    public function findByOwnersIds(array $userIds): array;
+    public function findByOwnersIds(array $userIds, bool $onlyActive = null): array;
 }

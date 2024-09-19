@@ -113,7 +113,7 @@ DQL;
         return $this->findBy(['id' => $ids]);
     }
 
-    public function findByOwnersIds(array $userIds): array
+    public function findByOwnersIds(array $userIds, bool $onlyActive = null): array
     {
         $users = [];
         foreach ($userIds as $userId) {
@@ -123,6 +123,11 @@ DQL;
         $builder->select('t')
             ->where($builder->expr()->in('t.user', ':users'))
             ->setParameter('users', $users);
+        if ($onlyActive !== null) {
+            $builder
+                ->andWhere('t.isArchived = :isArchived')
+                ->setParameter('isArchived', !!$onlyActive);
+        }
         return $builder->getQuery()->getResult();
     }
 }

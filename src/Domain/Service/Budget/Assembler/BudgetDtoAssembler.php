@@ -96,7 +96,7 @@ readonly class BudgetDtoAssembler
     private function getCategories(array $userIds): array
     {
         $categories = [];
-        foreach ($this->categoryRepository->findByOwnersIds($userIds) as $category) {
+        foreach ($this->categoryRepository->findByOwnersIds($userIds, true) as $category) {
             if (!$category->isArchived()) {
                 $categories[$category->getId()->getValue()] = $category->getId();
             }
@@ -107,7 +107,7 @@ readonly class BudgetDtoAssembler
     private function getTags(array $userIds): array
     {
         $tags = [];
-        foreach ($this->tagRepository->findByOwnersIds($userIds) as $tag) {
+        foreach ($this->tagRepository->findByOwnersIds($userIds, true) as $tag) {
             if (!$tag->isArchived()) {
                 $tags[$tag->getId()->getValue()] = $tag->getId();
             }
@@ -121,7 +121,12 @@ readonly class BudgetDtoAssembler
      */
     private function getEnvelopes(Budget $budget): array
     {
-        $envelopes = $this->budgetEnvelopeRepository->getByBudgetId($budget->getId(), true);
-        return $envelopes;
+        $envelopes = [];
+        foreach($this->budgetEnvelopeRepository->getByBudgetId($budget->getId(), true) as $envelope) {
+            if (!$envelope->isArchived()) {
+                $envelopes[$envelope->getId()->getValue()] = $envelope->getId();
+            }
+        }
+        return array_values($envelopes);
     }
 }

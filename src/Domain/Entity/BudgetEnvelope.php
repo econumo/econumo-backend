@@ -55,6 +55,11 @@ class BudgetEnvelope
         return $this->name;
     }
 
+    public function isArchived(): bool
+    {
+        return $this->isArchived;
+    }
+
     public function getIcon(): Icon
     {
         return $this->icon;
