@@ -24,7 +24,7 @@ class OrderFolderListCest
                     'position' => 1
                 ],
                 [
-                    'id' => '226557ac-7741-455b-b51d-6d038fe1ae1a',
+                    'id' => '0f8ab340-73b8-449a-b2ab-1286d8e709fc',
                     'position' => 0
                 ],
             ]
@@ -54,7 +54,7 @@ class OrderFolderListCest
                     'position' => 1
                 ],
                 [
-                    'id' => '226557ac-7741-455b-b51d-6d038fe1ae1a',
+                    'id' => '0f8ab340-73b8-449a-b2ab-1286d8e709fc',
                     'position' => 0
                 ],
             ]
@@ -75,7 +75,7 @@ class OrderFolderListCest
                     'position' => 1
                 ],
                 [
-                    'id' => '226557ac-7741-455b-b51d-6d038fe1ae1a',
+                    'id' => '0f8ab340-73b8-449a-b2ab-1286d8e709fc',
                     'position' => 0
                 ],
             ]

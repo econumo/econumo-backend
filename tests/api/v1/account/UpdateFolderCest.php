@@ -17,7 +17,7 @@ class UpdateFolderCest
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, ['id' => 'fe49bf88-0f8b-45b1-8feb-68eb38910e4d', 'name' => 'My Accounts']);
+        $I->sendPOST($this->url, ['id' => 'fe49bf88-0f8b-45b1-8feb-68eb38910e4d', 'name' => 'Personal NEW']);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
 
@@ -36,7 +36,7 @@ class UpdateFolderCest
      */
     public function requestShouldReturn401ResponseCode(ApiTester $I): void
     {
-        $I->sendPOST($this->url, ['id' => 'fe49bf88-0f8b-45b1-8feb-68eb38910e4d', 'name' => 'My Accounts']);
+        $I->sendPOST($this->url, ['id' => 'fe49bf88-0f8b-45b1-8feb-68eb38910e4d', 'name' => 'Personal NEW']);
         $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
     }
 
@@ -46,7 +46,7 @@ class UpdateFolderCest
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, ['id' => 'fe49bf88-0f8b-45b1-8feb-68eb38910e4d', 'name' => 'My Accounts']);
+        $I->sendPOST($this->url, ['id' => 'fe49bf88-0f8b-45b1-8feb-68eb38910e4d', 'name' => 'Personal NEW']);
         $I->seeResponseMatchesJsonType([
             'data' => [
                 'item' => $I->getAccountFolderDtoJsonType(),

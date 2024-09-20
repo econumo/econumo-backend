@@ -20,13 +20,13 @@ class OrderAccountListCest
         $I->sendPOST($this->url, [
             'changes' => [
                 [
-                    'id' => '4eec1ee6-1992-4222-b9ab-31ece5eaad5d',
-                    'folderId' => '226557ac-7741-455b-b51d-6d038fe1ae1a',
+                    'id' => 'b53cc423-4e33-49ba-98cc-ef80b2de9a86',
+                    'folderId' => 'fe49bf88-0f8b-45b1-8feb-68eb38910e4d',
                     'position' => 0
                 ],
                 [
-                    'id' => '5f3834d1-34e8-4f60-a697-004e63854513',
-                    'folderId' => 'fe49bf88-0f8b-45b1-8feb-68eb38910e4d',
+                    'id' => '2f8fa6a5-34a1-4ea4-b3ec-e11e22201578',
+                    'folderId' => '0f8ab340-73b8-449a-b2ab-1286d8e709fc',
                     'position' => 0
                 ],
             ]
@@ -52,13 +52,13 @@ class OrderAccountListCest
         $I->sendPOST($this->url, [
             'changes' => [
                 [
-                    'id' => '4eec1ee6-1992-4222-b9ab-31ece5eaad5d',
-                    'folderId' => '226557ac-7741-455b-b51d-6d038fe1ae1a',
+                    'id' => 'b53cc423-4e33-49ba-98cc-ef80b2de9a86',
+                    'folderId' => 'fe49bf88-0f8b-45b1-8feb-68eb38910e4d',
                     'position' => 0
                 ],
                 [
-                    'id' => '5f3834d1-34e8-4f60-a697-004e63854513',
-                    'folderId' => 'fe49bf88-0f8b-45b1-8feb-68eb38910e4d',
+                    'id' => '2f8fa6a5-34a1-4ea4-b3ec-e11e22201578',
+                    'folderId' => '0f8ab340-73b8-449a-b2ab-1286d8e709fc',
                     'position' => 0
                 ],
             ]
@@ -75,13 +75,13 @@ class OrderAccountListCest
         $I->sendPOST($this->url, [
             'changes' => [
                 [
-                    'id' => '4eec1ee6-1992-4222-b9ab-31ece5eaad5d',
-                    'folderId' => '226557ac-7741-455b-b51d-6d038fe1ae1a',
+                    'id' => 'b53cc423-4e33-49ba-98cc-ef80b2de9a86',
+                    'folderId' => 'fe49bf88-0f8b-45b1-8feb-68eb38910e4d',
                     'position' => 0
                 ],
                 [
-                    'id' => '5f3834d1-34e8-4f60-a697-004e63854513',
-                    'folderId' => 'fe49bf88-0f8b-45b1-8feb-68eb38910e4d',
+                    'id' => '2f8fa6a5-34a1-4ea4-b3ec-e11e22201578',
+                    'folderId' => '0f8ab340-73b8-449a-b2ab-1286d8e709fc',
                     'position' => 0
                 ],
             ]
