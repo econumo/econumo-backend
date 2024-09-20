@@ -17,7 +17,7 @@ class DeleteAccountCest
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, ['id' => '6c7b8af8-2f8a-4d6b-855c-ca6ff26952ff']);
+        $I->sendPOST($this->url, ['id' => 'b53cc423-4e33-49ba-98cc-ef80b2de9a86']);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
 
@@ -37,7 +37,7 @@ class DeleteAccountCest
     public function requestShouldReturn403ResponseCode(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, ['id' => '99ff78ec-5081-11ec-bf63-0242ac130002']);
+        $I->sendPOST($this->url, ['id' => 'fed3b875-808d-4f76-9c31-760aee6c09ed']);
         $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
     }
 
@@ -46,7 +46,7 @@ class DeleteAccountCest
      */
     public function requestShouldReturn401ResponseCode(ApiTester $I): void
     {
-        $I->sendPOST($this->url, ['id' => '6c7b8af8-2f8a-4d6b-855c-ca6ff26952ff']);
+        $I->sendPOST($this->url, ['id' => 'b53cc423-4e33-49ba-98cc-ef80b2de9a86']);
         $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
     }
 
@@ -57,7 +57,7 @@ class DeleteAccountCest
     {
         $I->amAuthenticatedAsJohn();
         $I->sendPOST($this->url, [
-            'id' => '6c7b8af8-2f8a-4d6b-855c-ca6ff26952ff',
+            'id' => 'b53cc423-4e33-49ba-98cc-ef80b2de9a86',
         ]);
         $I->seeResponseMatchesJsonType([
             'message' => 'string',
