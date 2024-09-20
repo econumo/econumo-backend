@@ -48,7 +48,7 @@ class GetAccountListCest
         $I->amAuthenticatedAsJohn();
         $I->sendGET($this->url);
         $I->seeResponseMatchesJsonType($I->getRootResponseWithItemsJsonType());
-        $I->seeResponseMatchesJsonType($I->getAccountDtoJsonType(), '$.data.items[3]');
-        $I->seeResponseMatchesJsonType($I->getSharedAccessDtoJsonType(), '$.data.items[3].sharedAccess[0]');
+        $I->seeResponseMatchesJsonType($I->getAccountDtoJsonType(), '$.data.items[1]');
+        $I->seeResponseMatchesJsonType($I->getSharedAccessDtoJsonType(), '$.data.items[1].sharedAccess[0]');
     }
 }
