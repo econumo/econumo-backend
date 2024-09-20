@@ -8,9 +8,9 @@ use Codeception\Exception\ModuleException;
 use App\Tests\ApiTester;
 use Codeception\Util\HttpCode;
 
-class GetBudgetCest
+class GetStructureCest
 {
-    private string $url = '/api/v1/budget/get-budget';
+    private string $url = '/api/v1/budget/get-structure';
 
     /**
      * @throws ModuleException

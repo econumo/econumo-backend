@@ -9,9 +9,6 @@ use App\Application\Budget\Dto\CreateBudgetV1ResultDto;
 use App\Application\Budget\Assembler\CreateBudgetV1ResultAssembler;
 use App\Application\Exception\AccessDeniedException;
 use App\Domain\Entity\ValueObject\BudgetName;
-use App\Application\Budget\Dto\GetBudgetV1RequestDto;
-use App\Application\Budget\Dto\GetBudgetV1ResultDto;
-use App\Application\Budget\Assembler\GetBudgetV1ResultAssembler;
 use App\Application\Budget\Dto\DeleteBudgetV1RequestDto;
 use App\Application\Budget\Dto\DeleteBudgetV1ResultDto;
 use App\Application\Budget\Assembler\DeleteBudgetV1ResultAssembler;
@@ -31,7 +28,6 @@ readonly class BudgetService
     public function __construct(
         private CreateBudgetV1ResultAssembler $createBudgetV1ResultAssembler,
         private BudgetServiceInterface $budgetService,
-        private GetBudgetV1ResultAssembler $getBudgetV1ResultAssembler,
         private BudgetAccessServiceInterface $budgetAccessService,
         private DeleteBudgetV1ResultAssembler $deleteBudgetV1ResultAssembler,
         private UpdateBudgetV1ResultAssembler $updateBudgetV1ResultAssembler,
@@ -51,19 +47,6 @@ readonly class BudgetService
         );
         $budgetDto = $this->budgetService->createBudget($userId, $id, $name, $excludedAccountsIds);
         return $this->createBudgetV1ResultAssembler->assemble($userId, $budgetDto);
-    }
-
-    public function getBudget(
-        GetBudgetV1RequestDto $dto,
-        Id $userId
-    ): GetBudgetV1ResultDto {
-        $budgetId = new Id($dto->id);
-        if (!$this->budgetAccessService->canReadBudget($userId, $budgetId)) {
-            throw new AccessDeniedException();
-        }
-
-        $budgetDto = $this->budgetService->getBudget($userId, $budgetId);
-        return $this->getBudgetV1ResultAssembler->assemble($userId, $budgetDto);
     }
 
     public function deleteBudget(

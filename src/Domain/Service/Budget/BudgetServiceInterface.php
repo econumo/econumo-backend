@@ -33,7 +33,7 @@ interface BudgetServiceInterface
      * @param Id $budgetId
      * @return BudgetDto
      */
-    public function getBudget(Id $userId, Id $budgetId): BudgetDto;
+    public function getStructure(Id $userId, Id $budgetId): BudgetDto;
 
     /**
      * @param Id $userId

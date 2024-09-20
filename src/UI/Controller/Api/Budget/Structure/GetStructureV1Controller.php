@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\UI\Controller\Api\Budget\Budget;
+namespace App\UI\Controller\Api\Budget\Structure;
 
-use App\Application\Budget\BudgetService;
-use App\Application\Budget\Dto\GetBudgetV1RequestDto;
-use App\UI\Controller\Api\Budget\Budget\Validation\GetBudgetV1Form;
+use App\Application\Budget\StructureService;
+use App\Application\Budget\Dto\GetStructureV1RequestDto;
+use App\UI\Controller\Api\Budget\Structure\Validation\GetStructureV1Form;
 use App\Application\Exception\ValidationException;
 use App\Domain\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,14 +18,14 @@ use Symfony\Component\Routing\Annotation\Route;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Annotations as OA;
 
-class GetBudgetV1Controller extends AbstractController
+class GetStructureV1Controller extends AbstractController
 {
-    public function __construct(private readonly BudgetService $budgetService, private readonly ValidatorInterface $validator)
+    public function __construct(private readonly StructureService $structureService, private readonly ValidatorInterface $validator)
     {
     }
 
     /**
-     * Get Budget
+     * Get a budget structure
      *
      * @OA\Tag(name="Budget"),
      * @OA\Parameter(
@@ -33,7 +33,7 @@ class GetBudgetV1Controller extends AbstractController
      *     in="query",
      *     required=true,
      *     @OA\Schema(type="string"),
-     *     description="Budget ID",
+     *     description="Structure ID",
      * ),
      * @OA\Response(
      *     response=200,
@@ -45,7 +45,7 @@ class GetBudgetV1Controller extends AbstractController
      *             @OA\Schema(
      *                 @OA\Property(
      *                     property="data",
-     *                     ref=@Model(type=\App\Application\Budget\Dto\GetBudgetV1ResultDto::class)
+     *                     ref=@Model(type=\App\Application\Budget\Dto\GetStructureV1ResultDto::class)
      *                 )
      *             )
      *         }
@@ -59,14 +59,14 @@ class GetBudgetV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/budget/get-budget', methods: ['GET'])]
+    #[Route(path: '/api/v1/budget/get-structure', methods: ['GET'])]
     public function __invoke(Request $request): Response
     {
-        $dto = new GetBudgetV1RequestDto();
-        $this->validator->validate(GetBudgetV1Form::class, $request->query->all(), $dto);
+        $dto = new GetStructureV1RequestDto();
+        $this->validator->validate(GetStructureV1Form::class, $request->query->all(), $dto);
         /** @var User $user */
         $user = $this->getUser();
-        $result = $this->budgetService->getBudget($dto, $user->getId());
+        $result = $this->structureService->getStructure($dto, $user->getId());
 
         return ResponseFactory::createOkResponse($request, $result);
     }

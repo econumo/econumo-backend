@@ -62,7 +62,7 @@ readonly class BudgetService implements BudgetServiceInterface
         return $this->budgetDtoAssembler->assemble($userId, $budget);
     }
 
-    public function getBudget(Id $userId, Id $budgetId): BudgetDto
+    public function getStructure(Id $userId, Id $budgetId): BudgetDto
     {
         $budget = $this->budgetRepository->get($budgetId);
         return $this->budgetDtoAssembler->assemble($userId, $budget);

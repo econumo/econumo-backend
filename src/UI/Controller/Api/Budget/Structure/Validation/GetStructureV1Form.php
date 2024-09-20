@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\UI\Controller\Api\Budget\Budget\Validation;
+namespace App\UI\Controller\Api\Budget\Structure\Validation;
 
 use App\UI\Service\Validator\ValueObjectValidationFactoryInterface;
 use Symfony\Component\Form\AbstractType;
@@ -12,7 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Uuid;
 
-class GetBudgetV1Form extends AbstractType
+class GetStructureV1Form extends AbstractType
 {
     public function __construct(private readonly ValueObjectValidationFactoryInterface $valueObjectValidationFactory)
     {
