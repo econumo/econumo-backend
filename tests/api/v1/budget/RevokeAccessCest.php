@@ -56,7 +56,7 @@ class RevokeAccessCest
      */
     public function requestShouldReturn403ResponseCode(ApiTester $I): void
     {
-        $I->amAuthenticatedAsSansa();
+        $I->amAuthenticatedAsAlex();
         $I->sendPOST($this->url, ['planId' => '3a6d84be-d074-4a14-ab9a-86dfb083c91d', 'userId' => '77be9577-147b-4f05-9aa7-91d9b159de5b']);
         $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
     }

@@ -17,7 +17,7 @@ class ReplaceFolderCest
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, ['id' => '1ad16d32-36af-496e-9867-3919436b8d86', 'replaceId' => '226557ac-7741-455b-b51d-6d038fe1ae1a']);
+        $I->sendPOST($this->url, ['id' => 'fe49bf88-0f8b-45b1-8feb-68eb38910e4d', 'replaceId' => '226557ac-7741-455b-b51d-6d038fe1ae1a']);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
 
@@ -36,7 +36,7 @@ class ReplaceFolderCest
      */
     public function requestShouldReturn401ResponseCode(ApiTester $I): void
     {
-        $I->sendPOST($this->url, ['id' => '1ad16d32-36af-496e-9867-3919436b8d86', 'replaceId' => '226557ac-7741-455b-b51d-6d038fe1ae1a']);
+        $I->sendPOST($this->url, ['id' => 'fe49bf88-0f8b-45b1-8feb-68eb38910e4d', 'replaceId' => '226557ac-7741-455b-b51d-6d038fe1ae1a']);
         $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
     }
 
@@ -46,7 +46,7 @@ class ReplaceFolderCest
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, ['id' => '1ad16d32-36af-496e-9867-3919436b8d86', 'replaceId' => '226557ac-7741-455b-b51d-6d038fe1ae1a']);
+        $I->sendPOST($this->url, ['id' => 'fe49bf88-0f8b-45b1-8feb-68eb38910e4d', 'replaceId' => '226557ac-7741-455b-b51d-6d038fe1ae1a']);
         $I->seeResponseMatchesJsonType([
             'message' => 'string',
             'data' => [],

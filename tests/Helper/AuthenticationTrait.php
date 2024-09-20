@@ -16,17 +16,17 @@ trait AuthenticationTrait
 
     public function amAuthenticatedAsJohn(): void
     {
-        $this->amAuthenticatedAsUser('john@econumo.test');
+        $this->amAuthenticatedAsUser('john@econumo.demo');
     }
 
     public function amAuthenticatedAsDany(): void
     {
-        $this->amAuthenticatedAsUser('dany@econumo.test');
+        $this->amAuthenticatedAsUser('dany@econumo.demo');
     }
 
-    public function amAuthenticatedAsSansa(): void
+    public function amAuthenticatedAsAlex(): void
     {
-        $this->amAuthenticatedAsUser('sansa@econumo.test');
+        $this->amAuthenticatedAsUser('alex@econumo.demo');
     }
 
     public function amAuthenticatedAsSystemUser(): void

@@ -26,7 +26,7 @@ class OrderAccountListCest
                 ],
                 [
                     'id' => '5f3834d1-34e8-4f60-a697-004e63854513',
-                    'folderId' => '1ad16d32-36af-496e-9867-3919436b8d86',
+                    'folderId' => 'fe49bf88-0f8b-45b1-8feb-68eb38910e4d',
                     'position' => 0
                 ],
             ]
@@ -58,7 +58,7 @@ class OrderAccountListCest
                 ],
                 [
                     'id' => '5f3834d1-34e8-4f60-a697-004e63854513',
-                    'folderId' => '1ad16d32-36af-496e-9867-3919436b8d86',
+                    'folderId' => 'fe49bf88-0f8b-45b1-8feb-68eb38910e4d',
                     'position' => 0
                 ],
             ]
@@ -81,7 +81,7 @@ class OrderAccountListCest
                 ],
                 [
                     'id' => '5f3834d1-34e8-4f60-a697-004e63854513',
-                    'folderId' => '1ad16d32-36af-496e-9867-3919436b8d86',
+                    'folderId' => 'fe49bf88-0f8b-45b1-8feb-68eb38910e4d',
                     'position' => 0
                 ],
             ]

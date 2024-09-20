@@ -22,7 +22,7 @@ class UpdateEnvelopeCest
             'id' => 'acb421b0-ea48-4efe-ab04-7bda5a5c68ae',
             'name' => 'Empty envelope 2',
             'icon' => 'airplane',
-            'currencyId' => 'fe5d9269-b69c-4841-9c04-136225447eca',
+            'currencyId' => 'e54f14e4-cdd3-4095-a892-ae7f532aaf7c',
             'categories' => [],
             'tags' => [],
         ]);
@@ -48,7 +48,7 @@ class UpdateEnvelopeCest
             'id' => 'acb421b0-ea48-4efe-ab04-7bda5a5c68ae',
             'name' => 'Empty envelope 2',
             'icon' => 'airplane',
-            'currencyId' => 'fe5d9269-b69c-4841-9c04-136225447eca',
+            'currencyId' => 'e54f14e4-cdd3-4095-a892-ae7f532aaf7c',
             'categories' => [],
             'tags' => [],
         ]);
@@ -65,7 +65,7 @@ class UpdateEnvelopeCest
             'id' => 'acb421b0-ea48-4efe-ab04-7bda5a5c68ae',
             'name' => 'Empty envelope 2',
             'icon' => 'airplane',
-            'currencyId' => 'fe5d9269-b69c-4841-9c04-136225447eca',
+            'currencyId' => 'e54f14e4-cdd3-4095-a892-ae7f532aaf7c',
             'categories' => [],
             'tags' => [],
         ]);

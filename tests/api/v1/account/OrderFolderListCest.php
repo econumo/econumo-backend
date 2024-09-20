@@ -20,7 +20,7 @@ class OrderFolderListCest
         $I->sendPOST($this->url, [
             'changes' => [
                 [
-                    'id' => '1ad16d32-36af-496e-9867-3919436b8d86',
+                    'id' => 'fe49bf88-0f8b-45b1-8feb-68eb38910e4d',
                     'position' => 1
                 ],
                 [
@@ -50,7 +50,7 @@ class OrderFolderListCest
         $I->sendPOST($this->url, [
             'changes' => [
                 [
-                    'id' => '1ad16d32-36af-496e-9867-3919436b8d86',
+                    'id' => 'fe49bf88-0f8b-45b1-8feb-68eb38910e4d',
                     'position' => 1
                 ],
                 [
@@ -71,7 +71,7 @@ class OrderFolderListCest
         $I->sendPOST($this->url, [
             'changes' => [
                 [
-                    'id' => '1ad16d32-36af-496e-9867-3919436b8d86',
+                    'id' => 'fe49bf88-0f8b-45b1-8feb-68eb38910e4d',
                     'position' => 1
                 ],
                 [

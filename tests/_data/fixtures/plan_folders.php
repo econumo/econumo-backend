@@ -3,52 +3,28 @@
 $data = <<<'JSON'
 [
   {
-    "id": "2ec2df9d-240e-4355-bd8e-e0425fd72e1d",
-    "plan_id": "16c88ac2-b548-4446-9e27-51a28156b299",
+    "id": "a5f4a984-948e-4617-bc27-1058d4c95586",
+    "plan_id": "c7c5f148-7ea8-4654-a218-267d0bbf7e88",
     "name": "Expenses",
     "position": 0,
-    "created_at": "2023-10-15 02:23:25",
-    "updated_at": "2023-10-15 02:23:25"
+    "created_at": "2024-08-26 04:23:26",
+    "updated_at": "2024-08-26 04:23:26"
   },
   {
-    "id": "cf328551-0808-4cb2-beb3-412be278a118",
-    "plan_id": "3a6d84be-d074-4a14-ab9a-86dfb083c91d",
-    "name": "Expenses",
-    "position": 0,
-    "created_at": "2023-10-15 02:23:40",
-    "updated_at": "2023-10-15 02:23:40"
-  },
-  {
-    "id": "949ec3ce-6379-406a-ae20-14ad63193d19",
-    "plan_id": "bceed17e-d492-40be-921a-e7fa6f663fa6",
-    "name": "Dany expenses",
+    "id": "fbe8744e-73ec-4a4b-aabf-91b3e7c65bdd",
+    "plan_id": "c7c5f148-7ea8-4654-a218-267d0bbf7e88",
+    "name": "Trips",
     "position": 1,
-    "created_at": "2023-10-15 02:24:21",
-    "updated_at": "2023-10-15 02:24:21"
+    "created_at": "2024-08-31 21:20:52",
+    "updated_at": "2024-08-31 21:20:52"
   },
   {
-    "id": "e776079f-33a8-4c61-aa6c-21192daa50e7",
-    "plan_id": "bceed17e-d492-40be-921a-e7fa6f663fa6",
-    "name": "John expenses",
+    "id": "e04beea3-6131-43ff-8d6f-6dc1b0e7cb8b",
+    "plan_id": "bc976f50-ed28-4e52-8b6f-627a218ef685",
+    "name": "Expenses",
     "position": 0,
-    "created_at": "2023-10-15 02:23:32",
-    "updated_at": "2023-10-15 02:23:32"
-  },
-  {
-    "id": "62ccc225-b141-42a4-8063-825c8b72d135",
-    "plan_id": "bceed17e-d492-40be-921a-e7fa6f663fa6",
-    "name": "Created folder",
-    "position": 2,
-    "created_at": "2023-10-15 02:23:32",
-    "updated_at": "2023-10-15 02:23:32"
-  },
-  {
-    "id": "860f0c50-bb33-42c1-955d-b3ce112462b8",
-    "plan_id": "16c88ac2-b548-4446-9e27-51a28156b299",
-    "name": "Empty folder",
-    "position": 2,
-    "created_at": "2023-10-15 02:23:32",
-    "updated_at": "2023-10-15 02:23:32"
+    "created_at": "2024-08-31 22:53:52",
+    "updated_at": "2024-08-31 22:53:52"
   }
 ]
 JSON;

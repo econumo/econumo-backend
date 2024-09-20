@@ -20,10 +20,10 @@ class CreateAccountCest
         $I->sendPOST($this->url, [
             'id' => '4b7946ca-2a48-4ea3-8645-2960cea6b94f',
             'name' => 'Savings Account',
-            'currencyId' => 'fe5d9269-b69c-4841-9c04-136225447eca',
+            'currencyId' => 'e54f14e4-cdd3-4095-a892-ae7f532aaf7c',
             'balance' => 100.13,
             'icon' => 'savings',
-            'folderId' => '1ad16d32-36af-496e-9867-3919436b8d86'
+            'folderId' => 'fe49bf88-0f8b-45b1-8feb-68eb38910e4d'
         ]);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
@@ -40,7 +40,7 @@ class CreateAccountCest
             'currencyId' => '',
             'balance' => 0,
             'icon' => 'no',
-            'folderId' => '1ad16d32-36af-496e-9867-3919436b8d86'
+            'folderId' => 'fe49bf88-0f8b-45b1-8feb-68eb38910e4d'
         ]);
         $I->seeResponseCodeIs(HttpCode::BAD_REQUEST);
     }
@@ -63,10 +63,10 @@ class CreateAccountCest
         $I->sendPOST($this->url, [
             'id' => '4b7946ca-2a48-4ea3-8645-2960cea6b94e',
             'name' => 'Savings Account',
-            'currencyId' => 'fe5d9269-b69c-4841-9c04-136225447eca',
+            'currencyId' => 'e54f14e4-cdd3-4095-a892-ae7f532aaf7c',
             'balance' => 100.13,
             'icon' => 'savings',
-            'folderId' => '1ad16d32-36af-496e-9867-3919436b8d86'
+            'folderId' => 'fe49bf88-0f8b-45b1-8feb-68eb38910e4d'
         ]);
         $I->seeResponseMatchesJsonType([
             'data' => [

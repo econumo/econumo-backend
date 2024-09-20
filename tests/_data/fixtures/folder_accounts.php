@@ -1,32 +1,79 @@
 <?php
 
-return [
-    [
-        'folder_id' => '1ad16d32-36af-496e-9867-3919436b8d86', // John Accounts
-        'account_id' => '5f3834d1-34e8-4f60-a697-004e63854513',
-    ],
-    [
-        'folder_id' => '226557ac-7741-455b-b51d-6d038fe1ae1a', // John Family
-        'account_id' => '0aaa0450-564e-411e-8018-7003f6dbeb92',
-    ],
-    [
-        'folder_id' => '1ad16d32-36af-496e-9867-3919436b8d86', // John Accounts
-        'account_id' => '4eec1ee6-1992-4222-b9ab-31ece5eaad5d',
-    ],
-    [
-        'folder_id' => '1ad16d32-36af-496e-9867-3919436b8d86', // John Accounts
-        'account_id' => '6c7b8af8-2f8a-4d6b-855c-ca6ff26952ff',
-    ],
-    [
-        'folder_id' => '97fd547c-c153-4200-a87d-5aaf9e085a55', // Dany Accounts
-        'account_id' => '0aaa0450-564e-411e-8018-7003f6dbeb92',
-    ],
-    [
-        'folder_id' => '97fd547c-c153-4200-a87d-5aaf9e085a55', // Dany Accounts
-        'account_id' => 'a62c06a0-d2b5-4564-a09b-703912c01481',
-    ],
-    [
-        'folder_id' => '3798a279-c4b5-4488-bada-16c31d41f6a6', // Sansa Accounts
-        'account_id' => '99ff78ec-5081-11ec-bf63-0242ac130002',
-    ],
-];
+$data = <<<'JSON'
+[
+  {
+    "folder_id": "0f8ab340-73b8-449a-b2ab-1286d8e709fc",
+    "account_id": "f22cfa46-e88c-4991-b937-35a2e85f2d52"
+  },
+  {
+    "folder_id": "0f8ab340-73b8-449a-b2ab-1286d8e709fc",
+    "account_id": "da48d408-bf33-4e93-84a3-315536fc184d"
+  },
+  {
+    "folder_id": "fe49bf88-0f8b-45b1-8feb-68eb38910e4d",
+    "account_id": "b53cc423-4e33-49ba-98cc-ef80b2de9a86"
+  },
+  {
+    "folder_id": "0f8ab340-73b8-449a-b2ab-1286d8e709fc",
+    "account_id": "28fcccba-21b2-4166-a213-bc4b7da9784d"
+  },
+  {
+    "folder_id": "fe49bf88-0f8b-45b1-8feb-68eb38910e4d",
+    "account_id": "9a922751-d24f-43d7-91db-257dfe15cce4"
+  },
+  {
+    "folder_id": "0f8ab340-73b8-449a-b2ab-1286d8e709fc",
+    "account_id": "efe7c8b9-f602-4b58-b607-ffe64ea4b4a2"
+  },
+  {
+    "folder_id": "0f8ab340-73b8-449a-b2ab-1286d8e709fc",
+    "account_id": "314863dc-3860-45fb-ad7f-7f920e491544"
+  },
+  {
+    "folder_id": "0f8ab340-73b8-449a-b2ab-1286d8e709fc",
+    "account_id": "771008b4-2e61-4dfa-850e-55964cf1a964"
+  },
+  {
+    "folder_id": "fe49bf88-0f8b-45b1-8feb-68eb38910e4d",
+    "account_id": "473908a4-fba4-433c-9905-4ad6b0a42138"
+  },
+  {
+    "folder_id": "fe49bf88-0f8b-45b1-8feb-68eb38910e4d",
+    "account_id": "1bfe2f99-0ccd-4243-95c1-57aceac46409"
+  },
+  {
+    "folder_id": "fe49bf88-0f8b-45b1-8feb-68eb38910e4d",
+    "account_id": "a1328fd3-d241-4b9b-81a3-f5a694686d50"
+  },
+  {
+    "folder_id": "0f8ab340-73b8-449a-b2ab-1286d8e709fc",
+    "account_id": "2f8fa6a5-34a1-4ea4-b3ec-e11e22201578"
+  },
+  {
+    "folder_id": "6b404175-1a23-4a73-bd2c-db2491d37aa6",
+    "account_id": "e91bc2d5-e791-40d0-9664-19fbae76d82e"
+  },
+  {
+    "folder_id": "0f8ab340-73b8-449a-b2ab-1286d8e709fc",
+    "account_id": "e91bc2d5-e791-40d0-9664-19fbae76d82e"
+  },
+  {
+    "folder_id": "ed3305b7-3f26-4520-a147-c8d80fa8f733",
+    "account_id": "fed3b875-808d-4f76-9c31-760aee6c09ed"
+  },
+  {
+    "folder_id": "ed3305b7-3f26-4520-a147-c8d80fa8f733",
+    "account_id": "da48d408-bf33-4e93-84a3-315536fc184d"
+  },
+  {
+    "folder_id": "bd996cab-a095-4e2b-929c-c990e5001bf9",
+    "account_id": "8a763fb8-053a-461f-9f35-04db372f2875"
+  }
+]
+JSON;
+
+$date = new DateTimeImmutable('-1 month');
+$data = preg_replace('/\d{4}-\d{2}-/', $date->format('Y-m-'), $data);
+
+return json_decode($data, true);
