@@ -8,8 +8,9 @@ namespace App\Domain\Service\Budget;
 
 use App\Domain\Entity\ValueObject\BudgetName;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Service\Budget\Dto\BudgetDataDto;
+use App\Domain\Service\Budget\Dto\BudgetStructureDto;
 use App\Domain\Service\Budget\Dto\BudgetDto;
-use App\Domain\Service\Budget\Dto\BudgetPreviewDto;
 use DateTimeInterface;
 
 interface BudgetServiceInterface
@@ -19,25 +20,25 @@ interface BudgetServiceInterface
      * @param Id $budgetId Budget ID
      * @param BudgetName $name Budget name
      * @param Id[] $excludedAccountsIds
-     * @return BudgetDto
+     * @return BudgetStructureDto
      */
     public function createBudget(
         Id $userId,
         Id $budgetId,
         BudgetName $name,
         array $excludedAccountsIds = []
-    ): BudgetDto;
+    ): BudgetStructureDto;
 
     /**
      * @param Id $userId
      * @param Id $budgetId
-     * @return BudgetDto
+     * @return BudgetStructureDto
      */
-    public function getStructure(Id $userId, Id $budgetId): BudgetDto;
+    public function getStructure(Id $userId, Id $budgetId): BudgetStructureDto;
 
     /**
      * @param Id $userId
-     * @return BudgetPreviewDto[]
+     * @return BudgetDto[]
      */
     public function getBudgetList(Id $userId): array;
 
@@ -46,11 +47,13 @@ interface BudgetServiceInterface
      */
     public function deleteBudget(Id $budgetId): void;
 
-    public function updateBudget(Id $userId, Id $budgetId, BudgetName $name): BudgetPreviewDto;
+    public function updateBudget(Id $userId, Id $budgetId, BudgetName $name): BudgetDto;
 
-    public function excludeAccount(Id $userId, Id $budgetId, Id $accountId): BudgetPreviewDto;
+    public function excludeAccount(Id $userId, Id $budgetId, Id $accountId): BudgetDto;
 
-    public function includeAccount(Id $userId, Id $budgetId, Id $accountId): BudgetPreviewDto;
+    public function includeAccount(Id $userId, Id $budgetId, Id $accountId): BudgetDto;
 
-    public function resetBudget(Id $userId, Id $budgetId, DateTimeInterface $startedAt): BudgetPreviewDto;
+    public function resetBudget(Id $userId, Id $budgetId, DateTimeInterface $startedAt): BudgetDto;
+
+    public function getData(Id $userId, Id $budgetId, DateTimeInterface $period): BudgetDataDto;
 }

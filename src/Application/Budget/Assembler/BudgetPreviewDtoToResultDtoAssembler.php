@@ -7,7 +7,7 @@ namespace App\Application\Budget\Assembler;
 
 
 use App\Application\Budget\Dto\BudgetListItemResultDto;
-use App\Domain\Service\Budget\Dto\BudgetPreviewDto;
+use App\Domain\Service\Budget\Dto\BudgetDto;
 
 readonly class BudgetPreviewDtoToResultDtoAssembler
 {
@@ -16,7 +16,7 @@ readonly class BudgetPreviewDtoToResultDtoAssembler
     ) {
     }
 
-    public function assemble(BudgetPreviewDto $budgetPreviewDto): BudgetListItemResultDto
+    public function assemble(BudgetDto $budgetPreviewDto): BudgetListItemResultDto
     {
         $item = new BudgetListItemResultDto();
         $item->id = $budgetPreviewDto->id->getValue();

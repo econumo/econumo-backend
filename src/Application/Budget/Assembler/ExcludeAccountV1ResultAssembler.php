@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Application\Budget\Assembler;
 
 use App\Application\Budget\Dto\ExcludeAccountV1ResultDto;
-use App\Domain\Service\Budget\Dto\BudgetPreviewDto;
+use App\Domain\Service\Budget\Dto\BudgetDto;
 
 readonly class ExcludeAccountV1ResultAssembler
 {
@@ -15,7 +15,7 @@ readonly class ExcludeAccountV1ResultAssembler
     }
 
     public function assemble(
-        BudgetPreviewDto $budgetDto
+        BudgetDto $budgetDto
     ): ExcludeAccountV1ResultDto {
         $result = new ExcludeAccountV1ResultDto();
         $result->item = $this->budgetPreviewDtoToResultDtoAssembler->assemble($budgetDto);

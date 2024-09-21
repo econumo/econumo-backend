@@ -51,6 +51,30 @@ interface AccountRepositoryInterface
     public function getAccountsBalancesBeforeDate(array $accountIds, DateTimeInterface $date): array;
 
     /**
+     * @param Id[] $accountIds
+     * @param DateTimeInterface $date
+     * @return array
+     */
+    public function getAccountsBalancesOnDate(array $accountIds, DateTimeInterface $date): array;
+
+    /**
+     * @param Id[] $accountIds
+     * @param DateTimeInterface $periodStart
+     * @param DateTimeInterface $periodEnd
+     * @return array
+     */
+    public function getAccountsReport(array $accountIds, DateTimeInterface $periodStart, DateTimeInterface $periodEnd): array;
+
+    /**
+     * @param Id[] $reportAccountIds
+     * @param Id[] $holdingAccountIds
+     * @param DateTimeInterface $periodStart
+     * @param DateTimeInterface $periodEnd
+     * @return array
+     */
+    public function getHoldingsReport(array $reportAccountIds, array $holdingAccountIds, DateTimeInterface $periodStart, DateTimeInterface $periodEnd): array;
+
+    /**
      * @param Id[] $userIds
      * @return Account[]
      */

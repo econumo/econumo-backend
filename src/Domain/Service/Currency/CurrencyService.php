@@ -11,9 +11,9 @@ use App\Domain\Entity\ValueObject\CurrencyCode;
 use App\Domain\Repository\CurrencyRepositoryInterface;
 use DateTimeInterface;
 
-class CurrencyService implements CurrencyServiceInterface
+readonly class CurrencyService implements CurrencyServiceInterface
 {
-    public function __construct(private readonly string $baseCurrency, private readonly CurrencyRepositoryInterface $currencyRepository)
+    public function __construct(private string $baseCurrency, private CurrencyRepositoryInterface $currencyRepository)
     {
     }
 

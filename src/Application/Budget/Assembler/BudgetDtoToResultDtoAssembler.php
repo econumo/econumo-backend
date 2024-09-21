@@ -8,7 +8,7 @@ namespace App\Application\Budget\Assembler;
 
 use App\Application\Budget\Dto\BudgetResultDto;
 use App\Domain\Entity\ValueObject\Id;
-use App\Domain\Service\Budget\Dto\BudgetDto;
+use App\Domain\Service\Budget\Dto\BudgetStructureDto;
 
 readonly class BudgetDtoToResultDtoAssembler
 {
@@ -20,7 +20,7 @@ readonly class BudgetDtoToResultDtoAssembler
     ) {
     }
 
-    public function assemble(Id $userId, BudgetDto $budgetDto): BudgetResultDto
+    public function assemble(Id $userId, BudgetStructureDto $budgetDto): BudgetResultDto
     {
         $result = new BudgetResultDto();
         $result->id = $budgetDto->id->getValue();

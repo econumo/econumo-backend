@@ -6,7 +6,7 @@ namespace App\Application\Budget\Assembler;
 
 use App\Application\Budget\Dto\UpdateBudgetV1RequestDto;
 use App\Application\Budget\Dto\UpdateBudgetV1ResultDto;
-use App\Domain\Service\Budget\Dto\BudgetPreviewDto;
+use App\Domain\Service\Budget\Dto\BudgetDto;
 
 readonly class UpdateBudgetV1ResultAssembler
 {
@@ -16,7 +16,7 @@ readonly class UpdateBudgetV1ResultAssembler
     }
 
     public function assemble(
-        BudgetPreviewDto $budgetDto
+        BudgetDto $budgetDto
     ): UpdateBudgetV1ResultDto {
         $result = new UpdateBudgetV1ResultDto();
         $result->item = $this->budgetPreviewDtoToResultDtoAssembler->assemble($budgetDto);

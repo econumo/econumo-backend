@@ -4,26 +4,27 @@ declare(strict_types=1);
 
 namespace App\Domain\Repository;
 
-use App\Domain\Entity\BudgetEntityOption;
+use App\Domain\Entity\BudgetEntityAmount;
 use App\Domain\Entity\ValueObject\Id;
+use DateTimeInterface;
 
 interface BudgetEntityAmountRepositoryInterface
 {
     public function getNextIdentity(): Id;
 
     /**
-     * @return BudgetEntityOption[]
+     * @return BudgetEntityAmount[]
      */
-    public function getByBudgetId(Id $budgetId): array;
+    public function getByBudgetId(Id $budgetId, DateTimeInterface $period): array;
 
     /**
-     * @param BudgetEntityOption[] $items
+     * @param BudgetEntityAmount[] $items
      * @return void
      */
     public function save(array $items): void;
 
     /**
-     * @param BudgetEntityOption[] $items
+     * @param BudgetEntityAmount[] $items
      * @return void
      */
     public function delete(array $items): void;

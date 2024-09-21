@@ -6,7 +6,7 @@ namespace App\Application\Budget\Assembler;
 
 use App\Application\Budget\Dto\IncludeAccountV1RequestDto;
 use App\Application\Budget\Dto\IncludeAccountV1ResultDto;
-use App\Domain\Service\Budget\Dto\BudgetPreviewDto;
+use App\Domain\Service\Budget\Dto\BudgetDto;
 
 readonly class IncludeAccountV1ResultAssembler
 {
@@ -16,7 +16,7 @@ readonly class IncludeAccountV1ResultAssembler
     }
 
     public function assemble(
-        BudgetPreviewDto $budgetDto
+        BudgetDto $budgetDto
     ): IncludeAccountV1ResultDto {
         $result = new IncludeAccountV1ResultDto();
         $result->item = $this->budgetPreviewDtoToResultDtoAssembler->assemble($budgetDto);

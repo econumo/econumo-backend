@@ -17,7 +17,7 @@ interface TransactionRepositoryInterface
      */
     public function findByAccountId(Id $accountId): array;
 
-    public function getBalance(Id $accountId, DateTimeInterface $date): float;
+    public function getAccountBalance(Id $accountId, DateTimeInterface $date): float;
 
     /**
      * @param Transaction[] $transactions
@@ -43,34 +43,19 @@ interface TransactionRepositoryInterface
 
     /**
      * @param Id[] $categoryIds
+     * @param Id[] $accountsIds
      * @param DateTimeInterface $startDate
      * @param DateTimeInterface $endDate
      * @return array
      */
-    public function countSpendingForCategories(array $categoryIds, DateTimeInterface $startDate, DateTimeInterface $endDate): array;
+    public function countSpendingForCategories(array $categoryIds, array $accountsIds, DateTimeInterface $startDate, DateTimeInterface $endDate): array;
 
     /**
      * @param Id[] $tagsIds
+     * @param Id[] $accountsIds
      * @param DateTimeInterface $startDate
      * @param DateTimeInterface $endDate
      * @return array
      */
-    public function countSpendingForTags(array $tagsIds, DateTimeInterface $startDate, DateTimeInterface $endDate): array;
-
-    /**
-     * @param Id[] $accountIds
-     * @param DateTimeInterface $periodStart
-     * @param DateTimeInterface $periodEnd
-     * @return array
-     */
-    public function getAccountsReport(array $accountIds, DateTimeInterface $periodStart, DateTimeInterface $periodEnd): array;
-
-    /**
-     * @param Id[] $reportAccountIds
-     * @param Id[] $hoardAccountIds
-     * @param DateTimeInterface $periodStart
-     * @param DateTimeInterface $periodEnd
-     * @return array
-     */
-    public function getHoardsReport(array $reportAccountIds, array $hoardAccountIds, DateTimeInterface $periodStart, DateTimeInterface $periodEnd): array;
+    public function countSpendingForTags(array $tagsIds, array $accountsIds, DateTimeInterface $startDate, DateTimeInterface $endDate): array;
 }

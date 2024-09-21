@@ -43,7 +43,7 @@ readonly class BalanceAnalyticsService implements BalanceAnalyticsServiceInterfa
                 if ($account->getUserId()->isEqual($userId) === false) {
                     continue;
                 }
-                $accountBalance = $this->transactionRepository->getBalance($account->getId(), $date);
+                $accountBalance = $this->transactionRepository->getAccountBalance($account->getId(), $date);
                 $accountBalanceConverted = $this->currencyConvertor->convert(
                     $account->getCurrencyCode(),
                     $user->getCurrency(),
