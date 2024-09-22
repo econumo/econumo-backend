@@ -44,13 +44,13 @@ readonly class BudgetDtoToResultDtoAssembler
             $result->envelopes[] = $this->budgetEnvelopeToResultDtoAssembler->assemble($budgetEnvelope);
         }
         $result->categories = [];
-        foreach ($budgetDto->categories as $categoryId) {
-            $result->categories[] = $categoryId->getValue();
-        }
+//        foreach ($budgetDto->categories as $categoryId) {
+//            $result->categories[] = $categoryId->getValue();
+//        }
         $result->tags = [];
-        foreach ($budgetDto->tags as $tagId) {
-            $result->tags[] = $tagId->getValue();
-        }
+//        foreach ($budgetDto->tags as $tagId) {
+//            $result->tags[] = $tagId->getValue();
+//        }
         $result->entityOptions = [];
         foreach ($budgetDto->entityOptions as $entityOption) {
             $result->entityOptions[] = $this->budgetEntityOptionToResultDtoAssembler->assemble($entityOption);

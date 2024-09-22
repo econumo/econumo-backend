@@ -17,10 +17,8 @@ readonly class BudgetDataDto
         public array $currencyBalances,
         /** @var AverageCurrencyRateDto[] */
         public array $averageCurrencyRates,
-        /** @var BudgetEntityBudgetAmountDto[] */
-        public array $entityBudgetAmounts,
-        /** @var BudgetEntitySpendAmountDto[] */
-        public array $entitySpendAmounts
+        /** @var BudgetEntityAmountDto[] */
+        public array $entityAmounts
     ) {
     }
 }

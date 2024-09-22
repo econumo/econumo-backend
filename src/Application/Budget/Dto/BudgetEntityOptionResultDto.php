@@ -18,9 +18,9 @@ class BudgetEntityOptionResultDto
     public string $entityId;
 
     /**
-     * @OA\Property(example="envelope")
+     * @OA\Property(example="0")
      */
-    public string $entityType;
+    public int $entityType;
 
     /**
      * @OA\Property(example="0")

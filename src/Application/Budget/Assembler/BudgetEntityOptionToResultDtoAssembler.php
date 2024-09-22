@@ -14,7 +14,7 @@ readonly class BudgetEntityOptionToResultDtoAssembler
     {
         $result = new BudgetEntityOptionResultDto();
         $result->entityId = $option->getEntityId()->getValue();
-        $result->entityType = $option->getEntityType()->getAlias();
+        $result->entityType = $option->getEntityType()->getValue();
         $result->position = $option->getPosition();
         $result->currencyId = $option->getCurrency()?->getId()->getValue();
         $result->folderId = $option->getFolder()?->getId()->getValue();

@@ -8,23 +8,18 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     required={"entityId", "entityType", "amount"}
+ *     required={"currencyId", "amount"}
  * )
  */
-class BudgetEntityBudgetAmountDto
+class BudgetEntityAmountSpentDto
 {
     /**
      * @OA\Property(example="05c8f3e1-d77f-4b37-b2ca-0fc5f0f0c7a9")
      */
-    public string $entityId;
+    public string $currencyId;
 
     /**
-     * @OA\Property(example="category")
-     */
-    public string $entityType;
-
-    /**
-     * @OA\Property(example="12.05")
+     * @OA\Property(example="100.0")
      */
     public float $amount;
 }

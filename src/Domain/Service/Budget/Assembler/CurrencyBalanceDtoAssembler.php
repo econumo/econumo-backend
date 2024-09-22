@@ -64,7 +64,7 @@ readonly class CurrencyBalanceDtoAssembler
                 ($periodEnd <= $now ? $endBalance : null),
                 ($periodStart <= $now ? $income : null),
                 ($periodStart <= $now ? $expenses : null),
-                ($periodStart <= $now ? $exchanges : null),
+                ($periodStart <= $now ? round($exchanges, 2) : null),
                 $holdings
             );
             $result[] = $item;
@@ -82,6 +82,6 @@ readonly class CurrencyBalanceDtoAssembler
             }
         }
 
-        return $result;
+        return round($result, 2);
     }
 }

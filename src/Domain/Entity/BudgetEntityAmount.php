@@ -23,6 +23,7 @@ class BudgetEntityAmount
         private BudgetEntityType $entityType,
         private Budget $budget,
         private float $amount,
+        private string $notes,
         DateTimeInterface $period,
         DateTimeInterface $createdAt
     ) {
@@ -48,13 +49,18 @@ class BudgetEntityAmount
 
     public function getAmount(): float
     {
-        return $this->amount;
+        return round($this->amount, 2);
+    }
+
+    public function getNotes(): string
+    {
+        return $this->notes;
     }
 
     public function updateAmount(float $amount): void
     {
         if ($this->amount !== $amount) {
-            $this->amount = $amount;
+            $this->amount = round($amount, 2);
             $this->updated();
         }
     }

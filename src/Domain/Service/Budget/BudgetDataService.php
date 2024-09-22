@@ -8,13 +8,11 @@ namespace App\Domain\Service\Budget;
 
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Service\Budget\Assembler\AverageCurrencyRateDtoAssembler;
-use App\Domain\Service\Budget\Assembler\BudgetEntityBudgetAmountDtoAssembler;
-use App\Domain\Service\Budget\Assembler\BudgetEntitySpendAmountDtoAssembler;
+use App\Domain\Service\Budget\Assembler\BudgetEntityAmountDtoAssembler;
 use App\Domain\Service\Budget\Assembler\CurrencyBalanceDtoAssembler;
 use App\Domain\Service\Budget\Dto\AverageCurrencyRateDto;
 use App\Domain\Service\Budget\Dto\BudgetDataDto;
-use App\Domain\Service\Budget\Dto\BudgetEntityBudgetAmountDto;
-use App\Domain\Service\Budget\Dto\BudgetEntitySpendAmountDto;
+use App\Domain\Service\Budget\Dto\BudgetEntityAmountDto;
 use App\Domain\Service\Budget\Dto\BudgetStructureDto;
 use App\Domain\Service\Budget\Dto\CurrencyBalanceDto;
 use DateTimeImmutable;
@@ -26,8 +24,7 @@ readonly class BudgetDataService
         private BudgetStructureService $budgetStructureService,
         private CurrencyBalanceDtoAssembler $currencyBalanceDtoAssembler,
         private AverageCurrencyRateDtoAssembler $averageCurrencyRateDtoAssembler,
-        private BudgetEntityBudgetAmountDtoAssembler $budgetEntityBudgetAmountDtoAssembler,
-        private BudgetEntitySpendAmountDtoAssembler $budgetEntitySpendAmountDtoAssembler,
+        private BudgetEntityAmountDtoAssembler $budgetEntityAmountDtoAssembler,
     ) {
     }
 
@@ -39,8 +36,7 @@ readonly class BudgetDataService
 
         $currencyBalances = $this->getCurrencyBalances($periodStart, $periodEnd, $budgetStructure);
         $averageCurrencyRates = $this->getAverageCurrencyRates($periodStart, $periodEnd, $budgetStructure);
-        $entityBudgetAmounts = $this->getEntityBudgetAmounts($periodStart, $budgetStructure);
-        $entitySpendAmounts = $this->getEntitySpendAmounts($periodStart, $periodEnd, $budgetStructure);
+        $entityAmounts = $this->getEntityAmounts($periodStart, $periodEnd, $budgetStructure);
 
         return new BudgetDataDto(
             $budgetId,
@@ -48,8 +44,7 @@ readonly class BudgetDataService
             $periodEnd,
             $currencyBalances,
             $averageCurrencyRates,
-            $entityBudgetAmounts,
-            $entitySpendAmounts
+            $entityAmounts
         );
     }
 
@@ -83,27 +78,15 @@ readonly class BudgetDataService
 
     /**
      * @param DateTimeInterface $periodStart
-     * @param BudgetStructureDto $budgetStructureDto
-     * @return BudgetEntityBudgetAmountDto[]
-     */
-    private function getEntityBudgetAmounts(
-        DateTimeInterface $periodStart,
-        BudgetStructureDto $budgetStructureDto
-    ): array {
-        return $this->budgetEntityBudgetAmountDtoAssembler->assemble($budgetStructureDto->id, $periodStart);
-    }
-
-    /**
-     * @param DateTimeInterface $periodStart
      * @param DateTimeInterface $periodEnd
-     * @param BudgetStructureDto $budgetStructureDto
-     * @return BudgetEntitySpendAmountDto[]
+     * @param BudgetStructureDto $budgetStructure
+     * @return BudgetEntityAmountDto[]
      */
-    private function getEntitySpendAmounts(
+    private function getEntityAmounts(
         DateTimeInterface $periodStart,
         DateTimeInterface $periodEnd,
-        BudgetStructureDto $budgetStructureDto
+        BudgetStructureDto $budgetStructure
     ): array {
-        return $this->budgetEntitySpendAmountDtoAssembler->assemble($periodStart, $periodEnd, $budgetStructureDto);
+        return $this->budgetEntityAmountDtoAssembler->assemble($periodStart, $periodEnd, $budgetStructure);
     }
 }

@@ -8,7 +8,7 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     required={"id", "periodStart", "periodEnd", "currencyBalances", "averageCurrencyRates", "entityBudgetAmounts", "entitySpendAmounts"}
+ *     required={"id", "periodStart", "periodEnd", "currencyBalances", "averageCurrencyRates", "entityAmounts"}
  * )
  */
 class GetDataV1ResultDto
@@ -29,26 +29,20 @@ class GetDataV1ResultDto
     public string $periodEnd;
 
     /**
-     * @var string[]
+     * @var BudgetCurrencyBalanceDto[]
      * @OA\Property()
      */
     public array $currencyBalances;
 
     /**
-     * @var string[]
+     * @var AverageCurrencyRateDto[]
      * @OA\Property()
      */
     public array $averageCurrencyRates;
 
     /**
-     * @var string[]
+     * @var BudgetEntityAmountDto[]
      * @OA\Property()
      */
-    public array $entityBudgetAmounts;
-
-    /**
-     * @var string[]
-     * @OA\Property()
-     */
-    public array $entitySpendAmounts;
+    public array $entityAmounts;
 }

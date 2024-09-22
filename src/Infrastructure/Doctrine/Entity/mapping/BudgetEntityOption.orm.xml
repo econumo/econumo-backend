@@ -5,8 +5,9 @@
 
     <entity repository-class="App\Infrastructure\Doctrine\Repository\BudgetEntityOptionRepository" name="App\Domain\Entity\BudgetEntityOption"
             table="budgets_entities_options">
+        <id name="budget" association-key="true" />
         <id name="entityId" type="uuid" column="entity_id"/>
-        <field name="entityType" type="budget_entity_type" column="entity_type" nullable="false" />
+        <id name="entityType" type="budget_entity_type" column="entity_type" />
 
         <field name="createdAt" type="datetime_immutable" column="created_at" nullable="false"/>
         <field name="updatedAt" type="datetime" column="updated_at" nullable="false"/>

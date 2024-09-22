@@ -6,8 +6,8 @@ namespace App\Application\Budget\Assembler;
 
 use App\Application\Budget\Dto\AverageCurrencyRateDto;
 use App\Application\Budget\Dto\BudgetCurrencyBalanceDto;
-use App\Application\Budget\Dto\BudgetEntityBudgetAmountDto;
-use App\Application\Budget\Dto\BudgetEntitySpendAmountDto;
+use App\Application\Budget\Dto\BudgetEntityAmountDto;
+use App\Application\Budget\Dto\BudgetEntityAmountSpentDto;
 use App\Application\Budget\Dto\GetDataV1ResultDto;
 use App\Domain\Service\Budget\Dto\BudgetDataDto;
 
@@ -39,22 +39,21 @@ readonly class GetDataV1ResultAssembler
             $item1->value = $averageCurrencyRate->value;
             $result->averageCurrencyRates[] = $item1;
         }
-        $result->entityBudgetAmounts = [];
-        foreach ($budgetDataDto->entityBudgetAmounts as $entityBudgetAmount) {
-            $item2 = new BudgetEntityBudgetAmountDto();
-            $item2->entityId = $entityBudgetAmount->entityId->getValue();
-            $item2->entityType = $entityBudgetAmount->entityType->getAlias();
-            $item2->amount = $entityBudgetAmount->amount;
-            $result->entityBudgetAmounts[] = $item2;
-        }
-        $result->entitySpendAmounts = [];
-        foreach ($budgetDataDto->entitySpendAmounts as $entitySpendAmount) {
-            $item3 = new BudgetEntitySpendAmountDto();
-            $item3->entityId = $entitySpendAmount->entityId->getValue();
-            $item3->currencyId = $entitySpendAmount->currencyId->getValue();
-            $item3->entityType = $entitySpendAmount->entityType->getAlias();
-            $item3->amount = $entitySpendAmount->amount;
-            $result->entitySpendAmounts[] = $item3;
+        $result->entityAmounts = [];
+        foreach ($budgetDataDto->entityAmounts as $entityAmount) {
+            $item4 = new BudgetEntityAmountDto();
+            $item4->id = $entityAmount->entityId->getValue();
+            $item4->type = $entityAmount->entityType->getValue();
+            $item4->budget = $entityAmount->budget === null ? .0 : (float)$entityAmount->budget;
+            $item4->available = $entityAmount->available === null ? .0 : (float)$entityAmount->available;
+            $item4->spent = [];
+            foreach ($entityAmount->spent as $entitySpent) {
+                $itemSpent = new BudgetEntityAmountSpentDto();
+                $itemSpent->currencyId = $entitySpent->currencyId->getValue();
+                $itemSpent->amount = $entitySpent->amount;
+                $item4->spent[] = $itemSpent;
+            }
+            $result->entityAmounts[] = $item4;
         }
 
         return $result;

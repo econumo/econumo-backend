@@ -39,7 +39,7 @@ readonly class AverageCurrencyRateDtoAssembler
         $result = [];
         foreach ($currencyRates as $item) {
             if (in_array($item['currencyId'], $supportedCurrencyIds, true)) {
-                $result[] = new AverageCurrencyRateDto(new Id($item['currencyId']), floatval($item['rate']));
+                $result[] = new AverageCurrencyRateDto(new Id($item['currencyId']), round(floatval($item['rate']), 8));
             }
         }
 
