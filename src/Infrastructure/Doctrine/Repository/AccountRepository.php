@@ -373,7 +373,8 @@ SQL;
         $builder = $this->createQueryBuilder('a');
         $builder->select('a')
             ->where($builder->expr()->in('a.user', ':users'))
-            ->setParameter('users', $users);
+            ->setParameter('users', $users)
+            ->andWhere('a.isDeleted = false');
         return $builder->getQuery()->getResult();
     }
 }
