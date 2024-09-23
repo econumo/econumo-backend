@@ -34,5 +34,15 @@
         <many-to-one field="tag" target-entity="App\Domain\Entity\Tag">
             <join-column name="tag_id" referenced-column-name="id" nullable="true" on-delete="SET NULL"/>
         </many-to-one>
+
+        <indexes>
+            <index columns="type" name="type_idx"/>
+            <index columns="spent_at" name="spent_idx"/>
+            <index columns="account_id,spent_at" name="account_spent_idx"/>
+            <index columns="account_recipient_id,spent_at" name="account_recipient_spent_idx"/>
+            <index columns="account_recipient_id,spent_at" name="account_recipient_spent_idx"/>
+            <index columns="category_id,account_id,spent_at" name="category_account_spent_idx"/>
+            <index columns="tag_id,account_id,spent_at" name="tag_account_spent_idx"/>
+        </indexes>
     </entity>
 </doctrine-mapping>
