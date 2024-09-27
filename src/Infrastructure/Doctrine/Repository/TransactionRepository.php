@@ -262,4 +262,33 @@ SQL;
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
         return $query->getResult();
     }
+
+    public function countSpending(
+        array $categoriesIds,
+        array $accountsIds,
+        DateTimeInterface $startDate,
+        DateTimeInterface $endDate
+    ): array {
+        if (count($categoriesIds) === 0) {
+            return [];
+        }
+
+        $categoriesString = implode("', '", array_map(fn(Id $id) => $id->getValue(), $categoriesIds));
+        $accountsString = implode("', '", array_map(fn(Id $id) => $id->getValue(), $accountsIds));
+        $startDateString = $startDate->format('Y-m-d H:i:s');
+        $endDateString = $endDate->format('Y-m-d H:i:s');
+        $sql =<<<SQL
+SELECT sum(t.amount) as amount, t.category_id, t.tag_id, a.currency_id FROM transactions t 
+LEFT JOIN accounts a ON t.account_id = a.id AND a.id IN ('{$accountsString}')
+WHERE t.category_id IN ('{$categoriesString}') AND t.spent_at >= '{$startDateString}' AND t.spent_at < '{$endDateString}'
+GROUP BY t.category_id, t.tag_id, a.currency_id
+SQL;
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('category_id', 'category_id');
+        $rsm->addScalarResult('tag_id', 'tag_id');
+        $rsm->addScalarResult('currency_id', 'currency_id');
+        $rsm->addScalarResult('amount', 'amount', 'float');
+        $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
+        return $query->getResult();
+    }
 }

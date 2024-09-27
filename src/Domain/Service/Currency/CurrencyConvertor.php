@@ -9,24 +9,29 @@ namespace App\Domain\Service\Currency;
 use App\Domain\Entity\CurrencyRate;
 use App\Domain\Entity\ValueObject\CurrencyCode;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Exception\DomainException;
 use App\Domain\Repository\CurrencyRateRepositoryInterface;
 use App\Domain\Repository\CurrencyRepositoryInterface;
 use App\Domain\Repository\UserRepositoryInterface;
+use App\Domain\Service\Currency\Dto\CurrencyConvertorDto;
 use App\Domain\Service\Dto\FullCurrencyRateDto;
 use DateTimeInterface;
 
-readonly class CurrencyConvertor implements CurrencyConvertorInterface
+class CurrencyConvertor implements CurrencyConvertorInterface
 {
     private CurrencyCode $baseCurrency;
 
+    private ?Id $baseCurrencyId;
+
     public function __construct(
         string $baseCurrency,
-        private UserRepositoryInterface $userRepository,
-        private CurrencyRateRepositoryInterface $currencyRateRepository,
-        private CurrencyRateServiceInterface $currencyRateService,
-        private CurrencyRepositoryInterface $currencyRepository,
+        readonly private UserRepositoryInterface $userRepository,
+        readonly private CurrencyRateRepositoryInterface $currencyRateRepository,
+        readonly private CurrencyRateServiceInterface $currencyRateService,
+        readonly private CurrencyRepositoryInterface $currencyRepository
     ) {
         $this->baseCurrency = new CurrencyCode($baseCurrency);
+        $this->baseCurrencyId = null;
     }
 
     public function convertForUser(Id $userId, CurrencyCode $originalCurrency, float $sum): float
@@ -50,21 +55,27 @@ readonly class CurrencyConvertor implements CurrencyConvertorInterface
         return $this->convertInternal($rates, $originalCurrency, $resultCurrency, $sum);
     }
 
-    public function convertForPeriod(
-        Id $fromCurrencyId,
-        Id $toCurrencyId,
-        float $sum,
-        DateTimeInterface $periodStart,
-        DateTimeInterface $periodEnd
-    ): float {
-        if ($fromCurrencyId->isEqual($toCurrencyId)) {
-            return $sum;
+    /**
+     * @inheritDoc
+     */
+    public function bulkConvert(DateTimeInterface $periodStart, DateTimeInterface $periodEnd, array $items): array
+    {
+        $rates = $this->currencyRateService->getAverageCurrencyRates($periodStart, $periodEnd);
+
+        $result = [];
+        foreach ($items as $key => $dto) {
+            $result[$key] = .0;
+            if ($dto instanceof CurrencyConvertorDto) {
+                $result[$key] = $this->convertInternalById($rates, $dto->fromCurrencyId, $dto->toCurrencyId, $dto->amount);
+            } else {
+                /** @var CurrencyConvertorDto $item */
+                foreach ($dto as $item) {
+                    $result[$key] += $this->convertInternalById($rates, $item->fromCurrencyId, $item->toCurrencyId, $item->amount);
+                }
+            }
         }
 
-        $fromCurrency = $this->currencyRepository->get($fromCurrencyId);
-        $toCurrency = $this->currencyRepository->get($toCurrencyId);
-        $rates = $this->currencyRateService->getAverageCurrencyRates($periodStart, $periodEnd);
-        return $this->convertInternal($rates, $fromCurrency->getCode(), $toCurrency->getCode(), $sum);
+        return $result;
     }
 
     /**
@@ -74,8 +85,12 @@ readonly class CurrencyConvertor implements CurrencyConvertorInterface
      * @param float $sum
      * @return float
      */
-    private function convertInternal(array $rates, CurrencyCode $originalCurrency, CurrencyCode $resultCurrency, float $sum): float
-    {
+    private function convertInternal(
+        array $rates,
+        CurrencyCode $originalCurrency,
+        CurrencyCode $resultCurrency,
+        float $sum
+    ): float {
         if ($originalCurrency->isEqual($resultCurrency)) {
             return $sum;
         }
@@ -93,6 +108,61 @@ readonly class CurrencyConvertor implements CurrencyConvertorInterface
         if (!$resultCurrency->isEqual($this->baseCurrency)) {
             foreach ($rates as $rate) {
                 if ($rate->currencyCode->isEqual($resultCurrency)) {
+                    $result *= $rate->rate;
+                    break;
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param FullCurrencyRateDto[] $rates
+     * @param Id $originalCurrencyId
+     * @param Id $resultCurrencyId
+     * @param float $amount
+     * @return float
+     */
+    private function convertInternalById(
+        array $rates,
+        Id $originalCurrencyId,
+        Id $resultCurrencyId,
+        float $amount
+    ): float {
+        if ($originalCurrencyId->isEqual($resultCurrencyId)) {
+            return $amount;
+        }
+
+        if ($this->baseCurrencyId) {
+            $baseCurrencyId = $this->baseCurrencyId;
+        } else {
+            $baseCurrencyId = null;
+            foreach ($rates as $rate) {
+                if ($rate->currencyCode->isEqual($this->baseCurrency)) {
+                    $baseCurrencyId = $rate->currencyId;
+                    $this->baseCurrencyId = $baseCurrencyId;
+                    break;
+                }
+            }
+        }
+        if (!$baseCurrencyId) {
+            throw new DomainException('Base Currency not found');
+        }
+
+        $result = $amount;
+        if (!$originalCurrencyId->isEqual($baseCurrencyId)) {
+            foreach ($rates as $rate) {
+                if ($rate->currencyId->isEqual($originalCurrencyId)) {
+                    $result /= $rate->rate;
+                    break;
+                }
+            }
+        }
+
+        if (!$resultCurrencyId->isEqual($baseCurrencyId)) {
+            foreach ($rates as $rate) {
+                if ($rate->currencyId->isEqual($resultCurrencyId)) {
                     $result *= $rate->rate;
                     break;
                 }

@@ -7,7 +7,7 @@ namespace App\Application\Budget\Assembler;
 
 
 use App\Application\Budget\Dto\BudgetListItemResultDto;
-use App\Domain\Service\Budget\Dto\BudgetDto;
+use App\Domain\Service\Budget\Dto\BudgetMetaDto;
 
 readonly class BudgetPreviewDtoToResultDtoAssembler
 {
@@ -16,19 +16,15 @@ readonly class BudgetPreviewDtoToResultDtoAssembler
     ) {
     }
 
-    public function assemble(BudgetDto $budgetPreviewDto): BudgetListItemResultDto
+    public function assemble(BudgetMetaDto $budgetMeta): BudgetListItemResultDto
     {
         $item = new BudgetListItemResultDto();
-        $item->id = $budgetPreviewDto->id->getValue();
-        $item->ownerUserId = $budgetPreviewDto->ownerUserId->getValue();
-        $item->name = $budgetPreviewDto->budgetName->getValue();
-        $item->startedAt = $budgetPreviewDto->startedAt->format('Y-m-d H:i:s');
-        $item->excludedAccounts = [];
-        foreach ($budgetPreviewDto->excludedAccounts as $account) {
-            $item->excludedAccounts[] = $account->getValue();
-        }
+        $item->id = $budgetMeta->id->getValue();
+        $item->ownerUserId = $budgetMeta->ownerUserId->getValue();
+        $item->name = $budgetMeta->budgetName->getValue();
+        $item->startedAt = $budgetMeta->startedAt->format('Y-m-d H:i:s');
         $item->sharedAccess = [];
-        foreach ($budgetPreviewDto->sharedAccess as $access) {
+        foreach ($budgetMeta->sharedAccess as $access) {
             $item->sharedAccess[] = $this->budgetAccessToResultDtoAssembler->assemble($access);
         }
 

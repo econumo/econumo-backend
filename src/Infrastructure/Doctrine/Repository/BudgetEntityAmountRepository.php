@@ -57,4 +57,19 @@ class BudgetEntityAmountRepository extends ServiceEntityRepository implements Bu
             ->getQuery()
             ->execute();
     }
+
+    public function getSummarizedAmounts(Id $budgetId, DateTimeInterface $periodStart, DateTimeInterface $periodEnd): array
+    {
+        $query = $this->createQueryBuilder('ea')
+            ->select('ea.entityId, ea.entityType, SUM(ea.amount) as budget')
+            ->where('ea.budget = :budget')
+            ->setParameter('budget', $this->getEntityReference(Budget::class, $budgetId))
+            ->andWhere('ea.period >= :periodStart')
+            ->setParameter('periodStart', $periodStart)
+            ->andWhere('ea.period < :periodEnd')
+            ->setParameter('periodEnd', $periodEnd)
+            ->groupBy('ea.entityId, ea.entityType')
+            ->getQuery();
+        return $query->getArrayResult();
+    }
 }

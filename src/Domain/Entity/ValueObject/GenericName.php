@@ -8,7 +8,7 @@ use App\Domain\Exception\DomainException;
 use App\Domain\Traits\ValueObjectTrait;
 use JsonSerializable;
 
-class GenericName implements ValueObjectInterface, JsonSerializable
+class GenericName implements ValueObjectInterface, JsonSerializable, NameInterface
 {
     use ValueObjectTrait;
 

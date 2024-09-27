@@ -8,7 +8,7 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     required={"id", "ownerUserId", "name", "startedAt", "excludedAccounts", "sharedAccess"}
+ *     required={"id", "ownerUserId", "name", "startedAt", "sharedAccess"}
  * )
  */
 class BudgetListItemResultDto
@@ -35,12 +35,6 @@ class BudgetListItemResultDto
      * @OA\Property(example="2021-01-01 12:15:00")
      */
     public string $startedAt;
-
-    /**
-     * @var string[]
-     * @OA\Property()
-     */
-    public array $excludedAccounts = [];
 
     /**
      * Account access

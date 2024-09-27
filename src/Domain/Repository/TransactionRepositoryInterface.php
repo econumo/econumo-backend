@@ -28,7 +28,12 @@ interface TransactionRepositoryInterface
      * @param Id[] $excludeAccounts
      * @return Transaction[]
      */
-    public function findAvailableForUserId(Id $userId, array $excludeAccounts = [], DateTimeInterface $periodStart = null, DateTimeInterface $periodEnd = null): array;
+    public function findAvailableForUserId(
+        Id $userId,
+        array $excludeAccounts = [],
+        DateTimeInterface $periodStart = null,
+        DateTimeInterface $periodEnd = null
+    ): array;
 
     /**
      * @return Transaction[]
@@ -48,7 +53,12 @@ interface TransactionRepositoryInterface
      * @param DateTimeInterface $endDate
      * @return array
      */
-    public function countSpendingForCategories(array $categoryIds, array $accountsIds, DateTimeInterface $startDate, DateTimeInterface $endDate): array;
+    public function countSpendingForCategories(
+        array $categoryIds,
+        array $accountsIds,
+        DateTimeInterface $startDate,
+        DateTimeInterface $endDate
+    ): array;
 
     /**
      * @param Id[] $tagsIds
@@ -57,5 +67,24 @@ interface TransactionRepositoryInterface
      * @param DateTimeInterface $endDate
      * @return array
      */
-    public function countSpendingForTags(array $tagsIds, array $accountsIds, DateTimeInterface $startDate, DateTimeInterface $endDate): array;
+    public function countSpendingForTags(
+        array $tagsIds,
+        array $accountsIds,
+        DateTimeInterface $startDate,
+        DateTimeInterface $endDate
+    ): array;
+
+    /**
+     * @param Id[] $categoriesIds
+     * @param Id[] $accountsIds
+     * @param DateTimeInterface $startDate
+     * @param DateTimeInterface $endDate
+     * @return array
+     */
+    public function countSpending(
+        array $categoriesIds,
+        array $accountsIds,
+        DateTimeInterface $startDate,
+        DateTimeInterface $endDate
+    ): array;
 }

@@ -12,10 +12,12 @@ readonly class BudgetEntityAmountDto
     public function __construct(
         public Id $entityId,
         public BudgetEntityType $entityType,
+        public ?Id $tagId,
         public ?float $budget,
-        public ?float $available,
+        public float $available,
+        public float $spent,
         /** @var BudgetEntityAmountSpentDto[] */
-        public array $spent = [],
+        public array $currenciesSpent = [],
     ) {
     }
 }

@@ -9,7 +9,6 @@ namespace App\Domain\Service\Budget\Assembler;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Repository\CurrencyRateRepositoryInterface;
 use App\Domain\Service\Budget\Dto\AverageCurrencyRateDto;
-use App\Domain\Service\Budget\Dto\BudgetStructureDto;
 use App\Domain\Service\Currency\CurrencyServiceInterface;
 use DateTimeInterface;
 
@@ -24,16 +23,16 @@ readonly class AverageCurrencyRateDtoAssembler
     /**
      * @param DateTimeInterface $periodStart
      * @param DateTimeInterface $periodEnd
-     * @param BudgetStructureDto $budgetStructureDto
+     * @param Id[] $currenciesIds
      * @return AverageCurrencyRateDto[]
      */
     public function assemble(
         DateTimeInterface $periodStart,
         DateTimeInterface $periodEnd,
-        BudgetStructureDto $budgetStructureDto
+        array $currenciesIds
     ): array {
         $baseCurrency = $this->currencyService->getBaseCurrency();
-        $supportedCurrencyIds = array_map(fn(Id $id) => $id->getValue(), $budgetStructureDto->currencies);
+        $supportedCurrencyIds = array_map(fn(Id $id) => $id->getValue(), $currenciesIds);
         $currencyRates = $this->currencyRateRepository->getAverage($periodStart, $periodEnd, $baseCurrency->getId());
 
         $result = [];

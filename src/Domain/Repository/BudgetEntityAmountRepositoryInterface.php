@@ -30,4 +30,6 @@ interface BudgetEntityAmountRepositoryInterface
     public function delete(array $items): void;
 
     public function deleteByBudgetId(Id $budgetId): void;
+
+    public function getSummarizedAmounts(Id $budgetId, DateTimeInterface $periodStart, DateTimeInterface $periodEnd): array;
 }

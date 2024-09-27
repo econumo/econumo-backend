@@ -22,6 +22,9 @@ use App\Application\Budget\Dto\ResetBudgetV1RequestDto;
 use App\Application\Budget\Dto\ResetBudgetV1ResultDto;
 use App\Application\Budget\Assembler\ResetBudgetV1ResultAssembler;
 use DateTimeImmutable;
+use App\Application\Budget\Dto\GetBudgetV1RequestDto;
+use App\Application\Budget\Dto\GetBudgetV1ResultDto;
+use App\Application\Budget\Assembler\GetBudgetV1ResultAssembler;
 
 readonly class BudgetService
 {
@@ -32,6 +35,7 @@ readonly class BudgetService
         private DeleteBudgetV1ResultAssembler $deleteBudgetV1ResultAssembler,
         private UpdateBudgetV1ResultAssembler $updateBudgetV1ResultAssembler,
         private ResetBudgetV1ResultAssembler $resetBudgetV1ResultAssembler,
+        private GetBudgetV1ResultAssembler $getBudgetV1ResultAssembler,
     ) {
     }
 
@@ -86,5 +90,21 @@ readonly class BudgetService
         $startedAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dto->startedAt);
         $budgetDto = $this->budgetService->resetBudget($userId, $budgetId, $startedAt);
         return $this->resetBudgetV1ResultAssembler->assemble($budgetDto);
+    }
+
+    public function getBudget(
+        GetBudgetV1RequestDto $dto,
+        Id $userId
+    ): GetBudgetV1ResultDto {
+        $budgetId = new Id($dto->id);
+        $date = new DateTimeImmutable($dto->date);
+        $date = $date->setDate((int)$date->format('Y'), (int)$date->format('m'), 1);
+        $date = $date->setTime(0, 0, 0);
+        if (!$this->budgetAccessService->canReadBudget($userId, $budgetId)) {
+            throw new AccessDeniedException();
+        }
+
+        $budgetDto = $this->budgetService->getBudget($userId, $budgetId, $date);
+        return $this->getBudgetV1ResultAssembler->assemble($budgetDto);
     }
 }

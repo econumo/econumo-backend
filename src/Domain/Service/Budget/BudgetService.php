@@ -12,10 +12,10 @@ use App\Domain\Repository\AccountRepositoryInterface;
 use App\Domain\Repository\BudgetEntityAmountRepositoryInterface;
 use App\Domain\Repository\BudgetRepositoryInterface;
 use App\Domain\Service\AntiCorruptionServiceInterface;
-use App\Domain\Service\Budget\Assembler\BudgetStructureDtoAssembler;
 use App\Domain\Service\Budget\Assembler\BudgetDtoAssembler;
-use App\Domain\Service\Budget\Dto\BudgetStructureDto;
+use App\Domain\Service\Budget\Assembler\BudgetMetaDtoAssembler;
 use App\Domain\Service\Budget\Dto\BudgetDto;
+use App\Domain\Service\Budget\Dto\BudgetMetaDto;
 use App\Domain\Service\Budget\Dto\BudgetDataDto;
 use App\Domain\Service\DatetimeServiceInterface;
 use App\Domain\Service\UserServiceInterface;
@@ -30,18 +30,17 @@ readonly class BudgetService implements BudgetServiceInterface
         private DatetimeServiceInterface $datetimeService,
         private UserServiceInterface $userService,
         private AntiCorruptionServiceInterface $antiCorruptionService,
-        private BudgetStructureDtoAssembler $budgetDtoAssembler,
         private BudgetEntityServiceInterface $budgetEntityService,
-        private BudgetDtoAssembler $budgetPreviewDtoAssembler,
+        private BudgetMetaDtoAssembler $budgetMetaDtoAssembler,
         private BudgetDeletionService $budgetDeletionService,
         private AccountRepositoryInterface $accountRepository,
         private BudgetEntityAmountRepositoryInterface $budgetEntityAmountRepository,
         private BudgetDataService $budgetDataService,
-        private BudgetStructureService $budgetStructureService
+        private BudgetDtoAssembler $budgetDtoAssembler,
     ) {
     }
 
-    public function createBudget(Id $userId, Id $budgetId, BudgetName $name, array $excludedAccountsIds = []): BudgetStructureDto
+    public function createBudget(Id $userId, Id $budgetId, BudgetName $name, array $excludedAccountsIds = []): BudgetMetaDto
     {
         $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
@@ -62,12 +61,7 @@ readonly class BudgetService implements BudgetServiceInterface
             throw $e;
         }
 
-        return $this->budgetDtoAssembler->assemble($userId, $budget);
-    }
-
-    public function getStructure(Id $userId, Id $budgetId): BudgetStructureDto
-    {
-        return $this->budgetStructureService->getBudgetStructure($userId, $budgetId);
+        return $this->budgetMetaDtoAssembler->assemble($budget);
     }
 
     public function getBudgetList(Id $userId): array
@@ -75,7 +69,7 @@ readonly class BudgetService implements BudgetServiceInterface
         $budgets = $this->budgetRepository->getByUserId($userId);
         $result = [];
         foreach ($budgets as $budget) {
-            $result[] = $this->budgetPreviewDtoAssembler->assemble($userId, $budget);
+            $result[] = $this->budgetMetaDtoAssembler->assemble($budget);
         }
 
         return $result;
@@ -86,15 +80,15 @@ readonly class BudgetService implements BudgetServiceInterface
         $this->budgetDeletionService->deleteBudget($budgetId);
     }
 
-    public function updateBudget(Id $userId, Id $budgetId, BudgetName $name): BudgetDto
+    public function updateBudget(Id $userId, Id $budgetId, BudgetName $name): BudgetMetaDto
     {
         $budget = $this->budgetRepository->get($budgetId);
         $budget->updateName($name);
         $this->budgetRepository->save([$budget]);
-        return $this->budgetPreviewDtoAssembler->assemble($userId, $budget);
+        return $this->budgetMetaDtoAssembler->assemble($budget);
     }
 
-    public function excludeAccount(Id $userId, Id $budgetId, Id $accountId): BudgetDto
+    public function excludeAccount(Id $userId, Id $budgetId, Id $accountId): BudgetMetaDto
     {
         $account = $this->accountRepository->get($accountId);
         if (!$account->getUserId()->isEqual($userId)) {
@@ -104,10 +98,10 @@ readonly class BudgetService implements BudgetServiceInterface
         $budget = $this->budgetRepository->get($budgetId);
         $budget->excludeAccount($account);
         $this->budgetRepository->save([$budget]);
-        return $this->budgetPreviewDtoAssembler->assemble($userId, $budget);
+        return $this->budgetMetaDtoAssembler->assemble($budget);
     }
 
-    public function includeAccount(Id $userId, Id $budgetId, Id $accountId): BudgetDto
+    public function includeAccount(Id $userId, Id $budgetId, Id $accountId): BudgetMetaDto
     {
         $account = $this->accountRepository->get($accountId);
         if (!$account->getUserId()->isEqual($userId)) {
@@ -117,10 +111,10 @@ readonly class BudgetService implements BudgetServiceInterface
         $budget = $this->budgetRepository->get($budgetId);
         $budget->includeAccount($account);
         $this->budgetRepository->save([$budget]);
-        return $this->budgetPreviewDtoAssembler->assemble($userId, $budget);
+        return $this->budgetMetaDtoAssembler->assemble($budget);
     }
 
-    public function resetBudget(Id $userId, Id $budgetId, DateTimeInterface $startedAt): BudgetDto
+    public function resetBudget(Id $userId, Id $budgetId, DateTimeInterface $startedAt): BudgetMetaDto
     {
         $budget = $this->budgetRepository->get($budgetId);
         try {
@@ -134,7 +128,21 @@ readonly class BudgetService implements BudgetServiceInterface
             $this->antiCorruptionService->rollback(__METHOD__);
             throw $e;
         }
-        return $this->budgetPreviewDtoAssembler->assemble($userId, $budget);
+        return $this->budgetMetaDtoAssembler->assemble($budget);
+    }
+
+    public function getBudget($userId, $budgetId, DateTimeInterface $periodStart): BudgetDto
+    {
+        $budget = $this->budgetRepository->get($budgetId);
+        $dto = $this->budgetDtoAssembler->assemble($userId, $budget, $periodStart);
+        // --- dump ---
+        echo '<pre>';
+        echo __FILE__ . chr(10);
+        echo __METHOD__ . chr(10);
+        var_dump($dto->structure);
+        echo '</pre>';
+        exit;
+        // --- // ---
     }
 
     public function getData(Id $userId, Id $budgetId, DateTimeInterface $period): BudgetDataDto

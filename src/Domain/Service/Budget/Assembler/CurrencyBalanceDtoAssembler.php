@@ -8,7 +8,7 @@ namespace App\Domain\Service\Budget\Assembler;
 
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Repository\AccountRepositoryInterface;
-use App\Domain\Service\Budget\Dto\BudgetStructureDto;
+use App\Domain\Service\Budget\Dto\BudgetFiltersDto;
 use App\Domain\Service\Budget\Dto\CurrencyBalanceDto;
 use App\Domain\Service\DatetimeServiceInterface;
 use DateTimeInterface;
@@ -24,30 +24,32 @@ readonly class CurrencyBalanceDtoAssembler
     /**
      * @param DateTimeInterface $periodStart
      * @param DateTimeInterface $periodEnd
-     * @param BudgetStructureDto $budgetStructureDto
+     * @param Id[] $includedAccountsIds
+     * @param Id[] $currenciesIds
      * @return CurrencyBalanceDto[]
      */
     public function assemble(
         DateTimeInterface $periodStart,
         DateTimeInterface $periodEnd,
-        BudgetStructureDto $budgetStructureDto
+        array $includedAccountsIds,
+        array $currenciesIds
     ): array {
         $now = $this->datetimeService->getCurrentDatetime();
         $startBalances = [];
         if ($periodStart <= $now) {
-            $startBalances = $this->accountRepository->getAccountsBalancesOnDate($budgetStructureDto->includedAccountsIds, $periodStart);
+            $startBalances = $this->accountRepository->getAccountsBalancesOnDate($includedAccountsIds, $periodStart);
         }
         $endBalances = [];
         if ($periodEnd <= $now){
-            $endBalances = $this->accountRepository->getAccountsBalancesBeforeDate($budgetStructureDto->includedAccountsIds, $periodEnd);
+            $endBalances = $this->accountRepository->getAccountsBalancesBeforeDate($includedAccountsIds, $periodEnd);
         }
         $reports = [];
         if ($periodStart <= $now) {
-            $reports = $this->accountRepository->getAccountsReport($budgetStructureDto->includedAccountsIds, $periodStart, $periodEnd);
+            $reports = $this->accountRepository->getAccountsReport($includedAccountsIds, $periodStart, $periodEnd);
         }
 
         $result = [];
-        foreach ($budgetStructureDto->currencies as $currencyId) {
+        foreach ($currenciesIds as $currencyId) {
             $startBalance = $this->summarize($startBalances, $currencyId, 'balance');
             $endBalance = $this->summarize($endBalances, $currencyId, 'balance');
             $income = $this->summarize($reports, $currencyId, 'incomes');

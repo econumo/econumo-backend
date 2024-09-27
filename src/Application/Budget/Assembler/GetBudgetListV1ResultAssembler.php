@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Application\Budget\Assembler;
 
 use App\Application\Budget\Dto\GetBudgetListV1ResultDto;
-use App\Domain\Service\Budget\Dto\BudgetDto;
+use App\Domain\Service\Budget\Dto\BudgetMetaDto;
 
 readonly class GetBudgetListV1ResultAssembler
 {
@@ -15,7 +15,7 @@ readonly class GetBudgetListV1ResultAssembler
     }
 
     /**
-     * @param BudgetDto[] $budgets
+     * @param BudgetMetaDto[] $budgets
      * @return GetBudgetListV1ResultDto
      */
     public function assemble(

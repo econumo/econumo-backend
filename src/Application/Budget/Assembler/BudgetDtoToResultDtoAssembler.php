@@ -8,7 +8,7 @@ namespace App\Application\Budget\Assembler;
 
 use App\Application\Budget\Dto\BudgetResultDto;
 use App\Domain\Entity\ValueObject\Id;
-use App\Domain\Service\Budget\Dto\BudgetStructureDto;
+use App\Domain\Service\Budget\Dto\BudgetFiltersDto;
 
 readonly class BudgetDtoToResultDtoAssembler
 {
@@ -20,7 +20,7 @@ readonly class BudgetDtoToResultDtoAssembler
     ) {
     }
 
-    public function assemble(Id $userId, BudgetStructureDto $budgetDto): BudgetResultDto
+    public function assemble(Id $userId, BudgetFiltersDto $budgetDto): BudgetResultDto
     {
         $result = new BudgetResultDto();
         $result->id = $budgetDto->id->getValue();
@@ -32,7 +32,7 @@ readonly class BudgetDtoToResultDtoAssembler
             $result->excludedAccounts[] = $accountId->getValue();
         }
         $result->currencies = [];
-        foreach ($budgetDto->currencies as $currencyId) {
+        foreach ($budgetDto->currenciesIds as $currencyId) {
             $result->currencies[] = $currencyId->getValue();
         }
         $result->folders = [];

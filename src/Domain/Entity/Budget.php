@@ -42,6 +42,7 @@ class Budget
         private User $user,
         private Id $id,
         private BudgetName $name,
+        private Currency $currency,
         array $excludedAccounts,
         DateTimeInterface $startDate,
         DateTimeInterface $createdAt
@@ -86,6 +87,16 @@ class Budget
     public function getStartedAt(): DateTimeInterface
     {
         return $this->startedAt;
+    }
+
+    public function getCurrency(): Currency
+    {
+        return $this->currency;
+    }
+
+    public function getCurrencyId(): Id
+    {
+        return $this->currency->getId();
     }
 
     public function getCreatedAt(): DateTimeImmutable
