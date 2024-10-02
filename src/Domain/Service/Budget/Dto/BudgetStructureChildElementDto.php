@@ -18,6 +18,7 @@ readonly class BudgetStructureChildElementDto
         public BudgetEntityType $type,
         public NameInterface $name,
         public Icon $icon,
+        public bool $isArchived,
         public float $spent,
         /** @var BudgetEntityAmountSpentDto[] */
         public array $currenciesSpent,

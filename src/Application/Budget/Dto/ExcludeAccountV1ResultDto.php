@@ -16,5 +16,5 @@ class ExcludeAccountV1ResultDto
     /**
      * @OA\Property()
      */
-    public BudgetListItemResultDto $item;
+    public BudgetMetaResultDto $item;
 }

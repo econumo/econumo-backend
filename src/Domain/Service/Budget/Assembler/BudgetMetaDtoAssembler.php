@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Domain\Service\Budget\Assembler;
 
 use App\Domain\Entity\Budget;
-use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Service\Budget\Dto\BudgetMetaDto;
 
 readonly class BudgetMetaDtoAssembler
@@ -17,7 +16,7 @@ readonly class BudgetMetaDtoAssembler
             $budget->getUser()->getId(),
             $budget->getName(),
             $budget->getStartedAt(),
-            null,
+            $budget->getCurrencyId(),
             $budget->getAccessList()->toArray()
         );
     }

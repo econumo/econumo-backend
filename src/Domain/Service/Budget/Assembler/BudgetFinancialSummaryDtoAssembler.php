@@ -30,8 +30,8 @@ readonly class BudgetFinancialSummaryDtoAssembler
     public function assemble(
         DateTimeInterface $periodStart,
         DateTimeInterface $periodEnd,
+        array $currenciesIds,
         array $accountsIds,
-        array $currenciesIds
     ): BudgetFinancialSummaryDto {
         $currencyBalances = $this->getCurrencyBalances(
             $periodStart,

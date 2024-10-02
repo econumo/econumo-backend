@@ -135,14 +135,8 @@ readonly class BudgetService implements BudgetServiceInterface
     {
         $budget = $this->budgetRepository->get($budgetId);
         $dto = $this->budgetDtoAssembler->assemble($userId, $budget, $periodStart);
-        // --- dump ---
-        echo '<pre>';
-        echo __FILE__ . chr(10);
-        echo __METHOD__ . chr(10);
-        var_dump($dto->structure);
-        echo '</pre>';
-        exit;
-        // --- // ---
+
+        return $dto;
     }
 
     public function getData(Id $userId, Id $budgetId, DateTimeInterface $period): BudgetDataDto

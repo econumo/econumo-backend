@@ -19,6 +19,7 @@ readonly class BudgetStructureParentElementDto
         public NameInterface $name,
         public Icon $icon,
         public Id $currencyId,
+        public bool $isArchived,
         public ?Id $folderId,
         public int $position,
         public float $budget,

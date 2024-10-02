@@ -265,6 +265,9 @@ readonly class BudgetElementsAmountDtoAssembler
     ): array {
         $categoriesIds = [];
         foreach ($budgetFilters->categories as $category) {
+            if ($category->getType()->isIncome()) {
+                continue;
+            }
             $categoriesIds[] = $category->getId();
         }
         $spending = $this->transactionRepository->countSpending(
@@ -316,6 +319,9 @@ readonly class BudgetElementsAmountDtoAssembler
     ): array {
         $categoriesIds = [];
         foreach ($budgetFilters->categories as $category) {
+            if ($category->getType()->isIncome()) {
+                continue;
+            }
             $categoriesIds[] = $category->getId();
         }
         $spending = $this->transactionRepository->countSpending(

@@ -14,7 +14,7 @@ use OpenApi\Annotations as OA;
 class GetBudgetListV1ResultDto
 {
     /**
-     * @var BudgetListItemResultDto[]
+     * @var BudgetMetaResultDto[]
      * @OA\Property()
      */
     public array $items;

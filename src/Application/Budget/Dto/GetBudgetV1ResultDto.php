@@ -8,14 +8,13 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     required={"result"}
+ *     required={"item"}
  * )
  */
 class GetBudgetV1ResultDto
 {
     /**
-     * Id
-     * @OA\Property(example="This is result")
+     * @OA\Property()
      */
-    public string $result;
+    public BudgetResultDto $item;
 }

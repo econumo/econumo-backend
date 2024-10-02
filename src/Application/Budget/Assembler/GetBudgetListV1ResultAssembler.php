@@ -10,7 +10,7 @@ use App\Domain\Service\Budget\Dto\BudgetMetaDto;
 readonly class GetBudgetListV1ResultAssembler
 {
     public function __construct(
-        private BudgetPreviewDtoToResultDtoAssembler $budgetPreviewDtoAssembler
+        private BudgetMetaToResultDtoAssembler $budgetMetaToResultDtoAssembler
     ) {
     }
 
@@ -24,7 +24,7 @@ readonly class GetBudgetListV1ResultAssembler
         $result = new GetBudgetListV1ResultDto();
         $result->items = [];
         foreach ($budgets as $budget) {
-            $result->items[] = $this->budgetPreviewDtoAssembler->assemble($budget);
+            $result->items[] = $this->budgetMetaToResultDtoAssembler->assemble($budget);
         }
 
         return $result;

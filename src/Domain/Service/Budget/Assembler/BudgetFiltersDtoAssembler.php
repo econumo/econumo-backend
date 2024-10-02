@@ -13,9 +13,7 @@ use App\Domain\Repository\AccountRepositoryInterface;
 use App\Domain\Repository\CategoryRepositoryInterface;
 use App\Domain\Repository\TagRepositoryInterface;
 use App\Domain\Service\Budget\Dto\BudgetFiltersDto;
-use ArrayObject;
 use DateTimeInterface;
-use SplFixedArray;
 
 readonly class BudgetFiltersDtoAssembler
 {
@@ -41,7 +39,7 @@ readonly class BudgetFiltersDtoAssembler
     ): BudgetFiltersDto {
         $excludedAccountIds = $this->getExcludedAccountIds($budget, $userId);
         $userIds = $this->getBudgetUserIds($budget);
-        $includedAccounts = $this->getIncludedUserAccounts($userIds, $excludedAccountIds);
+        $includedAccounts = $this->getIncludedUserAccounts($budget, $userIds);
         $includedAccountsIds = $this->getIncludedUserAccountsIds($includedAccounts);
         $currenciesIds = $this->getCurrenciesIds($includedAccounts);
         $categories = $this->getCategories($userIds);
@@ -76,13 +74,13 @@ readonly class BudgetFiltersDtoAssembler
     }
 
     /**
+     * @param Budget $budget
      * @param Id[] $userIds
-     * @param Id[] $excludedAccountsIds
      * @return Account[]
      */
-    private function getIncludedUserAccounts(array $userIds, array $excludedAccountsIds): array
+    private function getIncludedUserAccounts(Budget $budget, array $userIds): array
     {
-        $excludedAccounts = array_map(fn(Id $accountId) => $accountId->getValue(), $excludedAccountsIds);
+        $excludedAccounts = array_map(fn(Account $account) => $account->getId()->getValue(), $budget->getExcludedAccounts()->toArray());
         $userAccounts = $this->accountRepository->findByOwnersIds($userIds);
         $result = [];
         foreach ($userAccounts as $account) {
@@ -117,11 +115,11 @@ readonly class BudgetFiltersDtoAssembler
 
     /**
      * @param array $userIds
-     * @return ArrayObject<Category>
+     * @return Category[]
      */
-    private function getCategories(array $userIds): ArrayObject
+    private function getCategories(array $userIds): array
     {
-        $result = new ArrayObject();
+        $result = [];
         foreach ($this->categoryRepository->findByOwnersIds($userIds) as $category) {
             $result[$category->getId()->getValue()] = $category;
         }
@@ -130,11 +128,11 @@ readonly class BudgetFiltersDtoAssembler
 
     /**
      * @param array $userIds
-     * @return ArrayObject<Tag>
+     * @return Tag[]
      */
-    private function getTags(array $userIds): ArrayObject
+    private function getTags(array $userIds): array
     {
-        $result = new ArrayObject();
+        $result = [];
         foreach ($this->tagRepository->findByOwnersIds($userIds) as $tag) {
             $result[$tag->getId()->getValue()] = $tag;
         }

@@ -8,39 +8,45 @@ namespace App\Application\Budget\Assembler;
 
 use App\Application\Budget\Dto\BudgetResultDto;
 use App\Domain\Entity\ValueObject\Id;
+use App\Domain\Service\Budget\Dto\BudgetDto;
 use App\Domain\Service\Budget\Dto\BudgetFiltersDto;
 
 readonly class BudgetDtoToResultDtoAssembler
 {
     public function __construct(
-        private BudgetAccessToResultDtoAssembler $budgetAccessToResultDtoAssembler,
-        private BudgetFolderToResultDtoAssembler $budgetFolderToResultDtoAssembler,
-        private BudgetEnvelopeToResultDtoAssembler $budgetEnvelopeToResultDtoAssembler,
-        private BudgetEntityOptionToResultDtoAssembler $budgetEntityOptionToResultDtoAssembler
+        private BudgetMetaToResultDtoAssembler $budgetMetaToResultDtoAssembler,
+        private BudgetStructureToResultDtoAssembler $budgetStructureToResultDtoAssembler,
+        private BudgetCurrencyBalanceToResultDtoAssembler $budgetCurrencyBalanceToResultDtoAssembler,
+//        private BudgetFolderToResultDtoAssembler $budgetFolderToResultDtoAssembler,
+//        private BudgetEnvelopeToResultDtoAssembler $budgetEnvelopeToResultDtoAssembler,
+//        private BudgetEntityOptionToResultDtoAssembler $budgetEntityOptionToResultDtoAssembler
     ) {
     }
 
-    public function assemble(Id $userId, BudgetFiltersDto $budgetDto): BudgetResultDto
+    public function assemble(Id $userId, BudgetDto $dto): BudgetResultDto
     {
         $result = new BudgetResultDto();
-        $result->id = $budgetDto->id->getValue();
-        $result->name = $budgetDto->budgetName->getValue();
-        $result->ownerUserId = $budgetDto->ownerUserId->getValue();
-        $result->startedAt = $budgetDto->startedAt->format('Y-m-d H:i:s');
-        $result->excludedAccounts = [];
-        foreach ($budgetDto->excludedAccounts as $accountId) {
+        $result->meta = $this->budgetMetaToResultDtoAssembler->assemble($dto->meta);
+        $result->balances = [];
+        foreach ($dto->financialSummary->currencyBalances as $balance) {
+            $result->balances[] = $this->budgetCurrencyBalanceToResultDtoAssembler->assemble($balance);
+        }
+        $result->structure = $this->budgetStructureToResultDtoAssembler->assemble($dto->structure);
+
+        /*$result->excludedAccounts = [];
+        foreach ($dto->excludedAccounts as $accountId) {
             $result->excludedAccounts[] = $accountId->getValue();
         }
         $result->currencies = [];
-        foreach ($budgetDto->currenciesIds as $currencyId) {
+        foreach ($dto->currenciesIds as $currencyId) {
             $result->currencies[] = $currencyId->getValue();
         }
         $result->folders = [];
-        foreach ($budgetDto->folders as $budgetFolder) {
+        foreach ($dto->folders as $budgetFolder) {
             $result->folders[] = $this->budgetFolderToResultDtoAssembler->assemble($budgetFolder);
         }
         $result->envelopes = [];
-        foreach ($budgetDto->envelopes as $budgetEnvelope) {
+        foreach ($dto->envelopes as $budgetEnvelope) {
             $result->envelopes[] = $this->budgetEnvelopeToResultDtoAssembler->assemble($budgetEnvelope);
         }
         $result->categories = [];
@@ -52,14 +58,9 @@ readonly class BudgetDtoToResultDtoAssembler
 //            $result->tags[] = $tagId->getValue();
 //        }
         $result->entityOptions = [];
-        foreach ($budgetDto->entityOptions as $entityOption) {
+        foreach ($dto->entityOptions as $entityOption) {
             $result->entityOptions[] = $this->budgetEntityOptionToResultDtoAssembler->assemble($entityOption);
-        }
-
-        $result->sharedAccess = [];
-        foreach ($budgetDto->sharedAccess as $budgetAccess) {
-            $result->sharedAccess[] = $this->budgetAccessToResultDtoAssembler->assemble($budgetAccess);
-        }
+        }*/
 
         return $result;
     }

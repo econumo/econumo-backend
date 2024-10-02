@@ -59,6 +59,7 @@ readonly class CurrencyBalanceDtoAssembler
                     $currencyId,
                     'exchange_expenses'
                 );
+            // @todo fix holdings
             $holdings = null;
             $item = new CurrencyBalanceDto(
                 $currencyId,

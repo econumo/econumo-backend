@@ -16,5 +16,5 @@ class IncludeAccountV1ResultDto
     /**
      * @OA\Property()
      */
-    public BudgetListItemResultDto $item;
+    public BudgetMetaResultDto $item;
 }

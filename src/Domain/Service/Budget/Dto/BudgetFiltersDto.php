@@ -24,9 +24,9 @@ readonly class BudgetFiltersDto
         /** @var Id[] */
         public array $currenciesIds,
         /** @var Category[] */
-        public ArrayObject $categories,
+        public array $categories,
         /** @var Tag[] */
-        public ArrayObject $tags
+        public array $tags
     ) {
     }
 }

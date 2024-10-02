@@ -10,7 +10,7 @@ use App\Domain\Service\Budget\Dto\BudgetMetaDto;
 readonly class ExcludeAccountV1ResultAssembler
 {
     public function __construct(
-        private BudgetPreviewDtoToResultDtoAssembler $budgetPreviewDtoToResultDtoAssembler
+        private BudgetMetaToResultDtoAssembler $budgetMetaToResultDtoAssembler
     ) {
     }
 
@@ -18,7 +18,7 @@ readonly class ExcludeAccountV1ResultAssembler
         BudgetMetaDto $budgetDto
     ): ExcludeAccountV1ResultDto {
         $result = new ExcludeAccountV1ResultDto();
-        $result->item = $this->budgetPreviewDtoToResultDtoAssembler->assemble($budgetDto);
+        $result->item = $this->budgetMetaToResultDtoAssembler->assemble($budgetDto);
 
         return $result;
     }

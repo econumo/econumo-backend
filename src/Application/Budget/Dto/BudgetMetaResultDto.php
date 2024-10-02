@@ -8,10 +8,10 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     required={"id", "ownerUserId", "name", "startedAt", "sharedAccess"}
+ *     required={"id", "ownerUserId", "name", "startedAt", "currencyId", "sharedAccess"}
  * )
  */
-class BudgetListItemResultDto
+class BudgetMetaResultDto
 {
     /**
      * @OA\Property(example="05c8f3e1-d77f-4b37-b2ca-0fc5f0f0c7a9")
@@ -37,8 +37,14 @@ class BudgetListItemResultDto
     public string $startedAt;
 
     /**
+     * Budget currency ID
+     * @OA\Property(example="aff21334-96f0-4fb1-84d8-0223d0280954")
+     */
+    public string $currencyId;
+
+    /**
      * Account access
-     * @var BudgetAccessResultDto[]
+     * @var BudgetSharedAccessResultDto[]
      * @OA\Property()
      */
     public array $sharedAccess = [];

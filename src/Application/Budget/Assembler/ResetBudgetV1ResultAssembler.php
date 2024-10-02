@@ -10,14 +10,14 @@ use App\Domain\Service\Budget\Dto\BudgetMetaDto;
 readonly class ResetBudgetV1ResultAssembler
 {
     public function __construct(
-        private BudgetPreviewDtoToResultDtoAssembler $budgetPreviewDtoToResultDtoAssembler
+        private BudgetMetaToResultDtoAssembler $budgetMetaToResultDtoAssembler
     ) {
     }
     public function assemble(
         BudgetMetaDto $budgetDto
     ): ResetBudgetV1ResultDto {
         $result = new ResetBudgetV1ResultDto();
-        $result->item = $this->budgetPreviewDtoToResultDtoAssembler->assemble($budgetDto);
+        $result->item = $this->budgetMetaToResultDtoAssembler->assemble($budgetDto);
 
         return $result;
     }

@@ -72,7 +72,11 @@ readonly class BudgetStructureDtoAssembler
                         $budgetFilters->categories[$category->getId()->getValue()]
                     );
                     $categoryUsed[$category->getId()->getValue()] = $category->getId()->getValue();
-                    $spent += ($elementsAmounts[sprintf('%s-%s', $category->getId()->getValue(), BudgetEntityType::category()->getAlias())]?->spent ?? .0);
+                    $spent += ($elementsAmounts[sprintf(
+                        '%s-%s',
+                        $category->getId()->getValue(),
+                        BudgetEntityType::category()->getAlias()
+                    )]?->spent ?? .0);
                 }
             }
             $item = new BudgetStructureParentElementDto(
@@ -81,16 +85,20 @@ readonly class BudgetStructureDtoAssembler
                 $envelope->getName(),
                 $envelope->getIcon(),
                 $currencyId,
+                $envelope->isArchived(),
                 $folderId,
                 $position,
-                $budgeted,
-                $available,
-                $spent,
+                round($budgeted, 2),
+                round($available, 2),
+                round($spent, 2),
                 $currenciesSpent,
                 $children
             );
-            $elements[] = $item;
+            if (!$envelope->isArchived() || $spent != 0 || $budgeted != 0 || $available != 0 || count($children) > 0) {
+                $elements[] = $item;
+            }
         }
+
         foreach ($budgetFilters->tags as $tag) {
             $type = BudgetEntityType::tag();
             $index = sprintf('%s-%s', $tag->getId()->getValue(), $type->getAlias());
@@ -118,17 +126,24 @@ readonly class BudgetStructureDtoAssembler
                 $tag->getName(),
                 $tag->getIcon(),
                 $currencyId,
+                $tag->isArchived(),
                 $folderId,
                 $position,
-                $budgeted,
-                $available,
-                $spent,
+                round($budgeted, 2),
+                round($available, 2),
+                round($spent, 2),
                 $currenciesSpent,
                 $children
             );
-            $elements[] = $item;
+            if (!$tag->isArchived() || $spent != 0 || $budgeted != 0 || $available != 0 || count($children) > 0) {
+                $elements[] = $item;
+            }
         }
+
         foreach ($budgetFilters->categories as $category) {
+            if ($category->getType()->isIncome()) {
+                continue;
+            }
             if (array_key_exists($category->getId()->getValue(), $categoryUsed)) {
                 continue;
             }
@@ -147,27 +162,34 @@ readonly class BudgetStructureDtoAssembler
                 $category->getName(),
                 $category->getIcon(),
                 $currencyId,
+                $category->isArchived(),
                 $folderId,
                 $position,
-                $budgeted,
-                $available,
-                $spent,
+                round($budgeted, 2),
+                round($available, 2),
+                round($spent, 2),
                 $currenciesSpent,
                 []
             );
-            $elements[] = $item;
+            if (!$category->isArchived() || $spent != 0 || $budgeted != 0 || $available != 0) {
+                $elements[] = $item;
+            }
         }
 
         return new BudgetStructureDto($folders, $elements);
     }
 
-    private function assembleSubCategory(Category $category, float $spent, array $currenciesSpent): BudgetStructureChildElementDto
-    {
+    private function assembleSubCategory(
+        Category $category,
+        float $spent,
+        array $currenciesSpent
+    ): BudgetStructureChildElementDto {
         return new BudgetStructureChildElementDto(
             $category->getId(),
             BudgetEntityType::category(),
             $category->getName(),
             $category->getIcon(),
+            $category->isArchived(),
             $spent,
             $currenciesSpent
         );

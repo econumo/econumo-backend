@@ -104,7 +104,7 @@ readonly class BudgetService
             throw new AccessDeniedException();
         }
 
-        $budgetDto = $this->budgetService->getBudget($userId, $budgetId, $date);
-        return $this->getBudgetV1ResultAssembler->assemble($budgetDto);
+        $budget = $this->budgetService->getBudget($userId, $budgetId, $date);
+        return $this->getBudgetV1ResultAssembler->assemble($userId, $budget);
     }
 }
