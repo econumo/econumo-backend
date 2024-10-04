@@ -94,7 +94,6 @@ readonly class BudgetElementsAmountDtoAssembler
     }
 
     /**
-     * @TODO fix
      * @param Budget $budget
      * @param BudgetFiltersDto $budgetFilters
      * @return array
@@ -104,7 +103,7 @@ readonly class BudgetElementsAmountDtoAssembler
         BudgetFiltersDto $budgetFilters
     ): array {
         $data = [];
-        $data = $this->generateByAmounts($budget, $budgetFilters, $budgetFilters->periodStart, $data);
+        $data = $this->generateByAmounts($budget, $budgetFilters->periodStart, $data);
         $data = $this->countSpending(
             $budgetFilters,
             $budgetFilters->periodStart,
@@ -113,7 +112,6 @@ readonly class BudgetElementsAmountDtoAssembler
         );
         $data = $this->countSummarizedAmounts(
             $budget,
-            $budgetFilters,
             $budget->getStartedAt(),
             $budgetFilters->periodStart,
             $data
@@ -133,8 +131,9 @@ readonly class BudgetElementsAmountDtoAssembler
                 $item['type'],
                 $item['tag_id'],
                 $item['budget']?->getAmount(),
-                round($item['overall_budget'] - array_sum($item['overall_spent']), 2),
-                $item['spent']
+                round($item['overall_budget'], 2),
+                $item['spent'],
+                $item['overall_spent']
             );
             $result[] = $item;
         }
