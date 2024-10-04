@@ -23,7 +23,7 @@ readonly class BudgetParentElementToResultDtoAssembler
         $result->type = $dto->type->getValue();
         $result->name = $dto->name->getValue();
         $result->icon = $dto->icon->getValue();
-        $result->currencyId = $dto->currencyId->getValue();
+        $result->currencyId = $dto->currencyId?->getValue();
         $result->isArchived = $dto->isArchived ? 1 : 0;
         $result->folderId = $dto->folderId?->getValue();
         $result->position = $dto->position;
@@ -31,10 +31,10 @@ readonly class BudgetParentElementToResultDtoAssembler
         $result->available = $dto->available;
         $result->spent = $dto->spent;
 
-        $result->currenciesSpent = [];
-        foreach ($dto->currenciesSpent as $currencySpent) {
-            $result->currenciesSpent[] = $this->budgetCurrencyAmountToResultDtoAssembler->assemble($currencySpent);
-        }
+//        $result->currenciesSpent = [];
+//        foreach ($dto->currenciesSpent as $currencySpent) {
+//            $result->currenciesSpent[] = $this->budgetCurrencyAmountToResultDtoAssembler->assemble($currencySpent);
+//        }
 
         $result->children = [];
         foreach ($dto->children as $child) {

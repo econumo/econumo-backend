@@ -7,7 +7,7 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     required={"id", "type", "name", "icon", "isArchived", "spent", "currenciesSpent"}
+ *     required={"id", "type", "name", "icon", "isArchived", "spent"}
  * )
  */
 class BudgetStructureChildElementResultDto
@@ -41,10 +41,4 @@ class BudgetStructureChildElementResultDto
      * @OA\Property(example="10.0")
      */
     public float $spent;
-
-    /**
-     * @var BudgetCurrencyAmountDto[]
-     * @OA\Property()
-     */
-    public array $currenciesSpent;
 }

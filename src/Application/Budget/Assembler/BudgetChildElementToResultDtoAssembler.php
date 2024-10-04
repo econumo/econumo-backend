@@ -24,10 +24,10 @@ readonly class BudgetChildElementToResultDtoAssembler
         $result->icon = $dto->icon->getValue();
         $result->isArchived = $dto->isArchived ? 1 : 0;
         $result->spent = $dto->spent;
-        $result->currenciesSpent = [];
-        foreach ($dto->currenciesSpent as $currencySpent) {
-            $result->currenciesSpent[] = $this->budgetCurrencyAmountToResultDtoAssembler->assemble($currencySpent);
-        }
+//        $result->currenciesSpent = [];
+//        foreach ($dto->currenciesSpent as $currencySpent) {
+//            $result->currenciesSpent[] = $this->budgetCurrencyAmountToResultDtoAssembler->assemble($currencySpent);
+//        }
 
         return $result;
     }

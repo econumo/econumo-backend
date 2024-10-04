@@ -51,6 +51,7 @@ readonly class BudgetStructureDtoAssembler
 
         $toConvert = [];
         $categoryUsed = [];
+        $elements = [];
         $envelopes = $this->getEnvelopes($budget->getId());
         foreach ($envelopes as $envelope) {
             $type = BudgetEntityType::envelope();
@@ -282,7 +283,7 @@ readonly class BudgetStructureDtoAssembler
                 $element['type'],
                 $element['name'],
                 $element['icon'],
-                $element['currencyId'],
+                ($budget->getCurrencyId()->isEqual($element['currencyId']) ? null : $element['currencyId']),
                 $element['isArchived'],
                 $element['folderId'],
                 $element['position'],
