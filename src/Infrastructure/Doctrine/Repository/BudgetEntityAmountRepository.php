@@ -61,7 +61,7 @@ class BudgetEntityAmountRepository extends ServiceEntityRepository implements Bu
     public function getSummarizedAmounts(Id $budgetId, DateTimeInterface $periodStart, DateTimeInterface $periodEnd): array
     {
         $query = $this->createQueryBuilder('ea')
-            ->select('ea.entityId, ea.entityType, SUM(ea.amount) as budget')
+            ->select('ea.entityId, ea.entityType, SUM(ea.amount) as amount')
             ->where('ea.budget = :budget')
             ->setParameter('budget', $this->getEntityReference(Budget::class, $budgetId))
             ->andWhere('ea.period >= :periodStart')

@@ -18,10 +18,8 @@ interface CurrencyConvertorInterface
     public function convert(CurrencyCode $originalCurrency, CurrencyCode $resultCurrency, float $sum): float;
 
     /**
-     * @param DateTimeInterface $periodStart
-     * @param DateTimeInterface $periodEnd
-     * @param CurrencyConvertorDto[]|array $items
+     * @param CurrencyConvertorDto[] $items
      * @return float[]
      */
-    public function bulkConvert(DateTimeInterface $periodStart, DateTimeInterface $periodEnd, array $items): array;
+    public function bulkConvert(array $items): array;
 }

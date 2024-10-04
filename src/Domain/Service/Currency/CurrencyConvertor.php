@@ -15,6 +15,8 @@ use App\Domain\Repository\CurrencyRepositoryInterface;
 use App\Domain\Repository\UserRepositoryInterface;
 use App\Domain\Service\Currency\Dto\CurrencyConvertorDto;
 use App\Domain\Service\Dto\FullCurrencyRateDto;
+use DateInterval;
+use DatePeriod;
 use DateTimeInterface;
 
 class CurrencyConvertor implements CurrencyConvertorInterface
@@ -58,19 +60,50 @@ class CurrencyConvertor implements CurrencyConvertorInterface
     /**
      * @inheritDoc
      */
-    public function bulkConvert(DateTimeInterface $periodStart, DateTimeInterface $periodEnd, array $items): array
+    public function bulkConvert(array $items): array
     {
-        $rates = $this->currencyRateService->getAverageCurrencyRates($periodStart, $periodEnd);
+        $conversionNeeded = [];
+        foreach ($items as $item) {
+            if (is_array($item)) {
+                foreach ($item as $subItem) {
+                    $index = $subItem->periodStart->format('Y-m');
+                    if ($subItem->fromCurrencyId->isEqual($subItem->toCurrencyId)) {
+                        continue;
+                    }
+                    if (array_key_exists($index, $conversionNeeded)) {
+                        continue;
+                    }
+                    $conversionNeeded[$index] = [$subItem->periodStart, $subItem->periodEnd];
+                }
+            } else {
+                $index = $item->periodStart->format('Y-m');
+                if ($item->fromCurrencyId->isEqual($item->toCurrencyId)) {
+                    continue;
+                }
+                if (array_key_exists($index, $conversionNeeded)) {
+                    continue;
+                }
+                $conversionNeeded[$index] = [$item->periodStart, $item->periodEnd];
+            }
+        }
+        if (count($conversionNeeded) === 0) {
+            return [];
+        }
+
+        $rates = [];
+        foreach ($conversionNeeded as $index => $dateRange) {
+            $rates[$index] = $this->currencyRateService->getAverageCurrencyRates($dateRange[0], $dateRange[1]);
+        }
 
         $result = [];
         foreach ($items as $key => $dto) {
             $result[$key] = .0;
             if ($dto instanceof CurrencyConvertorDto) {
-                $result[$key] = $this->convertInternalById($rates, $dto->fromCurrencyId, $dto->toCurrencyId, $dto->amount);
+                $result[$key] = $this->convertInternalById($rates[$dto->periodStart->format('Y-m')], $dto->fromCurrencyId, $dto->toCurrencyId, $dto->amount);
             } else {
                 /** @var CurrencyConvertorDto $item */
                 foreach ($dto as $item) {
-                    $result[$key] += $this->convertInternalById($rates, $item->fromCurrencyId, $item->toCurrencyId, $item->amount);
+                    $result[$key] += $this->convertInternalById($rates[$item->periodStart->format('Y-m')], $item->fromCurrencyId, $item->toCurrencyId, $item->amount);
                 }
             }
         }

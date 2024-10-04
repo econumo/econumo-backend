@@ -7,7 +7,6 @@ namespace App\Domain\Service\Budget\Assembler;
 use App\Domain\Entity\Budget;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Service\Budget\Dto\BudgetDto;
-use App\Domain\Service\Budget\Dto\BudgetStructureDto;
 use DateTimeImmutable;
 use DateTimeInterface;
 

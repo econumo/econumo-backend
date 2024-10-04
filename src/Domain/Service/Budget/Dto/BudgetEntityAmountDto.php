@@ -13,11 +13,12 @@ readonly class BudgetEntityAmountDto
         public Id $entityId,
         public BudgetEntityType $entityType,
         public ?Id $tagId,
-        public ?float $budget,
-        public float $available,
-        public float $spent,
+        public ?float $budgeted,
+        public float $budgetedBefore,
         /** @var BudgetEntityAmountSpentDto[] */
         public array $currenciesSpent = [],
+        /** @var BudgetEntityAmountSpentDto[] */
+        public array $currenciesSpentBefore = [],
     ) {
     }
 }

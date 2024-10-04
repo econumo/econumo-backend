@@ -16,5 +16,5 @@ class CreateBudgetV1ResultDto
     /**
      * @OA\Property()
      */
-    public BudgetResultDto $item;
+    public BudgetMetaResultDto $item;
 }

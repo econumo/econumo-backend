@@ -50,7 +50,7 @@ readonly class BudgetService
             $dto->excludedAccounts
         );
         $budgetDto = $this->budgetService->createBudget($userId, $id, $name, $excludedAccountsIds);
-        return $this->createBudgetV1ResultAssembler->assemble($userId, $budgetDto);
+        return $this->createBudgetV1ResultAssembler->assemble($budgetDto);
     }
 
     public function deleteBudget(
@@ -105,6 +105,6 @@ readonly class BudgetService
         }
 
         $budget = $this->budgetService->getBudget($userId, $budgetId, $date);
-        return $this->getBudgetV1ResultAssembler->assemble($userId, $budget);
+        return $this->getBudgetV1ResultAssembler->assemble($budget);
     }
 }

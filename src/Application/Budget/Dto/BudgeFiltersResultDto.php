@@ -8,7 +8,7 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     required={"id", "ownerUserId", "name", "startedAt", "sharedAccess"}
+ *     required={"periodStart", "periodEnd", "excludedAccountsIds"}
  * )
  */
 class BudgeFiltersResultDto
@@ -28,12 +28,5 @@ class BudgeFiltersResultDto
      * @var string[]
      * @OA\Property()
      */
-    public array $excludedAccountIds;
-
-    /**
-     * Budget Currencies IDs
-     * @var string[]
-     * @OA\Property()
-     */
-    public array $currencyIds;
+    public array $excludedAccountsIds;
 }

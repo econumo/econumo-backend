@@ -7,7 +7,6 @@ namespace App\Domain\Service\Budget\Assembler;
 
 
 use App\Domain\Entity\Budget;
-use App\Domain\Entity\Category;
 use App\Domain\Entity\ValueObject\BudgetEntityType;
 use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Repository\BudgetEntityAmountRepositoryInterface;
@@ -15,8 +14,7 @@ use App\Domain\Repository\TransactionRepositoryInterface;
 use App\Domain\Service\Budget\Dto\BudgetEntityAmountDto;
 use App\Domain\Service\Budget\Dto\BudgetEntityAmountSpentDto;
 use App\Domain\Service\Budget\Dto\BudgetFiltersDto;
-use App\Domain\Service\Currency\CurrencyConvertorInterface;
-use App\Domain\Service\Currency\Dto\CurrencyConvertorDto;
+
 use DateInterval;
 use DatePeriod;
 use DateTimeInterface;
@@ -26,7 +24,6 @@ readonly class BudgetElementsAmountDtoAssembler
     public function __construct(
         private BudgetEntityAmountRepositoryInterface $budgetEntityAmountRepository,
         private TransactionRepositoryInterface $transactionRepository,
-        private CurrencyConvertorInterface $currencyConvertor
     ) {
     }
 
@@ -34,6 +31,7 @@ readonly class BudgetElementsAmountDtoAssembler
      * @param Budget $budget
      * @param BudgetFiltersDto $budgetFilters
      * @return BudgetEntityAmountDto[]
+     * @throws \DateMalformedPeriodStringException
      */
     public function assemble(
         Budget $budget,
@@ -45,9 +43,15 @@ readonly class BudgetElementsAmountDtoAssembler
         return $this->getEntityAmountsForMultipleCurrencies($budget, $budgetFilters);
     }
 
+    /**
+     * @param Budget $budget
+     * @param BudgetFiltersDto $budgetFilters
+     * @return array
+     * @throws \DateMalformedPeriodStringException
+     */
     private function getEntityAmountsForMultipleCurrencies(
         Budget $budget,
-        BudgetFiltersDto $budgetFilters
+        BudgetFiltersDto $budgetFilters,
     ): array {
         $data = [];
         $data = $this->generateByAmounts($budget, $budgetFilters->periodStart, $data);
@@ -70,56 +74,18 @@ readonly class BudgetElementsAmountDtoAssembler
             $endDate = clone $startDate;
             $endDate->modify('next month');
             $data = $this->countSummarizedSpending($budget, $budgetFilters, $startDate, $endDate, $data);
-
-            $toConvert = [];
-            foreach ($data as $key => $item) {
-                /** @var BudgetEntityAmountSpentDto $amount */
-                foreach ($item['overall_spent'] as $amount) {
-                    if (!array_key_exists($key, $toConvert)) {
-                        $toConvert[$key] = [];
-                    }
-                    $toConvert[$key][] = new CurrencyConvertorDto(
-                        $amount->currencyId,
-                        $budget->getCurrencyId(),
-                        $amount->amount
-                    );
-                }
-            }
-            $amounts = $this->currencyConvertor->bulkConvert($startDate, $endDate, $toConvert);
-            foreach ($amounts as $key => $amount) {
-                $data[$key]['overall_spent_sum'] += $amount;
-            }
-        }
-        $toConvert = [];
-        foreach ($data as $key => $item) {
-            /** @var BudgetEntityAmountSpentDto $amount */
-            foreach ($item['spent'] as $amount) {
-                if (!array_key_exists($key, $toConvert)) {
-                    $toConvert[$key] = [];
-                }
-                $toConvert[$key][] = new CurrencyConvertorDto(
-                    $amount->currencyId,
-                    $budget->getCurrencyId(),
-                    $amount->amount
-                );
-            }
-        }
-        $amounts = $this->currencyConvertor->bulkConvert($budgetFilters->periodStart, $budgetFilters->periodEnd, $toConvert);
-        foreach ($amounts as $key => $amount) {
-            $data[$key]['spent_sum'] += $amount;
         }
 
         $result = [];
-        foreach ($data as $item) {
-            $index = $this->getKey($item['id']->getValue(), $item['type']->getAlias());
+        foreach ($data as $index => $item) {
             $item = new BudgetEntityAmountDto(
                 $item['id'],
                 $item['type'],
                 $item['tag_id'],
-                $item['amount']?->getAmount(),
-                round($item['overall_budget'] - $item['overall_spent_sum'], 2),
-                round($item['spent_sum'], 2),
-                $item['spent']
+                $item['budget']?->getAmount(),
+                round($item['overall_budget'], 2),
+                $item['spent'],
+                $item['overall_spent']
             );
             $result[$index] = $item;
         }
@@ -127,6 +93,12 @@ readonly class BudgetElementsAmountDtoAssembler
         return $result;
     }
 
+    /**
+     * @TODO fix
+     * @param Budget $budget
+     * @param BudgetFiltersDto $budgetFilters
+     * @return array
+     */
     private function getEntityAmountsForOneCurrency(
         Budget $budget,
         BudgetFiltersDto $budgetFilters
@@ -160,7 +132,7 @@ readonly class BudgetElementsAmountDtoAssembler
                 $item['id'],
                 $item['type'],
                 $item['tag_id'],
-                $item['amount']?->getAmount(),
+                $item['budget']?->getAmount(),
                 round($item['overall_budget'] - array_sum($item['overall_spent']), 2),
                 $item['spent']
             );
@@ -191,7 +163,7 @@ readonly class BudgetElementsAmountDtoAssembler
             $index = $this->getKey($amount->getEntityId()->getValue(), $amount->getEntityType()->getAlias());
             if (!array_key_exists($index, $data)) {
                 $data[$index] = [
-                    'amount' => null,
+                    'budget' => null,
                     'spent' => [],
                     'spent_sum' => 0,
                     'overall_budget' => 0,
@@ -202,7 +174,7 @@ readonly class BudgetElementsAmountDtoAssembler
                     'type' => $amount->getEntityType(),
                 ];
             }
-            $data[$index]['amount'] = $amount;
+            $data[$index]['budget'] = $amount;
         }
         return $data;
     }
@@ -232,7 +204,7 @@ readonly class BudgetElementsAmountDtoAssembler
             );
             if (!array_key_exists($index, $data)) {
                 $data[$index] = [
-                    'amount' => null,
+                    'budget' => null,
                     'spent' => [],
                     'spent_sum' => 0,
                     'overall_budget' => 0,
@@ -243,7 +215,7 @@ readonly class BudgetElementsAmountDtoAssembler
                     'type' => $summarizedAmount['entityType'],
                 ];
             }
-            $data[$index]['overall_budget'] += $summarizedAmount['budget'];
+            $data[$index]['overall_budget'] += $summarizedAmount['amount'];
         }
         return $data;
     }
@@ -285,7 +257,7 @@ readonly class BudgetElementsAmountDtoAssembler
             $index = $this->getKey($item['category_id'], $type->getAlias());
             if (!array_key_exists($index, $data)) {
                 $data[$index] = [
-                    'amount' => null,
+                    'budget' => null,
                     'spent' => [],
                     'spent_sum' => 0,
                     'overall_budget' => 0,
@@ -298,7 +270,9 @@ readonly class BudgetElementsAmountDtoAssembler
             }
             $data[$index]['overall_spent'][] = new BudgetEntityAmountSpentDto(
                 new Id($item['currency_id']),
-                round(floatval($item['amount']), 2)
+                round(floatval($item['amount']), 2),
+                $periodStart,
+                $periodEnd
             );
         }
         return $data;
@@ -341,7 +315,7 @@ readonly class BudgetElementsAmountDtoAssembler
             $index = $this->getKey($category['category_id'], $type->getAlias());
             if (!array_key_exists($index, $data)) {
                 $data[$index] = [
-                    'amount' => null,
+                    'budget' => null,
                     'spent' => [],
                     'spent_sum' => 0,
                     'overall_budget' => 0,
@@ -350,11 +324,14 @@ readonly class BudgetElementsAmountDtoAssembler
                     'id' => new Id($category['category_id']),
                     'tag_id' => $tagId,
                     'type' => $type,
+                    'currency_id' => $category['currency_id'],
                 ];
             }
             $data[$index]['spent'][] = new BudgetEntityAmountSpentDto(
                 new Id($category['currency_id']),
-                round(floatval($category['amount']), 2)
+                round(floatval($category['amount']), 2),
+                $periodStart,
+                $periodEnd
             );
         }
         return $data;

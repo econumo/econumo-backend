@@ -22,7 +22,7 @@ readonly class BudgetStructureParentElementDto
         public bool $isArchived,
         public ?Id $folderId,
         public int $position,
-        public float $budget,
+        public float $budgeted,
         public float $available,
         public float $spent,
         /** @var BudgetEntityAmountSpentDto[] */

@@ -7,7 +7,6 @@ namespace App\Domain\Service\Budget\Dto;
 use App\Domain\Entity\Category;
 use App\Domain\Entity\Tag;
 use App\Domain\Entity\ValueObject\Id;
-use ArrayObject;
 use DateTimeInterface;
 
 readonly class BudgetFiltersDto
@@ -18,7 +17,7 @@ readonly class BudgetFiltersDto
         /** @var Id[] */
         public array $userIds,
         /** @var Id[] */
-        public array $excludedAccounts,
+        public array $excludedAccountsIds,
         /** @var Id[] */
         public array $includedAccountsIds,
         /** @var Id[] */

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Application\Budget\Assembler;
 
 use App\Application\Budget\Dto\GetBudgetV1ResultDto;
-use App\Domain\Entity\ValueObject\Id;
 use App\Domain\Service\Budget\Dto\BudgetDto;
 
 readonly class GetBudgetV1ResultAssembler
@@ -16,11 +15,10 @@ readonly class GetBudgetV1ResultAssembler
     }
 
     public function assemble(
-        Id $userId,
         BudgetDto $budget
     ): GetBudgetV1ResultDto {
         $result = new GetBudgetV1ResultDto();
-        $result->item = $this->budgetDtoToResultDtoAssembler->assemble($userId, $budget);
+        $result->item = $this->budgetDtoToResultDtoAssembler->assemble($budget);
 
         return $result;
     }
