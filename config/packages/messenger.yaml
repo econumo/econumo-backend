@@ -19,10 +19,10 @@ framework:
           max_retries: 1
 
     routing:
-      'App\Domain\Events\AccountFolderCreatedEvent': domain_events
-      'App\Domain\Events\BudgetFolderCreatedEvent': domain_events
-      'App\Domain\Events\RemindPasswordRequestedEvent': domain_events
-      'App\Domain\Events\UserRegisteredEvent': domain_events
-      'App\Domain\Events\BudgetEnvelopeCreatedEvent': domain_events
-      'App\Domain\Events\CategoryCreatedEvent': domain_events
-      'App\Domain\Events\TagCreatedEvent': domain_events
+      'App\EconumoBundle\Domain\Events\AccountFolderCreatedEvent': domain_events
+      'App\EconumoBundle\Domain\Events\BudgetFolderCreatedEvent': domain_events
+      'App\EconumoBundle\Domain\Events\RemindPasswordRequestedEvent': domain_events
+      'App\EconumoBundle\Domain\Events\UserRegisteredEvent': domain_events
+      'App\EconumoBundle\Domain\Events\BudgetEnvelopeCreatedEvent': domain_events
+      'App\EconumoBundle\Domain\Events\CategoryCreatedEvent': domain_events
+      'App\EconumoBundle\Domain\Events\TagCreatedEvent': domain_events
