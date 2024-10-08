@@ -73,6 +73,7 @@ readonly class BudgetStructureDtoAssembler
                         'type' => BudgetEntityType::category(),
                         'name' => $category->getName(),
                         'icon' => $category->getIcon(),
+                        'ownerId' => $category->getUserId(),
                         'isArchived' => $category->isArchived(),
                         'currenciesSpent' => $elementsAmounts[$subIndex]?->currenciesSpent ?? [],
                         'currenciesSpentBefore' => $elementsAmounts[$subIndex]?->currenciesSpentBefore ?? []
@@ -103,6 +104,7 @@ readonly class BudgetStructureDtoAssembler
                 'type' => $type,
                 'name' => $envelope->getName(),
                 'icon' => $envelope->getIcon(),
+                'ownerId' => null,
                 'currencyId' => $currencyId,
                 'isArchived' => $envelope->isArchived(),
                 'folderId' => $folderId,
@@ -138,6 +140,7 @@ readonly class BudgetStructureDtoAssembler
                         'type' => BudgetEntityType::category(),
                         'name' => $category->getName(),
                         'icon' => $category->getIcon(),
+                        'ownerId' => $category->getUserId(),
                         'isArchived' => $category->isArchived(),
                         'currenciesSpent' => $elementsAmount->currenciesSpent,
                         'currenciesSpentBefore' => $elementsAmount->currenciesSpentBefore
@@ -167,6 +170,7 @@ readonly class BudgetStructureDtoAssembler
                 'type' => $type,
                 'name' => $tag->getName(),
                 'icon' => $tag->getIcon(),
+                'ownerId' => $tag->getUserId(),
                 'currencyId' => $currencyId,
                 'isArchived' => $tag->isArchived(),
                 'folderId' => $folderId,
@@ -222,6 +226,7 @@ readonly class BudgetStructureDtoAssembler
                 'type' => $type,
                 'name' => $category->getName(),
                 'icon' => $category->getIcon(),
+                'ownerId' => $category->getUserId(),
                 'currencyId' => $currencyId,
                 'isArchived' => $category->isArchived(),
                 'folderId' => $folderId,
@@ -267,11 +272,15 @@ readonly class BudgetStructureDtoAssembler
                 $spent += $subElementSpent;
                 $spentBefore += $subElementSpentBefore;
                 if (!$subElement['isArchived'] || $subElementSpent != 0) {
+                    if ($element['type']->isTag() && $subElementSpent == 0) {
+                        continue;
+                    }
                     $children[] = new BudgetStructureChildElementDto(
                         $subElement['id'],
                         $subElement['type'],
                         $subElement['name'],
                         $subElement['icon'],
+                        $subElement['ownerId'],
                         $subElement['isArchived'],
                         $subElementSpent,
                         $subElement['currenciesSpent']
@@ -284,12 +293,13 @@ readonly class BudgetStructureDtoAssembler
                 $element['type'],
                 $element['name'],
                 $element['icon'],
+                $element['ownerId'],
                 $element['currencyId'],
                 $element['isArchived'],
                 $element['folderId'],
                 $element['position'],
                 round($element['budgeted'], 2),
-                round($available, 2),
+                round($available - $spent, 2),
                 round($spent, 2),
                 $element['currenciesSpent'],
                 $children,

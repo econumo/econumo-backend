@@ -17,7 +17,7 @@ readonly class BudgetMetaDto
         public BudgetName $budgetName,
         public DateTimeInterface $startedAt,
         public ?Id $currencyId, // todo fix
-        /** @var BudgetAccess[] */
+        /** @var BudgetUserAccessDto[] */
         public array $sharedAccess
     ) {
     }

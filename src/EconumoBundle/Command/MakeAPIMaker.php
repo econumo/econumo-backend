@@ -94,7 +94,7 @@ HELP);
         $data = [
             '_CG_URL_' => $url,
             '_CG_METHOD_' => $httpMethod,
-            '_CG_APPROOT_' => 'App',
+            '_CG_APPROOT_' => 'App\\EconumoBundle',
         ];
         foreach (
             [

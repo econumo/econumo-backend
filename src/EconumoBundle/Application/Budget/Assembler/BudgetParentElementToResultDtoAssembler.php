@@ -5,16 +5,13 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Application\Budget\Assembler;
 
-use App\EconumoBundle\Application\Budget\Assembler\BudgetCurrencyAmountToResultDtoAssembler;
 use App\EconumoBundle\Application\Budget\Dto\BudgetStructureParentElementResultDto;
-use App\EconumoBundle\Application\Budget\Assembler\BudgetChildElementToResultDtoAssembler;
 use App\EconumoBundle\Domain\Service\Budget\Dto\BudgetStructureParentElementDto;
 
 readonly class BudgetParentElementToResultDtoAssembler
 {
     public function __construct(
         private BudgetChildElementToResultDtoAssembler $budgetChildElementToResultDtoAssembler,
-        private BudgetCurrencyAmountToResultDtoAssembler $budgetCurrencyAmountToResultDtoAssembler
     ) {
     }
 
@@ -32,11 +29,7 @@ readonly class BudgetParentElementToResultDtoAssembler
         $result->budgeted = $dto->budgeted;
         $result->available = $dto->available;
         $result->spent = $dto->spent;
-
-//        $result->currenciesSpent = [];
-//        foreach ($dto->currenciesSpent as $currencySpent) {
-//            $result->currenciesSpent[] = $this->budgetCurrencyAmountToResultDtoAssembler->assemble($currencySpent);
-//        }
+        $result->ownerUserId = $dto->ownerId?->getValue();
 
         $result->children = [];
         foreach ($dto->children as $child) {

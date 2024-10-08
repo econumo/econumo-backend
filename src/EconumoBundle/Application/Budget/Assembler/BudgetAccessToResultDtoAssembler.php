@@ -7,21 +7,20 @@ namespace App\EconumoBundle\Application\Budget\Assembler;
 
 
 use App\EconumoBundle\Application\Budget\Dto\BudgetSharedAccessResultDto;
-use App\EconumoBundle\Application\User\Assembler\UserToDtoResultAssembler;
-use App\EconumoBundle\Domain\Entity\BudgetAccess;
+use App\EconumoBundle\Application\User\Dto\UserResultDto;
+use App\EconumoBundle\Domain\Service\Budget\Dto\BudgetUserAccessDto;
 
 readonly class BudgetAccessToResultDtoAssembler
 {
-    public function __construct(private UserToDtoResultAssembler $userToDtoResultAssembler)
-    {
-    }
-
-    public function assemble(BudgetAccess $budgetAccess): BudgetSharedAccessResultDto
+    public function assemble(BudgetUserAccessDto $budgetUserAccess): BudgetSharedAccessResultDto
     {
         $result = new BudgetSharedAccessResultDto();
-        $result->user = $this->userToDtoResultAssembler->assemble($budgetAccess->getUser());
-        $result->role = $budgetAccess->getRole()->getAlias();
-        $result->isAccepted = $budgetAccess->isAccepted() ? 1 : 0;
+        $result->user = new UserResultDto();
+        $result->user->id = $budgetUserAccess->id->getValue();
+        $result->user->name = $budgetUserAccess->name->getValue();
+        $result->user->avatar = $budgetUserAccess->avatar;
+        $result->role = $budgetUserAccess->role->getAlias();
+        $result->isAccepted = $budgetUserAccess->isAccepted ? 1 : 0;
 
 
         return $result;

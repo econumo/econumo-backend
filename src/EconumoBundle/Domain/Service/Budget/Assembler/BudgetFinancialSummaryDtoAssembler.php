@@ -23,24 +23,39 @@ readonly class BudgetFinancialSummaryDtoAssembler
     }
 
     /**
+     * @param Id $budgetCurrencyId
      * @param DateTimeInterface $periodStart
      * @param DateTimeInterface $periodEnd
-     * @param Id[] $accountsIds
      * @param Id[] $currenciesIds
+     * @param Id[] $accountsIds
      * @return BudgetFinancialSummaryDto
      */
     public function assemble(
+        Id $budgetCurrencyId,
         DateTimeInterface $periodStart,
         DateTimeInterface $periodEnd,
         array $currenciesIds,
         array $accountsIds,
     ): BudgetFinancialSummaryDto {
-        $currencyBalances = $this->getCurrencyBalances(
+        $currencyBalancesTmp = $this->getCurrencyBalances(
             $periodStart,
             $periodEnd,
             $accountsIds,
             $currenciesIds
         );
+        $currencyBalances = [];
+        foreach ($currencyBalancesTmp as $item) {
+            if ($item->currencyId->isEqual($budgetCurrencyId)) {
+                $currencyBalances[] = $item;
+                break;
+            }
+        }
+        foreach ($currencyBalancesTmp as $item) {
+            if (!$item->currencyId->isEqual($budgetCurrencyId)) {
+                $currencyBalances[] = $item;
+            }
+        }
+
         $averageCurrencyRates = $this->getAverageCurrencyRates(
             $periodStart,
             $periodEnd,

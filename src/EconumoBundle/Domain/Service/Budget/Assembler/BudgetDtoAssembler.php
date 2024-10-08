@@ -36,6 +36,7 @@ readonly class BudgetDtoAssembler
         $budgetMeta = $this->budgetMetaDtoAssembler->assemble($budget);
         $budgetFilters = $this->budgetFiltersDtoAssembler->assemble($budget, $userId, $periodStart, $periodEnd);
         $budgetFinancialSummary = $this->budgetFinancialSummaryDtoAssembler->assemble(
+            $budget->getCurrencyId(),
             $budgetFilters->periodStart,
             $budgetFilters->periodEnd,
             $budgetFilters->currenciesIds,
