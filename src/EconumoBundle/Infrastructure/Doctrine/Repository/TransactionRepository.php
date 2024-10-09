@@ -6,11 +6,15 @@ namespace App\EconumoBundle\Infrastructure\Doctrine\Repository;
 
 use App\EconumoBundle\Domain\Entity\Account;
 use App\EconumoBundle\Domain\Entity\Category;
+use App\EconumoBundle\Domain\Entity\Tag;
 use App\EconumoBundle\Domain\Entity\Transaction;
 use App\EconumoBundle\Domain\Entity\User;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoBundle\Domain\Entity\ValueObject\TransactionType;
+use App\EconumoBundle\Domain\Exception\DomainException;
 use App\EconumoBundle\Domain\Exception\NotFoundException;
 use App\EconumoBundle\Domain\Repository\TransactionRepositoryInterface;
+use App\EconumoBundle\Infrastructure\Doctrine\Repository\Traits\GetEntityReferenceTrait;
 use DateTimeInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\Criteria;
@@ -31,6 +35,8 @@ use RuntimeException;
  */
 class TransactionRepository extends ServiceEntityRepository implements TransactionRepositoryInterface
 {
+    use GetEntityReferenceTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Transaction::class);
@@ -69,7 +75,7 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
             }
 
             $this->getEntityManager()->flush();
-        } catch (ORMException | ORMInvalidArgumentException $e) {
+        } catch (ORMException|ORMInvalidArgumentException $e) {
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
     }
@@ -95,10 +101,11 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
         array $excludeAccounts = [],
         DateTimeInterface $periodStart = null,
         DateTimeInterface $periodEnd = null,
-    ): array
-    {
+    ): array {
         $sharedAccountsQuery = $this->getEntityManager()
-            ->createQuery('SELECT IDENTITY(aa.account) as accountId FROM App\EconumoBundle\Domain\Entity\AccountAccess aa WHERE aa.user = :user')
+            ->createQuery(
+                'SELECT IDENTITY(aa.account) as accountId FROM App\EconumoBundle\Domain\Entity\AccountAccess aa WHERE aa.user = :user'
+            )
             ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId));
         $sharedIds = array_column($sharedAccountsQuery->getScalarResult(), 'accountId');
 
@@ -106,7 +113,10 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
             ->createQuery('SELECT a.id FROM App\EconumoBundle\Domain\Entity\Account a WHERE a.user = :user')
             ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId));
         $userAccountIds = array_column($accountsQuery->getScalarResult(), 'id');
-        $accounts = array_map(fn(string $id): ?Account => $this->getEntityManager()->getReference(Account::class, new Id($id)), array_unique([...$sharedIds, ...$userAccountIds]));
+        $accounts = array_map(
+            fn(string $id): ?Account => $this->getEntityManager()->getReference(Account::class, new Id($id)),
+            array_unique([...$sharedIds, ...$userAccountIds])
+        );
         $filteredAccounts = [];
         foreach ($accounts as $account) {
             $found = false;
@@ -154,7 +164,9 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
     public function findChanges(Id $userId, DateTimeInterface $lastUpdate): array
     {
         $sharedAccountsQuery = $this->getEntityManager()
-            ->createQuery('SELECT IDENTITY(aa.account) as accountId FROM App\EconumoBundle\Domain\Entity\AccountAccess aa WHERE aa.user = :user')
+            ->createQuery(
+                'SELECT IDENTITY(aa.account) as accountId FROM App\EconumoBundle\Domain\Entity\AccountAccess aa WHERE aa.user = :user'
+            )
             ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId));
         $sharedIds = array_column($sharedAccountsQuery->getScalarResult(), 'accountId');
 
@@ -162,7 +174,10 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
             ->createQuery('SELECT a.id FROM App\EconumoBundle\Domain\Entity\Account a WHERE a.user = :user')
             ->setParameter('user', $this->getEntityManager()->getReference(User::class, $userId));
         $userAccountIds = array_column($accountsQuery->getScalarResult(), 'id');
-        $accounts = array_map(fn(string $id): ?Account => $this->getEntityManager()->getReference(Account::class, new Id($id)), array_unique([...$sharedIds, ...$userAccountIds]));
+        $accounts = array_map(
+            fn(string $id): ?Account => $this->getEntityManager()->getReference(Account::class, new Id($id)),
+            array_unique([...$sharedIds, ...$userAccountIds])
+        );
 
         $query = $this->createQueryBuilder('t')
             ->where('t.account IN(:accounts) OR t.accountRecipient IN(:accounts)')
@@ -200,7 +215,7 @@ SQL;
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
 
         try {
-            $result = (float) $query->getSingleScalarResult();
+            $result = (float)$query->getSingleScalarResult();
         } catch (NoResultException $e) {
             $result = 0.0;
         }
@@ -221,7 +236,7 @@ SQL;
         $accountsString = implode("', '", array_map(fn(Id $id) => $id->getValue(), $accountsIds));
         $startDateString = $startDate->format('Y-m-d H:i:s');
         $endDateString = $endDate->format('Y-m-d H:i:s');
-        $sql =<<<SQL
+        $sql = <<<SQL
 SELECT sum(t.amount) as amount, t.category_id, a.currency_id FROM transactions t 
 LEFT JOIN accounts a ON t.account_id = a.id AND a.id IN ('{$accountsString}')
 WHERE t.category_id IN ('{$categoriesString}') AND t.spent_at >= '{$startDateString}' AND t.spent_at < '{$endDateString}' AND t.tag_id IS NULL
@@ -249,7 +264,7 @@ SQL;
         $accountsString = implode("', '", array_map(fn(Id $id) => $id->getValue(), $accountsIds));
         $startDateString = $startDate->format('Y-m-d H:i:s');
         $endDateString = $endDate->format('Y-m-d H:i:s');
-        $sql =<<<SQL
+        $sql = <<<SQL
 SELECT sum(t.amount) as amount, t.tag_id, a.currency_id FROM transactions t 
 LEFT JOIN accounts a ON t.account_id = a.id AND a.id IN ('{$accountsString}')
 WHERE t.tag_id IN ('{$tagsString}') AND t.spent_at >= '{$startDateString}' AND t.spent_at < '{$endDateString}'
@@ -277,7 +292,7 @@ SQL;
         $accountsString = implode("', '", array_map(fn(Id $id) => $id->getValue(), $accountsIds));
         $startDateString = $startDate->format('Y-m-d H:i:s');
         $endDateString = $endDate->format('Y-m-d H:i:s');
-        $sql =<<<SQL
+        $sql = <<<SQL
 SELECT sum(t.amount) as amount, t.category_id, t.tag_id, a.currency_id FROM transactions t 
 LEFT JOIN accounts a ON t.account_id = a.id AND a.id IN ('{$accountsString}')
 WHERE t.category_id IN ('{$categoriesString}') AND t.spent_at >= '{$startDateString}' AND t.spent_at < '{$endDateString}'
@@ -289,6 +304,91 @@ SQL;
         $rsm->addScalarResult('currency_id', 'currency_id');
         $rsm->addScalarResult('amount', 'amount', 'float');
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
+        return $query->getResult();
+    }
+
+    public function getByCategoriesIdsForAccountsIds(
+        array $categoriesIds,
+        DateTimeInterface $periodStart,
+        DateTimeInterface $periodEnd,
+        array $accountIds
+    ): array {
+        if (count($categoriesIds) === 0 || count($accountIds) === 0) {
+            throw new DomainException('Categories and accounts are required.');
+        }
+
+        $categories = [];
+        foreach ($categoriesIds as $categoryId) {
+            $categories[] = $this->getEntityReference(Category::class, $categoryId);
+        }
+        $accounts = [];
+        foreach ($accountIds as $accountId) {
+            $accounts[] = $this->getEntityReference(Account::class, $accountId);
+        }
+
+        $query = $this->createQueryBuilder('t')
+            ->select('t')
+            ->where('t.spentAt >= :periodStart')
+            ->andWhere('t.spentAt < :periodEnd')
+            ->andWhere('t.account IN (:accounts)')
+            ->andWhere('t.category IN (:categories)')
+            ->andWhere('t.type = :type')
+            ->andWhere('t.tag IS NULL')
+            ->orderBy('t.spentAt', Criteria::DESC)
+            ->setParameter('periodStart', $periodStart)
+            ->setParameter('periodEnd', $periodEnd)
+            ->setParameter('accounts', $accounts)
+            ->setParameter('categories', $categories)
+            ->setParameter('type', TransactionType::createFromAlias(TransactionType::EXPENSE_ALIAS))
+            ->getQuery();
+
+        return $query->getResult();
+    }
+
+    public function getByTagsIdsForAccountsIds(
+        array $tagIds,
+        DateTimeInterface $periodStart,
+        DateTimeInterface $periodEnd,
+        array $accountIds,
+        array $categoriesIds
+    ): array {
+        if (count($tagIds) === 0 || count($accountIds) === 0) {
+            throw new DomainException('Tags and accounts are required.');
+        }
+
+        $tags = [];
+        foreach ($tagIds as $tagId) {
+            $tags[] = $this->getEntityReference(Tag::class, $tagId);
+        }
+        $accounts = [];
+        foreach ($accountIds as $accountId) {
+            $accounts[] = $this->getEntityReference(Account::class, $accountId);
+        }
+        $categories = [];
+        foreach ($categoriesIds as $categoryId) {
+            $categories[] = $this->getEntityReference(Category::class, $categoryId);
+        }
+
+        $builder = $this->createQueryBuilder('t')
+            ->select('t')
+            ->where('t.spentAt >= :periodStart')
+            ->andWhere('t.spentAt < :periodEnd')
+            ->andWhere('t.account IN (:accounts)')
+            ->andWhere('t.tag IN (:tags)')
+            ->andWhere('t.type = :type')
+            ->orderBy('t.spentAt', Criteria::DESC)
+            ->setParameter('periodStart', $periodStart)
+            ->setParameter('periodEnd', $periodEnd)
+            ->setParameter('accounts', $accounts)
+            ->setParameter('tags', $tags)
+            ->setParameter('type', TransactionType::createFromAlias(TransactionType::EXPENSE_ALIAS));
+        if (count($categories) > 0) {
+            $builder
+                ->andWhere('t.category IN (:categories)')
+                ->setParameter('categories', $categories);
+        }
+        $query = $builder->getQuery();
+
         return $query->getResult();
     }
 }

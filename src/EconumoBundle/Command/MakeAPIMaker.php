@@ -38,6 +38,13 @@ class MakeAPIMaker extends AbstractMaker
                 realpath(__DIR__ . '/../../'),
             )
             ->addOption(
+                'bundle',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Base path to generated files',
+                'EconumoBundle',
+            )
+            ->addOption(
                 'dry-run',
                 null,
                 InputOption::VALUE_NONE,
@@ -65,9 +72,11 @@ HELP);
     {
         $url = strtolower(trim((string) $input->getArgument('url')));
         $httpMethod = strtoupper(trim((string) $input->getArgument('method')));
+        $bundle = (string) $input->getOption('bundle');
         $basePath = (string) $input->getOption('base-path');
         $dryRun = (bool) $input->getOption('dry-run');
         $delete = (bool) $input->getOption('delete');
+        $bundlePath = $basePath . '/' . $bundle;
 
         if (!in_array($httpMethod, ['GET', 'POST'], true)) {
             throw new RuntimeException('Wrong HTTP method');
@@ -94,7 +103,8 @@ HELP);
         $data = [
             '_CG_URL_' => $url,
             '_CG_METHOD_' => $httpMethod,
-            '_CG_APPROOT_' => 'App\\EconumoBundle',
+            '_CG_APPROOT_' => 'App\\' . $bundle,
+            '_CG_TESTROOT_' => 'App',
         ];
         foreach (
             [
@@ -112,8 +122,8 @@ HELP);
 
         $templates = [
             sprintf('Controller%s.php', $httpMethod) => sprintf(
-                '%s/src/UI/Controller/Api/%s/%s/%s%s%sController.php',
-                $basePath,
+                '%s/UI/Controller/Api/%s/%s/%s%s%sController.php',
+                $bundlePath,
                 $module,
                 $subject,
                 $action,
@@ -121,8 +131,8 @@ HELP);
                 $version,
             ),
             'Form.php' => sprintf(
-                '%s/src/UI/Controller/Api/%s/%s/Validation/%s%s%sForm.php',
-                $basePath,
+                '%s/UI/Controller/Api/%s/%s/Validation/%s%s%sForm.php',
+                $bundlePath,
                 $module,
                 $subject,
                 $action,
@@ -146,30 +156,30 @@ HELP);
                 $subject,
             ),
             'RequestDto.php' => sprintf(
-                '%s/src/Application/%s/Dto/%s%s%sRequestDto.php',
-                $basePath,
+                '%s/Application/%s/Dto/%s%s%sRequestDto.php',
+                $bundlePath,
                 $module,
                 $action,
                 $subject,
                 $version,
             ),
             'ResultDto.php' => sprintf(
-                '%s/src/Application/%s/Dto/%s%s%sResultDto.php',
-                $basePath,
+                '%s/Application/%s/Dto/%s%s%sResultDto.php',
+                $bundlePath,
                 $module,
                 $action,
                 $subject,
                 $version,
             ),
             'ResultAssembler.php' => sprintf(
-                '%s/src/Application/%s/Assembler/%s%s%sResultAssembler.php',
-                $basePath,
+                '%s/Application/%s/Assembler/%s%s%sResultAssembler.php',
+                $bundlePath,
                 $module,
                 $action,
                 $subject,
                 $version,
             ),
-            'Service.php' => sprintf('%s/src/Application/%s/%sService.php', $basePath, $module, $subject),
+            'Service.php' => sprintf('%s/Application/%s/%sService.php', $bundlePath, $module, $subject),
         ];
 
         $filesystem = new Filesystem();
@@ -212,7 +222,7 @@ HELP);
 
     private function getContent(string $file, array $data): string
     {
-        $path = __DIR__ . '/../../config/code-templates/Api/' . $file;
+        $path = __DIR__ . '/../../../config/code-templates/Api/' . $file;
         $content = file_get_contents($path);
         return str_replace(array_keys($data), array_values($data), $content);
     }

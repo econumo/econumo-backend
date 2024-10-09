@@ -27,7 +27,7 @@ class GetTransactionListV1ResultAssembler
         $result = new GetTransactionListV1ResultDto();
         $result->items = [];
         foreach ($transactions as $transaction) {
-            $result->items[] = $this->transactionToDtoV1ResultAssembler->assemble($userId, $transaction);
+            $result->items[] = $this->transactionToDtoV1ResultAssembler->assemble($transaction);
         }
 
         return $result;

@@ -24,7 +24,7 @@ class DeleteTransactionV1ResultAssembler
         Transaction $transaction
     ): DeleteTransactionV1ResultDto {
         $result = new DeleteTransactionV1ResultDto();
-        $result->item = $this->transactionToDtoV1ResultAssembler->assemble($userId, $transaction);
+        $result->item = $this->transactionToDtoV1ResultAssembler->assemble($transaction);
         $accounts = $this->accountRepository->getAvailableForUserId($userId);
         foreach (array_reverse($accounts) as $account) {
             $result->accounts[] = $this->accountToDtoV1ResultAssembler->assemble($userId, $account);

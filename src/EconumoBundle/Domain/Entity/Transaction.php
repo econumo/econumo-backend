@@ -59,6 +59,11 @@ class Transaction
         return $this->id;
     }
 
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
     public function getUserId(): Id
     {
         return $this->user->getId();
@@ -79,6 +84,11 @@ class Transaction
         return $this->account->getCurrencyCode();
     }
 
+    public function getAccountCurrencyId(): Id
+    {
+        return $this->account->getCurrencyId();
+    }
+
     public function getAccountRecipientId(): ?Id
     {
         return $this->accountRecipient === null ? null : $this->accountRecipient->getId();
@@ -94,6 +104,11 @@ class Transaction
         return $this->amountRecipient === null ? null : (float)$this->amountRecipient;
     }
 
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
     public function getCategoryId(): ?Id
     {
         return $this->category === null ? null : $this->category->getId();
@@ -104,9 +119,19 @@ class Transaction
         return $this->description;
     }
 
+    public function getPayee(): ?Payee
+    {
+        return $this->payee;
+    }
+
     public function getPayeeId(): ?Id
     {
         return $this->payee === null ? null : $this->payee->getId();
+    }
+
+    public function getTag(): ?Tag
+    {
+        return $this->tag;
     }
 
     public function getTagId(): ?Id

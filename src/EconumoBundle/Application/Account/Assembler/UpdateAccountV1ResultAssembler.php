@@ -27,7 +27,7 @@ class UpdateAccountV1ResultAssembler
         $result = new UpdateAccountV1ResultDto();
         $result->item = $this->accountToDtoV1ResultAssembler->assemble($userId, $account);
         if ($transaction !== null) {
-            $result->transaction = $this->transactionToDtoV1ResultAssembler->assemble($userId, $transaction);
+            $result->transaction = $this->transactionToDtoV1ResultAssembler->assemble($transaction);
         }
 
         return $result;

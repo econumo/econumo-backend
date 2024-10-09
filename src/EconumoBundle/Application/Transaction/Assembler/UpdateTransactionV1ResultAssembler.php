@@ -24,7 +24,7 @@ class UpdateTransactionV1ResultAssembler
         Transaction $transaction
     ): UpdateTransactionV1ResultDto {
         $result = new UpdateTransactionV1ResultDto();
-        $result->item = $this->transactionToDtoV1ResultAssembler->assemble($userId, $transaction);
+        $result->item = $this->transactionToDtoV1ResultAssembler->assemble($transaction);
         $accounts = $this->accountRepository->getAvailableForUserId($userId);
         foreach (array_reverse($accounts) as $account) {
             $result->accounts[] = $this->accountToDtoV1ResultAssembler->assemble($userId, $account);

@@ -93,7 +93,7 @@ class GetChangesListV1ResultAssembler
 
         $result->transactions = [];
         foreach ($transactions as $item) {
-            $result->transactions[] = $this->transactionToDtoResultAssembler->assemble($userId, $item);
+            $result->transactions[] = $this->transactionToDtoResultAssembler->assemble($item);
         }
 
         $result->connections = [];

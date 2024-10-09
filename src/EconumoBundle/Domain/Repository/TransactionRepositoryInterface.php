@@ -87,4 +87,34 @@ interface TransactionRepositoryInterface
         DateTimeInterface $startDate,
         DateTimeInterface $endDate
     ): array;
+
+    /**
+     * @param array $categoriesIds
+     * @param DateTimeInterface $periodStart
+     * @param DateTimeInterface $periodEnd
+     * @param Id[] $accountIds
+     * @return Transaction[]
+     */
+    public function getByCategoriesIdsForAccountsIds(
+        array $categoriesIds,
+        DateTimeInterface $periodStart,
+        DateTimeInterface $periodEnd,
+        array $accountIds
+    ): array;
+
+    /**
+     * @param array $tagIds
+     * @param DateTimeInterface $periodStart
+     * @param DateTimeInterface $periodEnd
+     * @param Id[] $accountIds
+     * @param array $categoriesIds
+     * @return Transaction[]
+     */
+    public function getByTagsIdsForAccountsIds(
+        array $tagIds,
+        DateTimeInterface $periodStart,
+        DateTimeInterface $periodEnd,
+        array $accountIds,
+        array $categoriesIds
+    ): array;
 }

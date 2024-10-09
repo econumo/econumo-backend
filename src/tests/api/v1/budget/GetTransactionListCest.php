@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace _CG_TESTROOT_\Tests\api\_CG_VERSION_LOWER_\_CG_MODULE_LOWER_;
+namespace App\Tests\api\v1\budget;
 
 use Codeception\Exception\ModuleException;
-use _CG_TESTROOT_\Tests\ApiTester;
+use App\Tests\ApiTester;
 use Codeception\Util\HttpCode;
 
-class _CG_ACTION__CG_SUBJECT_Cest
+class GetTransactionListCest
 {
-    private string $url = '_CG_URL_';
+    private string $url = '/api/v1/budget/get-transaction-list';
 
     /**
      * @throws ModuleException
@@ -18,7 +18,7 @@ class _CG_ACTION__CG_SUBJECT_Cest
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->send_CG_METHOD_($this->url, ['id' => 'test']);
+        $I->sendGET($this->url, ['id' => 'test']);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
 
@@ -28,7 +28,7 @@ class _CG_ACTION__CG_SUBJECT_Cest
     public function requestShouldReturn400ResponseCode(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->send_CG_METHOD_($this->url, ['unexpected_param' => 'test']);
+        $I->sendGET($this->url, ['unexpected_param' => 'test']);
         $I->seeResponseCodeIs(HttpCode::BAD_REQUEST);
     }
 
@@ -37,7 +37,7 @@ class _CG_ACTION__CG_SUBJECT_Cest
      */
     public function requestShouldReturn401ResponseCode(ApiTester $I): void
     {
-        $I->send_CG_METHOD_($this->url, ['id' => 'test']);
+        $I->sendGET($this->url, ['id' => 'test']);
         $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
     }
 
@@ -47,7 +47,7 @@ class _CG_ACTION__CG_SUBJECT_Cest
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->send_CG_METHOD_($this->url, ['id' => 'test']);
+        $I->sendGET($this->url, ['id' => 'test']);
         $I->seeResponseMatchesJsonType([
             'data' => [
                 'result' => 'string',
