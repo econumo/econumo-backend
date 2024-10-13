@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Application\Budget\Dto;
 
-use App\EconumoBundle\Application\Budget\Dto\BudgetSharedAccessResultDto;
+use App\EconumoBundle\Application\Budget\Dto\BudgetAccessResultDto;
 use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     required={"id", "ownerUserId", "name", "startedAt", "currencyId", "sharedAccess"}
+ *     required={"id", "ownerUserId", "name", "startedAt", "currencyId", "access"}
  * )
  */
 class BudgetMetaResultDto
@@ -45,8 +45,8 @@ class BudgetMetaResultDto
 
     /**
      * Account access
-     * @var BudgetSharedAccessResultDto[]
+     * @var BudgetAccessResultDto[]
      * @OA\Property()
      */
-    public array $sharedAccess = [];
+    public array $access = [];
 }

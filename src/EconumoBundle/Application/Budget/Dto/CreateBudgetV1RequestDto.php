@@ -32,10 +32,10 @@ class CreateBudgetV1RequestDto
     /**
      * @OA\Property(example="2022-08-01")
      */
-    public string $startDate = '';
+    public ?string $startDate = '';
 
     /**
      * @OA\Property(example="9b29b760-ddca-46fb-a754-8743fc2c49a7")
      */
-    public string $currencyId = '';
+    public ?string $currencyId = '';
 }

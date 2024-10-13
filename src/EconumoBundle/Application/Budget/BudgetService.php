@@ -45,8 +45,8 @@ readonly class BudgetService
     ): CreateBudgetV1ResultDto {
         $budgetId = new Id($dto->id);
         $name = new BudgetName($dto->name);
-        $startDate = $dto->startDate === '' ? null : DateTimeImmutable::createFromFormat('Y-m-d', $dto->startDate);
-        $currencyId = $dto->currencyId === '' ? null : new Id($dto->currencyId);
+        $startDate = empty($dto->startDate) ? null : DateTimeImmutable::createFromFormat('Y-m-d', $dto->startDate);
+        $currencyId = empty($dto->currencyId) ? null : new Id($dto->currencyId);
         $excludedAccountsIds = array_map(
             fn(string $id) => new Id($id),
             $dto->excludedAccounts
