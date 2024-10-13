@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity repository-class="App\EconumoOneBundle\Infrastructure\Doctrine\Repository\BudgetEntityAmountRepository" name="App\EconumoOneBundle\Domain\Entity\BudgetEntityAmount"
+            table="budgets_entities_amounts">
+        <id name="budget" association-key="true" />
+        <id name="entityId" type="uuid" column="entity_id"/>
+        <id name="entityType" type="budget_entity_type" column="entity_type" />
+        <id name="period" type="datetime_immutable" column="period"/>
+
+        <field name="amount" type="decimal" column="amount" precision="19" scale="2" nullable="false"/>
+        <field name="notes" type="text" column="notes" nullable="false"/>
+        <field name="createdAt" type="datetime_immutable" column="created_at" nullable="false"/>
+        <field name="updatedAt" type="datetime" column="updated_at" nullable="false"/>
+
+        <many-to-one field="budget" target-entity="App\EconumoOneBundle\Domain\Entity\Budget">
+            <join-column name="budget_id" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
+        </many-to-one>
+
+        <indexes>
+            <index columns="budget_id,period" name="budget_period_idx"/>
+        </indexes>
+    </entity>
+</doctrine-mapping>

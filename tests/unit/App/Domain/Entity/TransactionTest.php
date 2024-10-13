@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\unit\App\EconumoBundle\Domain\Entity;
+namespace App\Tests\unit\App\EconumoOneBundle\Domain\Entity;
 
 use App\Tests\UnitTester;
 use Codeception\Test\Unit;

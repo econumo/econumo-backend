@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\functional\api\v1\user;
 
-use App\EconumoBundle\Domain\Events\RemindPasswordRequestedEvent;
+use App\EconumoOneBundle\Domain\Events\RemindPasswordRequestedEvent;
 use App\Tests\FunctionalTester;
 use Codeception\Util\HttpCode;
 use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;

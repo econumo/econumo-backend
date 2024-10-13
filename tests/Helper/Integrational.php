@@ -6,7 +6,7 @@ namespace App\Tests\Helper;
 // all public methods declared in helper class will be available in $I
 
 
-use App\EconumoBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use Ramsey\Uuid\Uuid;
 
 class Integrational extends \Codeception\Module
@@ -14,7 +14,7 @@ class Integrational extends \Codeception\Module
     use ContainerTrait;
 
     /**
-     * @return \App\EconumoBundle\Domain\Entity\ValueObject\Id
+     * @return \App\EconumoOneBundle\Domain\Entity\ValueObject\Id
      * @throws \Exception
      */
     public function generateId(): Id
