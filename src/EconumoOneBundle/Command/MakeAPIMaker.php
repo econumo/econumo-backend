@@ -140,7 +140,7 @@ HELP);
                 $version,
             ),
             'ApiCest.php' => sprintf(
-                '%s/tests/api/%s/%s/%s%sCest.php',
+                '%s/../tests/api/%s/%s/%s%sCest.php',
                 $basePath,
                 strtolower($version),
                 strtolower($module),
@@ -148,7 +148,7 @@ HELP);
                 $subject,
             ),
             'FunctionalCest.php' => sprintf(
-                '%s/tests/functional/api/%s/%s/%s%sCest.php',
+                '%s/../tests/functional/api/%s/%s/%s%sCest.php',
                 $basePath,
                 strtolower($version),
                 strtolower($module),

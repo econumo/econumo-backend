@@ -9,6 +9,7 @@ use App\EconumoOneBundle\Domain\Entity\BudgetFolder;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoOneBundle\Domain\Repository\BudgetFolderRepositoryInterface;
 use App\EconumoOneBundle\Infrastructure\Doctrine\Repository\Traits\DeleteTrait;
+use App\EconumoOneBundle\Infrastructure\Doctrine\Repository\Traits\GetEntityReferenceTrait;
 use App\EconumoOneBundle\Infrastructure\Doctrine\Repository\Traits\NextIdentityTrait;
 use App\EconumoOneBundle\Infrastructure\Doctrine\Repository\Traits\SaveTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -25,6 +26,7 @@ class BudgetFolderRepository extends ServiceEntityRepository implements BudgetFo
     use NextIdentityTrait;
     use SaveTrait;
     use DeleteTrait;
+    use GetEntityReferenceTrait;
 
     public function __construct(ManagerRegistry $registry)
     {
@@ -38,6 +40,8 @@ class BudgetFolderRepository extends ServiceEntityRepository implements BudgetFo
 
     public function getByBudgetId(Id $budgetId): array
     {
-        return $this->findBy(['budget' => $this->getEntityManager()->getReference(Budget::class, $budgetId)]);
+        return $this->findBy([
+            'budget' => $this->getEntityReference(Budget::class, $budgetId)
+        ], ['position' => 'ASC']);
     }
 }
