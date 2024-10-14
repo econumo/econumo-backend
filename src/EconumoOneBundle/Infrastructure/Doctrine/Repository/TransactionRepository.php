@@ -266,7 +266,7 @@ SQL;
         $endDateString = $endDate->format('Y-m-d H:i:s');
         $sql = <<<SQL
 SELECT sum(t.amount) as amount, t.tag_id, a.currency_id FROM transactions t 
-LEFT JOIN accounts a ON t.account_id = a.id AND a.id IN ('{$accountsString}')
+JOIN accounts a ON t.account_id = a.id AND t.account_id IN ('{$accountsString}')
 WHERE t.tag_id IN ('{$tagsString}') AND t.spent_at >= '{$startDateString}' AND t.spent_at < '{$endDateString}'
 GROUP BY a.currency_id, t.tag_id
 SQL;
@@ -294,7 +294,7 @@ SQL;
         $endDateString = $endDate->format('Y-m-d H:i:s');
         $sql = <<<SQL
 SELECT sum(t.amount) as amount, t.category_id, t.tag_id, a.currency_id FROM transactions t 
-LEFT JOIN accounts a ON t.account_id = a.id AND a.id IN ('{$accountsString}')
+JOIN accounts a ON t.account_id = a.id AND t.account_id IN ('{$accountsString}')
 WHERE t.category_id IN ('{$categoriesString}') AND t.spent_at >= '{$startDateString}' AND t.spent_at < '{$endDateString}'
 GROUP BY t.category_id, t.tag_id, a.currency_id
 SQL;

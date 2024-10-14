@@ -21,7 +21,7 @@ class UpdateBudgetV1RequestDto
     /**
      * @OA\Property(example="My budget")
      */
-    public string $name;
+    public ?string $name = null;
 
     /**
      * @var array

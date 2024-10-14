@@ -13,6 +13,7 @@ use App\EconumoOneBundle\Application\Budget\Dto\DeleteBudgetV1RequestDto;
 use App\EconumoOneBundle\Application\Budget\Dto\DeleteBudgetV1ResultDto;
 use App\EconumoOneBundle\Application\Budget\Assembler\DeleteBudgetV1ResultAssembler;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoOneBundle\Domain\Repository\BudgetRepositoryInterface;
 use App\EconumoOneBundle\Domain\Service\Budget\BudgetAccessServiceInterface;
 use App\EconumoOneBundle\Domain\Service\Budget\BudgetServiceInterface;
 use App\EconumoOneBundle\Application\Budget\Dto\UpdateBudgetV1RequestDto;
@@ -36,6 +37,7 @@ readonly class BudgetService
         private UpdateBudgetV1ResultAssembler $updateBudgetV1ResultAssembler,
         private ResetBudgetV1ResultAssembler $resetBudgetV1ResultAssembler,
         private GetBudgetV1ResultAssembler $getBudgetV1ResultAssembler,
+        private BudgetRepositoryInterface $budgetRepository,
     ) {
     }
 
@@ -80,9 +82,18 @@ readonly class BudgetService
         Id $userId
     ): UpdateBudgetV1ResultDto {
         $budgetId = new Id($dto->id);
-        if (!$this->budgetAccessService->canUpdateBudget($userId, $budgetId)) {
+        $budgetName = new BudgetName($dto->name);
+        if (!$this->budgetAccessService->canReadBudget($userId, $budgetId)) {
             throw new AccessDeniedException();
         }
+
+        $budget = $this->budgetRepository->get($budgetId);
+        if (!$budget->getName()->isEqual($budgetName)) {
+            if (!$this->budgetAccessService->canUpdateBudget($userId, $budgetId)) {
+                throw new AccessDeniedException();
+            }
+        }
+
         $excludedAccountsIds = array_map(
             fn(string $id) => new Id($id),
             $dto->excludedAccounts
@@ -91,7 +102,7 @@ readonly class BudgetService
         $budgetDto = $this->budgetService->updateBudget(
             $userId,
             $budgetId,
-            new BudgetName($dto->name),
+            $budgetName,
             $excludedAccountsIds
         );
         return $this->updateBudgetV1ResultAssembler->assemble($budgetDto);
