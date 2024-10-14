@@ -16,15 +16,11 @@ use App\EconumoOneBundle\Domain\Repository\UserRepositoryInterface;
 use App\EconumoOneBundle\Domain\Service\AntiCorruptionServiceInterface;
 use App\EconumoOneBundle\Domain\Service\Budget\Assembler\BudgetDtoAssembler;
 use App\EconumoOneBundle\Domain\Service\Budget\Assembler\BudgetMetaDtoAssembler;
-use App\EconumoOneBundle\Domain\Service\Budget\BudgetDataService;
-use App\EconumoOneBundle\Domain\Service\Budget\BudgetServiceInterface;
 use App\EconumoOneBundle\Domain\Service\Budget\Dto\BudgetDto;
 use App\EconumoOneBundle\Domain\Service\Budget\Dto\BudgetMetaDto;
 use App\EconumoOneBundle\Domain\Service\Budget\Dto\BudgetDataDto;
-use App\EconumoOneBundle\Domain\Service\Budget\BudgetEntityServiceInterface;
 use App\EconumoOneBundle\Domain\Service\DatetimeServiceInterface;
 use App\EconumoOneBundle\Domain\Service\UserServiceInterface;
-use App\EconumoOneBundle\Domain\Service\Budget\BudgetDeletionService;
 use DateTimeInterface;
 use Throwable;
 
@@ -45,6 +41,7 @@ readonly class BudgetService implements BudgetServiceInterface
         private BudgetDtoAssembler $budgetDtoAssembler,
         private UserRepositoryInterface $userRepository,
         private CurrencyRepositoryInterface $currencyRepository,
+        private BudgetUpdateService $budgetUpdateService
     ) {
     }
 
@@ -102,12 +99,16 @@ readonly class BudgetService implements BudgetServiceInterface
         $this->budgetDeletionService->deleteBudget($budgetId);
     }
 
-    public function updateBudget(Id $userId, Id $budgetId, BudgetName $name): BudgetMetaDto
-    {
-        $budget = $this->budgetRepository->get($budgetId);
-        $budget->updateName($name);
-        $this->budgetRepository->save([$budget]);
-        return $this->budgetMetaDtoAssembler->assemble($budget);
+    /**
+     * @inheritDoc
+     */
+    public function updateBudget(
+        Id $userId,
+        Id $budgetId,
+        BudgetName $name,
+        array $excludedAccountsIds = []
+    ): BudgetMetaDto {
+        return $this->budgetUpdateService->updateBudget($userId, $budgetId, $name, $excludedAccountsIds);
     }
 
     public function excludeAccount(Id $userId, Id $budgetId, Id $accountId): BudgetMetaDto

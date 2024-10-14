@@ -8,7 +8,7 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     required={"id", "name"},
+ *     required={"id", "name", "excludedAccounts"},
  * )
  */
 class UpdateBudgetV1RequestDto
@@ -22,4 +22,10 @@ class UpdateBudgetV1RequestDto
      * @OA\Property(example="My budget")
      */
     public string $name;
+
+    /**
+     * @var array
+     * @OA\Property(type="array", @OA\Items(type="string"))
+     */
+    public array $excludedAccounts = [];
 }

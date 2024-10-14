@@ -43,7 +43,19 @@ interface BudgetServiceInterface
      */
     public function deleteBudget(Id $budgetId): void;
 
-    public function updateBudget(Id $userId, Id $budgetId, BudgetName $name): BudgetMetaDto;
+    /**
+     * @param Id $userId
+     * @param Id $budgetId
+     * @param BudgetName $name
+     * @param Id[] $excludedAccountsIds
+     * @return BudgetMetaDto
+     */
+    public function updateBudget(
+        Id $userId,
+        Id $budgetId,
+        BudgetName $name,
+        array $excludedAccountsIds = []
+    ): BudgetMetaDto;
 
     public function excludeAccount(Id $userId, Id $budgetId, Id $accountId): BudgetMetaDto;
 

@@ -51,7 +51,14 @@ readonly class BudgetService
             fn(string $id) => new Id($id),
             $dto->excludedAccounts
         );
-        $budget = $this->budgetService->createBudget($userId, $budgetId, $name, $startDate, $currencyId, $excludedAccountsIds);
+        $budget = $this->budgetService->createBudget(
+            $userId,
+            $budgetId,
+            $name,
+            $startDate,
+            $currencyId,
+            $excludedAccountsIds
+        );
         return $this->createBudgetV1ResultAssembler->assemble($budget);
     }
 
@@ -76,8 +83,17 @@ readonly class BudgetService
         if (!$this->budgetAccessService->canUpdateBudget($userId, $budgetId)) {
             throw new AccessDeniedException();
         }
+        $excludedAccountsIds = array_map(
+            fn(string $id) => new Id($id),
+            $dto->excludedAccounts
+        );
 
-        $budgetDto = $this->budgetService->updateBudget($userId, $budgetId, new BudgetName($dto->name));
+        $budgetDto = $this->budgetService->updateBudget(
+            $userId,
+            $budgetId,
+            new BudgetName($dto->name),
+            $excludedAccountsIds
+        );
         return $this->updateBudgetV1ResultAssembler->assemble($budgetDto);
     }
 

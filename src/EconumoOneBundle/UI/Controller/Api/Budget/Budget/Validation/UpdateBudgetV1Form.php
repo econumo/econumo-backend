@@ -7,9 +7,11 @@ namespace App\EconumoOneBundle\UI\Controller\Api\Budget\Budget\Validation;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetName;
 use App\EconumoOneBundle\UI\Service\Validator\ValueObjectValidationFactoryInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\All;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Uuid;
@@ -36,6 +38,18 @@ class UpdateBudgetV1Form extends AbstractType
                     new NotBlank(),
                     new Length(['max' => BudgetName::MAX_LENGTH, 'min' => BudgetName::MIN_LENGTH]),
                     $this->valueObjectValidationFactory->create(BudgetName::class)
+                ],
+            ])
+            ->add('excludedAccounts', CollectionType::class, [
+                'entry_type' => TextType::class,
+                'allow_add' => true,
+                'constraints' => [
+                    new All([
+                        'constraints' => [
+                            new NotBlank(),
+                            new Uuid(),
+                        ],
+                    ]),
                 ],
             ]);
     }
