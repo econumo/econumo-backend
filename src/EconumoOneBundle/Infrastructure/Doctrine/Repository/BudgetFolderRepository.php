@@ -7,6 +7,7 @@ namespace App\EconumoOneBundle\Infrastructure\Doctrine\Repository;
 use App\EconumoOneBundle\Domain\Entity\Budget;
 use App\EconumoOneBundle\Domain\Entity\BudgetFolder;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoOneBundle\Domain\Exception\NotFoundException;
 use App\EconumoOneBundle\Domain\Repository\BudgetFolderRepositoryInterface;
 use App\EconumoOneBundle\Infrastructure\Doctrine\Repository\Traits\DeleteTrait;
 use App\EconumoOneBundle\Infrastructure\Doctrine\Repository\Traits\GetEntityReferenceTrait;
@@ -43,5 +44,15 @@ class BudgetFolderRepository extends ServiceEntityRepository implements BudgetFo
         return $this->findBy([
             'budget' => $this->getEntityReference(Budget::class, $budgetId)
         ], ['position' => 'ASC']);
+    }
+
+    public function get(Id $id): BudgetFolder
+    {
+        $item = $this->find($id);
+        if (!$item instanceof BudgetFolder) {
+            throw new NotFoundException(sprintf('BudgetFolder with ID %s not found', $id));
+        }
+
+        return $item;
     }
 }

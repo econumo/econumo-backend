@@ -30,9 +30,31 @@ readonly class FolderService implements FolderServiceInterface
         $toSave[] = $newFolder;
 
         $folders = $this->budgetFolderRepository->getByBudgetId($budgetId);
-        $position = 1;
+        $position = 0;
+        foreach ($folders as $folder) {
+            $position++;
+            if ($folder->getPosition() === $position) {
+                continue;
+            }
+            $folder->updatePosition($position);
+            $toSave[] = $folder;
+        }
+        $this->budgetFolderRepository->save($toSave);
+
+        return $this->budgetStructureFolderDtoAssembler->assemble($newFolder);
+    }
+
+    public function delete(Id $folderId): void
+    {
+        $folder = $this->budgetFolderRepository->get($folderId);
+        $this->budgetFolderRepository->delete([$folder]);
+
+        $toSave = [];
+        $folders = $this->budgetFolderRepository->getByBudgetId($folder->getBudget()->getId());
+        $position = 0;
         foreach ($folders as $folder) {
             if ($folder->getPosition() === $position) {
+                $position++;
                 continue;
             }
             $folder->updatePosition($position);
@@ -40,7 +62,5 @@ readonly class FolderService implements FolderServiceInterface
             $position++;
         }
         $this->budgetFolderRepository->save($toSave);
-
-        return $this->budgetStructureFolderDtoAssembler->assemble($newFolder);
     }
 }

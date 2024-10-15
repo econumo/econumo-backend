@@ -13,6 +13,12 @@ interface BudgetFolderRepositoryInterface
     public function getNextIdentity(): Id;
 
     /**
+     * @param Id $id
+     * @return BudgetFolder
+     */
+    public function get(Id $id): BudgetFolder;
+
+    /**
      * @return BudgetFolder[]
      */
     public function getByBudgetId(Id $budgetId): array;

@@ -13,4 +13,6 @@ use App\EconumoOneBundle\Domain\Service\Budget\Dto\BudgetStructureFolderDto;
 interface FolderServiceInterface
 {
     public function create(Id $budgetId, Id $folderId, BudgetFolderName $name): BudgetStructureFolderDto;
+
+    public function delete(Id $folderId): void;
 }
