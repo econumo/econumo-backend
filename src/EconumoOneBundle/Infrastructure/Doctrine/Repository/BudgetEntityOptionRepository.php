@@ -9,6 +9,7 @@ use App\EconumoOneBundle\Domain\Entity\BudgetEntityOption;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoOneBundle\Domain\Repository\BudgetEntityOptionRepositoryInterface;
 use App\EconumoOneBundle\Infrastructure\Doctrine\Repository\Traits\DeleteTrait;
+use App\EconumoOneBundle\Infrastructure\Doctrine\Repository\Traits\GetEntityReferenceTrait;
 use App\EconumoOneBundle\Infrastructure\Doctrine\Repository\Traits\NextIdentityTrait;
 use App\EconumoOneBundle\Infrastructure\Doctrine\Repository\Traits\SaveTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -25,6 +26,7 @@ class BudgetEntityOptionRepository extends ServiceEntityRepository implements Bu
     use NextIdentityTrait;
     use SaveTrait;
     use DeleteTrait;
+    use GetEntityReferenceTrait;
 
     public function __construct(ManagerRegistry $registry)
     {
@@ -34,5 +36,10 @@ class BudgetEntityOptionRepository extends ServiceEntityRepository implements Bu
     public function getByBudgetId(Id $budgetId): array
     {
         return $this->findBy(['budget' => $this->getEntityManager()->getReference(Budget::class, $budgetId)]);
+    }
+
+    public function getReference(Id $id): BudgetEntityOption
+    {
+        return $this->getEntityReference(BudgetEntityOption::class, $id);
     }
 }

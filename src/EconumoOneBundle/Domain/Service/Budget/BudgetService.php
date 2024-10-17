@@ -18,7 +18,6 @@ use App\EconumoOneBundle\Domain\Service\Budget\Assembler\BudgetDtoAssembler;
 use App\EconumoOneBundle\Domain\Service\Budget\Assembler\BudgetMetaDtoAssembler;
 use App\EconumoOneBundle\Domain\Service\Budget\Dto\BudgetDto;
 use App\EconumoOneBundle\Domain\Service\Budget\Dto\BudgetMetaDto;
-use App\EconumoOneBundle\Domain\Service\Budget\Dto\BudgetDataDto;
 use App\EconumoOneBundle\Domain\Service\DatetimeServiceInterface;
 use App\EconumoOneBundle\Domain\Service\UserServiceInterface;
 use DateTimeInterface;
@@ -37,11 +36,11 @@ readonly class BudgetService implements BudgetServiceInterface
         private BudgetDeletionService $budgetDeletionService,
         private AccountRepositoryInterface $accountRepository,
         private BudgetEntityAmountRepositoryInterface $budgetEntityAmountRepository,
-        private BudgetDataService $budgetDataService,
         private BudgetDtoAssembler $budgetDtoAssembler,
         private UserRepositoryInterface $userRepository,
         private CurrencyRepositoryInterface $currencyRepository,
-        private BudgetUpdateService $budgetUpdateService
+        private BudgetUpdateService $budgetUpdateService,
+        private BudgetElementsService $budgetElementsService
     ) {
     }
 
@@ -154,7 +153,7 @@ readonly class BudgetService implements BudgetServiceInterface
         return $this->budgetMetaDtoAssembler->assemble($budget);
     }
 
-    public function getBudget($userId, $budgetId, DateTimeInterface $periodStart): BudgetDto
+    public function getBudget(Id $userId, Id $budgetId, DateTimeInterface $periodStart): BudgetDto
     {
         $budget = $this->budgetRepository->get($budgetId);
         $dto = $this->budgetDtoAssembler->assemble($userId, $budget, $periodStart);
@@ -162,8 +161,8 @@ readonly class BudgetService implements BudgetServiceInterface
         return $dto;
     }
 
-    public function getData(Id $userId, Id $budgetId, DateTimeInterface $period): BudgetDataDto
+    public function moveElements(Id $userId, Id $budgetId, array $affectedElements): void
     {
-        return $this->budgetDataService->getData($userId, $budgetId, $period);
+        $this->budgetElementsService->moveElements($budgetId, $affectedElements);
     }
 }

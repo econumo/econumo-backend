@@ -47,6 +47,11 @@ class BudgetEntityOption
         return $this->folder;
     }
 
+    public function changeFolder(?BudgetFolder $budgetFolder): void
+    {
+        $this->folder = $budgetFolder;
+    }
+
     public function getEntityId(): Id
     {
         return $this->entityId;

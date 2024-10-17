@@ -27,4 +27,6 @@ interface BudgetEntityOptionRepositoryInterface
      * @return void
      */
     public function delete(array $items): void;
+
+    public function getReference(Id $id): BudgetEntityOption;
 }

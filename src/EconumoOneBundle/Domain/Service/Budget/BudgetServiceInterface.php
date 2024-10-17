@@ -10,6 +10,7 @@ use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetName;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoOneBundle\Domain\Service\Budget\Dto\BudgetDto;
 use App\EconumoOneBundle\Domain\Service\Budget\Dto\BudgetMetaDto;
+use App\EconumoOneBundle\Domain\Service\Budget\Dto\BudgetStructureMoveElementDto;
 use DateTimeInterface;
 
 interface BudgetServiceInterface
@@ -63,5 +64,13 @@ interface BudgetServiceInterface
 
     public function resetBudget(Id $userId, Id $budgetId, DateTimeInterface $startedAt): BudgetMetaDto;
 
-    public function getBudget($userId, $budgetId, DateTimeInterface $periodStart): BudgetDto;
+    public function getBudget(Id $userId, Id $budgetId, DateTimeInterface $periodStart): BudgetDto;
+
+    /**
+     * @param Id $userId
+     * @param Id $budgetId
+     * @param BudgetStructureMoveElementDto[] $affectedElements
+     * @return void
+     */
+    public function moveElements(Id $userId, Id $budgetId, array $affectedElements): void;
 }

@@ -55,7 +55,7 @@ final class BudgetEntityType implements JsonSerializable, ValueObjectInterface, 
     {
         $index = array_search($alias, self::MAPPING, true);
         if ($index === false) {
-            throw new DomainException(sprintf('BudgetEntity with alias %d not exists', $alias));
+            throw new DomainException(sprintf('BudgetEntityType with alias %d not exists', $alias));
         }
 
         return new self((int)$index);
@@ -64,7 +64,7 @@ final class BudgetEntityType implements JsonSerializable, ValueObjectInterface, 
     public function __construct(int $value)
     {
         if (!self::isValid($value)) {
-            throw new DomainException(sprintf('BudgetEntity %d not exists', $value));
+            throw new DomainException(sprintf('BudgetEntityType %d not exists', $value));
         }
 
         $this->value = $value;
@@ -120,10 +120,10 @@ final class BudgetEntityType implements JsonSerializable, ValueObjectInterface, 
 
     public static function validate($value): void
     {
-        if (empty($value)) {
-            throw new DomainException('Value cannot be empty');
+        if (!is_numeric($value)) {
+            throw new DomainException(sprintf('BudgetEntityType %d is not numeric', $value));
         }
 
-        self::createFromAlias($value);
+        new self((int)$value);
     }
 }
