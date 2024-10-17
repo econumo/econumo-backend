@@ -6,10 +6,17 @@ declare(strict_types=1);
 namespace App\EconumoOneBundle\Domain\Service\Budget;
 
 
+use App\EconumoOneBundle\Domain\Entity\Budget;
+use App\EconumoOneBundle\Domain\Entity\BudgetEntityOption;
+use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetEntityType;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoOneBundle\Domain\Exception\DomainException;
+use App\EconumoOneBundle\Domain\Exception\InvalidBudgetElementException;
 use App\EconumoOneBundle\Domain\Factory\BudgetEntityOptionFactoryInterface;
 use App\EconumoOneBundle\Domain\Repository\BudgetEntityOptionRepositoryInterface;
+use App\EconumoOneBundle\Domain\Repository\BudgetEnvelopeRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\BudgetFolderRepositoryInterface;
+use App\EconumoOneBundle\Domain\Service\Budget\Assembler\BudgetFiltersDtoAssembler;
 use App\EconumoOneBundle\Domain\Service\Budget\Dto\BudgetStructureMoveElementDto;
 
 readonly class BudgetElementsService
@@ -18,6 +25,8 @@ readonly class BudgetElementsService
         private BudgetEntityOptionRepositoryInterface $entityOptionRepository,
         private BudgetEntityOptionFactoryInterface $budgetEntityOptionFactory,
         private BudgetFolderRepositoryInterface $folderRepository,
+        private BudgetFiltersDtoAssembler $budgetFiltersDtoAssembler,
+        private BudgetEnvelopeRepositoryInterface $envelopeRepository,
     ) {
     }
 
@@ -26,10 +35,10 @@ readonly class BudgetElementsService
      * @param BudgetStructureMoveElementDto[] $elements
      * @return void
      */
-    public function moveElements(Id $budgetId, array $elements): void
+    public function moveElements(Budget $budget, array $elements): void
     {
         $seen = [];
-        $options = $this->entityOptionRepository->getByBudgetId($budgetId);
+        $options = $this->entityOptionRepository->getByBudgetId($budget->getId());
         $updatedOptions = [];
         foreach ($options as $option) {
             if (!array_key_exists($option->getEntityId()->getValue(), $elements)) {
@@ -64,18 +73,71 @@ readonly class BudgetElementsService
             }
         }
 
+        /** @var BudgetEntityOption[] $newOptions */
+        $newOptions = [];
+        $needTags = false;
+        $needCategories = false;
+        $needEnvelopes = false;
         foreach ($elements as $element) {
             if (array_key_exists($element->id->getValue(), $elements)) {
                 continue;
             }
-            $updatedOptions[] = $this->budgetEntityOptionFactory->create(
-                $budgetId,
+            $newOptions[$element->type->getAlias()][$element->id->getValue()] = $this->budgetEntityOptionFactory->create(
+                $budget->getId(),
                 $element->id,
                 $element->type,
                 $element->position,
                 null,
                 $element->folderId
             );
+            if ($element->type->isCategory()) {
+                $needCategories = true;
+            } elseif ($element->type->isTag()) {
+                $needTags = true;
+            } elseif ($element->type->isEnvelope()) {
+                $needEnvelopes = true;
+            }
+        }
+
+        if ($newOptions !== []) {
+            if ($needCategories || $needTags) {
+                $budgetUserIds = $this->budgetFiltersDtoAssembler->getBudgetUserIds($budget);
+                if (array_key_exists(BudgetEntityType::category()->getAlias(), $newOptions)) {
+                    $budgetCategories = $this->budgetFiltersDtoAssembler->getCategories($budgetUserIds);
+                    foreach ($newOptions[BudgetEntityType::category()->getAlias()] as $option) {
+                        if (!array_key_exists($option->getEntityId()->getValue(), $budgetCategories)) {
+                            throw new InvalidBudgetElementException();
+                        }
+                        $updatedOptions[] = $option;
+                    }
+                }
+                if (array_key_exists(BudgetEntityType::tag()->getAlias(), $newOptions)) {
+                    $budgetTags = $this->budgetFiltersDtoAssembler->getTags($budgetUserIds);
+                    foreach ($newOptions[BudgetEntityType::tag()->getAlias()] as $option) {
+                        if (!array_key_exists($option->getEntityId()->getValue(), $budgetTags)) {
+                            throw new InvalidBudgetElementException();
+                        }
+                        $updatedOptions[] = $option;
+                    }
+                }
+            }
+
+            if ($needEnvelopes) {
+                $envelopes = $this->envelopeRepository->getByBudgetId($budget->getId());
+                foreach ($newOptions[BudgetEntityType::envelope()->getAlias()] as $option) {
+                    $found = false;
+                    foreach ($envelopes as $envelope) {
+                        if ($envelope->getId()->isEqual($option->getEntityId())) {
+                            $found = true;
+                            break;
+                        }
+                    }
+                    if (!$found) {
+                        throw new InvalidBudgetElementException();
+                    }
+                    $updatedOptions[] = $option;
+                }
+            }
         }
 
         if ($updatedOptions !== []) {

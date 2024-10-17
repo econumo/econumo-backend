@@ -163,6 +163,7 @@ readonly class BudgetService implements BudgetServiceInterface
 
     public function moveElements(Id $userId, Id $budgetId, array $affectedElements): void
     {
-        $this->budgetElementsService->moveElements($budgetId, $affectedElements);
+        $budget = $this->budgetRepository->get($budgetId);
+        $this->budgetElementsService->moveElements($budget, $affectedElements);
     }
 }

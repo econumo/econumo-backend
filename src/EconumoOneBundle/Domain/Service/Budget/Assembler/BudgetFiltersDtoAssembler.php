@@ -62,7 +62,7 @@ readonly class BudgetFiltersDtoAssembler
         return array_map(fn(Account $account) => $account->getId(), $budget->getExcludedAccounts($userId)->toArray());
     }
 
-    private function getBudgetUserIds(Budget $budget): array
+    public function getBudgetUserIds(Budget $budget): array
     {
         $userIds = [$budget->getUser()->getId()];
         foreach ($budget->getAccessList() as $entry) {
@@ -117,7 +117,7 @@ readonly class BudgetFiltersDtoAssembler
      * @param array $userIds
      * @return Category[]
      */
-    private function getCategories(array $userIds): array
+    public function getCategories(array $userIds): array
     {
         $result = [];
         foreach ($this->categoryRepository->findByOwnersIds($userIds) as $category) {
@@ -130,7 +130,7 @@ readonly class BudgetFiltersDtoAssembler
      * @param array $userIds
      * @return Tag[]
      */
-    private function getTags(array $userIds): array
+    public function getTags(array $userIds): array
     {
         $result = [];
         foreach ($this->tagRepository->findByOwnersIds($userIds) as $tag) {
