@@ -14,5 +14,7 @@ interface FolderServiceInterface
 {
     public function create(Id $budgetId, Id $folderId, BudgetFolderName $name): BudgetStructureFolderDto;
 
-    public function delete(Id $folderId): void;
+    public function update(Id $budgetId, Id $folderId, BudgetFolderName $name): BudgetStructureFolderDto;
+
+    public function delete(Id $budgetId, Id $folderId): void;
 }

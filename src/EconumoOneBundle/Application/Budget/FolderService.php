@@ -16,6 +16,9 @@ use App\EconumoOneBundle\Domain\Service\Budget\FolderServiceInterface;
 use App\EconumoOneBundle\Application\Budget\Dto\DeleteFolderV1RequestDto;
 use App\EconumoOneBundle\Application\Budget\Dto\DeleteFolderV1ResultDto;
 use App\EconumoOneBundle\Application\Budget\Assembler\DeleteFolderV1ResultAssembler;
+use App\EconumoOneBundle\Application\Budget\Dto\UpdateFolderV1RequestDto;
+use App\EconumoOneBundle\Application\Budget\Dto\UpdateFolderV1ResultDto;
+use App\EconumoOneBundle\Application\Budget\Assembler\UpdateFolderV1ResultAssembler;
 
 readonly class FolderService
 {
@@ -25,6 +28,7 @@ readonly class FolderService
         private FolderServiceInterface $folderService,
         private DeleteFolderV1ResultAssembler $deleteFolderV1ResultAssembler,
         private BudgetFolderRepositoryInterface $budgetFolderRepository,
+        private UpdateFolderV1ResultAssembler $updateFolderV1ResultAssembler,
     ) {
     }
 
@@ -46,13 +50,28 @@ readonly class FolderService
         DeleteFolderV1RequestDto $dto,
         Id $userId
     ): DeleteFolderV1ResultDto {
+        $budgetId = new Id($dto->budgetId);
         $folderId = new Id($dto->id);
-        $folder = $this->budgetFolderRepository->get($folderId);
-        if (!$this->budgetAccessService->canUpdateBudget($userId, $folder->getBudget()->getId())) {
+        if (!$this->budgetAccessService->canUpdateBudget($userId, $budgetId)) {
             throw new AccessDeniedException();
         }
 
-        $this->folderService->delete($folderId);
+        $this->folderService->delete($budgetId, $folderId);
         return $this->deleteFolderV1ResultAssembler->assemble($dto);
+    }
+
+    public function updateFolder(
+        UpdateFolderV1RequestDto $dto,
+        Id $userId
+    ): UpdateFolderV1ResultDto {
+        $budgetId = new Id($dto->budgetId);
+        $folderId = new Id($dto->id);
+        $folderName = new BudgetFolderName($dto->name);
+        if (!$this->budgetAccessService->canUpdateBudget($userId, $budgetId)) {
+            throw new AccessDeniedException();
+        }
+
+        $folder = $this->folderService->update($budgetId, $folderId, $folderName);
+        return $this->updateFolderV1ResultAssembler->assemble($folder);
     }
 }

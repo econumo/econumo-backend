@@ -6,6 +6,7 @@ namespace App\EconumoOneBundle\Domain\Service\Budget;
 
 use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetFolderName;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoOneBundle\Domain\Exception\AccessDeniedException;
 use App\EconumoOneBundle\Domain\Factory\BudgetFolderFactoryInterface;
 use App\EconumoOneBundle\Domain\Repository\BudgetFolderRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\BudgetRepositoryInterface;
@@ -44,9 +45,13 @@ readonly class FolderService implements FolderServiceInterface
         return $this->budgetStructureFolderDtoAssembler->assemble($newFolder);
     }
 
-    public function delete(Id $folderId): void
+    public function delete(Id $budgetId, Id $folderId): void
     {
         $folder = $this->budgetFolderRepository->get($folderId);
+        if (!$folder->getBudget()->getId()->isEqual($budgetId)) {
+            throw new AccessDeniedException();
+        }
+
         $this->budgetFolderRepository->delete([$folder]);
 
         $toSave = [];
@@ -62,5 +67,18 @@ readonly class FolderService implements FolderServiceInterface
             $position++;
         }
         $this->budgetFolderRepository->save($toSave);
+    }
+
+    public function update(Id $budgetId, Id $folderId, BudgetFolderName $name): BudgetStructureFolderDto
+    {
+        $folder = $this->budgetFolderRepository->get($folderId);
+        if (!$folder->getBudget()->getId()->isEqual($budgetId)) {
+            throw new AccessDeniedException();
+        }
+
+        $folder->updateName($name);
+        $this->budgetFolderRepository->save([$folder]);
+
+        return $this->budgetStructureFolderDtoAssembler->assemble($folder);
     }
 }
