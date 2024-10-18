@@ -11,6 +11,7 @@ use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoOneBundle\Domain\Service\Budget\Dto\BudgetDto;
 use App\EconumoOneBundle\Domain\Service\Budget\Dto\BudgetMetaDto;
 use App\EconumoOneBundle\Domain\Service\Budget\Dto\BudgetStructureMoveElementDto;
+use App\EconumoOneBundle\Domain\Service\Budget\Dto\BudgetStructureOrderItemDto;
 use DateTimeInterface;
 
 interface BudgetServiceInterface
@@ -73,4 +74,12 @@ interface BudgetServiceInterface
      * @return void
      */
     public function moveElements(Id $userId, Id $budgetId, array $affectedElements): void;
+
+    /**
+     * @param Id $userId
+     * @param Id $budgetId
+     * @param BudgetStructureOrderItemDto[] $affectedFolders
+     * @return void
+     */
+    public function orderFolders(Id $userId, Id $budgetId, array $affectedFolders): void;
 }
