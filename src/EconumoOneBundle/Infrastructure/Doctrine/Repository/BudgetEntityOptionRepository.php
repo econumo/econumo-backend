@@ -35,7 +35,12 @@ class BudgetEntityOptionRepository extends ServiceEntityRepository implements Bu
 
     public function getByBudgetId(Id $budgetId): array
     {
-        return $this->findBy(['budget' => $this->getEntityManager()->getReference(Budget::class, $budgetId)]);
+        return $this->findBy(
+            [
+                'budget' => $this->getEntityManager()->getReference(Budget::class, $budgetId)
+            ],
+            ['position' => 'ASC']
+        );
     }
 
     public function getReference(Id $id): BudgetEntityOption

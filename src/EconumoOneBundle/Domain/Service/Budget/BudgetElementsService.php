@@ -10,7 +10,6 @@ use App\EconumoOneBundle\Domain\Entity\Budget;
 use App\EconumoOneBundle\Domain\Entity\BudgetEntityOption;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetEntityType;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
-use App\EconumoOneBundle\Domain\Exception\DomainException;
 use App\EconumoOneBundle\Domain\Exception\InvalidBudgetElementException;
 use App\EconumoOneBundle\Domain\Factory\BudgetEntityOptionFactoryInterface;
 use App\EconumoOneBundle\Domain\Repository\BudgetEntityOptionRepositoryInterface;
@@ -82,7 +81,8 @@ readonly class BudgetElementsService
             if (array_key_exists($element->id->getValue(), $elements)) {
                 continue;
             }
-            $newOptions[$element->type->getAlias()][$element->id->getValue()] = $this->budgetEntityOptionFactory->create(
+            $newOptions[$element->type->getAlias()][$element->id->getValue(
+            )] = $this->budgetEntityOptionFactory->create(
                 $budget->getId(),
                 $element->id,
                 $element->type,
@@ -143,5 +143,35 @@ readonly class BudgetElementsService
         if ($updatedOptions !== []) {
             $this->entityOptionRepository->save($updatedOptions);
         }
+
+        $this->updateElementsOrder($budget->getId());
+    }
+
+    public function updateElementsOrder(Id $budgetId): void
+    {
+        $folders = $this->folderRepository->getByBudgetId($budgetId);
+        $options = $this->entityOptionRepository->getByBudgetId($budgetId);
+
+        // sorting inside folders
+        foreach ($folders as $folder) {
+            $position = 0;
+            foreach ($options as $option) {
+                if (!$option->getFolder() || !$option->getFolder()->getId()->isEqual($folder->getId())) {
+                    continue;
+                }
+                $option->updatePosition($position++);
+            }
+        }
+
+        // sorting inside folders
+        $position = 0;
+        foreach ($options as $option) {
+            if ($option->getFolder()) {
+                continue;
+            }
+            $option->updatePosition($position++);
+        }
+
+        $this->entityOptionRepository->save($options);
     }
 }

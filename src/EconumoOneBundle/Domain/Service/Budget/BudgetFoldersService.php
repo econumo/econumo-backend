@@ -15,7 +15,8 @@ use App\EconumoOneBundle\Domain\Service\Budget\Dto\BudgetStructureOrderItemDto;
 readonly class BudgetFoldersService
 {
     public function __construct(
-        private BudgetFolderRepositoryInterface $budgetFolderRepository
+        private BudgetFolderRepositoryInterface $budgetFolderRepository,
+        private BudgetElementsService $budgetElementsService,
     ) {
     }
 
@@ -53,5 +54,6 @@ readonly class BudgetFoldersService
         }
 
         $this->budgetFolderRepository->save($budgetFolders);
+        $this->budgetElementsService->updateElementsOrder($budgetId);
     }
 }

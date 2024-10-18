@@ -41,9 +41,14 @@ class BudgetFolderRepository extends ServiceEntityRepository implements BudgetFo
 
     public function getByBudgetId(Id $budgetId): array
     {
-        return $this->findBy([
-            'budget' => $this->getEntityReference(Budget::class, $budgetId)
-        ], ['position' => 'ASC']);
+        return $this->findBy(
+            [
+                'budget' => $this->getEntityReference(Budget::class, $budgetId)
+            ],
+            [
+                'position' => 'ASC'
+            ]
+        );
     }
 
     public function get(Id $id): BudgetFolder
