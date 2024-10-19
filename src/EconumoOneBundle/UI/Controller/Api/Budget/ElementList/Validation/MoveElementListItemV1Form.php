@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\EconumoOneBundle\UI\Controller\Api\Budget\ElementList\Validation;
 
 use App\EconumoOneBundle\Application\Budget\Dto\MoveElementListItemV1RequestDto;
-use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetEntityType;
+use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetElementType;
 use App\EconumoOneBundle\UI\Service\Validator\ValueObjectValidationFactoryInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -44,7 +44,7 @@ class MoveElementListItemV1Form extends AbstractType
                 'constraints' => [
                     new NotBlank(),
                     new Type('integer'),
-                    $this->valueObjectValidationFactory->create(BudgetEntityType::class)
+                    $this->valueObjectValidationFactory->create(BudgetElementType::class)
                 ],
             ])
             ->add('position', IntegerType::class, [

@@ -8,7 +8,7 @@ use App\EconumoOneBundle\Application\Budget\Dto\MoveElementListV1RequestDto;
 use App\EconumoOneBundle\Application\Budget\Dto\MoveElementListV1ResultDto;
 use App\EconumoOneBundle\Application\Budget\Assembler\MoveElementListV1ResultAssembler;
 use App\EconumoOneBundle\Application\Exception\AccessDeniedException;
-use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetEntityType;
+use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetElementType;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoOneBundle\Domain\Service\Budget\BudgetAccessServiceInterface;
 use App\EconumoOneBundle\Domain\Service\Budget\BudgetServiceInterface;
@@ -36,7 +36,7 @@ readonly class ElementListService
         foreach ($dto->items as $item) {
             $affectedElements[$item->id] = new BudgetStructureMoveElementDto(
                 new Id($item->id),
-                new BudgetEntityType($item->type),
+                new BudgetElementType($item->type),
                 $item->position,
                 ($item->folderId === null ? null : new Id($item->folderId)),
             );

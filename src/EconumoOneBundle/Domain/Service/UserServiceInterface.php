@@ -27,5 +27,5 @@ interface UserServiceInterface
 
     public function updateReportPeriod(Id $userId, ReportPeriod $reportPeriod): void;
 
-    public function updateDefaultBudget(Id $userId, Id $budgetId): void;
+    public function updateBudget(Id $userId, Id $budgetId): void;
 }

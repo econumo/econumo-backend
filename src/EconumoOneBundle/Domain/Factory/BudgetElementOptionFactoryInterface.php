@@ -6,20 +6,20 @@ declare(strict_types=1);
 namespace App\EconumoOneBundle\Domain\Factory;
 
 
-use App\EconumoOneBundle\Domain\Entity\BudgetEntityOption;
-use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetEntityType;
+use App\EconumoOneBundle\Domain\Entity\BudgetElementOption;
+use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetElementType;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 
-interface BudgetEntityOptionFactoryInterface
+interface BudgetElementOptionFactoryInterface
 {
     public function create(
         Id $budgetId,
-        Id $entityId,
-        BudgetEntityType $budgetEntityType,
+        Id $elementId,
+        BudgetElementType $elementType,
         int $position,
         ?Id $currencyId,
         ?Id $folderId
-    ): BudgetEntityOption;
+    ): BudgetElementOption;
 
     public function createCategoryOption(
         Id $budgetId,
@@ -27,7 +27,7 @@ interface BudgetEntityOptionFactoryInterface
         int $position,
         ?Id $currencyId = null,
         ?Id $folderId = null
-    ): BudgetEntityOption;
+    ): BudgetElementOption;
 
     public function createTagOption(
         Id $budgetId,
@@ -35,13 +35,13 @@ interface BudgetEntityOptionFactoryInterface
         int $position,
         ?Id $currencyId = null,
         ?Id $folderId = null
-    ): BudgetEntityOption;
+    ): BudgetElementOption;
 
     public function createEnvelopeOption(
         Id $budgetId,
         Id $envelopeId,
         int $position,
-        ?Id $currencyId,
-        ?Id $folderId
-    ): BudgetEntityOption;
+        ?Id $currencyId = null,
+        ?Id $folderId = null
+    ): BudgetElementOption;
 }

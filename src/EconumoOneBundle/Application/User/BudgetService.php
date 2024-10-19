@@ -27,7 +27,7 @@ readonly class BudgetService
         Id $userId
     ): UpdateBudgetV1ResultDto {
         try {
-            $this->userService->updateDefaultBudget($userId, new Id($dto->value));
+            $this->userService->updateBudget($userId, new Id($dto->value));
             $user = $this->userRepository->get($userId);
             return $this->updateBudgetV1ResultAssembler->assemble($dto, $user);
         } catch (NotFoundException) {

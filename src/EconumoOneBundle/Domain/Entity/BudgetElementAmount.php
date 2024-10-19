@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App\EconumoOneBundle\Domain\Entity;
 
 use App\EconumoOneBundle\Domain\Entity\Budget;
-use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetEntityType;
+use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetElementType;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 
-class BudgetEntityAmount
+class BudgetElementAmount
 {
     private DateTimeImmutable $period;
 
@@ -20,11 +20,10 @@ class BudgetEntityAmount
     private DateTimeInterface $updatedAt;
 
     public function __construct(
-        private Id $entityId,
-        private BudgetEntityType $entityType,
+        private Id $elementId,
+        private BudgetElementType $elementType,
         private Budget $budget,
         private float $amount,
-        private string $notes,
         DateTimeInterface $period,
         DateTimeInterface $createdAt
     ) {
@@ -38,24 +37,19 @@ class BudgetEntityAmount
         return $this->budget;
     }
 
-    public function getEntityId(): Id
+    public function getElementId(): Id
     {
-        return $this->entityId;
+        return $this->elementId;
     }
 
-    public function getEntityType(): BudgetEntityType
+    public function getElementType(): BudgetElementType
     {
-        return $this->entityType;
+        return $this->elementType;
     }
 
     public function getAmount(): float
     {
         return round($this->amount, 2);
-    }
-
-    public function getNotes(): string
-    {
-        return $this->notes;
     }
 
     public function updateAmount(float $amount): void

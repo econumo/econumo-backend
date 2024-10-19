@@ -7,7 +7,7 @@ namespace App\EconumoOneBundle\Domain\Service\Budget\Dto;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use DateTimeInterface;
 
-readonly class BudgetEntityAmountSpentDto
+readonly class BudgetElementAmountSpentDto
 {
     public function __construct(
         public Id $currencyId,

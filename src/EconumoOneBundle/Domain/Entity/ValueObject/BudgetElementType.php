@@ -8,7 +8,7 @@ use App\EconumoOneBundle\Domain\Entity\ValueObject\ValueObjectInterface;
 use DomainException;
 use JsonSerializable;
 
-final class BudgetEntityType implements JsonSerializable, ValueObjectInterface, \Stringable
+final class BudgetElementType implements JsonSerializable, ValueObjectInterface, \Stringable
 {
     /**
      * @var int
@@ -55,7 +55,7 @@ final class BudgetEntityType implements JsonSerializable, ValueObjectInterface, 
     {
         $index = array_search($alias, self::MAPPING, true);
         if ($index === false) {
-            throw new DomainException(sprintf('BudgetEntityType with alias %d not exists', $alias));
+            throw new DomainException(sprintf('BudgetElementType with alias %d not exists', $alias));
         }
 
         return new self((int)$index);
@@ -64,7 +64,7 @@ final class BudgetEntityType implements JsonSerializable, ValueObjectInterface, 
     public function __construct(int $value)
     {
         if (!self::isValid($value)) {
-            throw new DomainException(sprintf('BudgetEntityType %d not exists', $value));
+            throw new DomainException(sprintf('BudgetElementType %d not exists', $value));
         }
 
         $this->value = $value;
@@ -121,7 +121,7 @@ final class BudgetEntityType implements JsonSerializable, ValueObjectInterface, 
     public static function validate($value): void
     {
         if (!is_numeric($value)) {
-            throw new DomainException(sprintf('BudgetEntityType %d is not numeric', $value));
+            throw new DomainException(sprintf('BudgetElementType %d is not numeric', $value));
         }
 
         new self((int)$value);

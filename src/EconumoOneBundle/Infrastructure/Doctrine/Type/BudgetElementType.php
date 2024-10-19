@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace App\EconumoOneBundle\Infrastructure\Doctrine\Type;
 
-use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetEntityType as ValueObject;
+use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetElementType as ValueObject;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\SmallIntType;
 
-class BudgetEntityType extends SmallIntType
+class BudgetElementType extends SmallIntType
 {
     /**
      * @inheritdoc
@@ -36,6 +36,6 @@ class BudgetEntityType extends SmallIntType
      */
     public function getName(): string
     {
-        return 'budget_entity_type';
+        return 'budget_element_type';
     }
 }

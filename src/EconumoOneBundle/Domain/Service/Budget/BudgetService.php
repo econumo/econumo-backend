@@ -9,7 +9,7 @@ use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoOneBundle\Domain\Exception\AccessDeniedException;
 use App\EconumoOneBundle\Domain\Factory\BudgetFactoryInterface;
 use App\EconumoOneBundle\Domain\Repository\AccountRepositoryInterface;
-use App\EconumoOneBundle\Domain\Repository\BudgetEntityAmountRepositoryInterface;
+use App\EconumoOneBundle\Domain\Repository\BudgetElementAmountRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\BudgetRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\CurrencyRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\UserRepositoryInterface;
@@ -31,11 +31,11 @@ readonly class BudgetService implements BudgetServiceInterface
         private DatetimeServiceInterface $datetimeService,
         private UserServiceInterface $userService,
         private AntiCorruptionServiceInterface $antiCorruptionService,
-        private BudgetEntityServiceInterface $budgetEntityService,
+        private BudgetElementServiceInterface $budgetEntityService,
         private BudgetMetaDtoAssembler $budgetMetaDtoAssembler,
         private BudgetDeletionService $budgetDeletionService,
         private AccountRepositoryInterface $accountRepository,
-        private BudgetEntityAmountRepositoryInterface $budgetEntityAmountRepository,
+        private BudgetElementAmountRepositoryInterface $budgetEntityAmountRepository,
         private BudgetDtoAssembler $budgetDtoAssembler,
         private UserRepositoryInterface $userRepository,
         private CurrencyRepositoryInterface $currencyRepository,
@@ -71,9 +71,9 @@ readonly class BudgetService implements BudgetServiceInterface
                 $excludedAccountsIds,
             );
             $this->budgetRepository->save([$budget]);
-            $categoriesOptions = $this->budgetEntityService->createCategoriesOptions($userId, $budgetId);
-            $this->budgetEntityService->createTagsOptions($userId, $budgetId, count($categoriesOptions));
-            $this->userService->updateDefaultBudget($userId, $budgetId);
+            [$position, $categoriesOptions] = $this->budgetEntityService->createCategoriesOptions($userId, $budgetId);
+            $this->budgetEntityService->createTagsOptions($userId, $budgetId, $position);
+            $this->userService->updateBudget($userId, $budgetId);
             $this->antiCorruptionService->commit(__METHOD__);
         } catch (Throwable $e) {
             $this->antiCorruptionService->rollback(__METHOD__);

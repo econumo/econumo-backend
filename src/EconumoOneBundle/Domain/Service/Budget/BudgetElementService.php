@@ -4,24 +4,24 @@ declare(strict_types=1);
 
 namespace App\EconumoOneBundle\Domain\Service\Budget;
 
-use App\EconumoOneBundle\Domain\Entity\BudgetEntityOption;
+use App\EconumoOneBundle\Domain\Entity\BudgetElementOption;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
-use App\EconumoOneBundle\Domain\Factory\BudgetEntityOptionFactoryInterface;
-use App\EconumoOneBundle\Domain\Repository\BudgetEntityOptionRepositoryInterface;
+use App\EconumoOneBundle\Domain\Factory\BudgetElementOptionFactoryInterface;
+use App\EconumoOneBundle\Domain\Repository\BudgetElementOptionRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\CategoryRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\TagRepositoryInterface;
-use App\EconumoOneBundle\Domain\Service\Budget\BudgetEntityServiceInterface;
+use App\EconumoOneBundle\Domain\Service\Budget\BudgetElementServiceInterface;
 use App\EconumoOneBundle\Domain\Service\Budget\Dto\BudgetCategoryDto;
 use App\EconumoOneBundle\Domain\Service\Budget\Dto\BudgetTagDto;
 use Throwable;
 
-readonly class BudgetEntityService implements BudgetEntityServiceInterface
+readonly class BudgetElementService implements BudgetElementServiceInterface
 {
     public function __construct(
         private CategoryRepositoryInterface $categoryRepository,
         private TagRepositoryInterface $tagRepository,
-        private BudgetEntityOptionFactoryInterface $budgetEntityOptionFactory,
-        private BudgetEntityOptionRepositoryInterface $budgetEntityOptionRepository
+        private BudgetElementOptionFactoryInterface $budgetEntityOptionFactory,
+        private BudgetElementOptionRepositoryInterface $budgetEntityOptionRepository
     ) {
     }
 
@@ -29,8 +29,7 @@ readonly class BudgetEntityService implements BudgetEntityServiceInterface
      * @param Id $userId
      * @param Id $budgetId
      * @param int $startPosition
-     * @return BudgetCategoryDto[]
-     * @throws Throwable
+     * @return array [int, BudgetCategoryDto[]]
      */
     public function createCategoriesOptions(Id $userId, Id $budgetId, int $startPosition = 0): array
     {
@@ -39,10 +38,14 @@ readonly class BudgetEntityService implements BudgetEntityServiceInterface
         $position = $startPosition;
         $entities = [];
         foreach ($categories as $category) {
+            if ($category->getType()->isIncome()) {
+                continue;
+            }
+
             $item = $this->budgetEntityOptionFactory->createCategoryOption(
                 $budgetId,
                 $category->getId(),
-                $position++
+                ($category->isArchived() ? BudgetElementOption::POSITION_UNSET : $position++)
             );
             $entities[] = $item;
             $result[] = new BudgetCategoryDto(
@@ -60,15 +63,14 @@ readonly class BudgetEntityService implements BudgetEntityServiceInterface
         }
         $this->budgetEntityOptionRepository->save($entities);
 
-        return $result;
+        return [$position, $result];
     }
 
     /**
      * @param Id $userId
      * @param Id $budgetId
      * @param int $startPosition
-     * @return BudgetTagDto[]
-     * @throws Throwable
+     * @return array [int, BudgetTagDto[]]
      */
     public function createTagsOptions(Id $userId, Id $budgetId, int $startPosition = 0): array
     {
@@ -80,7 +82,7 @@ readonly class BudgetEntityService implements BudgetEntityServiceInterface
             $item = $this->budgetEntityOptionFactory->createTagOption(
                 $budgetId,
                 $tag->getId(),
-                $position++
+                ($tag->isArchived() ? BudgetElementOption::POSITION_UNSET : $position++)
             );
             $entities[] = $item;
             $result[] = new BudgetTagDto(
@@ -97,6 +99,6 @@ readonly class BudgetEntityService implements BudgetEntityServiceInterface
         }
         $this->budgetEntityOptionRepository->save($entities);
 
-        return $result;
+        return [$position, $result];
     }
 }

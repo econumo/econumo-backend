@@ -6,7 +6,7 @@ namespace App\EconumoOneBundle\Domain\Service\Budget\Dto;
 
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoOneBundle\Domain\Service\Budget\Dto\AverageCurrencyRateDto;
-use App\EconumoOneBundle\Domain\Service\Budget\Dto\BudgetEntityAmountDto;
+use App\EconumoOneBundle\Domain\Service\Budget\Dto\BudgetElementAmountDto;
 use App\EconumoOneBundle\Domain\Service\Budget\Dto\CurrencyBalanceDto;
 use DateTimeInterface;
 
@@ -20,7 +20,7 @@ readonly class BudgetDataDto
         public array $currencyBalances,
         /** @var AverageCurrencyRateDto[] */
         public array $averageCurrencyRates,
-        /** @var BudgetEntityAmountDto[] */
+        /** @var BudgetElementAmountDto[] */
         public array $entityAmounts
     ) {
     }

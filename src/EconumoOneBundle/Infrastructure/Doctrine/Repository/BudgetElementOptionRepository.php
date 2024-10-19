@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\EconumoOneBundle\Infrastructure\Doctrine\Repository;
 
 use App\EconumoOneBundle\Domain\Entity\Budget;
-use App\EconumoOneBundle\Domain\Entity\BudgetEntityOption;
+use App\EconumoOneBundle\Domain\Entity\BudgetElementOption;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
-use App\EconumoOneBundle\Domain\Repository\BudgetEntityOptionRepositoryInterface;
+use App\EconumoOneBundle\Domain\Repository\BudgetElementOptionRepositoryInterface;
 use App\EconumoOneBundle\Infrastructure\Doctrine\Repository\Traits\DeleteTrait;
 use App\EconumoOneBundle\Infrastructure\Doctrine\Repository\Traits\GetEntityReferenceTrait;
 use App\EconumoOneBundle\Infrastructure\Doctrine\Repository\Traits\NextIdentityTrait;
@@ -16,12 +16,12 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method BudgetEntityOption|null find($id, $lockMode = null, $lockVersion = null)
- * @method BudgetEntityOption|null findOneBy(array $criteria, array $orderBy = null)
- * @method BudgetEntityOption[]    findAll()
- * @method BudgetEntityOption[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method BudgetElementOption|null find($id, $lockMode = null, $lockVersion = null)
+ * @method BudgetElementOption|null findOneBy(array $criteria, array $orderBy = null)
+ * @method BudgetElementOption[]    findAll()
+ * @method BudgetElementOption[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class BudgetEntityOptionRepository extends ServiceEntityRepository implements BudgetEntityOptionRepositoryInterface
+class BudgetElementOptionRepository extends ServiceEntityRepository implements BudgetElementOptionRepositoryInterface
 {
     use NextIdentityTrait;
     use SaveTrait;
@@ -30,7 +30,7 @@ class BudgetEntityOptionRepository extends ServiceEntityRepository implements Bu
 
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, BudgetEntityOption::class);
+        parent::__construct($registry, BudgetElementOption::class);
     }
 
     public function getByBudgetId(Id $budgetId): array
@@ -43,8 +43,8 @@ class BudgetEntityOptionRepository extends ServiceEntityRepository implements Bu
         );
     }
 
-    public function getReference(Id $id): BudgetEntityOption
+    public function getReference(Id $id): BudgetElementOption
     {
-        return $this->getEntityReference(BudgetEntityOption::class, $id);
+        return $this->getEntityReference(BudgetElementOption::class, $id);
     }
 }

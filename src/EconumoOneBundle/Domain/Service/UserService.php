@@ -74,7 +74,7 @@ readonly class UserService implements UserServiceInterface
                 [
                     $this->userOptionFactory->create($user, UserOption::CURRENCY, UserOption::DEFAULT_CURRENCY),
                     $this->userOptionFactory->create($user, UserOption::REPORT_PERIOD, UserOption::DEFAULT_REPORT_PERIOD),
-                    $this->userOptionFactory->create($user, UserOption::DEFAULT_BUDGET, null)
+                    $this->userOptionFactory->create($user, UserOption::BUDGET, null)
                 ]
             );
 
@@ -127,7 +127,7 @@ readonly class UserService implements UserServiceInterface
         }
     }
 
-    public function updateDefaultBudget(Id $userId, Id $budgetId): void
+    public function updateBudget(Id $userId, Id $budgetId): void
     {
         $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {

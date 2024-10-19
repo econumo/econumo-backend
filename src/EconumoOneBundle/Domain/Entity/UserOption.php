@@ -40,7 +40,7 @@ class UserOption
     /**
      * @var string
      */
-    final public const DEFAULT_BUDGET = 'default_budget';
+    final public const BUDGET = 'budget';
 
 
     /**
@@ -49,7 +49,7 @@ class UserOption
     public const OPTIONS = [
         self::CURRENCY,
         self::REPORT_PERIOD,
-        self::DEFAULT_BUDGET,
+        self::BUDGET,
     ];
 
     private readonly DateTimeImmutable $createdAt;

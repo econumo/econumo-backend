@@ -4,27 +4,27 @@ declare(strict_types=1);
 
 namespace App\EconumoOneBundle\Domain\Repository;
 
-use App\EconumoOneBundle\Domain\Entity\BudgetEntityAmount;
+use App\EconumoOneBundle\Domain\Entity\BudgetElementAmount;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use DateTimeInterface;
 
-interface BudgetEntityAmountRepositoryInterface
+interface BudgetElementAmountRepositoryInterface
 {
     public function getNextIdentity(): Id;
 
     /**
-     * @return BudgetEntityAmount[]
+     * @return BudgetElementAmount[]
      */
     public function getByBudgetId(Id $budgetId, DateTimeInterface $period): array;
 
     /**
-     * @param BudgetEntityAmount[] $items
+     * @param BudgetElementAmount[] $items
      * @return void
      */
     public function save(array $items): void;
 
     /**
-     * @param BudgetEntityAmount[] $items
+     * @param BudgetElementAmount[] $items
      * @return void
      */
     public function delete(array $items): void;

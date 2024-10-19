@@ -8,7 +8,7 @@ use App\EconumoOneBundle\Application\Budget\Dto\OrderFolderListV1RequestDto;
 use App\EconumoOneBundle\Application\Budget\Dto\OrderFolderListV1ResultDto;
 use App\EconumoOneBundle\Application\Budget\Assembler\OrderFolderListV1ResultAssembler;
 use App\EconumoOneBundle\Application\Exception\AccessDeniedException;
-use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetEntityType;
+use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetElementType;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoOneBundle\Domain\Service\Budget\BudgetAccessServiceInterface;
 use App\EconumoOneBundle\Domain\Service\Budget\BudgetServiceInterface;

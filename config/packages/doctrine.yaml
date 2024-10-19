@@ -29,7 +29,7 @@ doctrine:
             budget_name_type: App\EconumoOneBundle\Infrastructure\Doctrine\Type\BudgetNameType
             budget_folder_name_type: App\EconumoOneBundle\Infrastructure\Doctrine\Type\BudgetFolderNameType
             budget_envelope_name_type: App\EconumoOneBundle\Infrastructure\Doctrine\Type\BudgetEnvelopeNameType
-            budget_entity_type: App\EconumoOneBundle\Infrastructure\Doctrine\Type\BudgetEntityType
+            budget_element_type: App\EconumoOneBundle\Infrastructure\Doctrine\Type\BudgetElementType
         server_version: 13
 
     orm:

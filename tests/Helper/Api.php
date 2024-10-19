@@ -238,8 +238,8 @@ class Api extends \Codeception\Module
     public function getBudgetEntityOptionDtoJsonType(): array
     {
         return [
-            'entityId' => 'string',
-            'entityType' => 'string',
+            'elementId' => 'string',
+            'elementType' => 'string',
             'position' => 'integer',
             'currencyId' => 'string|null',
             'folderId' => 'string|null',
