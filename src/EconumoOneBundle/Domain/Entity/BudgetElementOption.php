@@ -12,7 +12,7 @@ use DateTimeInterface;
 
 class BudgetElementOption
 {
-    public const POSITION_UNSET = -1;
+    public const POSITION_UNSET = 0;
 
     private DateTimeImmutable $createdAt;
 

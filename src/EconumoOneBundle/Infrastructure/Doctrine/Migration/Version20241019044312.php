@@ -52,7 +52,7 @@ final class Version20241019044312 extends AbstractMigration
         , currency_id CHAR(36) DEFAULT NULL --(DC2Type:uuid)
         , folder_id CHAR(36) DEFAULT NULL --(DC2Type:uuid)
         , created_at DATETIME NOT NULL --(DC2Type:datetime_immutable)
-        , updated_at DATETIME NOT NULL, position SMALLINT DEFAULT 0 NOT NULL, PRIMARY KEY(element_id, element_type, budget_id))');
+        , updated_at DATETIME NOT NULL, position SMALLINT UNSIGNED DEFAULT 0 NOT NULL, PRIMARY KEY(element_id, element_type, budget_id))');
         $this->addSql('CREATE INDEX IDX_519D432336ABA6B8 ON budgets_elements_options (budget_id)');
         $this->addSql('CREATE INDEX IDX_519D432338248176 ON budgets_elements_options (currency_id)');
         $this->addSql('CREATE INDEX IDX_519D4323162CB942 ON budgets_elements_options (folder_id)');

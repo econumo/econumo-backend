@@ -13,7 +13,7 @@
         <field name="updatedAt" type="datetime" column="updated_at" nullable="false"/>
         <field name="position" type="smallint" column="position" nullable="false">
             <options>
-                <option name="unsigned">false</option>
+                <option name="unsigned">true</option>
                 <option name="default">0</option>
             </options>
         </field>
