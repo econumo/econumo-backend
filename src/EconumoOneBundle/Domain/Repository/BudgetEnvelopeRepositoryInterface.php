@@ -35,4 +35,11 @@ interface BudgetEnvelopeRepositoryInterface
     public function delete(array $items): void;
 
     public function getReference(Id $id): BudgetEnvelope;
+
+    /**
+     * @param Id $budgetId
+     * @param Id[] $categoriesIds
+     * @return void
+     */
+    public function deleteAssociationsWithCategories(Id $budgetId, array $categoriesIds): void;
 }

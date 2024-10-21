@@ -14,7 +14,10 @@ use App\EconumoOneBundle\Infrastructure\Doctrine\Repository\Traits\GetEntityRefe
 use App\EconumoOneBundle\Infrastructure\Doctrine\Repository\Traits\NextIdentityTrait;
 use App\EconumoOneBundle\Infrastructure\Doctrine\Repository\Traits\SaveTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\Persistence\ManagerRegistry;
+use RuntimeException;
+use Throwable;
 
 /**
  * @method BudgetEnvelope|null find($id, $lockMode = null, $lockVersion = null)
@@ -45,6 +48,36 @@ class BudgetEnvelopeRepository extends ServiceEntityRepository implements Budget
                 'budget' => $this->getEntityReference(Budget::class, $budgetId),
                 'isArchived' => !!$onlyActive
             ]);
+        }
+    }
+
+    public function deleteAssociationsWithCategories(Id $budgetId, array $categoriesIds): void
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $categoriesIdsString = [];
+        $placeholders = [];
+
+        foreach ($categoriesIds as $index => $categoryId) {
+            $placeholder = ':category_id_' . $index;
+            $placeholders[] = $placeholder;
+            $categoriesIdsString[$placeholder] = $categoryId->getValue();
+        }
+
+        $placeholdersString = implode(', ', $placeholders);
+
+        $sql = <<<SQL
+DELETE FROM budgets_envelopes_categories 
+WHERE budget_envelope_id IN (
+    SELECT id FROM budgets_envelopes WHERE budget_id = :budget_id
+) AND category_id IN ($placeholdersString)
+SQL;
+
+        try {
+            $stmt = $conn->prepare($sql);
+            $stmt->executeStatement(array_merge(['budget_id' => $budgetId->getValue()], $categoriesIdsString));
+        } catch (Throwable $e) {
+            // Handle any database errors
+            throw new RuntimeException('Database error: ' . $e->getMessage());
         }
     }
 

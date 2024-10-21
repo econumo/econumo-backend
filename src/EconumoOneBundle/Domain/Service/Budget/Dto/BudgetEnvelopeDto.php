@@ -11,8 +11,8 @@ use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 readonly class BudgetEnvelopeDto
 {
     public function __construct(
-        public Id $envelopeId,
-        public ?Id $budgetFolderId,
+        public Id $id,
+        public ?Id $folderId,
         public ?Id $currencyId,
         public BudgetEnvelopeName $name,
         public Icon $icon,

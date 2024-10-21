@@ -22,7 +22,7 @@ readonly class BudgetDtoAssembler
         private BudgetFiltersDtoAssembler $budgetFiltersDtoAssembler,
         private BudgetFinancialSummaryDtoAssembler $budgetFinancialSummaryDtoAssembler,
         private BudgetElementsAmountDtoAssembler $budgetElementsAmountDtoAssembler,
-        private BudgetStructureDtoAssembler  $budgetStructureDtoAssembler,
+        private BudgetStructureDtoAssembler $budgetStructureDtoAssembler,
     ) {
     }
 

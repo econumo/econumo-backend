@@ -69,14 +69,14 @@ readonly class BudgetStructureDtoAssembler
                 if (!array_key_exists($category->getId()->getValue(), $categoryUsed)) {
                     $subIndex = sprintf('%s-%s', $category->getId()->getValue(), BudgetElementType::category()->getAlias());
                     $children[$subIndex] = [
-                        'id' => $elementsAmounts[$subIndex]?->elementId,
+                        'id' => $category->getId(),
                         'type' => BudgetElementType::category(),
                         'name' => $category->getName(),
                         'icon' => $category->getIcon(),
                         'ownerId' => $category->getUserId(),
                         'isArchived' => $category->isArchived(),
-                        'currenciesSpent' => $elementsAmounts[$subIndex]?->currenciesSpent ?? [],
-                        'currenciesSpentBefore' => $elementsAmounts[$subIndex]?->currenciesSpentBefore ?? []
+                        'currenciesSpent' => ($elementsAmounts[$subIndex] ?? null)?->currenciesSpent ?? [],
+                        'currenciesSpentBefore' => ($elementsAmounts[$subIndex] ?? null)?->currenciesSpentBefore ?? []
                     ];
                     foreach ($children[$subIndex]['currenciesSpent'] as $spent) {
                         $toConvert[sprintf('spent-%s', $subIndex)][] = new CurrencyConvertorDto(

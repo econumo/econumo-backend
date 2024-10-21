@@ -244,4 +244,33 @@ readonly class BudgetElementsService
             $this->elementOptionRepository->delete($toDelete);
         }
     }
+
+    public function shiftElements(Id $budgetId, ?Id $folderId, int $startPosition): void
+    {
+        $options = $this->elementOptionRepository->getByBudgetId($budgetId);
+        $position = $startPosition;
+        $updated = [];
+        foreach ($options as $option) {
+            if ($folderId === null && $option->getFolder() !== null) {
+                continue;
+            }
+            if ($folderId !== null && $option->getFolder() === null) {
+                continue;
+            }
+            if ($folderId !== null && $option->getFolder() !== null && !$option->getFolder()->getId()->isEqual($folderId)) {
+                continue;
+            }
+            if ($option->getPosition() < $startPosition) {
+                continue;
+            }
+            $option->updatePosition(++$position);
+            $updated[] = $option;
+        }
+
+        if ($updated === []) {
+            return;
+        }
+
+        $this->elementOptionRepository->save($updated);
+    }
 }
