@@ -20,9 +20,9 @@ class BudgetElementAmount
     private DateTimeInterface $updatedAt;
 
     public function __construct(
+        private Budget $budget,
         private Id $elementId,
         private BudgetElementType $elementType,
-        private Budget $budget,
         private float $amount,
         DateTimeInterface $period,
         DateTimeInterface $createdAt

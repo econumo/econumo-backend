@@ -6,10 +6,12 @@ declare(strict_types=1);
 namespace App\EconumoOneBundle\Domain\Service\Budget;
 
 
+use App\EconumoOneBundle\Domain\Entity\BudgetEnvelope;
 use App\EconumoOneBundle\Domain\Entity\Category;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetElementType;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoOneBundle\Domain\Exception\AccessDeniedException;
+use App\EconumoOneBundle\Domain\Factory\BudgetElementAmountFactoryInterface;
 use App\EconumoOneBundle\Domain\Factory\BudgetElementOptionFactoryInterface;
 use App\EconumoOneBundle\Domain\Factory\BudgetEnvelopeFactoryInterface;
 use App\EconumoOneBundle\Domain\Repository\BudgetElementAmountRepositoryInterface;
@@ -17,11 +19,11 @@ use App\EconumoOneBundle\Domain\Repository\BudgetElementOptionRepositoryInterfac
 use App\EconumoOneBundle\Domain\Repository\BudgetEnvelopeRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\BudgetRepositoryInterface;
 use App\EconumoOneBundle\Domain\Service\AntiCorruptionServiceInterface;
-use App\EconumoOneBundle\Domain\Service\Budget\Assembler\BudgetDtoAssembler;
 use App\EconumoOneBundle\Domain\Service\Budget\Assembler\BudgetFiltersDtoAssembler;
 use App\EconumoOneBundle\Domain\Service\Budget\Dto\BudgetEnvelopeDto;
 use App\EconumoOneBundle\Domain\Service\Budget\Dto\BudgetStructureChildElementDto;
 use App\EconumoOneBundle\Domain\Service\Budget\Dto\BudgetStructureParentElementDto;
+use DateTime;
 
 readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
 {
@@ -35,7 +37,7 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
         private BudgetElementOptionRepositoryInterface $budgetElementOptionRepository,
         private BudgetFiltersDtoAssembler $budgetFiltersDtoAssembler,
         private BudgetElementAmountRepositoryInterface $budgetElementAmountRepository,
-        private BudgetDtoAssembler $budgetDtoAssembler,
+        private BudgetElementAmountFactoryInterface $budgetElementAmountFactory
     ) {
     }
 
@@ -71,8 +73,6 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
                 }
                 $this->budgetElementOptionRepository->save($updatedOptions);
 
-                // @todo migrate amounts ?
-
                 $this->budgetEnvelopeRepository->deleteAssociationsWithCategories($budgetId, $envelope->categories);
             }
 
@@ -99,6 +99,11 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
                 $envelope->folderId
             );
             $this->budgetElementOptionRepository->save([$envelopeOptions]);
+
+
+            if ($envelope->categories !== []) {
+                $this->reassignAmounts($budgetId, $envelopeEntity);
+            }
 
             $this->antiCorruptionService->commit(__METHOD__);
         } catch (\Throwable $exception) {
@@ -137,5 +142,68 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
             [],
             $children
         );
+    }
+
+    private function reassignAmounts(Id $budgetId, BudgetEnvelope $envelope): void
+    {
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
+        $envelopeType = BudgetElementType::envelope();
+        $categoryType = BudgetElementType::category();
+        try {
+            $categoriesIds = [];
+            foreach ($envelope->getCategories() as $category) {
+                $categoriesIds[] = $category->getId()->getValue();
+            }
+            $sourceAmounts = $this->budgetElementAmountRepository
+                ->getSummarizedAmountsForElements($budgetId, $categoriesIds, $categoryType);
+            $targetAmounts = $this->budgetElementAmountRepository
+                ->getAmountsByElementIdAndType($budgetId, $envelope->getId(), $envelopeType);
+
+            $updated = [];
+            $seen = [];
+            foreach ($targetAmounts as $targetAmount) {
+                $date = $targetAmount->getPeriod()->format('Y-m-d');
+                $seen[] = $date;
+                if (array_key_exists($date, $sourceAmounts)) {
+                    $targetAmount->updateAmount($targetAmount->getAmount() + $sourceAmounts[$date]);
+                    $updated[] = $targetAmount;
+                }
+            }
+            if ($updated !== []) {
+                $this->budgetElementAmountRepository->save($updated);
+            }
+
+            $keysToCreate = array_diff(array_keys($sourceAmounts), $seen);
+            $created = [];
+            foreach ($keysToCreate as $key) {
+                $created[] = $this->budgetElementAmountFactory->create(
+                    $budgetId,
+                    $envelope->getId(),
+                    $envelopeType,
+                    $sourceAmounts[$key],
+                    DateTime::createFromFormat('Y-m-d', $key)
+                );
+            }
+            if ($created !== []) {
+                $this->budgetElementAmountRepository->save($created);
+            }
+
+            $toDelete = [];
+            foreach ($envelope->getCategories() as $category) {
+                $oldAmounts = $this->budgetElementAmountRepository
+                    ->getAmountsByElementIdAndType($budgetId, $category->getId(), $categoryType);
+                if ($oldAmounts !== []) {
+                    $toDelete = array_merge($toDelete, $oldAmounts);
+                }
+            }
+            if ($toDelete !== []) {
+                $this->budgetElementAmountRepository->delete($toDelete);
+            }
+
+            $this->antiCorruptionService->commit(__METHOD__);
+        } catch (\Throwable $exception) {
+            $this->antiCorruptionService->rollback(__METHOD__);
+            throw $exception;
+        }
     }
 }

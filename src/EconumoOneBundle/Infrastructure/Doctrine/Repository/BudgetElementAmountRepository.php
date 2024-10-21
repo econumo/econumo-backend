@@ -6,12 +6,14 @@ namespace App\EconumoOneBundle\Infrastructure\Doctrine\Repository;
 
 use App\EconumoOneBundle\Domain\Entity\Budget;
 use App\EconumoOneBundle\Domain\Entity\BudgetElementAmount;
+use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetElementType;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoOneBundle\Domain\Repository\BudgetElementAmountRepositoryInterface;
 use App\EconumoOneBundle\Infrastructure\Doctrine\Repository\Traits\DeleteTrait;
 use App\EconumoOneBundle\Infrastructure\Doctrine\Repository\Traits\GetEntityReferenceTrait;
 use App\EconumoOneBundle\Infrastructure\Doctrine\Repository\Traits\NextIdentityTrait;
 use App\EconumoOneBundle\Infrastructure\Doctrine\Repository\Traits\SaveTrait;
+use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -71,5 +73,46 @@ class BudgetElementAmountRepository extends ServiceEntityRepository implements B
             ->groupBy('ea.elementId, ea.elementType')
             ->getQuery();
         return $query->getArrayResult();
+    }
+
+    public function getSummarizedAmountsForElements(Id $budgetId, array $sourceElementsIds, BudgetElementType $targetElementType): array
+    {
+        $elementsIds = [];
+        foreach ($sourceElementsIds as $sourceElementId) {
+            $elementsIds[] = $sourceElementId->getValue();
+        }
+        $amountsQuery = $this->createQueryBuilder('ea')
+            ->select('SUM(ea.amount) as amount, ea.period')
+            ->where('ea.budget = :budget')
+            ->setParameter('budget', $this->getEntityReference(Budget::class, $budgetId))
+            ->andWhere('ea.elementId IN (:elementsIds)')
+            ->setParameter('elementsIds', $elementsIds)
+            ->andWhere('ea.elementType = :elementType')
+            ->setParameter('elementType', $targetElementType->getValue())
+            ->groupBy('ea.period')
+            ->orderBy('ea.period')
+            ->getQuery();
+        $sourceAmounts = [];
+        foreach($amountsQuery->getArrayResult() as $item) {
+            $date = DateTime::createFromFormat('Y-m-d H:i:s', $item['period'])->format('Y-m-d');
+            $sourceAmounts[$date] = $item['amount'];
+        }
+
+        return $sourceAmounts;
+    }
+
+    public function getAmountsByElementIdAndType(Id $budgetId, Id $targetElementId, BudgetElementType $targetElementType): array
+    {
+        $targetAmountQuery = $this->createQueryBuilder('ea')
+            ->select('ea')
+            ->where('ea.budget = :budget')
+            ->setParameter('budget', $this->getEntityReference(Budget::class, $budgetId))
+            ->andWhere('ea.elementId = :elementId')
+            ->setParameter('elementId', $targetElementId->getValue())
+            ->andWhere('ea.elementType = :elementType')
+            ->setParameter('elementType', $targetElementType->getValue())
+            ->orderBy('ea.period')
+            ->getQuery();
+        return $targetAmountQuery->getResult();
     }
 }
