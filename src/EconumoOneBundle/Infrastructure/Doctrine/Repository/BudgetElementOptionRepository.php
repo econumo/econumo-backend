@@ -6,7 +6,9 @@ namespace App\EconumoOneBundle\Infrastructure\Doctrine\Repository;
 
 use App\EconumoOneBundle\Domain\Entity\Budget;
 use App\EconumoOneBundle\Domain\Entity\BudgetElementOption;
+use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetElementType;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoOneBundle\Domain\Exception\NotFoundException;
 use App\EconumoOneBundle\Domain\Repository\BudgetElementOptionRepositoryInterface;
 use App\EconumoOneBundle\Infrastructure\Doctrine\Repository\Traits\DeleteTrait;
 use App\EconumoOneBundle\Infrastructure\Doctrine\Repository\Traits\GetEntityReferenceTrait;
@@ -46,5 +48,27 @@ class BudgetElementOptionRepository extends ServiceEntityRepository implements B
     public function getReference(Id $id): BudgetElementOption
     {
         return $this->getEntityReference(BudgetElementOption::class, $id);
+    }
+
+    public function get(Id $budgetId, Id $elementId, BudgetElementType $elementType): BudgetElementOption
+    {
+        $item = $this->findOneBy(
+            [
+                'budget' => $this->getEntityManager()->getReference(Budget::class, $budgetId),
+                'elementId' => $elementId,
+                'elementType' => $elementType
+            ]
+        );
+        if (!$item instanceof BudgetElementOption) {
+            throw new NotFoundException(
+                sprintf(
+                    'BudgetElementOption with ID %s and TYPE %s not found',
+                    $elementId->getValue(),
+                    $elementType->getAlias()
+                )
+            );
+        }
+
+        return $item;
     }
 }

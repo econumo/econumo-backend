@@ -96,6 +96,14 @@ class BudgetEnvelope
         }
     }
 
+    public function setArchive(bool $value): void
+    {
+        if ($this->isArchived !== $value) {
+            $this->isArchived = $value;
+            $this->updated();
+        }
+    }
+
     public function getCreatedAt(): DateTimeInterface
     {
         return $this->createdAt;

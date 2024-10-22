@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\EconumoOneBundle\Domain\Repository;
 
 use App\EconumoOneBundle\Domain\Entity\BudgetElementOption;
+use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetElementType;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 
 interface BudgetElementOptionRepositoryInterface
@@ -15,6 +16,8 @@ interface BudgetElementOptionRepositoryInterface
      * @return BudgetElementOption[]
      */
     public function getByBudgetId(Id $budgetId): array;
+
+    public function get(Id $budgetId, Id $elementId, BudgetElementType $elementType): BudgetElementOption;
 
     /**
      * @param BudgetElementOption[] $items

@@ -9,15 +9,19 @@ use App\EconumoOneBundle\Domain\Entity\ValueObject\Icon;
 use App\EconumoOneBundle\UI\Service\Validator\ValueObjectValidationFactoryInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\All;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\PositiveOrZero;
+use Symfony\Component\Validator\Constraints\Range;
+use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Validator\Constraints\Uuid;
 
-class CreateEnvelopeV1Form extends AbstractType
+class UpdateEnvelopeV1Form extends AbstractType
 {
     public function __construct(private readonly ValueObjectValidationFactoryInterface $valueObjectValidationFactory)
     {
@@ -50,6 +54,13 @@ class CreateEnvelopeV1Form extends AbstractType
             ->add('currencyId', TextType::class, [
                 'constraints' => [new NotBlank(), new Uuid()],
             ])
+            ->add('isArchived', IntegerType::class, [
+                'constraints' => [
+                    new NotBlank(),
+                    new Type('integer'),
+                    new Range(['min' => 0, 'max' => 1]),
+                ],
+            ])
             ->add('categories', CollectionType::class, [
                 'entry_type' => TextType::class,
                 'allow_add' => true,
@@ -61,9 +72,6 @@ class CreateEnvelopeV1Form extends AbstractType
                         ],
                     ]),
                 ],
-            ])
-            ->add('folderId', TextType::class, [
-                'constraints' => [new Uuid()],
             ]);
     }
 }

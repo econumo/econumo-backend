@@ -87,6 +87,16 @@ class BudgetElementOption
         }
     }
 
+    public function updateCurrency(?Currency $currency): void
+    {
+        if (($this->currency !== null && $currency !== null && !$this->currency->getId()->isEqual($currency->getId()))
+            || ($this->currency === null && $currency !== null)
+            || ($this->currency !== null && $currency === null)) {
+            $this->currency = $currency;
+            $this->updated();
+        }
+    }
+
     private function updated(): void
     {
         $this->updatedAt = new DateTime();

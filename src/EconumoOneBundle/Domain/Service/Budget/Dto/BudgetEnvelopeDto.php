@@ -12,14 +12,13 @@ readonly class BudgetEnvelopeDto
 {
     public function __construct(
         public Id $id,
-        public ?Id $folderId,
         public ?Id $currencyId,
         public BudgetEnvelopeName $name,
         public Icon $icon,
         public int $position,
         public bool $isArchived,
         /** @var Id[] */
-        public array $categories,
+        public array $categories
     ) {
     }
 }

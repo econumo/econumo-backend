@@ -53,16 +53,19 @@ class BudgetEnvelopeRepository extends ServiceEntityRepository implements Budget
 
     public function deleteAssociationsWithCategories(Id $budgetId, array $categoriesIds): void
     {
+        if ($categoriesIds === []) {
+            return;
+        }
+
         $conn = $this->getEntityManager()->getConnection();
         $categoriesIdsString = [];
         $placeholders = [];
-
         foreach ($categoriesIds as $index => $categoryId) {
             $placeholder = ':category_id_' . $index;
             $placeholders[] = $placeholder;
             $categoriesIdsString[$placeholder] = $categoryId->getValue();
         }
-
+        $parameters = array_merge(['budget_id' => $budgetId->getValue()], $categoriesIdsString);
         $placeholdersString = implode(', ', $placeholders);
 
         $sql = <<<SQL
@@ -74,7 +77,7 @@ SQL;
 
         try {
             $stmt = $conn->prepare($sql);
-            $stmt->executeStatement(array_merge(['budget_id' => $budgetId->getValue()], $categoriesIdsString));
+            $stmt->executeStatement($parameters);
         } catch (Throwable $e) {
             // Handle any database errors
             throw new RuntimeException('Database error: ' . $e->getMessage());

@@ -12,5 +12,7 @@ use App\EconumoOneBundle\Domain\Service\Budget\Dto\BudgetStructureParentElementD
 
 interface BudgetEnvelopeServiceInterface
 {
-    public function create(Id $budgetId, BudgetEnvelopeDto $envelope): BudgetStructureParentElementDto;
+    public function create(Id $budgetId, BudgetEnvelopeDto $envelope, ?Id $folderId = null): BudgetStructureParentElementDto;
+
+    public function update(Id $budgetId, BudgetEnvelopeDto $envelopeDto): BudgetStructureParentElementDto;
 }

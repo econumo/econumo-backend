@@ -162,6 +162,27 @@ readonly class BudgetElementsService
 
         $seen = [];
         $budget = $this->budgetRepository->get($budgetId);
+
+        $envelopes = $this->envelopeRepository->getByBudgetId($budgetId);
+        $envelopeType = BudgetElementType::envelope()->getAlias();
+        $childCategoriesMap = [];
+        foreach ($envelopes as $envelope) {
+            $envelopeIndex = sprintf('%s_%s', $envelope->getId()->getValue(), $envelopeType);
+            $seen[$envelopeIndex] = true;
+            if (!array_key_exists($envelopeIndex, $optionsAssoc)) {
+                $optionsAssoc[$envelopeIndex] = $this->budgetEntityOptionFactory->createEnvelopeOption($budgetId, $envelope->getId(), PHP_INT_MAX);
+                $options[] = $optionsAssoc[$envelopeIndex];
+            }
+            if ($envelope->isArchived()) {
+                $optionsAssoc[$envelopeIndex]->unsetPosition();
+            } elseif ($optionsAssoc[$envelopeIndex]->isPositionUnset()) {
+                $optionsAssoc[$envelopeIndex]->updatePosition(PHP_INT_MAX);
+            }
+            foreach ($envelope->getCategories() as $category) {
+                $childCategoriesMap[$category->getId()->getValue()] = $category;
+            }
+        }
+
         $budgetUserIds = $this->budgetFiltersDtoAssembler->getBudgetUserIds($budget);
         $categories = $this->budgetFiltersDtoAssembler->getCategories($budgetUserIds);
         $categoryType = BudgetElementType::category()->getAlias();
@@ -176,6 +197,10 @@ readonly class BudgetElementsService
                 $optionsAssoc[$categoryIndex]->unsetPosition();
             } elseif ($optionsAssoc[$categoryIndex]->isPositionUnset()) {
                 $optionsAssoc[$categoryIndex]->updatePosition(PHP_INT_MAX);
+            }
+            if (array_key_exists($category->getId()->getValue(), $childCategoriesMap)) {
+                $optionsAssoc[$categoryIndex]->unsetPosition();
+                $optionsAssoc[$categoryIndex]->changeFolder(null);
             }
         }
 
@@ -192,22 +217,6 @@ readonly class BudgetElementsService
                 $optionsAssoc[$tagIndex]->unsetPosition();
             } elseif ($optionsAssoc[$tagIndex]->isPositionUnset()) {
                 $optionsAssoc[$tagIndex]->updatePosition(PHP_INT_MAX);
-            }
-        }
-
-        $envelopes = $this->envelopeRepository->getByBudgetId($budgetId);
-        $envelopeType = BudgetElementType::envelope()->getAlias();
-        foreach ($envelopes as $envelope) {
-            $envelopeIndex = sprintf('%s_%s', $envelope->getId()->getValue(), $envelopeType);
-            $seen[$envelopeIndex] = true;
-            if (!array_key_exists($envelopeIndex, $optionsAssoc)) {
-                $optionsAssoc[$envelopeIndex] = $this->budgetEntityOptionFactory->createEnvelopeOption($budgetId, $envelope->getId(), PHP_INT_MAX);
-                $options[] = $optionsAssoc[$envelopeIndex];
-            }
-            if ($envelope->isArchived()) {
-                $optionsAssoc[$envelopeIndex]->unsetPosition();
-            } elseif ($optionsAssoc[$envelopeIndex]->isPositionUnset()) {
-                $optionsAssoc[$envelopeIndex]->updatePosition(PHP_INT_MAX);
             }
         }
 
