@@ -71,4 +71,18 @@ class BudgetElementOptionRepository extends ServiceEntityRepository implements B
 
         return $item;
     }
+
+    public function deleteByElementIdAndType(Id $budgetId, Id $elementId, BudgetElementType $elementType): void
+    {
+        $this->createQueryBuilder('eo')
+            ->delete()
+            ->where('eo.budget = :budget')
+            ->setParameter('budget', $this->getEntityReference(Budget::class, $budgetId))
+            ->andWhere('eo.elementId = :elementId')
+            ->setParameter('elementId', $elementId->getValue())
+            ->andWhere('eo.elementType = :elementType')
+            ->setParameter('elementType', $elementType->getValue())
+            ->getQuery()
+            ->execute();
+    }
 }

@@ -53,7 +53,7 @@ readonly class BudgetAccessService implements BudgetAccessServiceInterface
     {
         try {
             $role = $this->getBudgetRole($userId, $budgetId);
-            if ($role->isAdmin() || $role->isOwner()) {
+            if ($role->isOwner() || $role->isAdmin() || $role->isUser()) {
                 return true;
             }
         } catch (AccessDeniedException $e) {

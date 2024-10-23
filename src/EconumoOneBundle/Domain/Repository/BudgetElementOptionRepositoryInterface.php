@@ -32,4 +32,6 @@ interface BudgetElementOptionRepositoryInterface
     public function delete(array $items): void;
 
     public function getReference(Id $id): BudgetElementOption;
+
+    public function deleteByElementIdAndType(Id $budgetId, Id $elementId, BudgetElementType $elementType): void;
 }

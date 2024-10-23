@@ -32,11 +32,19 @@ interface BudgetElementAmountRepositoryInterface
 
     public function deleteByBudgetId(Id $budgetId): void;
 
+    /**
+     * @param Id $budgetId
+     * @param Id $elementId
+     * @param BudgetElementType $elementType
+     * @return void
+     */
+    public function deleteByElementIdAndType(Id $budgetId, Id $elementId, BudgetElementType $elementType): void;
+
     public function getSummarizedAmounts(Id $budgetId, DateTimeInterface $periodStart, DateTimeInterface $periodEnd): array;
 
     /**
      * @param Id $budgetId
-     * @param array $sourceElementsIds
+     * @param Id[] $sourceElementsIds
      * @param BudgetElementType $targetElementType
      * @return float[]|int[]
      */
@@ -48,5 +56,5 @@ interface BudgetElementAmountRepositoryInterface
      * @param BudgetElementType $targetElementType
      * @return BudgetElementAmount[]
      */
-    public function getAmountsByElementIdAndType(Id $budgetId, Id $targetElementId, BudgetElementType $targetElementType): array;
+    public function getByElementIdAndType(Id $budgetId, Id $targetElementId, BudgetElementType $targetElementType): array;
 }

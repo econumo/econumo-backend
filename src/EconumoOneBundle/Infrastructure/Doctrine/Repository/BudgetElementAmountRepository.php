@@ -101,7 +101,7 @@ class BudgetElementAmountRepository extends ServiceEntityRepository implements B
         return $sourceAmounts;
     }
 
-    public function getAmountsByElementIdAndType(Id $budgetId, Id $targetElementId, BudgetElementType $targetElementType): array
+    public function getByElementIdAndType(Id $budgetId, Id $targetElementId, BudgetElementType $targetElementType): array
     {
         $targetAmountQuery = $this->createQueryBuilder('ea')
             ->select('ea')
@@ -114,5 +114,22 @@ class BudgetElementAmountRepository extends ServiceEntityRepository implements B
             ->orderBy('ea.period')
             ->getQuery();
         return $targetAmountQuery->getResult();
+    }
+
+    public function deleteByElementIdAndType(
+        Id $budgetId,
+        Id $elementId,
+        BudgetElementType $elementType
+    ): void {
+        $this->createQueryBuilder('ea')
+            ->delete()
+            ->where('ea.budget = :budget')
+            ->setParameter('budget', $this->getEntityReference(Budget::class, $budgetId))
+            ->andWhere('ea.elementId = :elementId')
+            ->setParameter('elementId', $elementId->getValue())
+            ->andWhere('ea.elementType = :elementType')
+            ->setParameter('elementType', $elementType->getValue())
+            ->getQuery()
+            ->execute();
     }
 }
