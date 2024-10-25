@@ -132,4 +132,13 @@ class BudgetElementAmountRepository extends ServiceEntityRepository implements B
             ->getQuery()
             ->execute();
     }
+
+    public function get(Id $budgetId, Id $elementId, DateTimeInterface $period): ?BudgetElementAmount
+    {
+        return $this->findOneBy([
+            'budget' => $this->getEntityReference(Budget::class, $budgetId),
+            'elementId' => $elementId,
+            'period' => $period
+        ]);
+    }
 }

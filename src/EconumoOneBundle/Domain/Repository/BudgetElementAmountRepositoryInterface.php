@@ -57,4 +57,12 @@ interface BudgetElementAmountRepositoryInterface
      * @return BudgetElementAmount[]
      */
     public function getByElementIdAndType(Id $budgetId, Id $targetElementId, BudgetElementType $targetElementType): array;
+
+    /**
+     * @param Id $budgetId
+     * @param Id $elementId
+     * @param DateTimeInterface $period
+     * @return BudgetElementAmount|null
+     */
+    public function get(Id $budgetId, Id $elementId, DateTimeInterface $period): ?BudgetElementAmount;
 }
