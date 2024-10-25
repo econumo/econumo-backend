@@ -7,17 +7,17 @@ namespace App\EconumoOneBundle\Domain\Service\Budget;
 
 
 use App\EconumoOneBundle\Domain\Entity\Budget;
-use App\EconumoOneBundle\Domain\Entity\BudgetElementOption;
+use App\EconumoOneBundle\Domain\Entity\BudgetElement;
 use App\EconumoOneBundle\Domain\Entity\BudgetEnvelope;
 use App\EconumoOneBundle\Domain\Entity\Category;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetElementType;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoOneBundle\Domain\Exception\AccessDeniedException;
 use App\EconumoOneBundle\Domain\Factory\BudgetElementAmountFactoryInterface;
-use App\EconumoOneBundle\Domain\Factory\BudgetElementOptionFactoryInterface;
+use App\EconumoOneBundle\Domain\Factory\BudgetElementFactoryInterface;
 use App\EconumoOneBundle\Domain\Factory\BudgetEnvelopeFactoryInterface;
 use App\EconumoOneBundle\Domain\Repository\BudgetElementAmountRepositoryInterface;
-use App\EconumoOneBundle\Domain\Repository\BudgetElementOptionRepositoryInterface;
+use App\EconumoOneBundle\Domain\Repository\BudgetElementRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\BudgetEnvelopeRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\BudgetRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\CurrencyRepositoryInterface;
@@ -33,11 +33,11 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
     public function __construct(
         private BudgetElementsService $budgetElementsService,
         private BudgetEnvelopeFactoryInterface $budgetEnvelopeFactory,
-        private BudgetElementOptionFactoryInterface $budgetElementOptionFactory,
+        private BudgetElementFactoryInterface $budgetElementFactory,
         private BudgetRepositoryInterface $budgetRepository,
         private AntiCorruptionServiceInterface $antiCorruptionService,
         private BudgetEnvelopeRepositoryInterface $budgetEnvelopeRepository,
-        private BudgetElementOptionRepositoryInterface $budgetElementOptionRepository,
+        private BudgetElementRepositoryInterface $budgetElementRepository,
         private BudgetFiltersDtoAssembler $budgetFiltersDtoAssembler,
         private BudgetElementAmountRepositoryInterface $budgetElementAmountRepository,
         private BudgetElementAmountFactoryInterface $budgetElementAmountFactory,
@@ -75,14 +75,14 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
             if ($envelopeCurrencyId !== null && $budget->getCurrencyId()->isEqual($envelope->currencyId)) {
                 $envelopeCurrencyId = null;
             }
-            $envelopeOptions = $this->budgetElementOptionFactory->createEnvelopeOption(
+            $envelopeOptions = $this->budgetElementFactory->createEnvelopeElement(
                 $budgetId,
                 $envelope->id,
                 $envelope->position,
                 $envelopeCurrencyId,
                 $folderId
             );
-            $this->budgetElementOptionRepository->save([$envelopeOptions]);
+            $this->budgetElementRepository->save([$envelopeOptions]);
 
             if ($envelope->categories !== []) {
                 $this->reassignAmounts($budgetId, $envelopeEntity);
@@ -104,8 +104,7 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
         try {
             $budget = $this->budgetRepository->get($budgetId);
             $envelope = $this->budgetEnvelopeRepository->get($envelopeDto->id);
-            $envelopeType = BudgetElementType::envelope();
-            $envelopeOptions = $this->budgetElementOptionRepository->get($budgetId, $envelope->getId(), $envelopeType);
+            $envelopeOptions = $this->budgetElementRepository->get($budgetId, $envelope->getId());
 
             $envelope->updateName($envelopeDto->name);
             $envelope->updateIcon($envelopeDto->icon);
@@ -119,7 +118,7 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
                 $currency = $this->currencyRepository->get($envelopeDto->currencyId);
                 $envelopeOptions->updateCurrency($currency);
             }
-            $this->budgetElementOptionRepository->save([$envelopeOptions]);
+            $this->budgetElementRepository->save([$envelopeOptions]);
 
             if ($envelopeDto->categories !== [] || $envelope->getCategories()->count() > 0) {
                 $envelopeCategoriesMap = [];
@@ -160,7 +159,6 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
     private function reassignAmounts(Id $budgetId, BudgetEnvelope $envelope): void
     {
         $this->antiCorruptionService->beginTransaction(__METHOD__);
-        $envelopeType = BudgetElementType::envelope();
         $categoryType = BudgetElementType::category();
         try {
             $categoriesIds = [];
@@ -168,9 +166,9 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
                 $categoriesIds[] = $category->getId();
             }
             $sourceAmounts = $this->budgetElementAmountRepository
-                ->getSummarizedAmountsForElements($budgetId, $categoriesIds, $categoryType);
+                ->getSummarizedAmountsForElements($budgetId, $categoriesIds);
             $targetAmounts = $this->budgetElementAmountRepository
-                ->getByElementIdAndType($budgetId, $envelope->getId(), $envelopeType);
+                ->getByBudgetIdAndElementId($budgetId, $envelope->getId());
 
             $updated = [];
             $seen = [];
@@ -192,7 +190,6 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
                 $created[] = $this->budgetElementAmountFactory->create(
                     $budgetId,
                     $envelope->getId(),
-                    $envelopeType,
                     $sourceAmounts[$key],
                     DateTime::createFromFormat('Y-m-d', $key)
                 );
@@ -204,7 +201,7 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
             $toDelete = [];
             foreach ($envelope->getCategories() as $category) {
                 $oldAmounts = $this->budgetElementAmountRepository
-                    ->getByElementIdAndType($budgetId, $category->getId(), $categoryType);
+                    ->getByBudgetIdAndElementId($budgetId, $category->getId(), $categoryType);
                 if ($oldAmounts !== []) {
                     $toDelete = array_merge($toDelete, $oldAmounts);
                 }
@@ -222,13 +219,13 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
 
     /**
      * @param BudgetEnvelope $envelope
-     * @param BudgetElementOption $envelopeOption
+     * @param BudgetElement $envelopeOption
      * @param Budget $budget
      * @return BudgetStructureParentElementDto
      */
     private function assembleEnvelope(
         BudgetEnvelope $envelope,
-        BudgetElementOption $envelopeOption,
+        BudgetElement $envelopeOption,
         Budget $budget
     ): BudgetStructureParentElementDto {
         $children = [];
@@ -246,7 +243,7 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
         }
         return new BudgetStructureParentElementDto(
             $envelope->getId(),
-            $envelopeOption->getElementType(),
+            $envelopeOption->getType(),
             $envelope->getName(),
             $envelope->getIcon(),
             null,
@@ -299,9 +296,9 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
         $this->budgetEnvelopeRepository->save([$envelope]);
 
         $updatedOptions = [];
-        $budgetElementsOptions = $this->budgetElementOptionRepository->getByBudgetId($envelope->getBudget()->getId());
+        $budgetElementsOptions = $this->budgetElementRepository->getByBudgetId($envelope->getBudget()->getId());
         foreach ($budgetElementsOptions as $budgetElementOption) {
-            if (!$budgetElementOption->getElementType()->isCategory()) {
+            if (!$budgetElementOption->getType()->isCategory()) {
                 continue;
             }
             if (!array_key_exists($budgetElementOption->getElementId()->getValue(), $categoriesMap)) {
@@ -312,7 +309,7 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
             $updatedOptions[] = $budgetElementOption;
         }
         if ($updatedOptions !== []) {
-            $this->budgetElementOptionRepository->save($updatedOptions);
+            $this->budgetElementRepository->save($updatedOptions);
         }
     }
 
@@ -332,11 +329,11 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
         }
 
         $toUpdate = [];
-        $budgetElementsOptions = $this->budgetElementOptionRepository->getByBudgetId($envelope->getBudget()->getId());
+        $budgetElementsOptions = $this->budgetElementRepository->getByBudgetId($envelope->getBudget()->getId());
         $envelopeOptions = null;
         foreach ($budgetElementsOptions as $budgetElementOption) {
             if ($budgetElementOption->getElementId()->isEqual($envelope->getId())
-                && $budgetElementOption->getElementType()->isEnvelope()) {
+                && $budgetElementOption->getType()->isEnvelope()) {
                 $envelopeOptions = $budgetElementOption;
                 break;
             }
@@ -353,7 +350,7 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
         $shiftTo = count($categoriesMap);
         $position = $envelopePosition;
         foreach ($budgetElementsOptions as $budgetElementOption) {
-            if (!$budgetElementOption->getElementType()->isCategory()) {
+            if (!$budgetElementOption->getType()->isCategory()) {
                 continue;
             }
 
@@ -371,7 +368,7 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
             }
         }
         if ($toUpdate !== []) {
-            $this->budgetElementOptionRepository->save($toUpdate);
+            $this->budgetElementRepository->save($toUpdate);
         }
     }
 
@@ -390,9 +387,8 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
             }
             $this->removeCategoriesFromEnvelope($envelope, $categoriesMap);
 
-            $type = BudgetElementType::envelope();
-            $this->budgetElementAmountRepository->deleteByElementIdAndType($budgetId, $envelope->getId(), $type);
-            $this->budgetElementOptionRepository->deleteByElementIdAndType($budgetId, $envelope->getId(), $type);
+            $this->budgetElementAmountRepository->deleteByBudgetIdAndElementId($budgetId, $envelope->getId());
+            $this->budgetElementRepository->deleteByBudgetAndElementId($budgetId, $envelope->getId());
             $this->budgetEnvelopeRepository->delete([$envelope]);
             $this->antiCorruptionService->commit(__METHOD__);
         } catch (\Throwable $exception) {

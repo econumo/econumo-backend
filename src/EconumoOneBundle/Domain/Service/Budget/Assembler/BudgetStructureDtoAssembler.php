@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\EconumoOneBundle\Domain\Service\Budget\Assembler;
 
 use App\EconumoOneBundle\Domain\Entity\Budget;
-use App\EconumoOneBundle\Domain\Entity\BudgetElementOption;
+use App\EconumoOneBundle\Domain\Entity\BudgetElement;
 use App\EconumoOneBundle\Domain\Entity\BudgetEnvelope;
 use App\EconumoOneBundle\Domain\Entity\BudgetFolder;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetElementType;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
-use App\EconumoOneBundle\Domain\Repository\BudgetElementOptionRepositoryInterface;
+use App\EconumoOneBundle\Domain\Repository\BudgetElementRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\BudgetEnvelopeRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\BudgetFolderRepositoryInterface;
 use App\EconumoOneBundle\Domain\Service\Budget\Assembler\BudgetStructureFolderDtoAssembler;
@@ -29,7 +29,7 @@ readonly class BudgetStructureDtoAssembler
         private BudgetFolderRepositoryInterface $budgetFolderRepository,
         private BudgetStructureFolderDtoAssembler $budgetStructureFolderDtoAssembler,
         private CurrencyConvertorInterface $currencyConvertor,
-        private BudgetElementOptionRepositoryInterface $budgetEntityOptionRepository,
+        private BudgetElementRepositoryInterface $budgetElementRepository,
     ) {
     }
 
@@ -59,7 +59,7 @@ readonly class BudgetStructureDtoAssembler
             $index = sprintf('%s-%s', $envelope->getId()->getValue(), $type->getAlias());
             $currencyId = ($elementsOptions[$index] ?? null)?->getCurrency()?->getId() ?? $budget->getCurrencyId();
             $folderId = ($elementsOptions[$index] ?? null)?->getFolder()?->getId();
-            $position = ($elementsOptions[$index] ?? null)?->getPosition() ?? BudgetElementOption::POSITION_UNSET;
+            $position = ($elementsOptions[$index] ?? null)?->getPosition() ?? BudgetElement::POSITION_UNSET;
             $budgeted = $elementsAmounts[$index]?->budgeted ?? .0;
             $budgetedBefore = $elementsAmounts[$index]?->budgetedBefore ?? .0;
             $currenciesSpent = $elementsAmounts[$index]?->currenciesSpent ?? [];
@@ -125,7 +125,7 @@ readonly class BudgetStructureDtoAssembler
             $index = sprintf('%s-%s', $tag->getId()->getValue(), $type->getAlias());
             $currencyId = ($elementsOptions[$index] ?? null)?->getCurrency()?->getId() ?? $budget->getCurrencyId();
             $folderId = ($elementsOptions[$index] ?? null)?->getFolder()?->getId();
-            $position = ($elementsOptions[$index] ?? null)?->getPosition() ?? BudgetElementOption::POSITION_UNSET;
+            $position = ($elementsOptions[$index] ?? null)?->getPosition() ?? BudgetElement::POSITION_UNSET;
             $budgeted = $elementsAmounts[$index]?->budgeted ?? .0;
             $budgetedBefore = $elementsAmounts[$index]?->budgetedBefore ?? .0;
             $currenciesSpent = $elementsAmounts[$index]?->currenciesSpent ?? [];
@@ -216,7 +216,7 @@ readonly class BudgetStructureDtoAssembler
             $index = sprintf('%s-%s', $category->getId()->getValue(), $type->getAlias());
             $currencyId = ($elementsOptions[$index] ?? null)?->getCurrency()?->getId() ?? $budget->getCurrencyId();
             $folderId = ($elementsOptions[$index] ?? null)?->getFolder()?->getId();
-            $position = ($elementsOptions[$index] ?? null)?->getPosition() ?? BudgetElementOption::POSITION_UNSET;
+            $position = ($elementsOptions[$index] ?? null)?->getPosition() ?? BudgetElement::POSITION_UNSET;
             $budgeted = $elementsAmounts[$index]?->budgeted ?? .0;
             $budgetedBefore = $elementsAmounts[$index]?->budgetedBefore ?? .0;
             $currenciesSpent = $elementsAmounts[$index]?->currenciesSpent ?? [];
@@ -344,14 +344,14 @@ readonly class BudgetStructureDtoAssembler
 
     /**
      * @param Id $budgetId
-     * @return BudgetElementOption[]
+     * @return BudgetElement[]
      */
     private function getElementOptions(Id $budgetId): array
     {
-        $elementsOptions = $this->budgetEntityOptionRepository->getByBudgetId($budgetId);
+        $elementsOptions = $this->budgetElementRepository->getByBudgetId($budgetId);
         $elementsOptionsAssoc = [];
         foreach ($elementsOptions as $item) {
-            $index = sprintf('%s-%s', $item->getElementId()->getValue(), $item->getElementType()->getAlias());
+            $index = sprintf('%s-%s', $item->getElementId()->getValue(), $item->getType()->getAlias());
             $elementsOptionsAssoc[$index] = $item;
         }
 

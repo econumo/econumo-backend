@@ -9,12 +9,12 @@ namespace App\EconumoOneBundle\Domain\Service\Budget;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoOneBundle\Domain\Factory\BudgetElementAmountFactoryInterface;
 use App\EconumoOneBundle\Domain\Repository\BudgetElementAmountRepositoryInterface;
-use App\EconumoOneBundle\Domain\Repository\BudgetElementOptionRepositoryInterface;
+use App\EconumoOneBundle\Domain\Repository\BudgetElementRepositoryInterface;
 
 readonly class BudgetLimitService implements BudgetLimitServiceInterface
 {
     public function __construct(
-        private BudgetElementOptionRepositoryInterface $budgetElementOptionRepository,
+        private BudgetElementRepositoryInterface $budgetElementRepository,
         private BudgetElementAmountRepositoryInterface $budgetElementAmountRepository,
         private BudgetElementAmountFactoryInterface $budgetElementAmountFactory
     ) {
@@ -22,7 +22,6 @@ readonly class BudgetLimitService implements BudgetLimitServiceInterface
 
     public function setLimit(Id $budgetId, Id $elementId, \DateTimeInterface $period, ?float $amount): void
     {
-        $elementOption = $this->budgetElementOptionRepository->get($budgetId, $elementId, null);
         $elementAmount = $this->budgetElementAmountRepository->get($budgetId, $elementId, $period);
         if (null === $amount) {
             if (null !== $elementAmount) {
@@ -33,7 +32,6 @@ readonly class BudgetLimitService implements BudgetLimitServiceInterface
                 $elementAmount = $this->budgetElementAmountFactory->create(
                     $budgetId,
                     $elementId,
-                    $elementOption->getElementType(),
                     $amount,
                     $period
                 );

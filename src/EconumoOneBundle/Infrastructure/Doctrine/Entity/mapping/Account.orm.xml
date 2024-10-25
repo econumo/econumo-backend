@@ -31,8 +31,8 @@
         </many-to-one>
 
         <indexes>
-            <index name="user_deleted_idx" columns="user_id,is_deleted"/>
-            <index name="is_deleted_idx" columns="is_deleted"/>
+            <index name="user_deleted_idx_accounts" columns="user_id,is_deleted"/>
+            <index name="is_deleted_idx_accounts" columns="is_deleted"/>
         </indexes>
     </entity>
 </doctrine-mapping>

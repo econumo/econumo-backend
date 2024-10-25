@@ -20,9 +20,9 @@
         </unique-constraints>
 
         <indexes>
-            <index name="published_at_idx" columns="published_at"/>
-            <index name="currency_published_idx" columns="currency_id,published_at"/>
-            <index name="base_currency_published_idx" columns="base_currency_id,published_at"/>
+            <index name="published_at_idx_currency_rates" columns="published_at"/>
+            <index name="currency_published_idx_currency_rates" columns="currency_id,published_at"/>
+            <index name="base_currency_published_idx_currency_rates" columns="base_currency_id,published_at"/>
         </indexes>
     </entity>
 </doctrine-mapping>

@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\EconumoOneBundle\Infrastructure\Doctrine\Repository;
 
 use App\EconumoOneBundle\Domain\Entity\Budget;
-use App\EconumoOneBundle\Domain\Entity\BudgetElementOption;
+use App\EconumoOneBundle\Domain\Entity\BudgetElement;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetElementType;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoOneBundle\Domain\Exception\NotFoundException;
-use App\EconumoOneBundle\Domain\Repository\BudgetElementOptionRepositoryInterface;
+use App\EconumoOneBundle\Domain\Repository\BudgetElementRepositoryInterface;
 use App\EconumoOneBundle\Infrastructure\Doctrine\Repository\Traits\DeleteTrait;
 use App\EconumoOneBundle\Infrastructure\Doctrine\Repository\Traits\GetEntityReferenceTrait;
 use App\EconumoOneBundle\Infrastructure\Doctrine\Repository\Traits\NextIdentityTrait;
@@ -18,12 +18,12 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method BudgetElementOption|null find($id, $lockMode = null, $lockVersion = null)
- * @method BudgetElementOption|null findOneBy(array $criteria, array $orderBy = null)
- * @method BudgetElementOption[]    findAll()
- * @method BudgetElementOption[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method BudgetElement|null find($id, $lockMode = null, $lockVersion = null)
+ * @method BudgetElement|null findOneBy(array $criteria, array $orderBy = null)
+ * @method BudgetElement[]    findAll()
+ * @method BudgetElement[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class BudgetElementOptionRepository extends ServiceEntityRepository implements BudgetElementOptionRepositoryInterface
+class BudgetElementRepository extends ServiceEntityRepository implements BudgetElementRepositoryInterface
 {
     use NextIdentityTrait;
     use SaveTrait;
@@ -32,7 +32,7 @@ class BudgetElementOptionRepository extends ServiceEntityRepository implements B
 
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, BudgetElementOption::class);
+        parent::__construct($registry, BudgetElement::class);
     }
 
     public function getByBudgetId(Id $budgetId): array
@@ -45,26 +45,24 @@ class BudgetElementOptionRepository extends ServiceEntityRepository implements B
         );
     }
 
-    public function getReference(Id $id): BudgetElementOption
+    public function getReference(Id $id): BudgetElement
     {
-        return $this->getEntityReference(BudgetElementOption::class, $id);
+        return $this->getEntityReference(BudgetElement::class, $id);
     }
 
-    public function get(Id $budgetId, Id $elementId, BudgetElementType $elementType): BudgetElementOption
+    public function get(Id $budgetId, Id $elementId): BudgetElement
     {
         $item = $this->findOneBy(
             [
-                'budget' => $this->getEntityManager()->getReference(Budget::class, $budgetId),
-                'elementId' => $elementId,
-                'elementType' => $elementType
+                'budget' => $this->getEntityReference(Budget::class, $budgetId),
+                'elementId' => $elementId
             ]
         );
-        if (!$item instanceof BudgetElementOption) {
+        if (!$item instanceof BudgetElement) {
             throw new NotFoundException(
                 sprintf(
-                    'BudgetElementOption with ID %s and TYPE %s not found',
-                    $elementId->getValue(),
-                    $elementType->getAlias()
+                    'BudgetElementOption with ID %s not found',
+                    $elementId->getValue()
                 )
             );
         }
@@ -72,7 +70,7 @@ class BudgetElementOptionRepository extends ServiceEntityRepository implements B
         return $item;
     }
 
-    public function deleteByElementIdAndType(Id $budgetId, Id $elementId, BudgetElementType $elementType): void
+    public function deleteByBudgetAndElementId(Id $budgetId, Id $elementId): void
     {
         $this->createQueryBuilder('eo')
             ->delete()
@@ -80,8 +78,6 @@ class BudgetElementOptionRepository extends ServiceEntityRepository implements B
             ->setParameter('budget', $this->getEntityReference(Budget::class, $budgetId))
             ->andWhere('eo.elementId = :elementId')
             ->setParameter('elementId', $elementId->getValue())
-            ->andWhere('eo.elementType = :elementType')
-            ->setParameter('elementType', $elementType->getValue())
             ->getQuery()
             ->execute();
     }

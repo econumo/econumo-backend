@@ -36,13 +36,12 @@
         </many-to-one>
 
         <indexes>
-            <index columns="type" name="type_idx"/>
-            <index columns="spent_at" name="spent_idx"/>
-            <index columns="account_id,spent_at" name="account_spent_idx"/>
-            <index columns="account_recipient_id,spent_at" name="account_recipient_spent_idx"/>
-            <index columns="account_recipient_id,spent_at" name="account_recipient_spent_idx"/>
-            <index columns="category_id,account_id,spent_at" name="category_account_spent_idx"/>
-            <index columns="tag_id,account_id,spent_at" name="tag_account_spent_idx"/>
+            <index columns="type" name="type_idx_transactions"/>
+            <index columns="spent_at" name="spent_idx_transactions"/>
+            <index columns="account_id,spent_at" name="account_spent_idx_transactions"/>
+            <index columns="account_recipient_id,spent_at" name="account_recipient_spent_idx_transactions"/>
+            <index columns="category_id,account_id,spent_at" name="category_account_spent_idx_transactions"/>
+            <index columns="tag_id,account_id,spent_at" name="tag_account_spent_idx_transactions"/>
         </indexes>
     </entity>
 </doctrine-mapping>

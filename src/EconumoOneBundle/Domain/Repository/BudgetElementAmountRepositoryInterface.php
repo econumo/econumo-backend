@@ -32,31 +32,30 @@ interface BudgetElementAmountRepositoryInterface
 
     public function deleteByBudgetId(Id $budgetId): void;
 
+    public function deleteByElementId(Id $elementId): void;
+
     /**
      * @param Id $budgetId
      * @param Id $elementId
-     * @param BudgetElementType $elementType
      * @return void
      */
-    public function deleteByElementIdAndType(Id $budgetId, Id $elementId, BudgetElementType $elementType): void;
+    public function deleteByBudgetIdAndElementId(Id $budgetId, Id $elementId): void;
 
-    public function getSummarizedAmounts(Id $budgetId, DateTimeInterface $periodStart, DateTimeInterface $periodEnd): array;
+    public function getSummarizedAmountsForPeriod(Id $budgetId, DateTimeInterface $periodStart, DateTimeInterface $periodEnd): array;
 
     /**
      * @param Id $budgetId
-     * @param Id[] $sourceElementsIds
-     * @param BudgetElementType $targetElementType
+     * @param Id[] $elementsIds
      * @return float[]|int[]
      */
-    public function getSummarizedAmountsForElements(Id $budgetId, array $sourceElementsIds, BudgetElementType $targetElementType): array;
+    public function getSummarizedAmountsForElements(Id $budgetId, array $elementsIds): array;
 
     /**
      * @param Id $budgetId
-     * @param Id $targetElementId
-     * @param BudgetElementType $targetElementType
+     * @param Id $elementId
      * @return BudgetElementAmount[]
      */
-    public function getByElementIdAndType(Id $budgetId, Id $targetElementId, BudgetElementType $targetElementType): array;
+    public function getByBudgetIdAndElementId(Id $budgetId, Id $elementId): array;
 
     /**
      * @param Id $budgetId

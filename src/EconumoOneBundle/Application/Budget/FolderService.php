@@ -10,9 +10,8 @@ use App\EconumoOneBundle\Application\Budget\Assembler\CreateFolderV1ResultAssemb
 use App\EconumoOneBundle\Application\Exception\AccessDeniedException;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetFolderName;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
-use App\EconumoOneBundle\Domain\Repository\BudgetFolderRepositoryInterface;
 use App\EconumoOneBundle\Domain\Service\Budget\BudgetAccessServiceInterface;
-use App\EconumoOneBundle\Domain\Service\Budget\FolderServiceInterface;
+use App\EconumoOneBundle\Domain\Service\Budget\BudgetFolderServiceInterface;
 use App\EconumoOneBundle\Application\Budget\Dto\DeleteFolderV1RequestDto;
 use App\EconumoOneBundle\Application\Budget\Dto\DeleteFolderV1ResultDto;
 use App\EconumoOneBundle\Application\Budget\Assembler\DeleteFolderV1ResultAssembler;
@@ -25,9 +24,8 @@ readonly class FolderService
     public function __construct(
         private CreateFolderV1ResultAssembler $createFolderV1ResultAssembler,
         private BudgetAccessServiceInterface $budgetAccessService,
-        private FolderServiceInterface $folderService,
+        private BudgetFolderServiceInterface $budgetFolderService,
         private DeleteFolderV1ResultAssembler $deleteFolderV1ResultAssembler,
-        private BudgetFolderRepositoryInterface $budgetFolderRepository,
         private UpdateFolderV1ResultAssembler $updateFolderV1ResultAssembler,
     ) {
     }
@@ -42,7 +40,7 @@ readonly class FolderService
         }
         $folderId = new Id($dto->id);
         $folderName = new BudgetFolderName($dto->name);
-        $folder = $this->folderService->create($budgetId, $folderId, $folderName);
+        $folder = $this->budgetFolderService->create($budgetId, $folderId, $folderName);
         return $this->createFolderV1ResultAssembler->assemble($folder);
     }
 
@@ -56,7 +54,7 @@ readonly class FolderService
             throw new AccessDeniedException();
         }
 
-        $this->folderService->delete($budgetId, $folderId);
+        $this->budgetFolderService->delete($budgetId, $folderId);
         return $this->deleteFolderV1ResultAssembler->assemble($dto);
     }
 
@@ -71,7 +69,7 @@ readonly class FolderService
             throw new AccessDeniedException();
         }
 
-        $folder = $this->folderService->update($budgetId, $folderId, $folderName);
+        $folder = $this->budgetFolderService->update($budgetId, $folderId, $folderName);
         return $this->updateFolderV1ResultAssembler->assemble($folder);
     }
 }

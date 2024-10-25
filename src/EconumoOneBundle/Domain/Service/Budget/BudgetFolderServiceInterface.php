@@ -10,7 +10,7 @@ use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetFolderName;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoOneBundle\Domain\Service\Budget\Dto\BudgetStructureFolderDto;
 
-interface FolderServiceInterface
+interface BudgetFolderServiceInterface
 {
     public function create(Id $budgetId, Id $folderId, BudgetFolderName $name): BudgetStructureFolderDto;
 

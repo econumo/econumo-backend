@@ -4,35 +4,33 @@ declare(strict_types=1);
 
 namespace App\EconumoOneBundle\Domain\Repository;
 
-use App\EconumoOneBundle\Domain\Entity\BudgetFolder;
+use App\EconumoOneBundle\Domain\Entity\BudgetElement;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 
-interface BudgetFolderRepositoryInterface
+interface BudgetElementRepositoryInterface
 {
     public function getNextIdentity(): Id;
 
     /**
-     * @param Id $id
-     * @return BudgetFolder
-     */
-    public function get(Id $id): BudgetFolder;
-
-    /**
-     * @return BudgetFolder[]
+     * @return BudgetElement[]
      */
     public function getByBudgetId(Id $budgetId): array;
 
+    public function get(Id $budgetId, Id $elementId): BudgetElement;
+
     /**
-     * @param BudgetFolder[] $items
+     * @param BudgetElement[] $items
      * @return void
      */
     public function save(array $items): void;
 
     /**
-     * @param BudgetFolder[] $items
+     * @param BudgetElement[] $items
      * @return void
      */
     public function delete(array $items): void;
 
-    public function getReference(Id $id): BudgetFolder;
+    public function getReference(Id $id): BudgetElement;
+
+    public function deleteByBudgetAndElementId(Id $budgetId, Id $elementId): void;
 }

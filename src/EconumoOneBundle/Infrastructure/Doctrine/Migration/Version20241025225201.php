@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20241019213803 extends AbstractMigration
+final class Version20241025225201 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -20,7 +20,7 @@ final class Version20241019213803 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->skipIf($this->connection->getDatabasePlatform()->getName() !== 'sqlite', 'Migration can only be executed safely on \'sqlite\'.');
+        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'sqlite', 'Migration can only be executed safely on \'sqlite\'.');
 
         $this->addSql('CREATE TABLE budgets (id CHAR(36) NOT NULL --(DC2Type:uuid)
         , currency_id CHAR(36) NOT NULL --(DC2Type:uuid)
@@ -40,22 +40,24 @@ final class Version20241019213803 extends AbstractMigration
         , updated_at DATETIME NOT NULL, PRIMARY KEY(budget_id, user_id))');
         $this->addSql('CREATE INDEX IDX_9300F12F36ABA6B8 ON budgets_access (budget_id)');
         $this->addSql('CREATE INDEX IDX_9300F12FA76ED395 ON budgets_access (user_id)');
-        $this->addSql('CREATE TABLE budgets_elements_amounts (element_id CHAR(36) NOT NULL --(DC2Type:uuid)
-        , element_type SMALLINT NOT NULL, period DATETIME NOT NULL --(DC2Type:datetime_immutable)
-        , budget_id CHAR(36) NOT NULL --(DC2Type:uuid)
-        , amount NUMERIC(19, 2) NOT NULL, created_at DATETIME NOT NULL --(DC2Type:datetime_immutable)
-        , updated_at DATETIME NOT NULL, PRIMARY KEY(element_id, element_type, period, budget_id))');
-        $this->addSql('CREATE INDEX IDX_2FAF76336ABA6B8 ON budgets_elements_amounts (budget_id)');
-        $this->addSql('CREATE INDEX budget_period_idx ON budgets_elements_amounts (budget_id, period)');
-        $this->addSql('CREATE TABLE budgets_elements_options (element_id CHAR(36) NOT NULL --(DC2Type:uuid)
-        , element_type SMALLINT NOT NULL, budget_id CHAR(36) NOT NULL --(DC2Type:uuid)
+        $this->addSql('CREATE TABLE budgets_elements (budget_id CHAR(36) NOT NULL --(DC2Type:uuid)
+        , element_id CHAR(36) NOT NULL --(DC2Type:uuid)
         , currency_id CHAR(36) DEFAULT NULL --(DC2Type:uuid)
         , folder_id CHAR(36) DEFAULT NULL --(DC2Type:uuid)
-        , created_at DATETIME NOT NULL --(DC2Type:datetime_immutable)
-        , updated_at DATETIME NOT NULL, position SMALLINT UNSIGNED DEFAULT 0 NOT NULL, PRIMARY KEY(element_id, element_type, budget_id))');
-        $this->addSql('CREATE INDEX IDX_519D432336ABA6B8 ON budgets_elements_options (budget_id)');
-        $this->addSql('CREATE INDEX IDX_519D432338248176 ON budgets_elements_options (currency_id)');
-        $this->addSql('CREATE INDEX IDX_519D4323162CB942 ON budgets_elements_options (folder_id)');
+        , type SMALLINT NOT NULL, created_at DATETIME NOT NULL --(DC2Type:datetime_immutable)
+        , updated_at DATETIME NOT NULL, position SMALLINT UNSIGNED DEFAULT 0 NOT NULL, PRIMARY KEY(budget_id, element_id))');
+        $this->addSql('CREATE INDEX IDX_EE8709C336ABA6B8 ON budgets_elements (budget_id)');
+        $this->addSql('CREATE INDEX IDX_EE8709C338248176 ON budgets_elements (currency_id)');
+        $this->addSql('CREATE INDEX IDX_EE8709C3162CB942 ON budgets_elements (folder_id)');
+        $this->addSql('CREATE INDEX element_idx_budgets_elements ON budgets_elements (element_id)');
+        $this->addSql('CREATE TABLE budgets_elements_amounts (budget_id CHAR(36) NOT NULL --(DC2Type:uuid)
+        , element_id CHAR(36) NOT NULL --(DC2Type:uuid)
+        , period DATETIME NOT NULL --(DC2Type:datetime_immutable)
+        , amount NUMERIC(19, 2) NOT NULL, created_at DATETIME NOT NULL --(DC2Type:datetime_immutable)
+        , updated_at DATETIME NOT NULL, PRIMARY KEY(budget_id, element_id, period))');
+        $this->addSql('CREATE INDEX IDX_2FAF76336ABA6B8 ON budgets_elements_amounts (budget_id)');
+        $this->addSql('CREATE INDEX budget_period_idx_budgets_elements_amounts ON budgets_elements_amounts (budget_id, period)');
+        $this->addSql('CREATE INDEX element_idx_budgets_elements_amounts ON budgets_elements_amounts (element_id)');
         $this->addSql('CREATE TABLE budgets_envelopes (id CHAR(36) NOT NULL --(DC2Type:uuid)
         , budget_id CHAR(36) NOT NULL --(DC2Type:uuid)
         , name VARCHAR(64) DEFAULT NULL, icon VARCHAR(64) DEFAULT NULL, is_archived BOOLEAN DEFAULT \'0\' NOT NULL, created_at DATETIME NOT NULL --(DC2Type:datetime_immutable)
@@ -76,13 +78,13 @@ final class Version20241019213803 extends AbstractMigration
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->skipIf($this->connection->getDatabasePlatform()->getName() !== 'sqlite', 'Migration can only be executed safely on \'sqlite\'.');
+        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'sqlite', 'Migration can only be executed safely on \'sqlite\'.');
 
         $this->addSql('DROP TABLE budgets');
         $this->addSql('DROP TABLE budgets_excluded_accounts');
         $this->addSql('DROP TABLE budgets_access');
+        $this->addSql('DROP TABLE budgets_elements');
         $this->addSql('DROP TABLE budgets_elements_amounts');
-        $this->addSql('DROP TABLE budgets_elements_options');
         $this->addSql('DROP TABLE budgets_envelopes');
         $this->addSql('DROP TABLE budgets_envelopes_categories');
         $this->addSql('DROP TABLE budgets_folders');

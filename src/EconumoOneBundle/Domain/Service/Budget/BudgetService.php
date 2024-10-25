@@ -31,11 +31,11 @@ readonly class BudgetService implements BudgetServiceInterface
         private DatetimeServiceInterface $datetimeService,
         private UserServiceInterface $userService,
         private AntiCorruptionServiceInterface $antiCorruptionService,
-        private BudgetElementServiceInterface $budgetEntityService,
+        private BudgetElementServiceInterface $budgetElementService,
         private BudgetMetaDtoAssembler $budgetMetaDtoAssembler,
         private BudgetDeletionService $budgetDeletionService,
         private AccountRepositoryInterface $accountRepository,
-        private BudgetElementAmountRepositoryInterface $budgetEntityAmountRepository,
+        private BudgetElementAmountRepositoryInterface $budgetElementAmountRepository,
         private BudgetDtoAssembler $budgetDtoAssembler,
         private UserRepositoryInterface $userRepository,
         private CurrencyRepositoryInterface $currencyRepository,
@@ -71,8 +71,8 @@ readonly class BudgetService implements BudgetServiceInterface
                 $excludedAccountsIds,
             );
             $this->budgetRepository->save([$budget]);
-            [$position, $categoriesOptions] = $this->budgetEntityService->createCategoriesOptions($userId, $budgetId);
-            $this->budgetEntityService->createTagsOptions($userId, $budgetId, $position);
+            [$position, $categoriesOptions] = $this->budgetElementService->createCategoriesOptions($userId, $budgetId);
+            $this->budgetElementService->createTagsOptions($userId, $budgetId, $position);
             $this->userService->updateBudget($userId, $budgetId);
             $this->antiCorruptionService->commit(__METHOD__);
         } catch (Throwable $e) {
@@ -142,7 +142,7 @@ readonly class BudgetService implements BudgetServiceInterface
         $budget = $this->budgetRepository->get($budgetId);
         try {
             $this->antiCorruptionService->beginTransaction(__METHOD__);
-            $this->budgetEntityAmountRepository->deleteByBudgetId($budgetId);
+            $this->budgetElementAmountRepository->deleteByBudgetId($budgetId);
 
             $budget->startFrom($startedAt);
             $this->budgetRepository->save([$budget]);

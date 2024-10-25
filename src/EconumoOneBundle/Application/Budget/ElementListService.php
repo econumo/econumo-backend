@@ -36,7 +36,6 @@ readonly class ElementListService
         foreach ($dto->items as $item) {
             $affectedElements[$item->id] = new BudgetStructureMoveElementDto(
                 new Id($item->id),
-                new BudgetElementType($item->type),
                 $item->position,
                 ($item->folderId === null ? null : new Id($item->folderId)),
             );

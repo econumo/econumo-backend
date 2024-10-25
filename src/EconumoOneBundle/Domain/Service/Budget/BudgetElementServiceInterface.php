@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\EconumoOneBundle\Domain\Service\Budget;
 
-use App\EconumoOneBundle\Domain\Entity\BudgetElementOption;
+use App\EconumoOneBundle\Domain\Entity\BudgetElement;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoOneBundle\Domain\Service\Budget\Dto\BudgetCategoryDto;
 use Throwable;

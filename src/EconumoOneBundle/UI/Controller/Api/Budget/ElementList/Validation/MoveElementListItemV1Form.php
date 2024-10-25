@@ -40,13 +40,6 @@ class MoveElementListItemV1Form extends AbstractType
                     new Uuid(),
                 ],
             ])
-            ->add('type', IntegerType::class, [
-                'constraints' => [
-                    new NotBlank(),
-                    new Type('integer'),
-                    $this->valueObjectValidationFactory->create(BudgetElementType::class)
-                ],
-            ])
             ->add('position', IntegerType::class, [
                 'constraints' => [
                     new NotBlank(),

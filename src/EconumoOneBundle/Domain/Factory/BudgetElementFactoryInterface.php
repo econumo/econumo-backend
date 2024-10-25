@@ -6,11 +6,11 @@ declare(strict_types=1);
 namespace App\EconumoOneBundle\Domain\Factory;
 
 
-use App\EconumoOneBundle\Domain\Entity\BudgetElementOption;
+use App\EconumoOneBundle\Domain\Entity\BudgetElement;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetElementType;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 
-interface BudgetElementOptionFactoryInterface
+interface BudgetElementFactoryInterface
 {
     public function create(
         Id $budgetId,
@@ -19,29 +19,29 @@ interface BudgetElementOptionFactoryInterface
         int $position,
         ?Id $currencyId,
         ?Id $folderId
-    ): BudgetElementOption;
+    ): BudgetElement;
 
-    public function createCategoryOption(
+    public function createCategoryElement(
         Id $budgetId,
         Id $categoryId,
         int $position,
         ?Id $currencyId = null,
         ?Id $folderId = null
-    ): BudgetElementOption;
+    ): BudgetElement;
 
-    public function createTagOption(
+    public function createTagElement(
         Id $budgetId,
         Id $tagId,
         int $position,
         ?Id $currencyId = null,
         ?Id $folderId = null
-    ): BudgetElementOption;
+    ): BudgetElement;
 
-    public function createEnvelopeOption(
+    public function createEnvelopeElement(
         Id $budgetId,
         Id $envelopeId,
         int $position,
         ?Id $currencyId = null,
         ?Id $folderId = null
-    ): BudgetElementOption;
+    ): BudgetElement;
 }

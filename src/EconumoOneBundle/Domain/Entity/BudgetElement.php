@@ -10,7 +10,7 @@ use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 
-class BudgetElementOption
+class BudgetElement
 {
     public const POSITION_UNSET = 0;
 
@@ -19,9 +19,9 @@ class BudgetElementOption
     private DateTimeInterface $updatedAt;
 
     public function __construct(
-        private Id $elementId,
-        private BudgetElementType $elementType,
         private Budget $budget,
+        private Id $elementId,
+        private BudgetElementType $type,
         private ?Currency $currency,
         private ?BudgetFolder $folder,
         private int $position,
@@ -56,9 +56,9 @@ class BudgetElementOption
         return $this->elementId;
     }
 
-    public function getElementType(): BudgetElementType
+    public function getType(): BudgetElementType
     {
-        return $this->elementType;
+        return $this->type;
     }
 
     public function isPositionUnset(): bool

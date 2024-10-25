@@ -6,8 +6,7 @@
     <entity repository-class="App\EconumoOneBundle\Infrastructure\Doctrine\Repository\BudgetElementAmountRepository" name="App\EconumoOneBundle\Domain\Entity\BudgetElementAmount"
             table="budgets_elements_amounts">
         <id name="budget" association-key="true" />
-        <id name="elementId" type="uuid" column="element_id"/>
-        <id name="elementType" type="budget_element_type" column="element_type" />
+        <id name="element" association-key="true" />
         <id name="period" type="datetime_immutable" column="period"/>
 
         <field name="amount" type="decimal" column="amount" precision="19" scale="2" nullable="false"/>
@@ -17,9 +16,13 @@
         <many-to-one field="budget" target-entity="App\EconumoOneBundle\Domain\Entity\Budget">
             <join-column name="budget_id" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
         </many-to-one>
+        <many-to-one field="element" target-entity="App\EconumoOneBundle\Domain\Entity\BudgetElement">
+            <join-column name="element_id" referenced-column-name="element_id" nullable="false" on-delete="CASCADE"/>
+        </many-to-one>
 
         <indexes>
-            <index columns="budget_id,period" name="budget_period_idx"/>
+            <index columns="budget_id,period" name="budget_period_idx_budgets_elements_amounts"/>
+            <index columns="element_id" name="element_idx_budgets_elements_amounts"/>
         </indexes>
     </entity>
 </doctrine-mapping>

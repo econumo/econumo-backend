@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\EconumoOneBundle\Domain\Entity;
 
-use App\EconumoOneBundle\Domain\Entity\Budget;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetElementType;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use DateTime;
@@ -21,8 +20,7 @@ class BudgetElementAmount
 
     public function __construct(
         private Budget $budget,
-        private Id $elementId,
-        private BudgetElementType $elementType,
+        private BudgetElement $element,
         private float $amount,
         DateTimeInterface $period,
         DateTimeInterface $createdAt
@@ -39,12 +37,12 @@ class BudgetElementAmount
 
     public function getElementId(): Id
     {
-        return $this->elementId;
+        return $this->element->getElementId();
     }
 
     public function getElementType(): BudgetElementType
     {
-        return $this->elementType;
+        return $this->element->getType();
     }
 
     public function getAmount(): float

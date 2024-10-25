@@ -191,7 +191,7 @@ readonly class BudgetElementsAmountDtoAssembler
         DateTimeInterface $periodEnd,
         array $data
     ): array {
-        $summarizedAmounts = $this->budgetEntityAmountRepository->getSummarizedAmounts(
+        $summarizedAmounts = $this->budgetEntityAmountRepository->getSummarizedAmountsForPeriod(
             $budget->getId(),
             $periodStart,
             $periodEnd

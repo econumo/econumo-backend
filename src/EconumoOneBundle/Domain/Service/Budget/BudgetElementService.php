@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\EconumoOneBundle\Domain\Service\Budget;
 
-use App\EconumoOneBundle\Domain\Entity\BudgetElementOption;
+use App\EconumoOneBundle\Domain\Entity\BudgetElement;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
-use App\EconumoOneBundle\Domain\Factory\BudgetElementOptionFactoryInterface;
-use App\EconumoOneBundle\Domain\Repository\BudgetElementOptionRepositoryInterface;
+use App\EconumoOneBundle\Domain\Factory\BudgetElementFactoryInterface;
+use App\EconumoOneBundle\Domain\Repository\BudgetElementRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\CategoryRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\TagRepositoryInterface;
 use App\EconumoOneBundle\Domain\Service\Budget\BudgetElementServiceInterface;
@@ -20,8 +20,8 @@ readonly class BudgetElementService implements BudgetElementServiceInterface
     public function __construct(
         private CategoryRepositoryInterface $categoryRepository,
         private TagRepositoryInterface $tagRepository,
-        private BudgetElementOptionFactoryInterface $budgetEntityOptionFactory,
-        private BudgetElementOptionRepositoryInterface $budgetEntityOptionRepository
+        private BudgetElementFactoryInterface $budgetElementFactory,
+        private BudgetElementRepositoryInterface $budgetElementRepository
     ) {
     }
 
@@ -42,10 +42,10 @@ readonly class BudgetElementService implements BudgetElementServiceInterface
                 continue;
             }
 
-            $item = $this->budgetEntityOptionFactory->createCategoryOption(
+            $item = $this->budgetElementFactory->createCategoryElement(
                 $budgetId,
                 $category->getId(),
-                ($category->isArchived() ? BudgetElementOption::POSITION_UNSET : $position++)
+                ($category->isArchived() ? BudgetElement::POSITION_UNSET : $position++)
             );
             $entities[] = $item;
             $result[] = new BudgetCategoryDto(
@@ -61,7 +61,7 @@ readonly class BudgetElementService implements BudgetElementServiceInterface
                 $category->isArchived()
             );
         }
-        $this->budgetEntityOptionRepository->save($entities);
+        $this->budgetElementRepository->save($entities);
 
         return [$position, $result];
     }
@@ -79,10 +79,10 @@ readonly class BudgetElementService implements BudgetElementServiceInterface
         $tags = $this->tagRepository->findByOwnerId($userId);
         $entities = [];
         foreach ($tags as $tag) {
-            $item = $this->budgetEntityOptionFactory->createTagOption(
+            $item = $this->budgetElementFactory->createTagElement(
                 $budgetId,
                 $tag->getId(),
-                ($tag->isArchived() ? BudgetElementOption::POSITION_UNSET : $position++)
+                ($tag->isArchived() ? BudgetElement::POSITION_UNSET : $position++)
             );
             $entities[] = $item;
             $result[] = new BudgetTagDto(
@@ -97,7 +97,7 @@ readonly class BudgetElementService implements BudgetElementServiceInterface
                 $tag->isArchived()
             );
         }
-        $this->budgetEntityOptionRepository->save($entities);
+        $this->budgetElementRepository->save($entities);
 
         return [$position, $result];
     }

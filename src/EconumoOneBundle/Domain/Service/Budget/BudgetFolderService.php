@@ -13,7 +13,7 @@ use App\EconumoOneBundle\Domain\Repository\BudgetRepositoryInterface;
 use App\EconumoOneBundle\Domain\Service\Budget\Assembler\BudgetStructureFolderDtoAssembler;
 use App\EconumoOneBundle\Domain\Service\Budget\Dto\BudgetStructureFolderDto;
 
-readonly class FolderService implements FolderServiceInterface
+readonly class BudgetFolderService implements BudgetFolderServiceInterface
 {
     public function __construct(
         private BudgetFolderFactoryInterface $budgetFolderFactory,

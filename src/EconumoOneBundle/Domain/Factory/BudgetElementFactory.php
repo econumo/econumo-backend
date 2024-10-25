@@ -6,7 +6,7 @@ declare(strict_types=1);
 namespace App\EconumoOneBundle\Domain\Factory;
 
 
-use App\EconumoOneBundle\Domain\Entity\BudgetElementOption;
+use App\EconumoOneBundle\Domain\Entity\BudgetElement;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetElementType;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoOneBundle\Domain\Repository\BudgetFolderRepositoryInterface;
@@ -14,7 +14,7 @@ use App\EconumoOneBundle\Domain\Repository\BudgetRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\CurrencyRepositoryInterface;
 use App\EconumoOneBundle\Domain\Service\DatetimeServiceInterface;
 
-readonly class BudgetElementOptionFactory implements BudgetElementOptionFactoryInterface
+readonly class BudgetElementFactory implements BudgetElementFactoryInterface
 {
     public function __construct(
         private DatetimeServiceInterface $datetimeService,
@@ -31,7 +31,7 @@ readonly class BudgetElementOptionFactory implements BudgetElementOptionFactoryI
         int $position,
         ?Id $currencyId,
         ?Id $folderId
-    ): BudgetElementOption {
+    ): BudgetElement {
         $currency = null;
         if ($currencyId) {
             $currency = $this->currencyRepository->getReference($currencyId);
@@ -40,10 +40,10 @@ readonly class BudgetElementOptionFactory implements BudgetElementOptionFactoryI
         if ($folderId) {
             $budgetFolder = $this->budgetFolderRepository->getReference($folderId);
         }
-        return new BudgetElementOption(
+        return new BudgetElement(
+            $this->budgetRepository->getReference($budgetId),
             $elementId,
             $elementType,
-            $this->budgetRepository->getReference($budgetId),
             $currency,
             $budgetFolder,
             $position,
@@ -51,13 +51,13 @@ readonly class BudgetElementOptionFactory implements BudgetElementOptionFactoryI
         );
     }
 
-    public function createCategoryOption(
+    public function createCategoryElement(
         Id $budgetId,
         Id $categoryId,
         int $position,
         ?Id $currencyId = null,
         ?Id $folderId = null
-    ): BudgetElementOption {
+    ): BudgetElement {
         return $this->create(
             $budgetId,
             $categoryId,
@@ -68,13 +68,13 @@ readonly class BudgetElementOptionFactory implements BudgetElementOptionFactoryI
         );
     }
 
-    public function createTagOption(
+    public function createTagElement(
         Id $budgetId,
         Id $tagId,
         int $position,
         ?Id $currencyId = null,
         ?Id $folderId = null
-    ): BudgetElementOption {
+    ): BudgetElement {
         return $this->create(
             $budgetId,
             $tagId,
@@ -85,13 +85,13 @@ readonly class BudgetElementOptionFactory implements BudgetElementOptionFactoryI
         );
     }
 
-    public function createEnvelopeOption(
+    public function createEnvelopeElement(
         Id $budgetId,
         Id $envelopeId,
         int $position,
         ?Id $currencyId = null,
         ?Id $folderId = null
-    ): BudgetElementOption {
+    ): BudgetElement {
         return $this->create(
             $budgetId,
             $envelopeId,
