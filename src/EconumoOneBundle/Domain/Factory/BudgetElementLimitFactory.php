@@ -6,14 +6,14 @@ declare(strict_types=1);
 namespace App\EconumoOneBundle\Domain\Factory;
 
 
-use App\EconumoOneBundle\Domain\Entity\BudgetElementAmount;
+use App\EconumoOneBundle\Domain\Entity\BudgetElementLimit;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoOneBundle\Domain\Repository\BudgetElementRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\BudgetRepositoryInterface;
 use App\EconumoOneBundle\Domain\Service\DatetimeServiceInterface;
 use DateTimeInterface;
 
-readonly class BudgetElementAmountFactory implements BudgetElementAmountFactoryInterface
+readonly class BudgetElementLimitFactory implements BudgetElementLimitFactoryInterface
 {
     public function __construct(
         private DatetimeServiceInterface $datetimeService,
@@ -27,8 +27,8 @@ readonly class BudgetElementAmountFactory implements BudgetElementAmountFactoryI
         Id $elementId,
         float $amount,
         DateTimeInterface $period
-    ): BudgetElementAmount {
-        return new BudgetElementAmount(
+    ): BudgetElementLimit {
+        return new BudgetElementLimit(
             $this->budgetRepository->getReference($budgetId),
             $this->budgetElementRepository->getReference($elementId),
             $amount,

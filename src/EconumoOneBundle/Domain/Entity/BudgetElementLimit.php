@@ -10,7 +10,7 @@ use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 
-class BudgetElementAmount
+class BudgetElementLimit
 {
     private DateTimeImmutable $period;
 

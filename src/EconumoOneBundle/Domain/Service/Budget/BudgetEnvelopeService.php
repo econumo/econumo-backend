@@ -13,10 +13,10 @@ use App\EconumoOneBundle\Domain\Entity\Category;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetElementType;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoOneBundle\Domain\Exception\AccessDeniedException;
-use App\EconumoOneBundle\Domain\Factory\BudgetElementAmountFactoryInterface;
+use App\EconumoOneBundle\Domain\Factory\BudgetElementLimitFactoryInterface;
 use App\EconumoOneBundle\Domain\Factory\BudgetElementFactoryInterface;
 use App\EconumoOneBundle\Domain\Factory\BudgetEnvelopeFactoryInterface;
-use App\EconumoOneBundle\Domain\Repository\BudgetElementAmountRepositoryInterface;
+use App\EconumoOneBundle\Domain\Repository\BudgetElementLimitRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\BudgetElementRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\BudgetEnvelopeRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\BudgetRepositoryInterface;
@@ -39,8 +39,8 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
         private BudgetEnvelopeRepositoryInterface $budgetEnvelopeRepository,
         private BudgetElementRepositoryInterface $budgetElementRepository,
         private BudgetFiltersDtoAssembler $budgetFiltersDtoAssembler,
-        private BudgetElementAmountRepositoryInterface $budgetElementAmountRepository,
-        private BudgetElementAmountFactoryInterface $budgetElementAmountFactory,
+        private BudgetElementLimitRepositoryInterface $budgetElementLimitRepository,
+        private BudgetElementLimitFactoryInterface $budgetElementLimitFactory,
         private CurrencyRepositoryInterface $currencyRepository,
     ) {
     }
@@ -53,6 +53,7 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
         $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
             $budget = $this->budgetRepository->get($budgetId);
+            $envelopeCategoriesMap = [];
             if ($envelope->categories !== []) {
                 $envelopeCategoriesMap = $this->getEligibleCategories($budget, $envelope->categories);
                 $this->budgetEnvelopeRepository->deleteAssociationsWithCategories($budgetId, $envelope->categories);
@@ -165,9 +166,9 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
             foreach ($envelope->getCategories() as $category) {
                 $categoriesIds[] = $category->getId();
             }
-            $sourceAmounts = $this->budgetElementAmountRepository
+            $sourceAmounts = $this->budgetElementLimitRepository
                 ->getSummarizedAmountsForElements($budgetId, $categoriesIds);
-            $targetAmounts = $this->budgetElementAmountRepository
+            $targetAmounts = $this->budgetElementLimitRepository
                 ->getByBudgetIdAndElementId($budgetId, $envelope->getId());
 
             $updated = [];
@@ -181,13 +182,13 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
                 }
             }
             if ($updated !== []) {
-                $this->budgetElementAmountRepository->save($updated);
+                $this->budgetElementLimitRepository->save($updated);
             }
 
             $keysToCreate = array_diff(array_keys($sourceAmounts), $seen);
             $created = [];
             foreach ($keysToCreate as $key) {
-                $created[] = $this->budgetElementAmountFactory->create(
+                $created[] = $this->budgetElementLimitFactory->create(
                     $budgetId,
                     $envelope->getId(),
                     $sourceAmounts[$key],
@@ -195,19 +196,19 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
                 );
             }
             if ($created !== []) {
-                $this->budgetElementAmountRepository->save($created);
+                $this->budgetElementLimitRepository->save($created);
             }
 
             $toDelete = [];
             foreach ($envelope->getCategories() as $category) {
-                $oldAmounts = $this->budgetElementAmountRepository
+                $oldAmounts = $this->budgetElementLimitRepository
                     ->getByBudgetIdAndElementId($budgetId, $category->getId(), $categoryType);
                 if ($oldAmounts !== []) {
                     $toDelete = array_merge($toDelete, $oldAmounts);
                 }
             }
             if ($toDelete !== []) {
-                $this->budgetElementAmountRepository->delete($toDelete);
+                $this->budgetElementLimitRepository->delete($toDelete);
             }
 
             $this->antiCorruptionService->commit(__METHOD__);
@@ -387,7 +388,7 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
             }
             $this->removeCategoriesFromEnvelope($envelope, $categoriesMap);
 
-            $this->budgetElementAmountRepository->deleteByBudgetIdAndElementId($budgetId, $envelope->getId());
+            $this->budgetElementLimitRepository->deleteByBudgetIdAndElementId($budgetId, $envelope->getId());
             $this->budgetElementRepository->deleteByBudgetAndElementId($budgetId, $envelope->getId());
             $this->budgetEnvelopeRepository->delete([$envelope]);
             $this->antiCorruptionService->commit(__METHOD__);

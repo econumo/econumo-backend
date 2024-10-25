@@ -6,7 +6,6 @@ namespace App\EconumoOneBundle\Domain\Service\Budget\Dto;
 
 use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetElementType;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
-use App\EconumoOneBundle\Domain\Service\Budget\Dto\BudgetElementAmountSpentDto;
 
 readonly class BudgetElementAmountDto
 {

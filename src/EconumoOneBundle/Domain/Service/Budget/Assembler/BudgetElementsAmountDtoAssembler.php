@@ -9,7 +9,7 @@ namespace App\EconumoOneBundle\Domain\Service\Budget\Assembler;
 use App\EconumoOneBundle\Domain\Entity\Budget;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetElementType;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
-use App\EconumoOneBundle\Domain\Repository\BudgetElementAmountRepositoryInterface;
+use App\EconumoOneBundle\Domain\Repository\BudgetElementLimitRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\TransactionRepositoryInterface;
 use App\EconumoOneBundle\Domain\Service\Budget\Dto\BudgetElementAmountDto;
 use App\EconumoOneBundle\Domain\Service\Budget\Dto\BudgetElementAmountSpentDto;
@@ -22,7 +22,7 @@ use DateTimeInterface;
 readonly class BudgetElementsAmountDtoAssembler
 {
     public function __construct(
-        private BudgetElementAmountRepositoryInterface $budgetEntityAmountRepository,
+        private BudgetElementLimitRepositoryInterface $budgetEntityAmountRepository,
         private TransactionRepositoryInterface $transactionRepository,
     ) {
     }

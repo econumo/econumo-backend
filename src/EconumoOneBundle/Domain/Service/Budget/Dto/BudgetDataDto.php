@@ -5,9 +5,6 @@ declare(strict_types=1);
 namespace App\EconumoOneBundle\Domain\Service\Budget\Dto;
 
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
-use App\EconumoOneBundle\Domain\Service\Budget\Dto\AverageCurrencyRateDto;
-use App\EconumoOneBundle\Domain\Service\Budget\Dto\BudgetElementAmountDto;
-use App\EconumoOneBundle\Domain\Service\Budget\Dto\CurrencyBalanceDto;
 use DateTimeInterface;
 
 readonly class BudgetDataDto

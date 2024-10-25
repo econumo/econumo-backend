@@ -4,28 +4,28 @@ declare(strict_types=1);
 
 namespace App\EconumoOneBundle\Domain\Repository;
 
-use App\EconumoOneBundle\Domain\Entity\BudgetElementAmount;
+use App\EconumoOneBundle\Domain\Entity\BudgetElementLimit;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetElementType;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use DateTimeInterface;
 
-interface BudgetElementAmountRepositoryInterface
+interface BudgetElementLimitRepositoryInterface
 {
     public function getNextIdentity(): Id;
 
     /**
-     * @return BudgetElementAmount[]
+     * @return BudgetElementLimit[]
      */
     public function getByBudgetId(Id $budgetId, DateTimeInterface $period): array;
 
     /**
-     * @param BudgetElementAmount[] $items
+     * @param BudgetElementLimit[] $items
      * @return void
      */
     public function save(array $items): void;
 
     /**
-     * @param BudgetElementAmount[] $items
+     * @param BudgetElementLimit[] $items
      * @return void
      */
     public function delete(array $items): void;
@@ -53,7 +53,7 @@ interface BudgetElementAmountRepositoryInterface
     /**
      * @param Id $budgetId
      * @param Id $elementId
-     * @return BudgetElementAmount[]
+     * @return BudgetElementLimit[]
      */
     public function getByBudgetIdAndElementId(Id $budgetId, Id $elementId): array;
 
@@ -61,7 +61,7 @@ interface BudgetElementAmountRepositoryInterface
      * @param Id $budgetId
      * @param Id $elementId
      * @param DateTimeInterface $period
-     * @return BudgetElementAmount|null
+     * @return BudgetElementLimit|null
      */
-    public function get(Id $budgetId, Id $elementId, DateTimeInterface $period): ?BudgetElementAmount;
+    public function get(Id $budgetId, Id $elementId, DateTimeInterface $period): ?BudgetElementLimit;
 }

@@ -50,14 +50,14 @@ final class Version20241025225201 extends AbstractMigration
         $this->addSql('CREATE INDEX IDX_EE8709C338248176 ON budgets_elements (currency_id)');
         $this->addSql('CREATE INDEX IDX_EE8709C3162CB942 ON budgets_elements (folder_id)');
         $this->addSql('CREATE INDEX element_idx_budgets_elements ON budgets_elements (element_id)');
-        $this->addSql('CREATE TABLE budgets_elements_amounts (budget_id CHAR(36) NOT NULL --(DC2Type:uuid)
+        $this->addSql('CREATE TABLE budgets_elements_limits (budget_id CHAR(36) NOT NULL --(DC2Type:uuid)
         , element_id CHAR(36) NOT NULL --(DC2Type:uuid)
         , period DATETIME NOT NULL --(DC2Type:datetime_immutable)
         , amount NUMERIC(19, 2) NOT NULL, created_at DATETIME NOT NULL --(DC2Type:datetime_immutable)
         , updated_at DATETIME NOT NULL, PRIMARY KEY(budget_id, element_id, period))');
-        $this->addSql('CREATE INDEX IDX_2FAF76336ABA6B8 ON budgets_elements_amounts (budget_id)');
-        $this->addSql('CREATE INDEX budget_period_idx_budgets_elements_amounts ON budgets_elements_amounts (budget_id, period)');
-        $this->addSql('CREATE INDEX element_idx_budgets_elements_amounts ON budgets_elements_amounts (element_id)');
+        $this->addSql('CREATE INDEX IDX_2FAF76336ABA6B8 ON budgets_elements_limits (budget_id)');
+        $this->addSql('CREATE INDEX budget_period_idx_budgets_elements_limits ON budgets_elements_limits (budget_id, period)');
+        $this->addSql('CREATE INDEX element_idx_budgets_elements_limits ON budgets_elements_limits (element_id)');
         $this->addSql('CREATE TABLE budgets_envelopes (id CHAR(36) NOT NULL --(DC2Type:uuid)
         , budget_id CHAR(36) NOT NULL --(DC2Type:uuid)
         , name VARCHAR(64) DEFAULT NULL, icon VARCHAR(64) DEFAULT NULL, is_archived BOOLEAN DEFAULT \'0\' NOT NULL, created_at DATETIME NOT NULL --(DC2Type:datetime_immutable)
@@ -84,7 +84,7 @@ final class Version20241025225201 extends AbstractMigration
         $this->addSql('DROP TABLE budgets_excluded_accounts');
         $this->addSql('DROP TABLE budgets_access');
         $this->addSql('DROP TABLE budgets_elements');
-        $this->addSql('DROP TABLE budgets_elements_amounts');
+        $this->addSql('DROP TABLE budgets_elements_limits');
         $this->addSql('DROP TABLE budgets_envelopes');
         $this->addSql('DROP TABLE budgets_envelopes_categories');
         $this->addSql('DROP TABLE budgets_folders');

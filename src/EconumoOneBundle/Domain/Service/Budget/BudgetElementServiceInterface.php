@@ -18,7 +18,7 @@ interface BudgetElementServiceInterface
      * @param int $startPosition
      * @return array [int, BudgetCategoryDto[]]
      */
-    public function createCategoriesOptions(Id $userId, Id $budgetId, int $startPosition = 0): array;
+    public function createCategoriesElements(Id $userId, Id $budgetId, int $startPosition = 0): array;
 
     /**
      * @param Id $userId
@@ -26,5 +26,5 @@ interface BudgetElementServiceInterface
      * @param int $startPosition
      * @return array [int, BudgetTagDto[]]
      */
-    public function createTagsOptions(Id $userId, Id $budgetId, int $startPosition = 0): array;
+    public function createTagsElements(Id $userId, Id $budgetId, int $startPosition = 0): array;
 }

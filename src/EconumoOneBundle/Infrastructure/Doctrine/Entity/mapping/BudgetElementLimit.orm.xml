@@ -3,8 +3,8 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity repository-class="App\EconumoOneBundle\Infrastructure\Doctrine\Repository\BudgetElementAmountRepository" name="App\EconumoOneBundle\Domain\Entity\BudgetElementAmount"
-            table="budgets_elements_amounts">
+    <entity repository-class="App\EconumoOneBundle\Infrastructure\Doctrine\Repository\BudgetElementLimitRepository" name="App\EconumoOneBundle\Domain\Entity\BudgetElementLimit"
+            table="budgets_elements_limits">
         <id name="budget" association-key="true" />
         <id name="element" association-key="true" />
         <id name="period" type="datetime_immutable" column="period"/>
@@ -21,8 +21,8 @@
         </many-to-one>
 
         <indexes>
-            <index columns="budget_id,period" name="budget_period_idx_budgets_elements_amounts"/>
-            <index columns="element_id" name="element_idx_budgets_elements_amounts"/>
+            <index columns="budget_id,period" name="budget_period_idx_budgets_elements_limits"/>
+            <index columns="element_id" name="element_idx_budgets_elements_limits"/>
         </indexes>
     </entity>
 </doctrine-mapping>

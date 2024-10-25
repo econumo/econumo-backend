@@ -9,7 +9,7 @@ use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoOneBundle\Domain\Exception\AccessDeniedException;
 use App\EconumoOneBundle\Domain\Factory\BudgetFactoryInterface;
 use App\EconumoOneBundle\Domain\Repository\AccountRepositoryInterface;
-use App\EconumoOneBundle\Domain\Repository\BudgetElementAmountRepositoryInterface;
+use App\EconumoOneBundle\Domain\Repository\BudgetElementLimitRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\BudgetRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\CurrencyRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\UserRepositoryInterface;
@@ -35,7 +35,7 @@ readonly class BudgetService implements BudgetServiceInterface
         private BudgetMetaDtoAssembler $budgetMetaDtoAssembler,
         private BudgetDeletionService $budgetDeletionService,
         private AccountRepositoryInterface $accountRepository,
-        private BudgetElementAmountRepositoryInterface $budgetElementAmountRepository,
+        private BudgetElementLimitRepositoryInterface $budgetElementLimitRepository,
         private BudgetDtoAssembler $budgetDtoAssembler,
         private UserRepositoryInterface $userRepository,
         private CurrencyRepositoryInterface $currencyRepository,
@@ -71,9 +71,10 @@ readonly class BudgetService implements BudgetServiceInterface
                 $excludedAccountsIds,
             );
             $this->budgetRepository->save([$budget]);
-            [$position, $categoriesOptions] = $this->budgetElementService->createCategoriesOptions($userId, $budgetId);
-            $this->budgetElementService->createTagsOptions($userId, $budgetId, $position);
+            [$position, $categoriesOptions] = $this->budgetElementService->createCategoriesElements($userId, $budgetId);
+            $this->budgetElementService->createTagsElements($userId, $budgetId, $position);
             $this->userService->updateBudget($userId, $budgetId);
+
             $this->antiCorruptionService->commit(__METHOD__);
         } catch (Throwable $e) {
             $this->antiCorruptionService->rollback(__METHOD__);
@@ -142,7 +143,7 @@ readonly class BudgetService implements BudgetServiceInterface
         $budget = $this->budgetRepository->get($budgetId);
         try {
             $this->antiCorruptionService->beginTransaction(__METHOD__);
-            $this->budgetElementAmountRepository->deleteByBudgetId($budgetId);
+            $this->budgetElementLimitRepository->deleteByBudgetId($budgetId);
 
             $budget->startFrom($startedAt);
             $this->budgetRepository->save([$budget]);
