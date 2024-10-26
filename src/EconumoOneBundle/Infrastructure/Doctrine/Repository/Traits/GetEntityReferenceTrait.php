@@ -9,7 +9,13 @@ use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 
 trait GetEntityReferenceTrait
 {
-    public function getEntityReference(string $entityName, Id $id)
+    /**
+     * @param string $entityName
+     * @param Id|array $id
+     * @return object|string|null
+     * @throws \Doctrine\ORM\Exception\ORMException
+     */
+    public function getEntityReference(string $entityName, Id | array $id)
     {
         return $this->getEntityManager()->getReference($entityName, $id);
     }

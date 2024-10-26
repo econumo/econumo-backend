@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\EconumoOneBundle\Domain\Repository;
 
+use App\EconumoOneBundle\Domain\Entity\BudgetElement;
 use App\EconumoOneBundle\Domain\Entity\BudgetElementLimit;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetElementType;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
@@ -58,10 +59,9 @@ interface BudgetElementLimitRepositoryInterface
     public function getByBudgetIdAndElementId(Id $budgetId, Id $elementId): array;
 
     /**
-     * @param Id $budgetId
-     * @param Id $elementId
+     * @param BudgetElement $element
      * @param DateTimeInterface $period
      * @return BudgetElementLimit|null
      */
-    public function get(Id $budgetId, Id $elementId, DateTimeInterface $period): ?BudgetElementLimit;
+    public function get(BudgetElement $element, DateTimeInterface $period): ?BudgetElementLimit;
 }

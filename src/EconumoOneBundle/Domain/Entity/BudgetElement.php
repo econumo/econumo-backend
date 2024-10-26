@@ -19,8 +19,9 @@ class BudgetElement
     private DateTimeInterface $updatedAt;
 
     public function __construct(
+        private Id $id,
         private Budget $budget,
-        private Id $elementId,
+        private Id $externalId,
         private BudgetElementType $type,
         private ?Currency $currency,
         private ?BudgetFolder $folder,
@@ -29,6 +30,11 @@ class BudgetElement
     ) {
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
+    }
+
+    public function getId(): Id
+    {
+        return $this->id;
     }
 
     public function getBudget(): Budget
@@ -51,9 +57,9 @@ class BudgetElement
         $this->folder = $budgetFolder;
     }
 
-    public function getElementId(): Id
+    public function getExternalId(): Id
     {
-        return $this->elementId;
+        return $this->externalId;
     }
 
     public function getType(): BudgetElementType

@@ -6,7 +6,6 @@ namespace App\EconumoOneBundle\Infrastructure\Doctrine\Repository;
 
 use App\EconumoOneBundle\Domain\Entity\Budget;
 use App\EconumoOneBundle\Domain\Entity\BudgetElement;
-use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetElementType;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoOneBundle\Domain\Exception\NotFoundException;
 use App\EconumoOneBundle\Domain\Repository\BudgetElementRepositoryInterface;
@@ -50,19 +49,19 @@ class BudgetElementRepository extends ServiceEntityRepository implements BudgetE
         return $this->getEntityReference(BudgetElement::class, $id);
     }
 
-    public function get(Id $budgetId, Id $elementId): BudgetElement
+    public function get(Id $budgetId, Id $externalElementId): BudgetElement
     {
         $item = $this->findOneBy(
             [
                 'budget' => $this->getEntityReference(Budget::class, $budgetId),
-                'elementId' => $elementId
+                'externalId' => $externalElementId
             ]
         );
         if (!$item instanceof BudgetElement) {
             throw new NotFoundException(
                 sprintf(
                     'BudgetElementOption with ID %s not found',
-                    $elementId->getValue()
+                    $externalElementId->getValue()
                 )
             );
         }
@@ -70,14 +69,14 @@ class BudgetElementRepository extends ServiceEntityRepository implements BudgetE
         return $item;
     }
 
-    public function deleteByBudgetAndElementId(Id $budgetId, Id $elementId): void
+    public function deleteByBudgetAndElementId(Id $budgetId, Id $externalElementId): void
     {
         $this->createQueryBuilder('eo')
             ->delete()
             ->where('eo.budget = :budget')
             ->setParameter('budget', $this->getEntityReference(Budget::class, $budgetId))
-            ->andWhere('eo.elementId = :elementId')
-            ->setParameter('elementId', $elementId->getValue())
+            ->andWhere('eo.externalId = :externalId')
+            ->setParameter('externalId', $externalElementId->getValue())
             ->getQuery()
             ->execute();
     }

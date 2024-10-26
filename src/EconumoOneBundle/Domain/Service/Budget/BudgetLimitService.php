@@ -10,34 +10,36 @@ use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoOneBundle\Domain\Factory\BudgetElementLimitFactoryInterface;
 use App\EconumoOneBundle\Domain\Repository\BudgetElementLimitRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\BudgetElementRepositoryInterface;
+use DateTimeInterface;
 
 readonly class BudgetLimitService implements BudgetLimitServiceInterface
 {
     public function __construct(
-        private BudgetElementRepositoryInterface $budgetElementRepository,
         private BudgetElementLimitRepositoryInterface $budgetElementLimitRepository,
-        private BudgetElementLimitFactoryInterface $budgetElementLimitFactory
+        private BudgetElementLimitFactoryInterface $budgetElementLimitFactory,
+        private BudgetElementRepositoryInterface $budgetElementRepository,
     ) {
     }
 
-    public function setLimit(Id $budgetId, Id $elementId, \DateTimeInterface $period, ?float $amount): void
+    public function setLimit(Id $budgetId, Id $elementId, DateTimeInterface $period, ?float $amount): void
     {
-        $elementAmount = $this->budgetElementLimitRepository->get($budgetId, $elementId, $period);
+        $element = $this->budgetElementRepository->get($budgetId, $elementId);
+        $elementLimit = $this->budgetElementLimitRepository->get($element, $period);
         if (null === $amount) {
-            if (null !== $elementAmount) {
-                $this->budgetElementLimitRepository->delete([$elementAmount]);
+            if (null !== $elementLimit) {
+                $this->budgetElementLimitRepository->delete([$elementLimit]);
             }
         } else {
-            if (null === $elementAmount) {
-                $elementAmount = $this->budgetElementLimitFactory->create(
-                    $budgetId,
-                    $elementId,
+            if (null === $elementLimit) {
+                $elementLimit = $this->budgetElementLimitFactory->create(
+                    $element,
                     $amount,
                     $period
                 );
+            } else {
+                $elementLimit->updateAmount($amount);
             }
-            $elementAmount->updateAmount($amount);
-            $this->budgetElementLimitRepository->save([$elementAmount]);
+            $this->budgetElementLimitRepository->save([$elementLimit]);
         }
     }
 }

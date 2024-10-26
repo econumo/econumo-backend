@@ -9,6 +9,7 @@ namespace App\EconumoOneBundle\Domain\Factory;
 use App\EconumoOneBundle\Domain\Entity\BudgetElement;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetElementType;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoOneBundle\Domain\Repository\BudgetElementRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\BudgetFolderRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\BudgetRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\CurrencyRepositoryInterface;
@@ -21,6 +22,7 @@ readonly class BudgetElementFactory implements BudgetElementFactoryInterface
         private BudgetRepositoryInterface $budgetRepository,
         private CurrencyRepositoryInterface $currencyRepository,
         private BudgetFolderRepositoryInterface $budgetFolderRepository,
+        private BudgetElementRepositoryInterface $budgetElementRepository,
     ) {
     }
 
@@ -41,6 +43,7 @@ readonly class BudgetElementFactory implements BudgetElementFactoryInterface
             $budgetFolder = $this->budgetFolderRepository->getReference($folderId);
         }
         return new BudgetElement(
+            $this->budgetElementRepository->getNextIdentity(),
             $this->budgetRepository->getReference($budgetId),
             $elementId,
             $elementType,

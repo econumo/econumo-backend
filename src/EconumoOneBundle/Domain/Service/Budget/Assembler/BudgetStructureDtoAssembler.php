@@ -351,7 +351,7 @@ readonly class BudgetStructureDtoAssembler
         $elementsOptions = $this->budgetElementRepository->getByBudgetId($budgetId);
         $elementsOptionsAssoc = [];
         foreach ($elementsOptions as $item) {
-            $index = sprintf('%s-%s', $item->getElementId()->getValue(), $item->getType()->getAlias());
+            $index = sprintf('%s-%s', $item->getExternalId()->getValue(), $item->getType()->getAlias());
             $elementsOptionsAssoc[$index] = $item;
         }
 

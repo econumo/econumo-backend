@@ -159,7 +159,7 @@ readonly class BudgetElementsAmountDtoAssembler
     ): array {
         $amounts = $this->budgetEntityAmountRepository->getByBudgetId($budget->getId(), $periodStart);
         foreach ($amounts as $amount) {
-            $index = $this->getKey($amount->getElementId()->getValue(), $amount->getElementType()->getAlias());
+            $index = $this->getKey($amount->getElement()->getExternalId()->getValue(), $amount->getElement()->getType()->getAlias());
             if (!array_key_exists($index, $data)) {
                 $data[$index] = [
                     'budget' => null,
@@ -168,9 +168,9 @@ readonly class BudgetElementsAmountDtoAssembler
                     'overall_budget' => 0,
                     'overall_spent' => [],
                     'overall_spent_sum' => 0,
-                    'id' => $amount->getElementId(),
+                    'id' => $amount->getElement()->getExternalId(),
                     'tag_id' => null,
-                    'type' => $amount->getElementType(),
+                    'type' => $amount->getElement()->getType(),
                 ];
             }
             $data[$index]['budget'] = $amount;

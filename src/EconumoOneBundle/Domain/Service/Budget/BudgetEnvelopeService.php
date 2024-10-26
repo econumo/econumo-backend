@@ -302,7 +302,7 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
             if (!$budgetElementOption->getType()->isCategory()) {
                 continue;
             }
-            if (!array_key_exists($budgetElementOption->getElementId()->getValue(), $categoriesMap)) {
+            if (!array_key_exists($budgetElementOption->getExternalId()->getValue(), $categoriesMap)) {
                 continue;
             }
             $budgetElementOption->unsetPosition();
@@ -333,7 +333,7 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
         $budgetElementsOptions = $this->budgetElementRepository->getByBudgetId($envelope->getBudget()->getId());
         $envelopeOptions = null;
         foreach ($budgetElementsOptions as $budgetElementOption) {
-            if ($budgetElementOption->getElementId()->isEqual($envelope->getId())
+            if ($budgetElementOption->getExternalId()->isEqual($envelope->getId())
                 && $budgetElementOption->getType()->isEnvelope()) {
                 $envelopeOptions = $budgetElementOption;
                 break;
@@ -355,7 +355,7 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
                 continue;
             }
 
-            if (array_key_exists($budgetElementOption->getElementId()->getValue(), $categoriesMap)) {
+            if (array_key_exists($budgetElementOption->getExternalId()->getValue(), $categoriesMap)) {
                 $budgetElementOption->changeFolder($envelopeFolder);
                 $budgetElementOption->updatePosition(++$position);
                 $toUpdate[] = $budgetElementOption;

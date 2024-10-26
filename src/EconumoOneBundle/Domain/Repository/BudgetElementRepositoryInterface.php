@@ -16,7 +16,7 @@ interface BudgetElementRepositoryInterface
      */
     public function getByBudgetId(Id $budgetId): array;
 
-    public function get(Id $budgetId, Id $elementId): BudgetElement;
+    public function get(Id $budgetId, Id $externalElementId): BudgetElement;
 
     /**
      * @param BudgetElement[] $items
@@ -32,5 +32,5 @@ interface BudgetElementRepositoryInterface
 
     public function getReference(Id $id): BudgetElement;
 
-    public function deleteByBudgetAndElementId(Id $budgetId, Id $elementId): void;
+    public function deleteByBudgetAndElementId(Id $budgetId, Id $externalElementId): void;
 }

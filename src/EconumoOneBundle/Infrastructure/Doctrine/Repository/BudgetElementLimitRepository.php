@@ -17,7 +17,10 @@ use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Exception\ORMException;
+use Doctrine\ORM\ORMInvalidArgumentException;
 use Doctrine\Persistence\ManagerRegistry;
+use RuntimeException;
 
 /**
  * @method BudgetElementLimit|null find($id, $lockMode = null, $lockVersion = null)
@@ -28,6 +31,7 @@ use Doctrine\Persistence\ManagerRegistry;
 class BudgetElementLimitRepository extends ServiceEntityRepository implements BudgetElementLimitRepositoryInterface
 {
     use NextIdentityTrait;
+
     use SaveTrait;
     use DeleteTrait;
     use GetEntityReferenceTrait;
@@ -42,9 +46,9 @@ class BudgetElementLimitRepository extends ServiceEntityRepository implements Bu
         $date = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $period->format('Y-m-01 00:00:00'));
         $query = $this->createQueryBuilder('ea')
             ->select()
-            ->where('ea.budget = :budget')
+            ->join('ea.element', 'e', 'WITH', 'e.budget = :budget')
             ->setParameter('budget', $this->getEntityReference(Budget::class, $budgetId))
-            ->andWhere('ea.period = :period')
+            ->where('ea.period = :period')
             ->setParameter('period', $date)
             ->getQuery();
         return $query->getResult();
@@ -54,24 +58,26 @@ class BudgetElementLimitRepository extends ServiceEntityRepository implements Bu
     {
         $this->createQueryBuilder('ea')
             ->delete()
-            ->where('ea.budget = :budget')
+            ->join('ea.element', 'e', 'WITH', 'e.budget = :budget')
             ->setParameter('budget', $this->getEntityReference(Budget::class, $budgetId))
             ->getQuery()
             ->execute();
     }
 
-    public function getSummarizedAmountsForPeriod(Id $budgetId, DateTimeInterface $periodStart, DateTimeInterface $periodEnd): array
-    {
-        $query = $this->createQueryBuilder('ea')
-            ->select('e.elementId, e.type as elementType, SUM(ea.amount) as amount')
-            ->join(BudgetElement::class, 'e', 'WITH', 'ea.budget = e.budget AND e = ea.element')
-            ->where('ea.budget = :budget')
+    public function getSummarizedAmountsForPeriod(
+        Id $budgetId,
+        DateTimeInterface $periodStart,
+        DateTimeInterface $periodEnd
+    ): array {
+        $query = $this->createQueryBuilder('el')
+            ->select('e.externalId as elementId, e.type as elementType, SUM(el.amount) as amount')
+            ->join('el.element', 'e', 'WITH', 'e.budget = :budget')
             ->setParameter('budget', $this->getEntityReference(Budget::class, $budgetId))
-            ->andWhere('ea.period >= :periodStart')
+            ->where('el.period >= :periodStart')
             ->setParameter('periodStart', $periodStart)
-            ->andWhere('ea.period < :periodEnd')
+            ->andWhere('el.period < :periodEnd')
             ->setParameter('periodEnd', $periodEnd)
-            ->groupBy('e.elementId, e.type')
+            ->groupBy('e.externalId, e.type')
             ->getQuery();
 
         return $query->getArrayResult();
@@ -79,21 +85,17 @@ class BudgetElementLimitRepository extends ServiceEntityRepository implements Bu
 
     public function getSummarizedAmountsForElements(Id $budgetId, array $elementsIds): array
     {
-        $elements = [];
-        foreach ($elementsIds as $elementId) {
-            $elements[] = $this->getEntityReference(BudgetElement::class, $elementId);
-        }
-        $amountsQuery = $this->createQueryBuilder('ea')
-            ->select('SUM(ea.amount) as amount, ea.period')
-            ->where('ea.budget = :budget')
+        $amountsQuery = $this->createQueryBuilder('el')
+            ->select('SUM(el.amount) as amount, el.period')
+            ->join('el.element', 'e', 'WITH', 'e.budget = :budget')
             ->setParameter('budget', $this->getEntityReference(Budget::class, $budgetId))
-            ->andWhere('ea.element IN (:elements)')
-            ->setParameter('elements', $elements)
-            ->groupBy('ea.period')
-            ->orderBy('ea.period')
+            ->where('e.externalId IN (:elements)')
+            ->setParameter('elements', $elementsIds)
+            ->groupBy('el.period')
+            ->orderBy('el.period')
             ->getQuery();
         $sourceAmounts = [];
-        foreach($amountsQuery->getArrayResult() as $item) {
+        foreach ($amountsQuery->getArrayResult() as $item) {
             $date = DateTime::createFromFormat('Y-m-d H:i:s', $item['period'])->format('Y-m-d');
             $sourceAmounts[$date] = $item['amount'];
         }
@@ -103,44 +105,44 @@ class BudgetElementLimitRepository extends ServiceEntityRepository implements Bu
 
     public function getByBudgetIdAndElementId(Id $budgetId, Id $elementId): array
     {
-        $targetAmountQuery = $this->createQueryBuilder('ea')
-            ->select('ea')
-            ->where('ea.budget = :budget')
+        $targetAmountQuery = $this->createQueryBuilder('el')
+            ->select('el')
+            ->join('el.element', 'e', 'WITH', 'e.budget = :budget')
             ->setParameter('budget', $this->getEntityReference(Budget::class, $budgetId))
-            ->andWhere('ea.element = :element')
-            ->setParameter('element', $this->getEntityReference(BudgetElement::class, $elementId))
-            ->orderBy('ea.period')
+            ->where('el.externalId = :elementId')
+            ->setParameter('elementId', $elementId)
+            ->orderBy('el.period')
             ->getQuery();
         return $targetAmountQuery->getResult();
     }
 
-    public function deleteByBudgetIdAndElementId(Id $budgetId, Id $elementId): void {
-        $this->createQueryBuilder('ea')
+    public function deleteByBudgetIdAndElementId(Id $budgetId, Id $elementId): void
+    {
+        $budgetRef = $this->getEntityReference(Budget::class, $budgetId);
+        $this->createQueryBuilder('el')
             ->delete()
-            ->where('ea.budget = :budget')
-            ->setParameter('budget', $this->getEntityReference(Budget::class, $budgetId))
-            ->andWhere('ea.element = :element')
-            ->setParameter('element', $this->getEntityReference(BudgetElement::class, $elementId))
+            ->join('el.element', 'e', 'WITH', 'e.budget = :budget')
+            ->setParameter('budget', $budgetRef)
+            ->where('e.externalId = :elementId')
+            ->setParameter('elementId', $elementId)
             ->getQuery()
             ->execute();
     }
 
-    public function get(Id $budgetId, Id $elementId, DateTimeInterface $period): ?BudgetElementLimit
+    public function get(BudgetElement $element, DateTimeInterface $period): ?BudgetElementLimit
     {
-        return $this->findOneBy([
-            'budget' => $this->getEntityReference(Budget::class, $budgetId),
-            'element' => $this->getEntityReference(BudgetElement::class, $elementId),
-            'period' => $period
-        ]);
+        $period = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $period->format('Y-m-d 00:00:00'));
+        $builder = $this->createQueryBuilder('el');
+        $builder->select('el')
+            ->where('el.element = :element')
+            ->andWhere('el.period = :period')
+            ->setParameter('element', $element)
+            ->setParameter('period', $period);
+        return $builder->getQuery()->getOneOrNullResult();
     }
 
     public function deleteByElementId(Id $elementId): void
     {
-        $this->createQueryBuilder('ea')
-            ->delete()
-            ->where('ea.element = :element')
-            ->setParameter('element', $this->getEntityReference(BudgetElement::class, $elementId))
-            ->getQuery()
-            ->execute();
+        throw new \RuntimeException('Not implemented');
     }
 }

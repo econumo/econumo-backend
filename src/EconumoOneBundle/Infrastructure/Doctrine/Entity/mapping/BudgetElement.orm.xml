@@ -5,9 +5,9 @@
 
     <entity repository-class="App\EconumoOneBundle\Infrastructure\Doctrine\Repository\BudgetElementRepository" name="App\EconumoOneBundle\Domain\Entity\BudgetElement"
             table="budgets_elements">
-        <id name="budget" association-key="true" />
-        <id name="elementId" type="uuid" column="element_id"/>
+        <id name="id" type="uuid" column="id"/>
 
+        <field name="externalId" type="uuid" column="external_id" nullable="false" />
         <field name="type" type="budget_element_type" column="type" nullable="false" />
         <field name="createdAt" type="datetime_immutable" column="created_at" nullable="false"/>
         <field name="updatedAt" type="datetime" column="updated_at" nullable="false"/>
@@ -28,8 +28,12 @@
             <join-column name="folder_id" referenced-column-name="id" nullable="true" on-delete="SET NULL"/>
         </many-to-one>
 
+        <unique-constraints>
+            <unique-constraint columns="budget_id,external_id" name="uniq_budgets_elements" />
+        </unique-constraints>
+
         <indexes>
-            <index columns="element_id" name="element_idx_budgets_elements"/>
+            <index columns="external_id" name="external_idx_budgets_elements"/>
         </indexes>
     </entity>
 </doctrine-mapping>

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\EconumoOneBundle\Domain\Entity;
 
-use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetElementType;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use DateTime;
 use DateTimeImmutable;
@@ -19,7 +18,7 @@ class BudgetElementLimit
     private DateTimeInterface $updatedAt;
 
     public function __construct(
-        private Budget $budget,
+        private Id $id,
         private BudgetElement $element,
         private float $amount,
         DateTimeInterface $period,
@@ -30,19 +29,19 @@ class BudgetElementLimit
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
     }
 
-    public function getBudget(): Budget
+    public function getId(): Id
     {
-        return $this->budget;
+        return $this->id;
     }
 
     public function getElementId(): Id
     {
-        return $this->element->getElementId();
+        return $this->element->getId();
     }
 
-    public function getElementType(): BudgetElementType
+    public function getElement(): BudgetElement
     {
-        return $this->element->getType();
+        return $this->element;
     }
 
     public function getAmount(): float
@@ -61,6 +60,16 @@ class BudgetElementLimit
     public function getPeriod(): DateTimeImmutable
     {
         return $this->period;
+    }
+
+    public function getCreatedAt(): DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): DateTimeInterface
+    {
+        return $this->updatedAt;
     }
 
     private function updated(): void

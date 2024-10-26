@@ -40,16 +40,16 @@ readonly class BudgetElementsService
         $budgetElements = $this->budgetElementRepository->getByBudgetId($budget->getId());
         $updatedElements = [];
         foreach ($budgetElements as $option) {
-            if (!array_key_exists($option->getElementId()->getValue(), $elementsToMove)) {
+            if (!array_key_exists($option->getExternalId()->getValue(), $elementsToMove)) {
                 continue;
             }
-            if (array_key_exists($option->getElementId()->getValue(), $seen)) {
+            if (array_key_exists($option->getExternalId()->getValue(), $seen)) {
                 continue;
             }
-            $seen[$option->getElementId()->getValue()] = true;
+            $seen[$option->getExternalId()->getValue()] = true;
 
             $isUpdated = false;
-            $element = $elementsToMove[$option->getElementId()->getValue()];
+            $element = $elementsToMove[$option->getExternalId()->getValue()];
             if ($element->folderId === null && $option->getFolder() !== null) {
                 $option->changeFolder(null);
                 $isUpdated = true;
@@ -86,7 +86,7 @@ readonly class BudgetElementsService
 
         $optionsAssoc = [];
         foreach ($options as $option) {
-            $index = sprintf('%s_%s', $option->getElementId()->getValue(), $option->getType()->getAlias());
+            $index = sprintf('%s_%s', $option->getExternalId()->getValue(), $option->getType()->getAlias());
             $optionsAssoc[$index] = $option;
         }
 

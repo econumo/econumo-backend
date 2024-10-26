@@ -40,24 +40,26 @@ final class Version20241025225201 extends AbstractMigration
         , updated_at DATETIME NOT NULL, PRIMARY KEY(budget_id, user_id))');
         $this->addSql('CREATE INDEX IDX_9300F12F36ABA6B8 ON budgets_access (budget_id)');
         $this->addSql('CREATE INDEX IDX_9300F12FA76ED395 ON budgets_access (user_id)');
-        $this->addSql('CREATE TABLE budgets_elements (budget_id CHAR(36) NOT NULL --(DC2Type:uuid)
-        , element_id CHAR(36) NOT NULL --(DC2Type:uuid)
+        $this->addSql('CREATE TABLE budgets_elements (id CHAR(36) NOT NULL --(DC2Type:uuid)
+        , budget_id CHAR(36) NOT NULL --(DC2Type:uuid)
         , currency_id CHAR(36) DEFAULT NULL --(DC2Type:uuid)
         , folder_id CHAR(36) DEFAULT NULL --(DC2Type:uuid)
+        , external_id CHAR(36) NOT NULL --(DC2Type:uuid)
         , type SMALLINT NOT NULL, created_at DATETIME NOT NULL --(DC2Type:datetime_immutable)
-        , updated_at DATETIME NOT NULL, position SMALLINT UNSIGNED DEFAULT 0 NOT NULL, PRIMARY KEY(budget_id, element_id))');
+        , updated_at DATETIME NOT NULL, position SMALLINT UNSIGNED DEFAULT 0 NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_EE8709C336ABA6B8 ON budgets_elements (budget_id)');
         $this->addSql('CREATE INDEX IDX_EE8709C338248176 ON budgets_elements (currency_id)');
         $this->addSql('CREATE INDEX IDX_EE8709C3162CB942 ON budgets_elements (folder_id)');
-        $this->addSql('CREATE INDEX element_idx_budgets_elements ON budgets_elements (element_id)');
-        $this->addSql('CREATE TABLE budgets_elements_limits (budget_id CHAR(36) NOT NULL --(DC2Type:uuid)
+        $this->addSql('CREATE INDEX external_idx_budgets_elements ON budgets_elements (external_id)');
+        $this->addSql('CREATE UNIQUE INDEX uniq_budgets_elements ON budgets_elements (budget_id, external_id)');
+        $this->addSql('CREATE TABLE budgets_elements_limits (id CHAR(36) NOT NULL --(DC2Type:uuid)
         , element_id CHAR(36) NOT NULL --(DC2Type:uuid)
         , period DATETIME NOT NULL --(DC2Type:datetime_immutable)
         , amount NUMERIC(19, 2) NOT NULL, created_at DATETIME NOT NULL --(DC2Type:datetime_immutable)
-        , updated_at DATETIME NOT NULL, PRIMARY KEY(budget_id, element_id, period))');
-        $this->addSql('CREATE INDEX IDX_2FAF76336ABA6B8 ON budgets_elements_limits (budget_id)');
-        $this->addSql('CREATE INDEX budget_period_idx_budgets_elements_limits ON budgets_elements_limits (budget_id, period)');
-        $this->addSql('CREATE INDEX element_idx_budgets_elements_limits ON budgets_elements_limits (element_id)');
+        , updated_at DATETIME NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE INDEX IDX_406C516F1F1F2A24 ON budgets_elements_limits (element_id)');
+        $this->addSql('CREATE INDEX period_idx_budgets_elements_limits ON budgets_elements_limits (period)');
+        $this->addSql('CREATE INDEX element_period_idx_budgets_elements_limits ON budgets_elements_limits (element_id, period)');
         $this->addSql('CREATE TABLE budgets_envelopes (id CHAR(36) NOT NULL --(DC2Type:uuid)
         , budget_id CHAR(36) NOT NULL --(DC2Type:uuid)
         , name VARCHAR(64) DEFAULT NULL, icon VARCHAR(64) DEFAULT NULL, is_archived BOOLEAN DEFAULT \'0\' NOT NULL, created_at DATETIME NOT NULL --(DC2Type:datetime_immutable)
