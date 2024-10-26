@@ -96,7 +96,7 @@ class BudgetElementLimitRepository extends ServiceEntityRepository implements Bu
             ->getQuery();
         $sourceAmounts = [];
         foreach ($amountsQuery->getArrayResult() as $item) {
-            $date = DateTime::createFromFormat('Y-m-d H:i:s', $item['period'])->format('Y-m-d');
+            $date = DateTime::createFromInterface($item['period'])->format('Y-m-d');
             $sourceAmounts[$date] = $item['amount'];
         }
 
@@ -109,7 +109,7 @@ class BudgetElementLimitRepository extends ServiceEntityRepository implements Bu
             ->select('el')
             ->join('el.element', 'e', 'WITH', 'e.budget = :budget')
             ->setParameter('budget', $this->getEntityReference(Budget::class, $budgetId))
-            ->where('el.externalId = :elementId')
+            ->where('e.externalId = :elementId')
             ->setParameter('elementId', $elementId)
             ->orderBy('el.period')
             ->getQuery();

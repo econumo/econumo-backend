@@ -160,24 +160,24 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
     private function reassignAmounts(Id $budgetId, BudgetEnvelope $envelope): void
     {
         $this->antiCorruptionService->beginTransaction(__METHOD__);
-        $categoryType = BudgetElementType::category();
         try {
+            $element = $this->budgetElementRepository->get($budgetId, $envelope->getId());
             $categoriesIds = [];
             foreach ($envelope->getCategories() as $category) {
                 $categoriesIds[] = $category->getId();
             }
-            $sourceAmounts = $this->budgetElementLimitRepository
+            $originLimits = $this->budgetElementLimitRepository
                 ->getSummarizedAmountsForElements($budgetId, $categoriesIds);
-            $targetAmounts = $this->budgetElementLimitRepository
+            $targetLimits = $this->budgetElementLimitRepository
                 ->getByBudgetIdAndElementId($budgetId, $envelope->getId());
 
             $updated = [];
             $seen = [];
-            foreach ($targetAmounts as $targetAmount) {
+            foreach ($targetLimits as $targetAmount) {
                 $date = $targetAmount->getPeriod()->format('Y-m-d');
                 $seen[] = $date;
-                if (array_key_exists($date, $sourceAmounts)) {
-                    $targetAmount->updateAmount($targetAmount->getAmount() + $sourceAmounts[$date]);
+                if (array_key_exists($date, $originLimits)) {
+                    $targetAmount->updateAmount($targetAmount->getAmount() + $originLimits[$date]);
                     $updated[] = $targetAmount;
                 }
             }
@@ -185,13 +185,12 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
                 $this->budgetElementLimitRepository->save($updated);
             }
 
-            $keysToCreate = array_diff(array_keys($sourceAmounts), $seen);
+            $keysToCreate = array_diff(array_keys($originLimits), $seen);
             $created = [];
             foreach ($keysToCreate as $key) {
                 $created[] = $this->budgetElementLimitFactory->create(
-                    $budgetId,
-                    $envelope->getId(),
-                    $sourceAmounts[$key],
+                    $element,
+                    $originLimits[$key],
                     DateTime::createFromFormat('Y-m-d', $key)
                 );
             }
@@ -202,7 +201,7 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
             $toDelete = [];
             foreach ($envelope->getCategories() as $category) {
                 $oldAmounts = $this->budgetElementLimitRepository
-                    ->getByBudgetIdAndElementId($budgetId, $category->getId(), $categoryType);
+                    ->getByBudgetIdAndElementId($budgetId, $category->getId());
                 if ($oldAmounts !== []) {
                     $toDelete = array_merge($toDelete, $oldAmounts);
                 }
