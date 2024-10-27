@@ -17,7 +17,7 @@ interface BudgetElementLimitRepositoryInterface
     /**
      * @return BudgetElementLimit[]
      */
-    public function getByBudgetId(Id $budgetId, DateTimeInterface $period): array;
+    public function getByBudgetIdAndPeriod(Id $budgetId, DateTimeInterface $period): array;
 
     /**
      * @param BudgetElementLimit[] $items
@@ -35,33 +35,26 @@ interface BudgetElementLimitRepositoryInterface
 
     public function deleteByElementId(Id $elementId): void;
 
-    /**
-     * @param Id $budgetId
-     * @param Id $elementId
-     * @return void
-     */
-    public function deleteByBudgetIdAndElementId(Id $budgetId, Id $elementId): void;
-
     public function getSummarizedAmountsForPeriod(Id $budgetId, DateTimeInterface $periodStart, DateTimeInterface $periodEnd): array;
 
     /**
      * @param Id $budgetId
-     * @param Id[] $elementsIds
+     * @param Id[] $externalIds
      * @return float[]|int[]
      */
-    public function getSummarizedAmountsForElements(Id $budgetId, array $elementsIds): array;
+    public function getSummarizedAmountsForElements(Id $budgetId, array $externalIds): array;
 
     /**
      * @param Id $budgetId
-     * @param Id $elementId
+     * @param Id $externalId
      * @return BudgetElementLimit[]
      */
-    public function getByBudgetIdAndElementId(Id $budgetId, Id $elementId): array;
+    public function getByBudgetIdAndElementId(Id $budgetId, Id $externalId): array;
 
     /**
-     * @param BudgetElement $element
+     * @param Id $elementId
      * @param DateTimeInterface $period
      * @return BudgetElementLimit|null
      */
-    public function get(BudgetElement $element, DateTimeInterface $period): ?BudgetElementLimit;
+    public function get(Id $elementId, DateTimeInterface $period): ?BudgetElementLimit;
 }

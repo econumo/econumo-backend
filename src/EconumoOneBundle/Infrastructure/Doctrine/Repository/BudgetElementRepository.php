@@ -68,16 +68,4 @@ class BudgetElementRepository extends ServiceEntityRepository implements BudgetE
 
         return $item;
     }
-
-    public function deleteByBudgetAndElementId(Id $budgetId, Id $externalElementId): void
-    {
-        $this->createQueryBuilder('eo')
-            ->delete()
-            ->where('eo.budget = :budget')
-            ->setParameter('budget', $this->getEntityReference(Budget::class, $budgetId))
-            ->andWhere('eo.externalId = :externalId')
-            ->setParameter('externalId', $externalElementId->getValue())
-            ->getQuery()
-            ->execute();
-    }
 }

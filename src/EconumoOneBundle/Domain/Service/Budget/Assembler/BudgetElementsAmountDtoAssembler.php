@@ -157,7 +157,7 @@ readonly class BudgetElementsAmountDtoAssembler
         DateTimeInterface $periodStart,
         array $data
     ): array {
-        $amounts = $this->budgetEntityAmountRepository->getByBudgetId($budget->getId(), $periodStart);
+        $amounts = $this->budgetEntityAmountRepository->getByBudgetIdAndPeriod($budget->getId(), $periodStart);
         foreach ($amounts as $amount) {
             $index = $this->getKey($amount->getElement()->getExternalId()->getValue(), $amount->getElement()->getType()->getAlias());
             if (!array_key_exists($index, $data)) {

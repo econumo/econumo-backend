@@ -379,6 +379,7 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
             throw new AccessDeniedException('Envelope was not found for this budget');
         }
 
+        $element = $this->budgetElementRepository->get($budgetId, $envelopeId);
         $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
             $categoriesMap = [];
@@ -387,8 +388,8 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
             }
             $this->removeCategoriesFromEnvelope($envelope, $categoriesMap);
 
-            $this->budgetElementLimitRepository->deleteByBudgetIdAndElementId($budgetId, $envelope->getId());
-            $this->budgetElementRepository->deleteByBudgetAndElementId($budgetId, $envelope->getId());
+            $this->budgetElementLimitRepository->deleteByElementId($element->getId());
+            $this->budgetElementRepository->delete([$element]);
             $this->budgetEnvelopeRepository->delete([$envelope]);
             $this->antiCorruptionService->commit(__METHOD__);
         } catch (\Throwable $exception) {

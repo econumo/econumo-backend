@@ -31,6 +31,4 @@ interface BudgetElementRepositoryInterface
     public function delete(array $items): void;
 
     public function getReference(Id $id): BudgetElement;
-
-    public function deleteByBudgetAndElementId(Id $budgetId, Id $externalElementId): void;
 }

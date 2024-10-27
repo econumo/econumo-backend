@@ -24,7 +24,7 @@ readonly class BudgetLimitService implements BudgetLimitServiceInterface
     public function setLimit(Id $budgetId, Id $elementId, DateTimeInterface $period, ?float $amount): void
     {
         $element = $this->budgetElementRepository->get($budgetId, $elementId);
-        $elementLimit = $this->budgetElementLimitRepository->get($element, $period);
+        $elementLimit = $this->budgetElementLimitRepository->get($element->getId(), $period);
         if (null === $amount) {
             if (null !== $elementLimit) {
                 $this->budgetElementLimitRepository->delete([$elementLimit]);
