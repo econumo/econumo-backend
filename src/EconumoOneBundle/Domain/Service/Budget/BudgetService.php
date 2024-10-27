@@ -40,7 +40,7 @@ readonly class BudgetService implements BudgetServiceInterface
         private UserRepositoryInterface $userRepository,
         private CurrencyRepositoryInterface $currencyRepository,
         private BudgetUpdateService $budgetUpdateService,
-        private BudgetElementsService $budgetElementsService,
+        private BudgetElementsActionsService $budgetElementsActionsService,
         private BudgetFoldersService $budgetFoldersService
     ) {
     }
@@ -166,7 +166,7 @@ readonly class BudgetService implements BudgetServiceInterface
     public function moveElements(Id $userId, Id $budgetId, array $affectedElements): void
     {
         $budget = $this->budgetRepository->get($budgetId);
-        $this->budgetElementsService->moveElements($budget, $affectedElements);
+        $this->budgetElementsActionsService->moveElements($budget, $affectedElements);
     }
 
     public function orderFolders(Id $userId, Id $budgetId, array $affectedFolders): void

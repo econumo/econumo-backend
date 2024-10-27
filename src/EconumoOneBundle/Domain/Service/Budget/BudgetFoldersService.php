@@ -16,7 +16,7 @@ readonly class BudgetFoldersService
 {
     public function __construct(
         private BudgetFolderRepositoryInterface $budgetFolderRepository,
-        private BudgetElementsService $budgetElementsService,
+        private BudgetElementsActionsService $budgetElementsActionsService,
     ) {
     }
 
@@ -54,6 +54,6 @@ readonly class BudgetFoldersService
         }
 
         $this->budgetFolderRepository->save($budgetFolders);
-        $this->budgetElementsService->updateElementsOrder($budgetId);
+        $this->budgetElementsActionsService->restoreElementsOrder($budgetId);
     }
 }

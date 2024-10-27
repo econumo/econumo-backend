@@ -17,7 +17,7 @@ use App\EconumoOneBundle\Domain\Repository\BudgetRepositoryInterface;
 use App\EconumoOneBundle\Domain\Service\Budget\Assembler\BudgetFiltersDtoAssembler;
 use App\EconumoOneBundle\Domain\Service\Budget\Dto\BudgetStructureMoveElementDto;
 
-readonly class BudgetElementsService
+readonly class BudgetElementsActionsService
 {
     public function __construct(
         private BudgetElementRepositoryInterface $budgetElementRepository,
@@ -76,10 +76,10 @@ readonly class BudgetElementsService
             $this->budgetElementRepository->save($updatedElements);
         }
 
-        $this->updateElementsOrder($budget->getId());
+        $this->restoreElementsOrder($budget->getId());
     }
 
-    public function updateElementsOrder(Id $budgetId): void
+    public function restoreElementsOrder(Id $budgetId): void
     {
         $folders = $this->budgetFolderRepository->getByBudgetId($budgetId);
         $options = $this->budgetElementRepository->getByBudgetId($budgetId);

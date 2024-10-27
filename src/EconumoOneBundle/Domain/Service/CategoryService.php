@@ -16,8 +16,10 @@ use App\EconumoOneBundle\Domain\Repository\AccountRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\CategoryRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\TransactionRepositoryInterface;
 use App\EconumoOneBundle\Domain\Service\AntiCorruptionServiceInterface;
+use App\EconumoOneBundle\Domain\Service\Budget\BudgetElementServiceInterface;
 use App\EconumoOneBundle\Domain\Service\CategoryServiceInterface;
 use DateTimeInterface;
+use Throwable;
 
 readonly class CategoryService implements CategoryServiceInterface
 {
@@ -26,7 +28,8 @@ readonly class CategoryService implements CategoryServiceInterface
         private CategoryRepositoryInterface $categoryRepository,
         private AccountRepositoryInterface $accountRepository,
         private AntiCorruptionServiceInterface $antiCorruptionService,
-        private TransactionRepositoryInterface $transactionRepository
+        private TransactionRepositoryInterface $transactionRepository,
+        private BudgetElementServiceInterface $budgetElementService,
     ) {
     }
 
@@ -44,9 +47,10 @@ readonly class CategoryService implements CategoryServiceInterface
             $category = $this->categoryFactory->create($userId, $name, $type, $icon);
             $category->updatePosition(count($categories));
             $this->categoryRepository->save([$category]);
+            $this->budgetElementService->createCategoryElements($category);
 
             $this->antiCorruptionService->commit(__METHOD__);
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback(__METHOD__);
             throw $throwable;
         }
@@ -74,9 +78,10 @@ readonly class CategoryService implements CategoryServiceInterface
         $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
             $category = $this->categoryRepository->get($categoryId);
+            $this->budgetElementService->deleteCategoryElements($categoryId);
             $this->categoryRepository->delete($category);
             $this->antiCorruptionService->commit(__METHOD__);
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback(__METHOD__);
             throw $throwable;
         }
@@ -99,7 +104,7 @@ readonly class CategoryService implements CategoryServiceInterface
             $this->transactionRepository->replaceCategory($categoryId, $newCategoryId);
             $this->deleteCategory($categoryId);
             $this->antiCorruptionService->commit(__METHOD__);
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback(__METHOD__);
             throw $throwable;
         }
@@ -144,18 +149,32 @@ readonly class CategoryService implements CategoryServiceInterface
 
     public function archive(Id $categoryId): void
     {
-        $category = $this->categoryRepository->get($categoryId);
-        $category->archive();
-
-        $this->categoryRepository->save([$category]);
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
+        try {
+            $category = $this->categoryRepository->get($categoryId);
+            $category->archive();
+            $this->categoryRepository->save([$category]);
+            $this->budgetElementService->archiveCategoryElements($categoryId);
+            $this->antiCorruptionService->commit(__METHOD__);
+        } catch (Throwable $throwable) {
+            $this->antiCorruptionService->rollback(__METHOD__);
+            throw $throwable;
+        }
     }
 
     public function unarchive(Id $categoryId): void
     {
-        $category = $this->categoryRepository->get($categoryId);
-        $category->unarchive();
-
-        $this->categoryRepository->save([$category]);
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
+        try {
+            $category = $this->categoryRepository->get($categoryId);
+            $category->unarchive();
+            $this->categoryRepository->save([$category]);
+            $this->budgetElementService->unarchiveCategoryElements($categoryId);
+            $this->antiCorruptionService->commit(__METHOD__);
+        } catch (Throwable $throwable) {
+            $this->antiCorruptionService->rollback(__METHOD__);
+            throw $throwable;
+        }
     }
 
     public function getChanged(Id $userId, DateTimeInterface $lastUpdate): array

@@ -6,6 +6,7 @@ namespace App\EconumoOneBundle\Infrastructure\Doctrine\Repository;
 
 use App\EconumoOneBundle\Domain\Entity\Budget;
 use App\EconumoOneBundle\Domain\Entity\BudgetElement;
+use App\EconumoOneBundle\Domain\Entity\Folder;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoOneBundle\Domain\Exception\NotFoundException;
 use App\EconumoOneBundle\Domain\Repository\BudgetElementRepositoryInterface;
@@ -14,6 +15,7 @@ use App\EconumoOneBundle\Infrastructure\Doctrine\Repository\Traits\GetEntityRefe
 use App\EconumoOneBundle\Infrastructure\Doctrine\Repository\Traits\NextIdentityTrait;
 use App\EconumoOneBundle\Infrastructure\Doctrine\Repository\Traits\SaveTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -67,5 +69,34 @@ class BudgetElementRepository extends ServiceEntityRepository implements BudgetE
         }
 
         return $item;
+    }
+
+    public function getNextPosition(Id $budgetId, ?Id $folderId): int
+    {
+        $builder = $this->createQueryBuilder('e');
+        $builder
+            ->select('e')
+            ->where('e.budget = :budget')
+            ->setParameter('budget', $this->getEntityReference(Budget::class, $budgetId))
+            ->orderBy('e.position', 'DESC')
+            ->setMaxResults(1);
+        if ($folderId) {
+            $builder
+                ->andWhere('e.folder = :folder')
+                ->setParameter('folder', $this->getEntityReference(Folder::class, $folderId));
+        }
+        try {
+            $element = $builder->getQuery()->getSingleResult();
+            $position = $element->getPosition() + 1;
+        } catch (NoResultException $e) {
+            $position = 0;
+        }
+
+        return $position;
+    }
+
+    public function getElementsByExternalId(Id $externalElementId): array
+    {
+        return $this->findBy(['externalId' => $externalElementId]);
     }
 }

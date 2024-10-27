@@ -31,7 +31,7 @@ use DateTime;
 readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
 {
     public function __construct(
-        private BudgetElementsService $budgetElementsService,
+        private BudgetElementsActionsService $budgetElementsActionsService,
         private BudgetEnvelopeFactoryInterface $budgetEnvelopeFactory,
         private BudgetElementFactoryInterface $budgetElementFactory,
         private BudgetRepositoryInterface $budgetRepository,
@@ -42,6 +42,7 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
         private BudgetElementLimitRepositoryInterface $budgetElementLimitRepository,
         private BudgetElementLimitFactoryInterface $budgetElementLimitFactory,
         private CurrencyRepositoryInterface $currencyRepository,
+        private BudgetElementServiceInterface $budgetElementService,
     ) {
     }
 
@@ -59,7 +60,7 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
                 $this->budgetEnvelopeRepository->deleteAssociationsWithCategories($budgetId, $envelope->categories);
             }
 
-            $this->budgetElementsService->shiftElements($budgetId, $folderId, $envelope->position);
+            $this->budgetElementsActionsService->shiftElements($budgetId, $folderId, $envelope->position);
             $envelopeEntity = $this->budgetEnvelopeFactory->create(
                 $budgetId,
                 $envelope->id,
@@ -76,14 +77,15 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
             if ($envelopeCurrencyId !== null && $budget->getCurrencyId()->isEqual($envelope->currencyId)) {
                 $envelopeCurrencyId = null;
             }
-            $envelopeOptions = $this->budgetElementFactory->createEnvelopeElement(
+
+            $envelopeElement = $this->budgetElementFactory->createEnvelopeElement(
                 $budgetId,
                 $envelope->id,
                 $envelope->position,
                 $envelopeCurrencyId,
                 $folderId
             );
-            $this->budgetElementRepository->save([$envelopeOptions]);
+            $this->budgetElementRepository->save([$envelopeElement]);
 
             if ($envelope->categories !== []) {
                 $this->reassignAmounts($budgetId, $envelopeEntity);
@@ -94,9 +96,9 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
             $this->antiCorruptionService->rollback(__METHOD__);
             throw $exception;
         }
-        $this->budgetElementsService->updateElementsOrder($budgetId);
+        $this->budgetElementsActionsService->restoreElementsOrder($budgetId);
 
-        return $this->assembleEnvelope($envelopeEntity, $envelopeOptions, $budget);
+        return $this->assembleEnvelope($envelopeEntity, $envelopeElement, $budget);
     }
 
     public function update(Id $budgetId, BudgetEnvelopeDto $envelopeDto): BudgetStructureParentElementDto
@@ -105,7 +107,13 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
         try {
             $budget = $this->budgetRepository->get($budgetId);
             $envelope = $this->budgetEnvelopeRepository->get($envelopeDto->id);
-            $envelopeOptions = $this->budgetElementRepository->get($budgetId, $envelope->getId());
+            $envelopeElement = $this->budgetElementRepository->get($budgetId, $envelope->getId());
+
+            if (!$envelope->isArchived() && $envelopeDto->isArchived) {
+                $this->budgetElementService->archiveEnvelopeElement($envelope->getId());
+            } elseif ($envelope->isArchived() && !$envelopeDto->isArchived) {
+                $this->budgetElementService->unarchiveEnvelopeElement($envelope->getId());
+            }
 
             $envelope->updateName($envelopeDto->name);
             $envelope->updateIcon($envelopeDto->icon);
@@ -114,12 +122,12 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
 
             if ($envelopeDto->currencyId === null
                 || ($envelopeDto->currencyId && $budget->getCurrency()->getId()->isEqual($envelopeDto->currencyId))) {
-                $envelopeOptions->updateCurrency(null);
+                $envelopeElement->updateCurrency(null);
             } else {
                 $currency = $this->currencyRepository->get($envelopeDto->currencyId);
-                $envelopeOptions->updateCurrency($currency);
+                $envelopeElement->updateCurrency($currency);
             }
-            $this->budgetElementRepository->save([$envelopeOptions]);
+            $this->budgetElementRepository->save([$envelopeElement]);
 
             if ($envelopeDto->categories !== [] || $envelope->getCategories()->count() > 0) {
                 $envelopeCategoriesMap = [];
@@ -152,9 +160,9 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
             $this->antiCorruptionService->rollback(__METHOD__);
             throw $exception;
         }
-        $this->budgetElementsService->updateElementsOrder($budgetId);
+        $this->budgetElementsActionsService->restoreElementsOrder($budgetId);
 
-        return $this->assembleEnvelope($envelope, $envelopeOptions, $budget);
+        return $this->assembleEnvelope($envelope, $envelopeElement, $budget);
     }
 
     private function reassignAmounts(Id $budgetId, BudgetEnvelope $envelope): void
@@ -379,7 +387,6 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
             throw new AccessDeniedException('Envelope was not found for this budget');
         }
 
-        $element = $this->budgetElementRepository->get($budgetId, $envelopeId);
         $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
             $categoriesMap = [];
@@ -387,9 +394,7 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
                 $categoriesMap[$category->getId()->getValue()] = $category;
             }
             $this->removeCategoriesFromEnvelope($envelope, $categoriesMap);
-
-            $this->budgetElementLimitRepository->deleteByElementId($element->getId());
-            $this->budgetElementRepository->delete([$element]);
+            $this->budgetElementService->deleteEnvelopeElement($envelope->getId());
             $this->budgetEnvelopeRepository->delete([$envelope]);
             $this->antiCorruptionService->commit(__METHOD__);
         } catch (\Throwable $exception) {
@@ -397,6 +402,6 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
             throw $exception;
         }
 
-        $this->budgetElementsService->updateElementsOrder($budgetId);
+        $this->budgetElementsActionsService->restoreElementsOrder($budgetId);
     }
 }

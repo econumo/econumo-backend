@@ -14,6 +14,7 @@ use App\EconumoOneBundle\Domain\Factory\TagFactoryInterface;
 use App\EconumoOneBundle\Domain\Repository\AccountRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\TagRepositoryInterface;
 use App\EconumoOneBundle\Domain\Service\AntiCorruptionServiceInterface;
+use App\EconumoOneBundle\Domain\Service\Budget\BudgetElementServiceInterface;
 use App\EconumoOneBundle\Domain\Service\TagServiceInterface;
 use DateTimeInterface;
 
@@ -23,7 +24,8 @@ readonly class TagService implements TagServiceInterface
         private TagFactoryInterface $tagFactory,
         private TagRepositoryInterface $tagRepository,
         private AccountRepositoryInterface $accountRepository,
-        private AntiCorruptionServiceInterface $antiCorruptionService
+        private AntiCorruptionServiceInterface $antiCorruptionService,
+        private BudgetElementServiceInterface $budgetElementService,
     ) {
     }
 
@@ -41,6 +43,7 @@ readonly class TagService implements TagServiceInterface
             $tag = $this->tagFactory->create($userId, $name);
             $tag->updatePosition(count($tags));
             $this->tagRepository->save([$tag]);
+            $this->budgetElementService->createTagElements($tag);
 
             $this->antiCorruptionService->commit(__METHOD__);
         } catch (\Throwable $throwable) {
@@ -101,6 +104,7 @@ readonly class TagService implements TagServiceInterface
         $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
             $category = $this->tagRepository->get($tagId);
+            $this->budgetElementService->deleteTagElements($tagId);
             $this->tagRepository->delete($category);
             $this->antiCorruptionService->commit(__METHOD__);
         } catch (\Throwable $throwable) {
@@ -111,18 +115,34 @@ readonly class TagService implements TagServiceInterface
 
     public function archiveTag(Id $tagId): void
     {
-        $tag = $this->tagRepository->get($tagId);
-        $tag->archive();
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
+        try {
+            $tag = $this->tagRepository->get($tagId);
+            $tag->archive();
+            $this->budgetElementService->archiveTagElements($tagId);
+            $this->tagRepository->save([$tag]);
 
-        $this->tagRepository->save([$tag]);
+            $this->antiCorruptionService->commit(__METHOD__);
+        } catch (Throwable $throwable) {
+            $this->antiCorruptionService->rollback(__METHOD__);
+            throw $throwable;
+        }
     }
 
     public function unarchiveTag(Id $tagId): void
     {
-        $tag = $this->tagRepository->get($tagId);
-        $tag->unarchive();
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
+        try {
+            $tag = $this->tagRepository->get($tagId);
+            $tag->unarchive();
+            $this->budgetElementService->unarchiveTagElements($tagId);
+            $this->tagRepository->save([$tag]);
 
-        $this->tagRepository->save([$tag]);
+            $this->antiCorruptionService->commit(__METHOD__);
+        } catch (Throwable $throwable) {
+            $this->antiCorruptionService->rollback(__METHOD__);
+            throw $throwable;
+        }
     }
 
     public function getChanged(Id $userId, DateTimeInterface $lastUpdate): array

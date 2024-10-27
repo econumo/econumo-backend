@@ -5,9 +5,14 @@ declare(strict_types=1);
 namespace App\EconumoOneBundle\Domain\Service\Budget;
 
 use App\EconumoOneBundle\Domain\Entity\BudgetElement;
+use App\EconumoOneBundle\Domain\Entity\BudgetEnvelope;
+use App\EconumoOneBundle\Domain\Entity\Category;
+use App\EconumoOneBundle\Domain\Entity\Tag;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoOneBundle\Domain\Factory\BudgetElementFactoryInterface;
+use App\EconumoOneBundle\Domain\Repository\BudgetElementLimitRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\BudgetElementRepositoryInterface;
+use App\EconumoOneBundle\Domain\Repository\BudgetRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\CategoryRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\TagRepositoryInterface;
 use App\EconumoOneBundle\Domain\Service\Budget\BudgetElementServiceInterface;
@@ -21,7 +26,10 @@ readonly class BudgetElementService implements BudgetElementServiceInterface
         private CategoryRepositoryInterface $categoryRepository,
         private TagRepositoryInterface $tagRepository,
         private BudgetElementFactoryInterface $budgetElementFactory,
-        private BudgetElementRepositoryInterface $budgetElementRepository
+        private BudgetElementRepositoryInterface $budgetElementRepository,
+        private BudgetRepositoryInterface $budgetRepository,
+        private BudgetElementLimitRepositoryInterface $budgetElementLimitRepository,
+        private BudgetElementsActionsService  $budgetElementsActionsService
     ) {
     }
 
@@ -100,5 +108,126 @@ readonly class BudgetElementService implements BudgetElementServiceInterface
         $this->budgetElementRepository->save($entities);
 
         return [$position, $result];
+    }
+
+    public function createCategoryElements(Category $category): void
+    {
+        if ($category->getType()->isIncome()) {
+            return;
+        }
+
+        $newElements = [];
+        $budgets = $this->budgetRepository->getByUserId($category->getUserId());
+        foreach ($budgets as $budget) {
+            if ($category->isArchived()) {
+                $position = BudgetElement::POSITION_UNSET;
+            } else {
+                $position = $this->budgetElementRepository->getNextPosition($budget->getId(), null);
+            }
+            $item = $this->budgetElementFactory->createCategoryElement(
+                $budget->getId(),
+                $category->getId(),
+                $position
+            );
+            $newElements[] = $item;
+        }
+        $this->budgetElementRepository->save($newElements);
+    }
+
+    public function deleteCategoryElements(Id $categoryId): void
+    {
+        $this->deleteElements($categoryId);
+    }
+
+    public function archiveCategoryElements(Id $categoryId): void
+    {
+        $this->archiveElements($categoryId);
+    }
+
+    public function unarchiveCategoryElements(Id $categoryId): void
+    {
+        $this->unarchiveElements($categoryId);
+    }
+
+    public function createTagElements(Tag $tag): void
+    {
+        $newElements = [];
+        $budgets = $this->budgetRepository->getByUserId($tag->getUserId());
+        foreach ($budgets as $budget) {
+            if ($tag->isArchived()) {
+                $position = BudgetElement::POSITION_UNSET;
+            } else {
+                $position = $this->budgetElementRepository->getNextPosition($budget->getId(), null);
+            }
+            $item = $this->budgetElementFactory->createTagElement(
+                $budget->getId(),
+                $tag->getId(),
+                $position
+            );
+            $newElements[] = $item;
+        }
+        $this->budgetElementRepository->save($newElements);
+    }
+
+    public function deleteTagElements(Id $tagId): void
+    {
+        $this->deleteElements($tagId);
+    }
+
+    public function archiveTagElements(Id $tagId): void
+    {
+        $this->archiveElements($tagId);
+    }
+
+    public function unarchiveTagElements(Id $tagId): void
+    {
+        $this->unarchiveElements($tagId);
+    }
+
+    private function deleteElements(Id $externalId): void
+    {
+        $elements = $this->budgetElementRepository->getElementsByExternalId($externalId);
+        foreach ($elements as $element) {
+            $this->budgetElementLimitRepository->deleteByElementId($element->getId());
+            $this->budgetElementRepository->delete([$element]);
+            $this->budgetElementsActionsService->restoreElementsOrder($element->getBudget()->getId());
+        }
+    }
+
+    private function archiveElements(Id $externalId): void
+    {
+        $elements = $this->budgetElementRepository->getElementsByExternalId($externalId);
+        foreach ($elements as $element) {
+            $element->unsetPosition();
+            $element->changeFolder(null);
+            $this->budgetElementRepository->save([$element]);
+            $this->budgetElementsActionsService->restoreElementsOrder($element->getBudget()->getId());
+        }
+    }
+
+    private function unarchiveElements(Id $externalId): void
+    {
+        $elements = $this->budgetElementRepository->getElementsByExternalId($externalId);
+        foreach ($elements as $element) {
+            $position = $this->budgetElementRepository->getNextPosition($element->getBudget()->getId(), null);
+            $element->updatePosition($position);
+            $element->changeFolder(null);
+        }
+        $this->budgetElementRepository->save($elements);
+    }
+
+    public function deleteEnvelopeElement(Id $envelopeId): void
+    {
+        $this->deleteElements($envelopeId);
+    }
+
+    public function archiveEnvelopeElement(Id $envelopeId): void
+    {
+        $this->archiveElements($envelopeId);
+    }
+
+    public function unarchiveEnvelopeElement(Id $envelopeId): void
+    {
+        $this->unarchiveElements($envelopeId);
     }
 }
