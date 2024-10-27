@@ -8,7 +8,7 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     required={"id", "type", "name", "icon", "currencyId", "isArchived", "folderId", "position", "budget", "available", "spent", "children", "ownerUserId"}
+ *     required={"id", "type", "name", "icon", "currencyId", "isArchived", "folderId", "position", "budget", "available", "spent", "budgetSpent", "children", "ownerUserId"}
  * )
  */
 class BudgetStructureParentElementResultDto
@@ -67,6 +67,11 @@ class BudgetStructureParentElementResultDto
      * @OA\Property(example="10.0")
      */
     public float $spent;
+
+    /**
+     * @OA\Property(example="10.0")
+     */
+    public float $budgetSpent;
 
     /**
      * @var BudgetStructureChildElementResultDto[]

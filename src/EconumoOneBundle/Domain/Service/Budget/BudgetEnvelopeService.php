@@ -246,6 +246,7 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
                 $category->getUserId(),
                 $category->isArchived(),
                 .0,
+                .0,
                 []
             );
         }
@@ -260,6 +261,7 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
             $envelope->isArchived(),
             $envelopeOption->getFolder()?->getId(),
             $envelopeOption->getPosition(),
+            0.0,
             0.0,
             0.0,
             0.0,

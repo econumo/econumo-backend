@@ -29,6 +29,7 @@ readonly class BudgetParentElementToResultDtoAssembler
         $result->budgeted = $dto->budgeted;
         $result->available = $dto->available;
         $result->spent = $dto->spent;
+        $result->budgetSpent = $dto->spentInBudgetCurrency;
         $result->ownerUserId = $dto->ownerId?->getValue();
 
         $result->children = [];

@@ -54,6 +54,7 @@ readonly class BudgetStructureDtoAssembler
         $categoryUsed = [];
         $elements = [];
         $envelopes = $this->getEnvelopes($budget->getId());
+        $budgetCurrencyId = $budget->getCurrencyId();
         foreach ($envelopes as $envelope) {
             $type = BudgetElementType::envelope();
             $index = sprintf('%s-%s', $envelope->getId()->getValue(), $type->getAlias());
@@ -84,6 +85,13 @@ readonly class BudgetStructureDtoAssembler
                             $spent->periodEnd,
                             $spent->currencyId,
                             $currencyId,
+                            $spent->amount
+                        );
+                        $toConvert[sprintf('spent-budget-%s', $subIndex)][] = new CurrencyConvertorDto(
+                            $spent->periodStart,
+                            $spent->periodEnd,
+                            $spent->currencyId,
+                            $budgetCurrencyId,
                             $spent->amount
                         );
                     }
@@ -153,6 +161,13 @@ readonly class BudgetStructureDtoAssembler
                             $currencyId,
                             $spent->amount
                         );
+                        $toConvert[sprintf('spent-budget-%s', $subIndex)][] = new CurrencyConvertorDto(
+                            $spent->periodStart,
+                            $spent->periodEnd,
+                            $spent->currencyId,
+                            $budgetCurrencyId,
+                            $spent->amount
+                        );
                     }
                     foreach ($elementsAmount->currenciesSpentBefore as $spentBefore) {
                         $toConvert[sprintf('spent-before-%s', $subIndex)][] = new CurrencyConvertorDto(
@@ -189,6 +204,13 @@ readonly class BudgetStructureDtoAssembler
                         $spent->periodEnd,
                         $spent->currencyId,
                         $currencyId,
+                        $spent->amount
+                    );
+                    $toConvert[sprintf('spent-%s', $index)][] = new CurrencyConvertorDto(
+                        $spent->periodStart,
+                        $spent->periodEnd,
+                        $spent->currencyId,
+                        $budgetCurrencyId,
                         $spent->amount
                     );
                 }
@@ -247,6 +269,13 @@ readonly class BudgetStructureDtoAssembler
                         $currencyId,
                         $spent->amount
                     );
+                    $toConvert[sprintf('spent-budget-%s', $index)][] = new CurrencyConvertorDto(
+                        $spent->periodStart,
+                        $spent->periodEnd,
+                        $spent->currencyId,
+                        $budgetCurrencyId,
+                        $spent->amount
+                    );
                 }
                 foreach ($currenciesSpentBefore as $spentBefore) {
                     $toConvert[sprintf('spent-before-%s', $index)][] = new CurrencyConvertorDto(
@@ -264,12 +293,15 @@ readonly class BudgetStructureDtoAssembler
         $amounts = $this->currencyConvertor->bulkConvert($toConvert);
         foreach ($elements as $index => $element) {
             $spent = $amounts[sprintf('spent-%s', $index)] ?? .0;
+            $spentBudget = $amounts[sprintf('spent-budget-%s', $index)] ?? .0;
             $spentBefore = $amounts[sprintf('spent-before-%s', $index)] ?? .0;
             $children = [];
             foreach ($element['children'] as $subIndex => $subElement) {
                 $subElementSpent = round($amounts[sprintf('spent-%s', $subIndex)] ?? .0, 2);
+                $subElementBudgetSpent = round($amounts[sprintf('spent-budget-%s', $subIndex)] ?? .0, 2);
                 $subElementSpentBefore = round($amounts[sprintf('spent-before-%s', $subIndex)] ?? .0, 2);
                 $spent += $subElementSpent;
+                $spentBudget += $subElementBudgetSpent;
                 $spentBefore += $subElementSpentBefore;
                 if (!$subElement['isArchived'] || $subElementSpent != 0) {
                     if ($element['type']->isTag() && $subElementSpent == 0) {
@@ -283,11 +315,15 @@ readonly class BudgetStructureDtoAssembler
                         $subElement['ownerId'],
                         $subElement['isArchived'],
                         $subElementSpent,
+                        $spentBudget,
                         $subElement['currenciesSpent']
                     );
                 }
             }
             $available = $element['budgetedBefore'] - $spentBefore;
+            if ($element['isArchived'] && ($available == 0 && $spent == 0 && $element['budgeted'] == 0)) {
+                continue;
+            }
             $result[] = new BudgetStructureParentElementDto(
                 $element['id'],
                 $element['type'],
@@ -301,6 +337,7 @@ readonly class BudgetStructureDtoAssembler
                 round($element['budgeted'], 2),
                 round($available - $spent, 2),
                 round($spent, 2),
+                round($spentBudget, 2),
                 $element['currenciesSpent'],
                 $children,
             );

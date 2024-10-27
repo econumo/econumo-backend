@@ -26,6 +26,7 @@ readonly class BudgetStructureParentElementDto
         public float $budgeted,
         public float $available,
         public float $spent,
+        public float $spentInBudgetCurrency,
         /** @var BudgetElementAmountSpentDto[] */
         public array $currenciesSpent,
         /** @var BudgetStructureChildElementDto[] */

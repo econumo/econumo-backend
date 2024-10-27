@@ -19,6 +19,7 @@ readonly class BudgetChildElementToResultDtoAssembler
         $result->icon = $dto->icon->getValue();
         $result->isArchived = $dto->isArchived ? 1 : 0;
         $result->spent = $dto->spent;
+        $result->budgetSpent = $dto->spentInBudgetCurrency;
         $result->ownerUserId = $dto->ownerId->getValue();
 
         return $result;

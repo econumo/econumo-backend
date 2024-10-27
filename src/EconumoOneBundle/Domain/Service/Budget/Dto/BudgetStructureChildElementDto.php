@@ -21,6 +21,7 @@ readonly class BudgetStructureChildElementDto
         public Id $ownerId,
         public bool $isArchived,
         public float $spent,
+        public float $spentInBudgetCurrency,
         /** @var BudgetElementAmountSpentDto[] */
         public array $currenciesSpent,
     ) {
