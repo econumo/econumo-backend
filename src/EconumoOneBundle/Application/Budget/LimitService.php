@@ -8,7 +8,9 @@ use App\EconumoOneBundle\Application\Budget\Dto\SetLimitV1RequestDto;
 use App\EconumoOneBundle\Application\Budget\Dto\SetLimitV1ResultDto;
 use App\EconumoOneBundle\Application\Budget\Assembler\SetLimitV1ResultAssembler;
 use App\EconumoOneBundle\Application\Exception\AccessDeniedException;
+use App\EconumoOneBundle\Application\Exception\ValidationException;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoOneBundle\Domain\Exception\BudgetLimitInvalidDateException;
 use App\EconumoOneBundle\Domain\Service\Budget\BudgetAccessServiceInterface;
 use App\EconumoOneBundle\Domain\Service\Budget\BudgetLimitServiceInterface;
 use DateTimeImmutable;
@@ -34,7 +36,12 @@ readonly class LimitService
         $period = DateTimeImmutable::createFromFormat('Y-m-d', $dto->period);
         $amount = $dto->amount === null ? null : floatval($dto->amount);
 
-        $this->budgetLimitService->setLimit($budgetId, $elementId, $period, $amount);
+        try {
+            $this->budgetLimitService->setLimit($budgetId, $elementId, $period, $amount);
+        } catch (BudgetLimitInvalidDateException $e) {
+            throw new ValidationException($e->getMessage());
+        }
+
         return $this->setLimitV1ResultAssembler->assemble();
     }
 }
