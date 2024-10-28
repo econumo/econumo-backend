@@ -127,7 +127,7 @@ readonly class UserService implements UserServiceInterface
         }
     }
 
-    public function updateBudget(Id $userId, Id $budgetId): void
+    public function updateBudget(Id $userId, ?Id $budgetId): void
     {
         $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {

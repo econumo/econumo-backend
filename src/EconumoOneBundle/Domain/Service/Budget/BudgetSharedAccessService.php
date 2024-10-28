@@ -14,6 +14,7 @@ use App\EconumoOneBundle\Domain\Factory\BudgetAccessFactoryInterface;
 use App\EconumoOneBundle\Domain\Repository\BudgetAccessRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\BudgetElementRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\BudgetRepositoryInterface;
+use App\EconumoOneBundle\Domain\Repository\UserRepositoryInterface;
 use App\EconumoOneBundle\Domain\Service\AntiCorruptionServiceInterface;
 use App\EconumoOneBundle\Domain\Service\Connection\ConnectionServiceInterface;
 use App\EconumoOneBundle\Domain\Service\UserServiceInterface;
@@ -28,7 +29,8 @@ readonly class BudgetSharedAccessService implements BudgetSharedAccessServiceInt
         private BudgetElementServiceInterface $budgetElementService,
         private BudgetElementRepositoryInterface $budgetElementRepository,
         private UserServiceInterface $userService,
-        private AntiCorruptionServiceInterface $antiCorruptionService
+        private AntiCorruptionServiceInterface $antiCorruptionService,
+        private UserRepositoryInterface $userRepository,
     ) {
     }
 
@@ -118,6 +120,7 @@ readonly class BudgetSharedAccessService implements BudgetSharedAccessServiceInt
             $this->antiCorruptionService->commit(__METHOD__);
         } catch (\Throwable $exception) {
             $this->antiCorruptionService->rollback(__METHOD__);
+            throw $exception;
         }
     }
 
@@ -140,13 +143,26 @@ readonly class BudgetSharedAccessService implements BudgetSharedAccessServiceInt
             if ($invitation->getRole()->isReader() || !$invitation->isAccepted()) {
                 $this->budgetAccessRepository->delete([$invitation]);
             } else {
-                // @todo delete elements for categories, tags
+                $this->budgetElementService->deleteCategoriesElements($invitation->getUserId(), $budgetId);
+                $this->budgetElementService->deleteTagsElements($invitation->getUserId(), $budgetId);
             }
-            // @todo change the default budget to other
+            $user = $this->userRepository->get($userId);
+            if ($user->getDefaultPlanId() && $user->getDefaultPlanId()->isEqual($budgetId)) {
+                $availableBudgets = $this->budgetRepository->getByUserId($userId);
+                $newBudgetId = null;
+                foreach ($availableBudgets as $budget) {
+                    if (!$budget->getId()->isEqual($budgetId) && $budget->isUserAccepted($userId)) {
+                        $newBudgetId = $budget->getId();
+                        break;
+                    }
+                }
+                $this->userService->updateBudget($userId, $newBudgetId);
+            }
 
             $this->antiCorruptionService->commit(__METHOD__);
         } catch (\Throwable $exception) {
             $this->antiCorruptionService->rollback(__METHOD__);
+            throw $exception;
         }
     }
 }

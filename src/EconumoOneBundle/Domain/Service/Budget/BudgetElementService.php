@@ -230,4 +230,24 @@ readonly class BudgetElementService implements BudgetElementServiceInterface
     {
         $this->unarchiveElements($envelopeId);
     }
+
+    public function deleteCategoriesElements(Id $userId, Id $budgetId): void
+    {
+        $categories = $this->categoryRepository->findByOwnerId($userId);
+        $ids = [];
+        foreach ($categories as $category) {
+            $ids[] = $category->getId();
+        }
+        $this->budgetElementsActionsService->deleteElements($budgetId, $ids);
+    }
+
+    public function deleteTagsElements(Id $userId, Id $budgetId): void
+    {
+        $tags = $this->tagRepository->findByOwnerId($userId);
+        $ids = [];
+        foreach ($tags as $tag) {
+            $ids[] = $tag->getId();
+        }
+        $this->budgetElementsActionsService->deleteElements($budgetId, $ids);
+    }
 }

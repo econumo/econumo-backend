@@ -22,6 +22,8 @@ interface BudgetElementServiceInterface
      */
     public function createCategoriesElements(Id $userId, Id $budgetId, int $startPosition = 0): array;
 
+    public function deleteCategoriesElements(Id $userId, Id $budgetId): void;
+
     /**
      * @param Id $userId
      * @param Id $budgetId
@@ -29,6 +31,8 @@ interface BudgetElementServiceInterface
      * @return array [int, BudgetTagDto[]]
      */
     public function createTagsElements(Id $userId, Id $budgetId, int $startPosition = 0): array;
+
+    public function deleteTagsElements(Id $userId, Id $budgetId): void;
 
     public function createCategoryElements(Category $category): void;
 

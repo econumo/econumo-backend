@@ -159,6 +159,21 @@ class Budget
         return $this->budgetAccess;
     }
 
+    public function isUserAccepted(Id $userId): bool
+    {
+        if ($this->user->getId()->isEqual($userId)) {
+            return true;
+        }
+
+        foreach ($this->getAccessList() as $budgetAccess) {
+            if ($budgetAccess->getUserId()->isEqual($userId)) {
+                return $budgetAccess->isAccepted();
+            }
+        }
+
+        return false;
+    }
+
     /**
      * @return Collection|BudgetFolder[]
      */

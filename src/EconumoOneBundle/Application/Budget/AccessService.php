@@ -16,6 +16,9 @@ use App\EconumoOneBundle\Application\Budget\Assembler\AcceptAccessV1ResultAssemb
 use App\EconumoOneBundle\Domain\Service\Budget\BudgetAccessServiceInterface;
 use App\EconumoOneBundle\Domain\Service\Budget\BudgetServiceInterface;
 use App\EconumoOneBundle\Domain\Service\Budget\BudgetSharedAccessServiceInterface;
+use App\EconumoOneBundle\Application\Budget\Dto\RevokeAccessV1RequestDto;
+use App\EconumoOneBundle\Application\Budget\Dto\RevokeAccessV1ResultDto;
+use App\EconumoOneBundle\Application\Budget\Assembler\RevokeAccessV1ResultAssembler;
 
 readonly class AccessService
 {
@@ -25,6 +28,7 @@ readonly class AccessService
         private BudgetAccessServiceInterface $budgetAccessService,
         private BudgetSharedAccessServiceInterface $budgetSharedAccessService,
         private BudgetServiceInterface $budgetService,
+        private RevokeAccessV1ResultAssembler $revokeAccessV1ResultAssembler,
     ) {
     }
 
@@ -56,5 +60,18 @@ readonly class AccessService
         $this->budgetSharedAccessService->acceptAccess($budgetId, $userId);
         $budgets = $this->budgetService->getBudgetList($userId);
         return $this->acceptAccessV1ResultAssembler->assemble($budgets);
+    }
+
+    public function revokeAccess(
+        RevokeAccessV1RequestDto $dto,
+        Id $userId
+    ): RevokeAccessV1ResultDto {
+        $budgetId = new Id($dto->budgetId);
+        if (!$this->budgetAccessService->canShareBudget($userId, $budgetId)) {
+            throw new AccessDeniedException();
+        }
+        $invitedUserId = new Id($dto->userId);
+        $this->budgetSharedAccessService->revokeAccess($budgetId, $invitedUserId);
+        return $this->revokeAccessV1ResultAssembler->assemble();
     }
 }

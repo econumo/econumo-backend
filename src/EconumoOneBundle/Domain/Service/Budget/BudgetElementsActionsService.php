@@ -10,10 +10,12 @@ use App\EconumoOneBundle\Domain\Entity\Budget;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetElementType;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoOneBundle\Domain\Factory\BudgetElementFactoryInterface;
+use App\EconumoOneBundle\Domain\Repository\BudgetElementLimitRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\BudgetElementRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\BudgetEnvelopeRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\BudgetFolderRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\BudgetRepositoryInterface;
+use App\EconumoOneBundle\Domain\Service\AntiCorruptionServiceInterface;
 use App\EconumoOneBundle\Domain\Service\Budget\Assembler\BudgetFiltersDtoAssembler;
 use App\EconumoOneBundle\Domain\Service\Budget\Dto\BudgetStructureMoveElementDto;
 
@@ -26,6 +28,8 @@ readonly class BudgetElementsActionsService
         private BudgetFiltersDtoAssembler $budgetFiltersDtoAssembler,
         private BudgetEnvelopeRepositoryInterface $budgetEnvelopeRepository,
         private BudgetRepositoryInterface $budgetRepository,
+        private BudgetElementLimitRepositoryInterface $budgetElementLimitRepository,
+        private AntiCorruptionServiceInterface $antiCorruptionService
     ) {
     }
 
@@ -186,10 +190,10 @@ readonly class BudgetElementsActionsService
 
     public function shiftElements(Id $budgetId, ?Id $folderId, int $startPosition): void
     {
-        $options = $this->budgetElementRepository->getByBudgetId($budgetId);
+        $elements = $this->budgetElementRepository->getByBudgetId($budgetId);
         $position = $startPosition;
         $updated = [];
-        foreach ($options as $option) {
+        foreach ($elements as $option) {
             if ($folderId === null && $option->getFolder() !== null) {
                 continue;
             }
@@ -211,5 +215,39 @@ readonly class BudgetElementsActionsService
         }
 
         $this->budgetElementRepository->save($updated);
+    }
+
+    /**
+     * @param Id $budgetId
+     * @param Id[] $elementsIds
+     * @return void
+     * @throws \Throwable
+     */
+    public function deleteElements(Id $budgetId, array $elementsIds): void
+    {
+        $elementsIdsMap = [];
+        foreach ($elementsIds as $elementId) {
+            $elementsIdsMap[$elementId->getValue()] = $elementId;
+        }
+        $elements = $this->budgetElementRepository->getByBudgetId($budgetId);
+        $toDelete = [];
+        $toDeleteIds = [];
+        foreach ($elements as $element) {
+            if (array_key_exists($element->getExternalId()->getValue(), $elementsIdsMap)) {
+                $toDelete[] = $element;
+                $toDeleteIds[] = $element->getId();
+            }
+        }
+
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
+        try {
+            $this->budgetElementLimitRepository->deleteByElementIds($toDeleteIds);
+            $this->budgetElementRepository->delete($toDelete);
+            $this->restoreElementsOrder($budgetId);
+            $this->antiCorruptionService->commit(__METHOD__);
+        } catch (\Throwable $e) {
+            $this->antiCorruptionService->rollback(__METHOD__);
+            throw $e;
+        }
     }
 }

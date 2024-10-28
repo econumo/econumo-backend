@@ -35,6 +35,12 @@ interface BudgetElementLimitRepositoryInterface
 
     public function deleteByElementId(Id $elementId): void;
 
+    /**
+     * @param Id[] $elementIds
+     * @return void
+     */
+    public function deleteByElementIds(array $elementIds): void;
+
     public function getSummarizedAmountsForPeriod(Id $budgetId, DateTimeInterface $periodStart, DateTimeInterface $periodEnd): array;
 
     /**

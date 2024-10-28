@@ -138,4 +138,18 @@ class BudgetElementLimitRepository extends ServiceEntityRepository implements Bu
             ->getQuery()
             ->execute();
     }
+
+    public function deleteByElementIds(array $elementIds): void
+    {
+        $elements = [];
+        foreach ($elementIds as $elementId) {
+            $elements[] = $this->getEntityReference(BudgetElement::class, $elementId);
+        }
+        $this->createQueryBuilder('el')
+            ->delete()
+            ->where('el.element IN (:elements)')
+            ->setParameter('elements', $elements)
+            ->getQuery()
+            ->execute();
+    }
 }
