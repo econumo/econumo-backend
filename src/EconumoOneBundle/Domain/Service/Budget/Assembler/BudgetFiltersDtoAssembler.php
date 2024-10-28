@@ -66,7 +66,7 @@ readonly class BudgetFiltersDtoAssembler
     {
         $userIds = [$budget->getUser()->getId()];
         foreach ($budget->getAccessList() as $entry) {
-            if ($entry->isAccepted()) {
+            if ($entry->isAccepted() && !$entry->getRole()->isReader()) {
                 $userIds[] = $entry->getUserId();
             }
         }

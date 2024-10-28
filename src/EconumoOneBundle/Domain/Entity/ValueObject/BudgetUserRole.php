@@ -4,16 +4,11 @@ declare(strict_types=1);
 
 namespace App\EconumoOneBundle\Domain\Entity\ValueObject;
 
-use App\EconumoOneBundle\Domain\Entity\ValueObject\ValueObjectInterface;
 use DomainException;
 use JsonSerializable;
 
-final class UserRole implements JsonSerializable, ValueObjectInterface, \Stringable
+final class BudgetUserRole implements JsonSerializable, ValueObjectInterface, \Stringable
 {
-    /**
-     * @var int
-     */
-    public const OWNER = -1;
     /**
      * @var int
      */
@@ -33,18 +28,12 @@ final class UserRole implements JsonSerializable, ValueObjectInterface, \Stringa
      * @var string[]
      */
     public const MAPPING = [
-        self::OWNER => 'owner',
         self::ADMIN => 'admin',
         self::USER => 'user',
         self::GUEST => 'guest',
     ];
 
     private int $value;
-
-    public static function owner(): self
-    {
-        return new self(self::OWNER);
-    }
 
     public static function admin(): self
     {
@@ -85,11 +74,6 @@ final class UserRole implements JsonSerializable, ValueObjectInterface, \Stringa
         return self::MAPPING[$this->value];
     }
 
-    public function isOwner(): bool
-    {
-        return $this->value === self::OWNER;
-    }
-
     public function isAdmin(): bool
     {
         return $this->value === self::ADMIN;
@@ -100,14 +84,14 @@ final class UserRole implements JsonSerializable, ValueObjectInterface, \Stringa
         return $this->value === self::USER;
     }
 
-    public function isReader(): bool
+    public function isGuest(): bool
     {
         return $this->value === self::GUEST;
     }
 
     public static function isValid(int $value): bool
     {
-        return in_array($value, [self::ADMIN, self::USER, self::GUEST, self::OWNER], true);
+        return in_array($value, [self::ADMIN, self::USER, self::GUEST], true);
     }
 
     /**

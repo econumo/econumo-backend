@@ -104,4 +104,37 @@ readonly class BudgetAccessService implements BudgetAccessServiceInterface
 
         return false;
     }
+
+    public function canShareBudget(Id $userId, Id $budgetId): bool
+    {
+        try {
+            $role = $this->getBudgetRole($userId, $budgetId);
+            if ($role->isOwner() || $role->isAdmin()) {
+                return true;
+            }
+        } catch (AccessDeniedException $e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function canAcceptBudget(Id $userId, Id $budgetId): bool
+    {
+        try {
+            $budget = $this->budgetRepository->get($budgetId);
+            $accessList = $budget->getAccessList();
+            foreach ($accessList as $access) {
+                if ($access->getUserId()->isEqual($userId)) {
+                    if (!$access->isAccepted()) {
+                        return true;
+                    }
+                }
+            }
+        } catch (AccessDeniedException $e) {
+            return false;
+        }
+
+        return false;
+    }
 }
