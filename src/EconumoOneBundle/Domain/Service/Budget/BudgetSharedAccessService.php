@@ -151,12 +151,11 @@ readonly class BudgetSharedAccessService implements BudgetSharedAccessServiceInt
     private function removeUserAccess(BudgetAccess $access): void {
         $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
-            if ($access->getRole()->isReader() || !$access->isAccepted()) {
-                $this->budgetAccessRepository->delete([$access]);
-            } else {
+            if (!$access->getRole()->isReader() && $access->isAccepted()) {
                 $this->budgetElementService->deleteCategoriesElements($access->getUserId(), $access->getBudgetId());
                 $this->budgetElementService->deleteTagsElements($access->getUserId(), $access->getBudgetId());
             }
+            $this->budgetAccessRepository->delete([$access]);
             $user = $this->userRepository->get($access->getUserId());
             if ($user->getDefaultPlanId() && $user->getDefaultPlanId()->isEqual($access->getBudgetId())) {
                 $availableBudgets = $this->budgetRepository->getByUserId($access->getUserId());
