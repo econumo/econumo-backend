@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\EconumoOneBundle\Infrastructure\Doctrine\Repository;
 
+use App\EconumoOneBundle\Domain\Entity\Budget;
 use App\EconumoOneBundle\Domain\Entity\BudgetAccess;
 use App\EconumoOneBundle\Domain\Entity\User;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoOneBundle\Domain\Exception\NotFoundException;
 use App\EconumoOneBundle\Domain\Repository\BudgetAccessRepositoryInterface;
 use App\EconumoOneBundle\Infrastructure\Doctrine\Repository\Traits\DeleteTrait;
+use App\EconumoOneBundle\Infrastructure\Doctrine\Repository\Traits\GetEntityReferenceTrait;
 use App\EconumoOneBundle\Infrastructure\Doctrine\Repository\Traits\NextIdentityTrait;
 use App\EconumoOneBundle\Infrastructure\Doctrine\Repository\Traits\SaveTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -26,6 +28,7 @@ class BudgetAccessRepository extends ServiceEntityRepository implements BudgetAc
     use NextIdentityTrait;
     use SaveTrait;
     use DeleteTrait;
+    use GetEntityReferenceTrait;
 
     public function __construct(ManagerRegistry $registry)
     {
@@ -39,7 +42,7 @@ class BudgetAccessRepository extends ServiceEntityRepository implements BudgetAc
 
     public function getByBudgetId(Id $budgetId): array
     {
-        return $this->findBy(['budget' => $this->getReference($budgetId)]);
+        return $this->findBy(['budget' => $this->getEntityReference(Budget::class, $budgetId)]);
     }
 
     public function get(Id $budgetId, Id $userId): BudgetAccess

@@ -19,6 +19,8 @@ interface BudgetAccessServiceInterface
 
     public function canAcceptBudget(Id $userId, Id $budgetId): bool;
 
+    public function canDeclineBudget(Id $userId, Id $budgetId): bool;
+
     public function canUpdateBudget(Id $userId, Id $budgetId): bool;
 
     public function canResetBudget(Id $userId, Id $budgetId): bool;

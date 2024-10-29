@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace App\EconumoOneBundle\Domain\Service\Budget;
 
 
+use App\EconumoOneBundle\Domain\Entity\BudgetAccess;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetUserRole;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\UserRole;
@@ -90,6 +91,7 @@ readonly class BudgetSharedAccessService implements BudgetSharedAccessServiceInt
             }
             $usersMap[$budgetAccess->getUserId()->getValue()] = $budgetAccess->getUserId();
         }
+        $usersMap[$budget->getUser()->getId()->getValue()] = $budget->getUser()->getId();
 
         $usersConnected = false;
         $connections = $this->connectionService->getUserList($invitedUserId);
@@ -126,37 +128,46 @@ readonly class BudgetSharedAccessService implements BudgetSharedAccessServiceInt
 
     public function revokeAccess(Id $budgetId, Id $userId): void
     {
-        $invitation = null;
+        $access = null;
         $budgetInvites = $this->budgetAccessRepository->getByBudgetId($budgetId);
         foreach ($budgetInvites as $budgetInvite) {
             if ($budgetInvite->getUserId()->isEqual($userId)) {
-                $invitation = $budgetInvite;
+                $access = $budgetInvite;
                 break;
             }
         }
-        if ($invitation === null) {
+        if ($access === null) {
             return;
         }
 
+        $this->removeUserAccess($access);
+    }
+
+    /**
+     * @param BudgetAccess $access
+     * @return void
+     * @throws \Throwable
+     */
+    private function removeUserAccess(BudgetAccess $access): void {
         $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
-            if ($invitation->getRole()->isReader() || !$invitation->isAccepted()) {
-                $this->budgetAccessRepository->delete([$invitation]);
+            if ($access->getRole()->isReader() || !$access->isAccepted()) {
+                $this->budgetAccessRepository->delete([$access]);
             } else {
-                $this->budgetElementService->deleteCategoriesElements($invitation->getUserId(), $budgetId);
-                $this->budgetElementService->deleteTagsElements($invitation->getUserId(), $budgetId);
+                $this->budgetElementService->deleteCategoriesElements($access->getUserId(), $access->getBudgetId());
+                $this->budgetElementService->deleteTagsElements($access->getUserId(), $access->getBudgetId());
             }
-            $user = $this->userRepository->get($userId);
-            if ($user->getDefaultPlanId() && $user->getDefaultPlanId()->isEqual($budgetId)) {
-                $availableBudgets = $this->budgetRepository->getByUserId($userId);
+            $user = $this->userRepository->get($access->getUserId());
+            if ($user->getDefaultPlanId() && $user->getDefaultPlanId()->isEqual($access->getBudgetId())) {
+                $availableBudgets = $this->budgetRepository->getByUserId($access->getUserId());
                 $newBudgetId = null;
                 foreach ($availableBudgets as $budget) {
-                    if (!$budget->getId()->isEqual($budgetId) && $budget->isUserAccepted($userId)) {
+                    if (!$budget->getId()->isEqual($access->getBudgetId()) && $budget->isUserAccepted($access->getUserId())) {
                         $newBudgetId = $budget->getId();
                         break;
                     }
                 }
-                $this->userService->updateBudget($userId, $newBudgetId);
+                $this->userService->updateBudget($access->getUserId(), $newBudgetId);
             }
 
             $this->antiCorruptionService->commit(__METHOD__);

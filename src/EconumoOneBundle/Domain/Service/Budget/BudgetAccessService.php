@@ -53,7 +53,7 @@ readonly class BudgetAccessService implements BudgetAccessServiceInterface
     {
         try {
             $role = $this->getBudgetRole($userId, $budgetId);
-            if ($role->isOwner() || $role->isAdmin() || $role->isUser()) {
+            if ($role->isOwner() || $role->isAdmin()) {
                 return true;
             }
         } catch (AccessDeniedException $e) {
@@ -129,6 +129,23 @@ readonly class BudgetAccessService implements BudgetAccessServiceInterface
                     if (!$access->isAccepted()) {
                         return true;
                     }
+                }
+            }
+        } catch (AccessDeniedException $e) {
+            return false;
+        }
+
+        return false;
+    }
+
+    public function canDeclineBudget(Id $userId, Id $budgetId): bool
+    {
+        try {
+            $budget = $this->budgetRepository->get($budgetId);
+            $accessList = $budget->getAccessList();
+            foreach ($accessList as $access) {
+                if ($access->getUserId()->isEqual($userId)) {
+                    return true;
                 }
             }
         } catch (AccessDeniedException $e) {
