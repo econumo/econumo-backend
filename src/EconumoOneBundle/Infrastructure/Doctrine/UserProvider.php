@@ -8,6 +8,7 @@ use App\EconumoOneBundle\Domain\Entity\User;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Identifier;
 use App\EconumoOneBundle\Domain\Exception\NotFoundException;
 use App\EconumoOneBundle\Domain\Repository\UserRepositoryInterface;
+use App\EconumoOneBundle\Domain\Service\EncodeServiceInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
@@ -16,8 +17,10 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 readonly class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
-    public function __construct(private UserRepositoryInterface $userRepository)
-    {
+    public function __construct(
+        private UserRepositoryInterface $userRepository,
+        private EncodeServiceInterface $encodeService
+    ) {
     }
 
     /**
@@ -33,11 +36,10 @@ readonly class UserProvider implements UserProviderInterface, PasswordUpgraderIn
     public function loadUserByIdentifier(string $identifier): UserInterface
     {
         try {
-            return $this->userRepository->loadByIdentifier(new Identifier($identifier));
+            $hashedIdentifier = new Identifier($this->encodeService->hash($identifier));
+            return $this->userRepository->loadByIdentifier($hashedIdentifier);
         } catch (NotFoundException $notFoundException) {
-            $ex = new UserNotFoundException($notFoundException->getMessage(), $notFoundException->getCode(), $notFoundException);
-            $ex->setUserIdentifier($identifier);
-            throw $ex;
+            throw new UserNotFoundException($notFoundException->getMessage(), $notFoundException->getCode(), $notFoundException);
         }
     }
 
@@ -85,6 +87,10 @@ readonly class UserProvider implements UserProviderInterface, PasswordUpgraderIn
 
     public function loadUserByUsername(string $username): UserInterface
     {
-        return $this->loadUserByIdentifier($username);
+        try {
+            return $this->userRepository->loadByIdentifier(new Identifier($username));
+        } catch (NotFoundException $notFoundException) {
+            throw new UserNotFoundException($notFoundException->getMessage(), $notFoundException->getCode(), $notFoundException);
+        }
     }
 }

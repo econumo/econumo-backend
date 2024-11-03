@@ -28,11 +28,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     use EventTrait;
 
     /**
-     * @var string E-mail
-     */
-    private string $identifier;
-
-    /**
      * @var string The hashed password
      */
     private string $password;
@@ -51,12 +46,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     private DateTimeInterface $updatedAt;
 
-    public function __construct(private Id $id, /**
-     * @var string The salt
-     */
-    private string $salt, private string $name, Email $email, DateTimeInterface $createdAt)
-    {
-        $this->identifier = Identifier::createFromEmail($email)->getValue();
+    public function __construct(
+        private Id $id,
+        private string $identifier,
+        private string $salt,
+        private string $email,
+        private string $name,
+        private string $avatarUrl,
+        DateTimeInterface $createdAt
+    ) {
         $this->connections = new ArrayCollection();
         $this->options = new ArrayCollection();
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
@@ -82,6 +80,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUsername(): string
     {
         return $this->getUserIdentifier();
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function updateEmail(string $email): void
+    {
+        $this->email = $email;
     }
 
     /**
@@ -130,9 +138,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->identifier;
     }
 
+    public function updateUserIdentifier(string $identifier): void
+    {
+        $this->identifier = $identifier;
+    }
+
     public function getAvatarUrl(): string
     {
-        return sprintf('https://www.gravatar.com/avatar/%s', md5($this->identifier));
+        return $this->avatarUrl;
+    }
+
+    public function updateAvatarUrl(string $url): void
+    {
+        $this->avatarUrl = $url;
     }
 
     public function isUserConnected(self $user): bool

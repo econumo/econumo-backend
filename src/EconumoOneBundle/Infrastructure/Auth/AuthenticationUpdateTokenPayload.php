@@ -6,13 +6,16 @@ namespace App\EconumoOneBundle\Infrastructure\Auth;
 
 use App\EconumoOneBundle\Domain\Entity\User;
 use App\EconumoOneBundle\Domain\Entity\UserOption;
+use App\EconumoOneBundle\Domain\Service\EncodeServiceInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 
-class AuthenticationUpdateTokenPayload
+readonly class AuthenticationUpdateTokenPayload
 {
-    public function __construct(private readonly string $baseCurrency)
-    {
+    public function __construct(
+        private readonly string $baseCurrency,
+        private EncodeServiceInterface $encodeService,
+    ) {
     }
 
     /**
@@ -27,6 +30,7 @@ class AuthenticationUpdateTokenPayload
 
         $data = $event->getData();
         $data['id'] = $user->getId()->getValue();
+        $data['username'] = $this->encodeService->decode($user->getEmail());
 
         $event->setData($data);
     }

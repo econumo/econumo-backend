@@ -43,12 +43,6 @@ class CurrencyRateRepository extends ServiceEntityRepository implements Currency
                 ->select('cr.publishedAt')
                 ->setMaxResults(1)
                 ->orderBy('cr.publishedAt', Criteria::DESC);
-            $lastDate = $dateBuilder->getQuery()->getSingleScalarResult();
-            if (!$lastDate) {
-                throw new NotFoundException('Currency rates not loaded');
-            }
-
-            $ratesDate = \DateTime::createFromFormat('Y-m-d', $lastDate);
         } else {
             $dateBuilder = $this->createQueryBuilder('cr')
                 ->select('cr.publishedAt')
@@ -56,9 +50,9 @@ class CurrencyRateRepository extends ServiceEntityRepository implements Currency
                 ->orderBy('cr.publishedAt', Criteria::DESC)
                 ->where('cr.publishedAt <= :date')
                 ->setParameter('date', $date);
-            $lastDate = $dateBuilder->getQuery()->getSingleScalarResult();
-            $ratesDate = \DateTime::createFromFormat('Y-m-d', $lastDate);
         }
+        $lastDate = $dateBuilder->getQuery()->getSingleScalarResult();
+        $ratesDate = \DateTime::createFromFormat('Y-m-d', $lastDate);
 
         $query = $this->createQueryBuilder('cr')
             ->andWhere('cr.publishedAt = :date')

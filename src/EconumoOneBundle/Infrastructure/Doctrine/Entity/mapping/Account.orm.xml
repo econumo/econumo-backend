@@ -24,14 +24,14 @@
         <field name="updatedAt" type="datetime" column="updated_at" nullable="false"/>
 
         <many-to-one field="currency" target-entity="App\EconumoOneBundle\Domain\Entity\Currency">
-            <join-column name="currency_id" referenced-column-name="id" nullable="false"/>
+            <join-column name="currency_id" referenced-column-name="id" nullable="false" on-delete="SET NULL"/>
         </many-to-one>
         <many-to-one field="user" target-entity="App\EconumoOneBundle\Domain\Entity\User">
-            <join-column name="user_id" referenced-column-name="id" nullable="false"/>
+            <join-column name="user_id" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
         </many-to-one>
 
         <indexes>
-            <index name="user_deleted_idx_accounts" columns="user_id,is_deleted"/>
+            <index name="user_id_is_deleted_idx_accounts" columns="user_id,is_deleted"/>
             <index name="is_deleted_idx_accounts" columns="is_deleted"/>
         </indexes>
     </entity>

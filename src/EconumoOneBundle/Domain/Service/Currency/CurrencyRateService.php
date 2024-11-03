@@ -5,17 +5,15 @@ declare(strict_types=1);
 
 namespace App\EconumoOneBundle\Domain\Service\Currency;
 
-use App\EconumoOneBundle\Domain\Entity\CurrencyRate;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\CurrencyCode;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoOneBundle\Domain\Repository\CurrencyRateRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\CurrencyRepositoryInterface;
-use App\EconumoOneBundle\Domain\Service\Currency\CurrencyRateServiceInterface;
 use App\EconumoOneBundle\Domain\Service\DatetimeServiceInterface;
-use App\EconumoOneBundle\Domain\Service\Dto\CurrencyRateDto;
 use App\EconumoOneBundle\Domain\Service\Dto\FullCurrencyRateDto;
 use DateTimeImmutable;
 use DateTimeInterface;
+use Doctrine\ORM\NoResultException;
 
 readonly class CurrencyRateService implements CurrencyRateServiceInterface
 {
@@ -43,7 +41,13 @@ readonly class CurrencyRateService implements CurrencyRateServiceInterface
      */
     public function getLatestCurrencyRates(): array
     {
-        return $this->currencyRateRepository->getAll();
+        try {
+            $result = $this->currencyRateRepository->getAll();
+        } catch (NoResultException $exception) {
+            $result = [];
+        }
+
+        return $result;
     }
 
     public function getChanged(DateTimeInterface $lastUpdate): array

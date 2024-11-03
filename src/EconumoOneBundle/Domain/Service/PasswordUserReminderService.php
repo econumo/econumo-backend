@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\EconumoOneBundle\Domain\Service;
 
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Email;
+use App\EconumoOneBundle\Domain\Entity\ValueObject\Identifier;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\UserPasswordRequestCode;
 use App\EconumoOneBundle\Domain\Exception\UserPasswordRequestExpiredException;
 use App\EconumoOneBundle\Domain\Factory\UserPasswordRequestFactory;
@@ -27,12 +28,13 @@ readonly class PasswordUserReminderService implements PasswordUserReminderServic
         private AntiCorruptionServiceInterface $antiCorruptionService,
         private UserPasswordServiceInterface $userPasswordService,
         private EmailServiceInterface $emailService,
+        private EncodeServiceInterface $encodeService,
     ) {
     }
 
     public function remindPassword(Email $email): void
     {
-        $user = $this->userRepository->getByEmail($email);
+        $user = $this->userRepository->loadByIdentifier(new Identifier($this->encodeService->hash($email->getValue())));
         $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
             $this->userPasswordRequestRepository->removeUserCodes($user->getId());
@@ -50,7 +52,7 @@ readonly class PasswordUserReminderService implements PasswordUserReminderServic
 
     public function resetPassword(Email $email, UserPasswordRequestCode $code, string $password): void
     {
-        $user = $this->userRepository->getByEmail($email);
+        $user = $this->userRepository->loadByIdentifier(new Identifier($this->encodeService->hash($email->getValue())));
         $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
             $userPasswordRequest = $this->userPasswordRequestRepository->getByUserAndCode($user->getId(), $code);

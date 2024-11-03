@@ -39,4 +39,6 @@ interface BudgetElementRepositoryInterface
      * @return BudgetElement[]
      */
     public function getElementsByExternalId(Id $externalElementId): array;
+
+    public function deleteByBudgetId(Id $budgetId): void;
 }

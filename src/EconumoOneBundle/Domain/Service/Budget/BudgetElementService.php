@@ -188,7 +188,7 @@ readonly class BudgetElementService implements BudgetElementServiceInterface
     {
         $elements = $this->budgetElementRepository->getElementsByExternalId($externalId);
         foreach ($elements as $element) {
-            $this->budgetElementLimitRepository->deleteByElementId($element->getId());
+//            $this->budgetElementLimitRepository->deleteByElementId($element->getId());
             $this->budgetElementRepository->delete([$element]);
             $this->budgetElementsActionsService->restoreElementsOrder($element->getBudget()->getId());
         }

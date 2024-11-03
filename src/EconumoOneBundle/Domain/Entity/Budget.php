@@ -4,14 +4,9 @@ declare(strict_types=1);
 
 namespace App\EconumoOneBundle\Domain\Entity;
 
-use App\EconumoOneBundle\Domain\Entity\Account;
-use App\EconumoOneBundle\Domain\Entity\BudgetFolder;
-use App\EconumoOneBundle\Domain\Entity\Currency;
-use App\EconumoOneBundle\Domain\Entity\User;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\BudgetName;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoOneBundle\Domain\Traits\EntityTrait;
-use App\EconumoOneBundle\Domain\Entity\BudgetAccess;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;

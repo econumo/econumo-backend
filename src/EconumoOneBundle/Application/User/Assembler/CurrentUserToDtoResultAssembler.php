@@ -8,15 +8,22 @@ use App\EconumoOneBundle\Application\User\Dto\CurrentUserResultDto;
 use App\EconumoOneBundle\Application\User\Dto\OptionResultDto;
 use App\EconumoOneBundle\Domain\Entity\User;
 use App\EconumoOneBundle\Domain\Entity\UserOption;
+use App\EconumoOneBundle\Domain\Service\EncodeServiceInterface;
 
-class CurrentUserToDtoResultAssembler
+readonly class CurrentUserToDtoResultAssembler
 {
+    public function __construct(
+        private EncodeServiceInterface $encoder,
+    ) {
+    }
+
+
     public function assemble(User $user): CurrentUserResultDto
     {
         $dto = new CurrentUserResultDto();
         $dto->id = $user->getId()->getValue();
         $dto->name = $user->getName();
-        $dto->email = $user->getUsername();
+        $dto->email = $this->encoder->decode($user->getEmail());
         $dto->avatar = $user->getAvatarUrl();
 
         $dto->options = [];

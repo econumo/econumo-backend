@@ -29,11 +29,11 @@
         </many-to-one>
 
         <unique-constraints>
-            <unique-constraint columns="budget_id,external_id" name="uniq_budgets_elements" />
+            <unique-constraint columns="budget_id,external_id" name="identifier_uniq_budgets_elements" />
         </unique-constraints>
 
         <indexes>
-            <index columns="external_id" name="external_idx_budgets_elements"/>
+            <index columns="external_id" name="external_id_idx_budgets_elements"/>
         </indexes>
     </entity>
 </doctrine-mapping>

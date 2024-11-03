@@ -35,4 +35,6 @@ interface BudgetFolderRepositoryInterface
     public function delete(array $items): void;
 
     public function getReference(Id $id): BudgetFolder;
+
+    public function deleteByBudgetId(Id $budgetId): void;
 }

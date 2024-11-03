@@ -17,10 +17,10 @@
         <field name="spentAt" type="datetime" column="spent_at" nullable="false"/>
 
         <many-to-one field="user" target-entity="App\EconumoOneBundle\Domain\Entity\User">
-            <join-column name="user_id" referenced-column-name="id" nullable="false"/>
+            <join-column name="user_id" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
         </many-to-one>
         <many-to-one field="account" target-entity="App\EconumoOneBundle\Domain\Entity\Account">
-            <join-column name="account_id" referenced-column-name="id" nullable="false"/>
+            <join-column name="account_id" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
         </many-to-one>
         <many-to-one field="accountRecipient" target-entity="App\EconumoOneBundle\Domain\Entity\Account">
             <join-column name="account_recipient_id" referenced-column-name="id" nullable="true" on-delete="SET NULL"/>
@@ -38,10 +38,10 @@
         <indexes>
             <index columns="type" name="type_idx_transactions"/>
             <index columns="spent_at" name="spent_idx_transactions"/>
-            <index columns="account_id,spent_at" name="account_spent_idx_transactions"/>
-            <index columns="account_recipient_id,spent_at" name="account_recipient_spent_idx_transactions"/>
-            <index columns="category_id,account_id,spent_at" name="category_account_spent_idx_transactions"/>
-            <index columns="tag_id,account_id,spent_at" name="tag_account_spent_idx_transactions"/>
+            <index columns="account_id,spent_at" name="account_id_spent_at_idx_transactions"/>
+            <index columns="account_recipient_id,spent_at" name="account_recipient_id_spent_at_idx_transactions"/>
+            <index columns="category_id,account_id,spent_at" name="category_id_account_id_spent_at_idx_transactions"/>
+            <index columns="tag_id,account_id,spent_at" name="tag_id_account_id_spent_at_idx_transactions"/>
         </indexes>
     </entity>
 </doctrine-mapping>

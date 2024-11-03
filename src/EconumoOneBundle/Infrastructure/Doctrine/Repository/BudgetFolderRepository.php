@@ -60,4 +60,14 @@ class BudgetFolderRepository extends ServiceEntityRepository implements BudgetFo
 
         return $item;
     }
+
+    public function deleteByBudgetId(Id $budgetId): void
+    {
+        $this->createQueryBuilder('f')
+            ->delete()
+            ->where('f.budget = :budget')
+            ->setParameter('budget', $this->getEntityReference(Budget::class, $budgetId))
+            ->getQuery()
+            ->execute();
+    }
 }

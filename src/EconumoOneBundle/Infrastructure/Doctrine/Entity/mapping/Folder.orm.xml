@@ -23,10 +23,10 @@
         <field name="updatedAt" type="datetime" column="updated_at" nullable="false"/>
 
         <many-to-one field="user" target-entity="App\EconumoOneBundle\Domain\Entity\User">
-            <join-column name="user_id" referenced-column-name="id" nullable="false"/>
+            <join-column name="user_id" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
         </many-to-one>
         <many-to-many field="accounts" target-entity="App\EconumoOneBundle\Domain\Entity\Account">
-            <join-table name="folder_accounts">
+            <join-table name="accounts_folders">
                 <join-columns>
                     <join-column name="folder_id" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
                 </join-columns>

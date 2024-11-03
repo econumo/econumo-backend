@@ -11,6 +11,8 @@ use DateTimeInterface;
 
 class BudgetElementLimit
 {
+    private string $amount;
+
     private DateTimeImmutable $period;
 
     private DateTimeImmutable $createdAt;
@@ -20,10 +22,11 @@ class BudgetElementLimit
     public function __construct(
         private Id $id,
         private BudgetElement $element,
-        private float $amount,
+        float $amount,
         DateTimeInterface $period,
         DateTimeInterface $createdAt
     ) {
+        $this->amount = (string)round($amount, 2);
         $this->period = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $period->format('Y-m-01 00:00:00'));
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
@@ -46,13 +49,13 @@ class BudgetElementLimit
 
     public function getAmount(): float
     {
-        return round($this->amount, 2);
+        return round((float)$this->amount, 2);
     }
 
     public function updateAmount(float $amount): void
     {
-        if ($this->amount !== $amount) {
-            $this->amount = round($amount, 2);
+        if (round((float)$this->amount, 2) !== round($amount, 2)) {
+            $this->amount = (string)round($amount, 2);
             $this->updated();
         }
     }

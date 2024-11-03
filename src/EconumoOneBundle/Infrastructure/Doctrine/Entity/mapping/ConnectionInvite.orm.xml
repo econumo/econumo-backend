@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                                      https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
     <entity repository-class="App\EconumoOneBundle\Infrastructure\Doctrine\Repository\ConnectionRepository"
-            name="App\EconumoOneBundle\Domain\Entity\ConnectionInvite" table="user_connections_invites">
-        <id name="user" association-key="true" />
+            name="App\EconumoOneBundle\Domain\Entity\ConnectionInvite" table="users_connections_invites">
+        <id name="user" association-key="true"/>
 
         <field name="code" type="connection_code_type" column="code" nullable="true"/>
         <field name="expiredAt" type="datetime" column="expired_at" nullable="true"/>
@@ -15,12 +16,12 @@
         </many-to-one>
 
         <indexes>
-            <index columns="expired_at" name="expired_at_idx"/>
-            <index columns="user_id" name="user_id_idx"/>
+            <index columns="expired_at" name="expired_at_idx_connections_invites"/>
+            <index columns="user_id" name="user_id_idx_connections_invites"/>
         </indexes>
 
         <unique-constraints>
-            <unique-constraint columns="code" name="code_idx" />
+            <unique-constraint columns="code" name="code_uniq_connections_invites"/>
         </unique-constraints>
     </entity>
 </doctrine-mapping>

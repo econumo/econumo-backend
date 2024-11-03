@@ -3,7 +3,7 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
     <entity repository-class="App\EconumoOneBundle\Infrastructure\Doctrine\Repository\CurrencyRateRepository"
-            name="App\EconumoOneBundle\Domain\Entity\CurrencyRate" table="currency_rates">
+            name="App\EconumoOneBundle\Domain\Entity\CurrencyRate" table="currencies_rates">
         <id name="id" type="uuid" column="id"/>
         <field name="rate" type="decimal" column="rate" precision="16" scale="8" nullable="false"/>
         <field name="publishedAt" type="date_immutable" column="published_at" nullable="false"/>
@@ -16,13 +16,13 @@
         </many-to-one>
 
         <unique-constraints>
-            <unique-constraint columns="published_at,currency_id,base_currency_id" name="uniq_currency_rate" />
+            <unique-constraint columns="published_at,currency_id,base_currency_id" name="identifier_uniq_currencies_rates" />
         </unique-constraints>
 
         <indexes>
-            <index name="published_at_idx_currency_rates" columns="published_at"/>
-            <index name="currency_published_idx_currency_rates" columns="currency_id,published_at"/>
-            <index name="base_currency_published_idx_currency_rates" columns="base_currency_id,published_at"/>
+            <index columns="published_at" name="published_at_idx_currencies_rates"/>
+            <index columns="currency_id,published_at" name="currency_id_published_at_idx_currencies_rates"/>
+            <index columns="base_currency_id,published_at" name="base_currency_id_published_at_idx_currencies_rates"/>
         </indexes>
     </entity>
 </doctrine-mapping>

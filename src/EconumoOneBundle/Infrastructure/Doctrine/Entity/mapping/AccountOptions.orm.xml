@@ -4,7 +4,7 @@
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
     <entity repository-class="App\EconumoOneBundle\Infrastructure\Doctrine\Repository\AccountOptionsRepository" name="App\EconumoOneBundle\Domain\Entity\AccountOptions"
-            table="account_options">
+            table="accounts_options">
         <id name="account" association-key="true" />
         <id name="user" association-key="true" />
         <field name="position" type="smallint" column="position" nullable="false">
