@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace _CG_APPROOT_\UI\Controller\Api\_CG_MODULE_\_CG_SUBJECT_\Validation;
 
-use App\UI\Service\Validator\ValueObjectValidationFactoryInterface;
+use App\EconumoOneBundle\UI\Service\Validator\ValueObjectValidationFactoryInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;

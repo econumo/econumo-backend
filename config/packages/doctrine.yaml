@@ -11,26 +11,25 @@ doctrine:
         url: '%env(resolve:DATABASE_URL)%'
         charset: 'utf8'
         types:
-            uuid: App\Infrastructure\Doctrine\Type\UuidType
-            account_type: App\Infrastructure\Doctrine\Type\AccountType
-            account_name_type: App\Infrastructure\Doctrine\Type\AccountNameType
-            account_user_role_type: App\Infrastructure\Doctrine\Type\AccountUserRoleType
-            category_type: App\Infrastructure\Doctrine\Type\CategoryType
-            category_name_type: App\Infrastructure\Doctrine\Type\CategoryNameType
-            transaction_type: App\Infrastructure\Doctrine\Type\TransactionType
-            icon_type: App\Infrastructure\Doctrine\Type\IconType
-            folder_name_type: App\Infrastructure\Doctrine\Type\FolderNameType
-            connection_code_type: App\Infrastructure\Doctrine\Type\ConnectionCodeType
-            currency_code_type: App\Infrastructure\Doctrine\Type\CurrencyCodeType
-            payee_name_type: App\Infrastructure\Doctrine\Type\PayeeNameType
-            tag_name_type: App\Infrastructure\Doctrine\Type\TagNameType
-            plan_name_type: App\Infrastructure\Doctrine\Type\PlanNameType
-            user_role_type: App\Infrastructure\Doctrine\Type\UserRoleType
-            plan_folder_name_type: App\Infrastructure\Doctrine\Type\PlanFolderNameType
-            envelope_name_type: App\Infrastructure\Doctrine\Type\EnvelopeNameType
-            envelope_type: App\Infrastructure\Doctrine\Type\EnvelopeType
-            user_password_request_code_type: App\Infrastructure\Doctrine\Type\UserPasswordRequestCodeType
-        server_version: 13
+            uuid: App\EconumoOneBundle\Infrastructure\Doctrine\Type\UuidType
+            account_type: App\EconumoOneBundle\Infrastructure\Doctrine\Type\AccountType
+            account_name_type: App\EconumoOneBundle\Infrastructure\Doctrine\Type\AccountNameType
+            account_user_role_type: App\EconumoOneBundle\Infrastructure\Doctrine\Type\AccountUserRoleType
+            category_type: App\EconumoOneBundle\Infrastructure\Doctrine\Type\CategoryType
+            category_name_type: App\EconumoOneBundle\Infrastructure\Doctrine\Type\CategoryNameType
+            transaction_type: App\EconumoOneBundle\Infrastructure\Doctrine\Type\TransactionType
+            icon_type: App\EconumoOneBundle\Infrastructure\Doctrine\Type\IconType
+            folder_name_type: App\EconumoOneBundle\Infrastructure\Doctrine\Type\FolderNameType
+            connection_code_type: App\EconumoOneBundle\Infrastructure\Doctrine\Type\ConnectionCodeType
+            currency_code_type: App\EconumoOneBundle\Infrastructure\Doctrine\Type\CurrencyCodeType
+            payee_name_type: App\EconumoOneBundle\Infrastructure\Doctrine\Type\PayeeNameType
+            tag_name_type: App\EconumoOneBundle\Infrastructure\Doctrine\Type\TagNameType
+            user_role_type: App\EconumoOneBundle\Infrastructure\Doctrine\Type\UserRoleType
+            user_password_request_code_type: App\EconumoOneBundle\Infrastructure\Doctrine\Type\UserPasswordRequestCodeType
+            budget_name_type: App\EconumoOneBundle\Infrastructure\Doctrine\Type\BudgetNameType
+            budget_folder_name_type: App\EconumoOneBundle\Infrastructure\Doctrine\Type\BudgetFolderNameType
+            budget_envelope_name_type: App\EconumoOneBundle\Infrastructure\Doctrine\Type\BudgetEnvelopeNameType
+            budget_element_type: App\EconumoOneBundle\Infrastructure\Doctrine\Type\BudgetElementType
 
     orm:
         auto_generate_proxy_classes: true
@@ -39,9 +38,9 @@ doctrine:
         mappings:
             Domain:
                 type: xml
-                dir: '%kernel.project_dir%/src/Infrastructure/Doctrine/Entity/mapping'
-                prefix: 'App\Domain\Entity'
+                dir: '%kernel.project_dir%/src/EconumoOneBundle/Infrastructure/Doctrine/Entity/mapping'
+                prefix: 'App\EconumoOneBundle\Domain\Entity'
             Infrastructure:
                 type: annotation
-                dir: '%kernel.project_dir%/src/Infrastructure/Doctrine/Entity'
-                prefix: 'App\Infrastructure\Doctrine\Entity'
+                dir: '%kernel.project_dir%/src/EconumoOneBundle/Infrastructure/Doctrine/Entity'
+                prefix: 'App\EconumoOneBundle\Infrastructure\Doctrine\Entity'

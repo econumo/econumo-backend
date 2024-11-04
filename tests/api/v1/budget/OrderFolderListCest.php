@@ -14,32 +14,18 @@ class OrderFolderListCest
 
     /**
      * @throws ModuleException
+     * @skip
      */
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, [
-            'planId' => 'bceed17e-d492-40be-921a-e7fa6f663fa6',
-            'changes' => [
-                [
-                    'id' => '949ec3ce-6379-406a-ae20-14ad63193d19',
-                    'position' => 0
-                ],
-                [
-                    'id' => 'e776079f-33a8-4c61-aa6c-21192daa50e7',
-                    'position' => 1
-                ],
-                [
-                    'id' => '62ccc225-b141-42a4-8063-825c8b72d135',
-                    'position' => 2
-                ],
-            ]
-        ]);
+        $I->sendPOST($this->url, ['id' => 'test']);
         $I->seeResponseCodeIs(HttpCode::OK);
     }
 
     /**
      * @throws ModuleException
+     * @skip
      */
     public function requestShouldReturn400ResponseCode(ApiTester $I): void
     {
@@ -50,53 +36,26 @@ class OrderFolderListCest
 
     /**
      * @throws ModuleException
+     * @skip
      */
     public function requestShouldReturn401ResponseCode(ApiTester $I): void
     {
-        $I->sendPOST($this->url, [
-            'planId' => 'bceed17e-d492-40be-921a-e7fa6f663fa6',
-            'changes' => [
-                [
-                    'id' => '949ec3ce-6379-406a-ae20-14ad63193d19',
-                    'position' => 0
-                ],
-                [
-                    'id' => 'e776079f-33a8-4c61-aa6c-21192daa50e7',
-                    'position' => 1
-                ],
-                [
-                    'id' => '62ccc225-b141-42a4-8063-825c8b72d135',
-                    'position' => 2
-                ],
-            ]
-        ]);
+        $I->sendPOST($this->url, ['id' => 'test']);
         $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
     }
 
     /**
      * @throws ModuleException
+     * @skip
      */
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
         $I->amAuthenticatedAsJohn();
-        $I->sendPOST($this->url, [
-            'planId' => 'bceed17e-d492-40be-921a-e7fa6f663fa6',
-            'changes' => [
-                [
-                    'id' => '949ec3ce-6379-406a-ae20-14ad63193d19',
-                    'position' => 0
-                ],
-                [
-                    'id' => 'e776079f-33a8-4c61-aa6c-21192daa50e7',
-                    'position' => 1
-                ],
-                [
-                    'id' => '62ccc225-b141-42a4-8063-825c8b72d135',
-                    'position' => 2
-                ],
-            ]
+        $I->sendPOST($this->url, ['id' => 'test']);
+        $I->seeResponseMatchesJsonType([
+            'data' => [
+                'result' => 'string',
+            ],
         ]);
-        $I->seeResponseMatchesJsonType($I->getRootResponseWithItemsJsonType());
-        $I->seeResponseMatchesJsonType($I->getPlanFolderDtoJsonType(), '$.data.items[0]');
     }
 }

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace _CG_APPROOT_\Tests\api\_CG_VERSION_LOWER_\_CG_MODULE_LOWER_;
+namespace _CG_TESTROOT_\Tests\api\_CG_VERSION_LOWER_\_CG_MODULE_LOWER_;
 
 use Codeception\Exception\ModuleException;
-use _CG_APPROOT_\Tests\ApiTester;
+use _CG_TESTROOT_\Tests\ApiTester;
 use Codeception\Util\HttpCode;
 
 class _CG_ACTION__CG_SUBJECT_Cest
