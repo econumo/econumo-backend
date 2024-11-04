@@ -4,15 +4,15 @@ namespace App\EconumoOneBundle\DataFixtures;
 
 
 use App\EconumoOneBundle\DataFixtures\AbstractFixture;
-use App\EconumoOneBundle\DataFixtures\UserFixtures;
+use App\EconumoOneBundle\DataFixtures\UsersFixtures;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
-class UserConnectionFixtures extends AbstractFixture implements DependentFixtureInterface
+class UsersOptionFixtures extends AbstractFixture implements DependentFixtureInterface
 {
-    public string $tableName = 'user_connections';
+    public string $tableName = 'users_options';
 
     public function getDependencies(): array
     {
-        return [UserFixtures::class];
+        return [UsersFixtures::class];
     }
 }

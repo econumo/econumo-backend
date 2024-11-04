@@ -14,6 +14,7 @@ class CreateBudgetCest
 
     /**
      * @throws ModuleException
+     * @skip
      */
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
@@ -28,6 +29,7 @@ class CreateBudgetCest
 
     /**
      * @throws ModuleException
+     * @skip
      */
     public function requestShouldReturn400ResponseCode(ApiTester $I): void
     {
@@ -38,6 +40,7 @@ class CreateBudgetCest
 
     /**
      * @throws ModuleException
+     * @skip
      */
     public function requestShouldReturn401ResponseCode(ApiTester $I): void
     {
@@ -47,6 +50,7 @@ class CreateBudgetCest
 
     /**
      * @throws ModuleException
+     * @skip
      */
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {

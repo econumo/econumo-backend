@@ -7,9 +7,9 @@ use App\EconumoOneBundle\DataFixtures\AbstractFixture;
 use App\EconumoOneBundle\DataFixtures\UsersFixtures;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
-class ConnectionInviteFixtures extends AbstractFixture implements DependentFixtureInterface
+class UsersConnectionsFixtures extends AbstractFixture implements DependentFixtureInterface
 {
-    public string $tableName = 'users_connections_invites';
+    public string $tableName = 'users_connections';
 
     public function getDependencies(): array
     {

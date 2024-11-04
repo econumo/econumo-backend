@@ -3,15 +3,15 @@
 namespace App\EconumoOneBundle\DataFixtures;
 
 use App\EconumoOneBundle\DataFixtures\AbstractFixture;
-use App\EconumoOneBundle\DataFixtures\UserFixtures;
+use App\EconumoOneBundle\DataFixtures\UsersFixtures;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
-class TagFixtures extends AbstractFixture implements DependentFixtureInterface
+class FoldersFixtures extends AbstractFixture implements DependentFixtureInterface
 {
-    public string $tableName = 'tags';
+    public string $tableName = 'folders';
 
     public function getDependencies(): array
     {
-        return [UserFixtures::class];
+        return [UsersFixtures::class];
     }
 }

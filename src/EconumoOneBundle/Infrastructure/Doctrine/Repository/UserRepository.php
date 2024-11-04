@@ -93,7 +93,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     public function getByEmail(Email $email): User
     {
-        $user = $this->findOneBy(['identifier' => $email->getValue()]);
+        $user = $this->findOneBy(['email' => $email->getValue()]);
         if (!$user instanceof User) {
             throw new NotFoundException(sprintf('User with email %s not found', $email));
         }

@@ -5,7 +5,7 @@ namespace App\EconumoOneBundle\DataFixtures;
 
 use App\EconumoOneBundle\DataFixtures\AbstractFixture;
 
-class UserFixtures extends AbstractFixture
+class CurrenciesFixtures extends AbstractFixture
 {
-    public string $tableName = 'users';
+    public string $tableName = 'currencies';
 }
