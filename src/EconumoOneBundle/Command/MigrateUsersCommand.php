@@ -38,10 +38,11 @@ class MigrateUsersCommand extends Command
             $avatarUrl = sprintf('https://www.gravatar.com/avatar/%s', md5($user->getEmail()));
             $user->updateAvatarUrl($avatarUrl);
 
-            $encodedEmail = $this->encodeService->encode($user->getEmail());
+            $originalEmail = $user->getEmail();
+            $encodedEmail = $this->encodeService->encode($originalEmail);
             $user->updateEmail($encodedEmail);
 
-            $identifier = $this->encodeService->hash($user->getEmail());
+            $identifier = $this->encodeService->hash($originalEmail);
             $user->updateUserIdentifier($identifier);
         }
         $this->userRepository->save($users);
