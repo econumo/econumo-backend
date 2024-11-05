@@ -55,4 +55,6 @@ interface BudgetElementServiceInterface
     public function archiveEnvelopeElement(Id $envelopeId): void;
 
     public function unarchiveEnvelopeElement(Id $envelopeId): void;
+
+    public function changeElementCurrency(Id $budgetId, Id $elementId, Id $currencyId): void;
 }

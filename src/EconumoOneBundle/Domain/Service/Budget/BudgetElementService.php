@@ -5,17 +5,15 @@ declare(strict_types=1);
 namespace App\EconumoOneBundle\Domain\Service\Budget;
 
 use App\EconumoOneBundle\Domain\Entity\BudgetElement;
-use App\EconumoOneBundle\Domain\Entity\BudgetEnvelope;
 use App\EconumoOneBundle\Domain\Entity\Category;
 use App\EconumoOneBundle\Domain\Entity\Tag;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoOneBundle\Domain\Factory\BudgetElementFactoryInterface;
-use App\EconumoOneBundle\Domain\Repository\BudgetElementLimitRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\BudgetElementRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\BudgetRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\CategoryRepositoryInterface;
+use App\EconumoOneBundle\Domain\Repository\CurrencyRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\TagRepositoryInterface;
-use App\EconumoOneBundle\Domain\Service\Budget\BudgetElementServiceInterface;
 use App\EconumoOneBundle\Domain\Service\Budget\Dto\BudgetCategoryDto;
 use App\EconumoOneBundle\Domain\Service\Budget\Dto\BudgetTagDto;
 use Throwable;
@@ -28,8 +26,8 @@ readonly class BudgetElementService implements BudgetElementServiceInterface
         private BudgetElementFactoryInterface $budgetElementFactory,
         private BudgetElementRepositoryInterface $budgetElementRepository,
         private BudgetRepositoryInterface $budgetRepository,
-        private BudgetElementLimitRepositoryInterface $budgetElementLimitRepository,
-        private BudgetElementsActionsService  $budgetElementsActionsService
+        private BudgetElementsActionsService  $budgetElementsActionsService,
+        private CurrencyRepositoryInterface $currencyRepository,
     ) {
     }
 
@@ -249,5 +247,13 @@ readonly class BudgetElementService implements BudgetElementServiceInterface
             $ids[] = $tag->getId();
         }
         $this->budgetElementsActionsService->deleteElements($budgetId, $ids);
+    }
+
+    public function changeElementCurrency(Id $budgetId, Id $elementId, Id $currencyId): void
+    {
+        $element = $this->budgetElementRepository->get($budgetId, $elementId);
+        $currency = $this->currencyRepository->get($currencyId);
+        $element->updateCurrency($currency);
+        $this->budgetElementRepository->save([$element]);
     }
 }
