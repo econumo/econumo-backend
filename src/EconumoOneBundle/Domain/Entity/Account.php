@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace App\EconumoOneBundle\Domain\Entity;
 
-use App\EconumoOneBundle\Domain\Entity\User;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\AccountName;
-use App\EconumoOneBundle\Domain\Entity\Currency;
-use App\EconumoOneBundle\Domain\Entity\Transaction;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\AccountType;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\CurrencyCode;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Icon;
@@ -20,8 +17,6 @@ use DateTimeInterface;
 class Account
 {
     use EntityTrait;
-
-    private string $balance;
 
     private bool $isDeleted = false;
 
@@ -36,10 +31,8 @@ class Account
         private Currency $currency,
         private AccountType $type,
         private Icon $icon,
-        DateTimeInterface $createdAt,
-        private bool $isExcludedFromBudget = false
+        DateTimeInterface $createdAt
     ) {
-        $this->balance = '0';
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
     }
@@ -57,11 +50,6 @@ class Account
     public function getName(): AccountName
     {
         return $this->name;
-    }
-
-    public function isExcludedFromBudget(): bool
-    {
-        return $this->isExcludedFromBudget;
     }
 
     public function getCurrency(): Currency
@@ -101,14 +89,6 @@ class Account
     {
         if (!$this->icon->isEqual($icon)) {
             $this->icon = $icon;
-            $this->updated();
-        }
-    }
-
-    public function updateExcludeFromBudget(bool $value): void
-    {
-        if ($this->isExcludedFromBudget !== $value) {
-            $this->isExcludedFromBudget = $value;
             $this->updated();
         }
     }

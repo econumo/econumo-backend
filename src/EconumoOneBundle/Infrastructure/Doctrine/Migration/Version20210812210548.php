@@ -70,10 +70,8 @@ CREATE TABLE accounts
     , currency_id             CHAR(36)            NOT NULL --(DC2Type:uuid)
     , user_id                 CHAR(36)            NOT NULL --(DC2Type:uuid)
     , name                    VARCHAR(64)         NOT NULL
-    , balance                 NUMERIC(19, 2)      NOT NULL
     , type                    SMALLINT            NOT NULL
     , icon                    VARCHAR(64)         NOT NULL
-    , is_excluded_from_budget BOOLEAN DEFAULT '0' NOT NULL
     , is_deleted              BOOLEAN DEFAULT '0' NOT NULL
     , created_at              DATETIME            NOT NULL --(DC2Type:datetime_immutable)
     , updated_at              DATETIME            NOT NULL
