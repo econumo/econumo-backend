@@ -208,17 +208,19 @@ readonly class AccountService implements AccountServiceInterface
 
     public function getBalance(Id $accountId): float
     {
+        $tomorrow = $this->datetimeService->getNextDay();
         return $this->transactionRepository->getAccountBalance(
             $accountId,
-            $this->datetimeService->getCurrentDatetime()
+            $tomorrow
         );
     }
 
     public function getAccountsBalance(array $accountsIds): array
     {
-        $balances = $this->accountRepository->getAccountsBalancesOnDate(
+        $tomorrow = $this->datetimeService->getNextDay();
+        $balances = $this->accountRepository->getAccountsBalancesBeforeDate(
             $accountsIds,
-            $this->datetimeService->getCurrentDatetime()
+            $tomorrow
         );
         $result = [];
         foreach ($balances as $balance) {

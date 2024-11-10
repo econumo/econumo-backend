@@ -9,4 +9,6 @@ use DateTimeInterface;
 interface DatetimeServiceInterface
 {
     public function getCurrentDatetime(): DateTimeInterface;
+
+    public function getNextDay(): DateTimeInterface;
 }
