@@ -5,21 +5,25 @@ declare(strict_types=1);
 namespace App\EconumoOneBundle\Application\Account\Assembler;
 
 use App\EconumoOneBundle\Application\Account\Dto\AccountResultDto;
-use App\EconumoOneBundle\Application\Account\Assembler\AccountIdToSharedAccessResultAssembler;
-use App\EconumoOneBundle\Application\Currency\Assembler\CurrencyIdToDtoV1ResultAssembler;
+use App\EconumoOneBundle\Application\Currency\Assembler\CurrencyToDtoV1ResultAssembler;
 use App\EconumoOneBundle\Application\User\Assembler\UserIdToDtoResultAssembler;
 use App\EconumoOneBundle\Domain\Entity\Account;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoOneBundle\Domain\Repository\AccountOptionsRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\FolderRepositoryInterface;
 
-class AccountToDtoV1ResultAssembler
+readonly class AccountToDtoV1ResultAssembler
 {
-    public function __construct(private readonly AccountIdToSharedAccessResultAssembler $accountIdToSharedAccessResultAssembler, private readonly CurrencyIdToDtoV1ResultAssembler $currencyIdToDtoV1ResultAssembler, private readonly FolderRepositoryInterface $folderRepository, private readonly UserIdToDtoResultAssembler $userIdToDtoResultAssembler, private readonly AccountOptionsRepositoryInterface $accountOptionsRepository)
-    {
+    public function __construct(
+        private AccountIdToSharedAccessResultAssembler $accountIdToSharedAccessResultAssembler,
+        private CurrencyToDtoV1ResultAssembler $currencyToDtoV1ResultAssembler,
+        private FolderRepositoryInterface $folderRepository,
+        private UserIdToDtoResultAssembler $userIdToDtoResultAssembler,
+        private AccountOptionsRepositoryInterface $accountOptionsRepository
+    ) {
     }
 
-    public function assemble(Id $userId, Account $account): AccountResultDto
+    public function assemble(Id $userId, Account $account, float $balance): AccountResultDto
     {
         $item = new AccountResultDto();
         $item->id = $account->getId()->getValue();
@@ -34,8 +38,8 @@ class AccountToDtoV1ResultAssembler
         }
 
         $item->name = $account->getName()->getValue();
-        $item->currency = $this->currencyIdToDtoV1ResultAssembler->assemble($account->getCurrencyId());
-        $item->balance = $account->getBalance();
+        $item->currency = $this->currencyToDtoV1ResultAssembler->assemble($account->getCurrency());
+        $item->balance = $balance;
         $item->type = $account->getType()->getValue();
         $item->icon = $account->getIcon()->getValue();
         $item->sharedAccess = $this->accountIdToSharedAccessResultAssembler->assemble($account->getId());

@@ -27,8 +27,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AccountService
 {
-    public function __construct(private readonly CreateAccountV1ResultAssembler $createAccountV1ResultAssembler, private readonly AccountServiceInterface $accountService, private readonly DeleteAccountV1ResultAssembler $deleteAccountV1ResultAssembler, private readonly UpdateAccountV1ResultAssembler $updateAccountV1ResultAssembler, private readonly AccountRepositoryInterface $accountRepository, private readonly AccountAccessServiceInterface $accountAccessService, private readonly TranslatorInterface $translator, private readonly ConnectionAccountServiceInterface $connectionAccountService)
-    {
+    public function __construct(
+        private readonly CreateAccountV1ResultAssembler $createAccountV1ResultAssembler,
+        private readonly AccountServiceInterface $accountService,
+        private readonly DeleteAccountV1ResultAssembler $deleteAccountV1ResultAssembler,
+        private readonly UpdateAccountV1ResultAssembler $updateAccountV1ResultAssembler,
+        private readonly AccountRepositoryInterface $accountRepository,
+        private readonly AccountAccessServiceInterface $accountAccessService,
+        private readonly TranslatorInterface $translator,
+        private readonly ConnectionAccountServiceInterface $connectionAccountService
+    ) {
     }
 
     public function createAccount(
@@ -44,7 +52,7 @@ class AccountService
         $accountDto->folderId = new Id($dto->folderId);
 
         $account = $this->accountService->create($accountDto);
-        return $this->createAccountV1ResultAssembler->assemble($dto, $userId, $account);
+        return $this->createAccountV1ResultAssembler->assemble($dto, $userId, $account, $accountDto->balance);
     }
 
     public function deleteAccount(
@@ -77,7 +85,12 @@ class AccountService
 
         $this->accountService->update($userId, $accountId, new AccountName($dto->name), new Icon($dto->icon));
         $updatedAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dto->updatedAt);
-        $transaction = $this->accountService->updateBalance($accountId, $dto->balance, $updatedAt, $this->translator->trans('account.correction.message'));
+        $transaction = $this->accountService->updateBalance(
+            $accountId,
+            $dto->balance,
+            $updatedAt,
+            $this->translator->trans('account.correction.message')
+        );
         $account = $this->accountRepository->get($accountId);
         return $this->updateAccountV1ResultAssembler->assemble($dto, $userId, $account, $transaction);
     }

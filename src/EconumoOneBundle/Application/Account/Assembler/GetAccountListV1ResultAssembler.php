@@ -22,12 +22,13 @@ class GetAccountListV1ResultAssembler
     public function assemble(
         GetAccountListV1RequestDto $dto,
         Id $userId,
-        array $accounts
+        array $accounts,
+        array $balances
     ): GetAccountListV1ResultDto {
         $result = new GetAccountListV1ResultDto();
         $result->items = [];
         foreach (array_reverse($accounts) as $account) {
-            $result->items[] = $this->accountToDtoV1ResultAssembler->assemble($userId, $account);
+            $result->items[] = $this->accountToDtoV1ResultAssembler->assemble($userId, $account, $balances[$account->getId()->getValue()] ?? .0);
         }
 
         return $result;

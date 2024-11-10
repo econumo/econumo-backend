@@ -18,17 +18,24 @@ use App\EconumoOneBundle\Domain\Repository\AccountOptionsRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\AccountRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\FolderRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\TransactionRepositoryInterface;
-use App\EconumoOneBundle\Domain\Service\AntiCorruptionServiceInterface;
 use App\EconumoOneBundle\Domain\Service\Dto\AccountDto;
-use App\EconumoOneBundle\Domain\Service\AccountServiceInterface;
-use App\EconumoOneBundle\Domain\Service\TransactionServiceInterface;
 use DateTimeInterface;
 use Throwable;
 
-class AccountService implements AccountServiceInterface
+readonly class AccountService implements AccountServiceInterface
 {
-    public function __construct(private readonly AccountRepositoryInterface $accountRepository, private readonly AccountFactoryInterface $accountFactory, private readonly TransactionServiceInterface $transactionService, private readonly AccountOptionsFactoryInterface $accountOptionsFactory, private readonly AccountOptionsRepositoryInterface $accountOptionsRepository, private readonly AntiCorruptionServiceInterface $antiCorruptionService, private readonly FolderRepositoryInterface $folderRepository, private readonly TransactionFactoryInterface $transactionFactory, private readonly TransactionRepositoryInterface $transactionRepository)
-    {
+    public function __construct(
+        private AccountRepositoryInterface $accountRepository,
+        private AccountFactoryInterface $accountFactory,
+        private TransactionServiceInterface $transactionService,
+        private AccountOptionsFactoryInterface $accountOptionsFactory,
+        private AccountOptionsRepositoryInterface $accountOptionsRepository,
+        private AntiCorruptionServiceInterface $antiCorruptionService,
+        private FolderRepositoryInterface $folderRepository,
+        private TransactionFactoryInterface $transactionFactory,
+        private TransactionRepositoryInterface $transactionRepository,
+        private DatetimeServiceInterface $datetimeService,
+    ) {
     }
 
     public function create(AccountDto $dto): Account
@@ -74,9 +81,6 @@ class AccountService implements AccountServiceInterface
                     $account->getCreatedAt()
                 );
                 $this->transactionRepository->save([$transaction]);
-                $account = $this->accountRepository->get($account->getId());
-                $account->applyTransaction($transaction);
-                $this->accountRepository->save([$account]);
             }
 
             $this->antiCorruptionService->commit(__METHOD__);
@@ -113,14 +117,14 @@ class AccountService implements AccountServiceInterface
         DateTimeInterface $updatedAt,
         ?string $comment = ''
     ): ?Transaction {
-        $account = $this->accountRepository->get($accountId);
-        if ((string)$account->getBalance() === (string)$balance) {
+        $actualBalance = $this->getBalance($accountId);
+        if (sprintf('%.2f', $actualBalance) === sprintf('%.2f', $balance)) {
             return null;
         }
 
         return $this->transactionService->updateBalance(
             $accountId,
-            $account->getBalance() - $balance,
+            round($actualBalance, 2) - round($balance, 2),
             $updatedAt,
             (string)$comment
         );
@@ -197,6 +201,28 @@ class AccountService implements AccountServiceInterface
             if ($account->getUpdatedAt() > $lastUpdate) {
                 $result[] = $account;
             }
+        }
+
+        return $result;
+    }
+
+    public function getBalance(Id $accountId): float
+    {
+        return $this->transactionRepository->getAccountBalance(
+            $accountId,
+            $this->datetimeService->getCurrentDatetime()
+        );
+    }
+
+    public function getAccountsBalance(array $accountsIds): array
+    {
+        $balances = $this->accountRepository->getAccountsBalancesOnDate(
+            $accountsIds,
+            $this->datetimeService->getCurrentDatetime()
+        );
+        $result = [];
+        foreach ($balances as $balance) {
+            $result[$balance['account_id']] = round($balance['balance'], 2);
         }
 
         return $result;

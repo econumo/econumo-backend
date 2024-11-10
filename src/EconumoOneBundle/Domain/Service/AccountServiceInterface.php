@@ -28,4 +28,12 @@ interface AccountServiceInterface
      * @return void
      */
     public function orderAccounts(Id $userId, array $changes): void;
+
+    public function getBalance(Id $accountId): float;
+
+    /**
+     * @param Id[] $accountsIds
+     * @return float[]
+     */
+    public function getAccountsBalance(array $accountsIds): array;
 }

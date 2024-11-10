@@ -5,17 +5,22 @@ declare(strict_types=1);
 namespace App\EconumoOneBundle\Application\Transaction\Assembler;
 
 use App\EconumoOneBundle\Application\Account\Assembler\AccountToDtoV1ResultAssembler;
-use App\EconumoOneBundle\Application\Transaction\Assembler\TransactionToDtoResultAssembler;
 use App\EconumoOneBundle\Application\Transaction\Dto\UpdateTransactionV1RequestDto;
 use App\EconumoOneBundle\Application\Transaction\Dto\UpdateTransactionV1ResultDto;
+use App\EconumoOneBundle\Domain\Entity\Account;
 use App\EconumoOneBundle\Domain\Entity\Transaction;
 use App\EconumoOneBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoOneBundle\Domain\Repository\AccountRepositoryInterface;
+use App\EconumoOneBundle\Domain\Service\AccountServiceInterface;
 
-class UpdateTransactionV1ResultAssembler
+readonly class UpdateTransactionV1ResultAssembler
 {
-    public function __construct(private readonly AccountRepositoryInterface $accountRepository, private readonly TransactionToDtoResultAssembler $transactionToDtoV1ResultAssembler, private readonly AccountToDtoV1ResultAssembler $accountToDtoV1ResultAssembler)
-    {
+    public function __construct(
+        private AccountRepositoryInterface $accountRepository,
+        private TransactionToDtoResultAssembler $transactionToDtoV1ResultAssembler,
+        private AccountToDtoV1ResultAssembler $accountToDtoV1ResultAssembler,
+        private AccountServiceInterface $accountService
+    ) {
     }
 
     public function assemble(
@@ -26,8 +31,10 @@ class UpdateTransactionV1ResultAssembler
         $result = new UpdateTransactionV1ResultDto();
         $result->item = $this->transactionToDtoV1ResultAssembler->assemble($transaction);
         $accounts = $this->accountRepository->getAvailableForUserId($userId);
+        $accountsIds = array_map(fn(Account $account) => $account->getId(), $accounts);
+        $balances = $this->accountService->getAccountsBalance($accountsIds);
         foreach (array_reverse($accounts) as $account) {
-            $result->accounts[] = $this->accountToDtoV1ResultAssembler->assemble($userId, $account);
+            $result->accounts[] = $this->accountToDtoV1ResultAssembler->assemble($userId, $account, $balances[$account->getId()->getValue()] ?? .0);
         }
 
         return $result;

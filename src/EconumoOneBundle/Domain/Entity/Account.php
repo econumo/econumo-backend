@@ -64,6 +64,11 @@ class Account
         return $this->isExcludedFromBudget;
     }
 
+    public function getCurrency(): Currency
+    {
+        return $this->currency;
+    }
+
     public function getCurrencyId(): Id
     {
         return $this->currency->getId();
@@ -72,53 +77,6 @@ class Account
     public function getCurrencyCode(): CurrencyCode
     {
         return $this->currency->getCode();
-    }
-
-    public function applyTransaction(Transaction $transaction): void
-    {
-        if ($transaction->getAccountCurrency()->isEqual($this->getCurrencyCode())) {
-            $amount = $transaction->getAmount();
-        } else {
-            $amount = $transaction->getAmountRecipient();
-        }
-
-        if ($transaction->getType()->isExpense()) {
-            $this->balance = (string)((float)$this->balance - $amount);
-        } elseif ($transaction->getType()->isIncome()) {
-            $this->balance = (string)((float)$this->balance + $amount);
-        } elseif ($transaction->getType()->isTransfer()) {
-            if ($transaction->getAccountId()->isEqual($this->id)) {
-                $this->balance = (string)((float)$this->balance - $amount);
-            } elseif ($transaction->getAccountRecipientId()->isEqual($this->id)) {
-                $this->balance = (string)((float)$this->balance + $amount);
-            }
-        }
-    }
-
-    public function rollbackTransaction(Transaction $transaction): void
-    {
-        if ($transaction->getAccountCurrency()->isEqual($this->getCurrencyCode())) {
-            $amount = $transaction->getAmount();
-        } else {
-            $amount = $transaction->getAmountRecipient();
-        }
-
-        if ($transaction->getType()->isExpense()) {
-            $this->balance = (string)((float)$this->balance + $amount);
-        } elseif ($transaction->getType()->isIncome()) {
-            $this->balance = (string)((float)$this->balance - $amount);
-        } elseif ($transaction->getType()->isTransfer()) {
-            if ($transaction->getAccountId()->isEqual($this->id)) {
-                $this->balance = (string)((float)$this->balance + $amount);
-            } elseif ($transaction->getAccountRecipientId()->isEqual($this->id)) {
-                $this->balance = (string)((float)$this->balance - $amount);
-            }
-        }
-    }
-
-    public function getBalance(): float
-    {
-        return (float)$this->balance;
     }
 
     public function getType(): AccountType
