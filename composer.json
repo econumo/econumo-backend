@@ -9,7 +9,6 @@
         "ext-iconv": "*",
         "ext-json": "*",
         "ext-pdo": "*",
-        "ext-pdo_pgsql": "*",
         "ext-openssl": "*",
         "doctrine/doctrine-bundle": "^2.0",
         "doctrine/doctrine-migrations-bundle": "^2.1",
