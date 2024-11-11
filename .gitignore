@@ -3,7 +3,7 @@
 .idea
 .DS_Store
 src/*Bundle/
-!src/EconumoOneBundle/
+!src/EconumoBundle/
 ###< econumo ###
 
 

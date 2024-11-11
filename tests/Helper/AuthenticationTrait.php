@@ -6,8 +6,8 @@ declare(strict_types=1);
 namespace App\Tests\Helper;
 
 
-use App\EconumoOneBundle\Domain\Entity\ValueObject\Email;
-use App\EconumoOneBundle\Domain\Repository\UserRepositoryInterface;
+use App\EconumoBundle\Domain\Entity\ValueObject\Email;
+use App\EconumoBundle\Domain\Repository\UserRepositoryInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 
 trait AuthenticationTrait

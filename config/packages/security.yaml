@@ -1,6 +1,6 @@
 security:
     password_hashers:
-        App\EconumoOneBundle\Domain\Entity\User:
+        App\EconumoBundle\Domain\Entity\User:
             algorithm: sha512
             encode_as_base64: true
             iterations: 500
@@ -17,7 +17,7 @@ security:
             json_login:
                 check_path: /api/v1/user/login-user
                 success_handler: lexik_jwt_authentication.handler.authentication_success
-                failure_handler: App\EconumoOneBundle\Infrastructure\Auth\AuthenticationFailureHandler
+                failure_handler: App\EconumoBundle\Infrastructure\Auth\AuthenticationFailureHandler
 
         api_register:
             pattern: ^/api/v1/user/register-user
@@ -64,4 +64,4 @@ security:
 
     providers:
         app_user_provider:
-            id: App\EconumoOneBundle\Infrastructure\Doctrine\UserProvider
+            id: App\EconumoBundle\Infrastructure\Doctrine\UserProvider
