@@ -15,6 +15,7 @@ use App\EconumoOneBundle\Domain\Repository\CurrencyRepositoryInterface;
 use App\EconumoOneBundle\Domain\Repository\UserRepositoryInterface;
 use App\EconumoOneBundle\Domain\Service\Currency\CurrencyRateServiceInterface;
 use App\EconumoOneBundle\Domain\Service\Currency\Dto\CurrencyConvertorDto;
+use App\EconumoOneBundle\Domain\Service\DatetimeServiceInterface;
 use App\EconumoOneBundle\Domain\Service\Dto\FullCurrencyRateDto;
 use App\EconumoOneBundle\Domain\Service\Currency\CurrencyConvertorInterface;
 use DateInterval;
@@ -32,7 +33,8 @@ class CurrencyConvertor implements CurrencyConvertorInterface
         readonly private UserRepositoryInterface $userRepository,
         readonly private CurrencyRateRepositoryInterface $currencyRateRepository,
         readonly private CurrencyRateServiceInterface $currencyRateService,
-        readonly private CurrencyRepositoryInterface $currencyRepository
+        readonly private CurrencyRepositoryInterface $currencyRepository,
+        readonly private DatetimeServiceInterface $datetimeService
     ) {
         $this->baseCurrency = new CurrencyCode($baseCurrency);
         $this->baseCurrencyId = null;
@@ -65,10 +67,14 @@ class CurrencyConvertor implements CurrencyConvertorInterface
     public function bulkConvert(array $items): array
     {
         $conversionNeeded = [];
+        $currentPeriodStart = $this->datetimeService->getCurrentMonthStart();
+        $currentPeriodStartIndex = $currentPeriodStart->format('Ym');
+        $currentPeriodEnd = $this->datetimeService->getNextMonthStart();
+        $conversionNeeded[$currentPeriodStartIndex] = [$currentPeriodStart, $currentPeriodEnd];
         foreach ($items as $item) {
             if (is_array($item)) {
                 foreach ($item as $subItem) {
-                    $index = $subItem->periodStart->format('Y-m');
+                    $index = $subItem->periodStart->format('Ym');
                     if ($subItem->fromCurrencyId->isEqual($subItem->toCurrencyId)) {
                         continue;
                     }
@@ -78,7 +84,7 @@ class CurrencyConvertor implements CurrencyConvertorInterface
                     $conversionNeeded[$index] = [$subItem->periodStart, $subItem->periodEnd];
                 }
             } else {
-                $index = $item->periodStart->format('Y-m');
+                $index = $item->periodStart->format('Ym');
                 if ($item->fromCurrencyId->isEqual($item->toCurrencyId)) {
                     continue;
                 }
@@ -101,11 +107,13 @@ class CurrencyConvertor implements CurrencyConvertorInterface
         foreach ($items as $key => $dto) {
             $result[$key] = .0;
             if ($dto instanceof CurrencyConvertorDto) {
-                $result[$key] = $this->convertInternalById($rates[$dto->periodStart->format('Y-m')], $dto->fromCurrencyId, $dto->toCurrencyId, $dto->amount);
+                $existingKey = array_key_exists($dto->periodStart->format('Ym'), $rates) ? $dto->periodStart->format('Ym') : $currentPeriodStartIndex;
+                $result[$key] = $this->convertInternalById($rates[$existingKey], $dto->fromCurrencyId, $dto->toCurrencyId, $dto->amount);
             } else {
                 /** @var CurrencyConvertorDto $item */
                 foreach ($dto as $item) {
-                    $result[$key] += $this->convertInternalById($rates[$item->periodStart->format('Y-m')], $item->fromCurrencyId, $item->toCurrencyId, $item->amount);
+                    $existingKey = array_key_exists($item->periodStart->format('Ym'), $rates) ? $item->periodStart->format('Ym') : $currentPeriodStartIndex;
+                    $result[$key] += $this->convertInternalById($rates[$existingKey], $item->fromCurrencyId, $item->toCurrencyId, $item->amount);
                 }
             }
         }

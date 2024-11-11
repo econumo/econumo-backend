@@ -11,4 +11,8 @@ interface DatetimeServiceInterface
     public function getCurrentDatetime(): DateTimeInterface;
 
     public function getNextDay(): DateTimeInterface;
+
+    public function getCurrentMonthStart(): DateTimeInterface;
+
+    public function getNextMonthStart(): DateTimeInterface;
 }

@@ -1,4 +1,11 @@
-src/EconumoFamilyBundle
+###> econumo ###
+.secret*
+.idea
+.DS_Store
+src/*Bundle/
+!src/EconumoOneBundle/
+###< econumo ###
+
 
 ###> symfony/framework-bundle ###
 /.env.local
@@ -18,11 +25,6 @@ src/EconumoFamilyBundle
 /phpunit.xml
 .phpunit.result.cache
 ###< phpunit/phpunit ###
-
-
-.secret*
-.idea
-.DS_Store
 ###> phpstan/phpstan ###
 phpstan.neon
 ###< phpstan/phpstan ###

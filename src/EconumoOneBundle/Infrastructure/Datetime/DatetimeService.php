@@ -26,4 +26,17 @@ class DatetimeService implements DatetimeServiceInterface
         $now->modify('+1 day');
         return DateTimeImmutable::createFromMutable($now);
     }
+
+    public function getCurrentMonthStart(): DateTimeInterface
+    {
+        $now = new DateTime();
+        return DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $now->format('Y-m-01 00:00:00'));
+    }
+
+    public function getNextMonthStart(): DateTimeInterface
+    {
+        $now = new DateTime();
+        $now->modify('next month');
+        return DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $now->format('Y-m-01 00:00:00'));
+    }
 }
