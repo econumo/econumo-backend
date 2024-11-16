@@ -4,15 +4,10 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\UI\Controller\Api\Connection\Connection;
 
-use App\EconumoBundle\Application\Connection\ConnectionService;
-use App\EconumoBundle\Application\Connection\Dto\DeleteConnectionV1RequestDto;
-use App\EconumoBundle\UI\Controller\Api\Connection\Connection\Validation\DeleteConnectionV1Form;
 use App\EconumoBundle\Application\Exception\ValidationException;
-use App\EconumoBundle\Domain\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\EconumoBundle\UI\Service\Validator\ValidatorInterface;
 use App\EconumoBundle\UI\Service\Response\ResponseFactory;
 use Symfony\Component\Routing\Annotation\Route;
 use Nelmio\ApiDocBundle\Annotation\Model;
@@ -20,10 +15,6 @@ use OpenApi\Annotations as OA;
 
 class DeleteConnectionV1Controller extends AbstractController
 {
-    public function __construct(private readonly ConnectionService $connectionService, private readonly ValidatorInterface $validator)
-    {
-    }
-
     /**
      * Delete connection
      *
@@ -53,15 +44,9 @@ class DeleteConnectionV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/connection/delete-connection', methods: ['POST'])]
+    #[Route(path: '/api/v1/connection/delete-connection', name: 'api_connection_delete_connection', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
-        $dto = new DeleteConnectionV1RequestDto();
-        $this->validator->validate(DeleteConnectionV1Form::class, $request->request->all(), $dto);
-        /** @var User $user */
-        $user = $this->getUser();
-        $result = $this->connectionService->deleteConnection($dto, $user->getId());
-
-        return ResponseFactory::createOkResponse($request, $result);
+        return ResponseFactory::createNotImplementedResponse('Not supported in Econumo One');
     }
 }

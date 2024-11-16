@@ -4,15 +4,10 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\UI\Controller\Api\Budget\Access;
 
-use App\EconumoBundle\Application\Budget\AccessService;
-use App\EconumoBundle\Application\Budget\Dto\DeclineAccessV1RequestDto;
-use App\EconumoBundle\UI\Controller\Api\Budget\Access\Validation\DeclineAccessV1Form;
 use App\EconumoBundle\Application\Exception\ValidationException;
-use App\EconumoBundle\Domain\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\EconumoBundle\UI\Service\Validator\ValidatorInterface;
 use App\EconumoBundle\UI\Service\Response\ResponseFactory;
 use Symfony\Component\Routing\Annotation\Route;
 use Nelmio\ApiDocBundle\Annotation\Model;
@@ -20,10 +15,6 @@ use OpenApi\Annotations as OA;
 
 class DeclineAccessV1Controller extends AbstractController
 {
-    public function __construct(private readonly AccessService $accessService, private readonly ValidatorInterface $validator)
-    {
-    }
-
     /**
      * Decline access
      *
@@ -53,15 +44,9 @@ class DeclineAccessV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/budget/decline-access', methods: ['POST'])]
+    #[Route(path: '/api/v1/budget/decline-access', name: 'api_budget_decline_access', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
-        $dto = new DeclineAccessV1RequestDto();
-        $this->validator->validate(DeclineAccessV1Form::class, $request->request->all(), $dto);
-        /** @var User $user */
-        $user = $this->getUser();
-        $result = $this->accessService->declineAccess($dto, $user->getId());
-
-        return ResponseFactory::createOkResponse($request, $result);
+        return ResponseFactory::createNotImplementedResponse('Not supported in Econumo One');
     }
 }

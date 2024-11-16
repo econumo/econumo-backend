@@ -4,15 +4,10 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\UI\Controller\Api\Connection\Invite;
 
-use App\EconumoBundle\Application\Connection\InviteService;
-use App\EconumoBundle\Application\Connection\Dto\GenerateInviteV1RequestDto;
-use App\EconumoBundle\UI\Controller\Api\Connection\Invite\Validation\GenerateInviteV1Form;
 use App\EconumoBundle\Application\Exception\ValidationException;
-use App\EconumoBundle\Domain\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\EconumoBundle\UI\Service\Validator\ValidatorInterface;
 use App\EconumoBundle\UI\Service\Response\ResponseFactory;
 use Symfony\Component\Routing\Annotation\Route;
 use Nelmio\ApiDocBundle\Annotation\Model;
@@ -20,9 +15,6 @@ use OpenApi\Annotations as OA;
 
 class GenerateInviteV1Controller extends AbstractController
 {
-    public function __construct(private readonly InviteService $inviteService, private readonly ValidatorInterface $validator)
-    {
-    }
 
     /**
      * Generate invite
@@ -53,15 +45,9 @@ class GenerateInviteV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/connection/generate-invite', methods: ['POST'])]
+    #[Route(path: '/api/v1/connection/generate-invite', name: 'api_connection_generate_invite', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
-        $dto = new GenerateInviteV1RequestDto();
-        $this->validator->validate(GenerateInviteV1Form::class, $request->request->all(), $dto);
-        /** @var User $user */
-        $user = $this->getUser();
-        $result = $this->inviteService->generateInvite($dto, $user->getId());
-
-        return ResponseFactory::createOkResponse($request, $result);
+        return ResponseFactory::createNotImplementedResponse('Not supported in Econumo One');
     }
 }

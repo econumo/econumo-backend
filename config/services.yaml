@@ -21,6 +21,12 @@ services:
       - '../src/EconumoBundle/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
       - '../src/EconumoBundle/Infrastructure/Doctrine/Migrations/**.php'
 
+  # controllers are imported separately to make sure services can be injected
+  # as action arguments even if you don't extend any base controller class
+  App\EconumoBundle\UI\Controller\:
+    resource: '../src/EconumoBundle/UI/Controller'
+    tags: [ 'controller.service_arguments' ]
+
   App\EconumoBundle\Domain\Service\Currency\CurrencyServiceInterface:
     class: \App\EconumoBundle\Domain\Service\Currency\CurrencyService
     arguments:
@@ -35,12 +41,6 @@ services:
     class: \App\EconumoBundle\Domain\Service\Currency\CurrencyRateService
     arguments:
       $baseCurrency: '%env(string:ECONUMO_CURRENCY_BASE)%'
-
-  # controllers are imported separately to make sure services can be injected
-  # as action arguments even if you don't extend any base controller class
-  App\EconumoBundle\UI\Controller\:
-    resource: '../src/EconumoBundle/UI/Controller'
-    tags: [ 'controller.service_arguments' ]
 
   # add more service definitions when explicit configuration is needed
   # please note that last definitions always *replace* previous ones

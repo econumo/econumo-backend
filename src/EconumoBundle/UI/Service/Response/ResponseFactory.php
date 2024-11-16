@@ -59,6 +59,17 @@ class ResponseFactory
         return static::createJsonResponse($data, $httpCode);
     }
 
+    public static function createNotImplementedResponse(
+        string $message = '',
+    ): Response {
+        return static::createJsonResponse([
+            'success' => false,
+            'message' => $message,
+            'code' => 0,
+            'errors' => [],
+        ], Response::HTTP_NOT_IMPLEMENTED);
+    }
+
     protected static function createJsonResponse(
         mixed $data,
         int $httpCode

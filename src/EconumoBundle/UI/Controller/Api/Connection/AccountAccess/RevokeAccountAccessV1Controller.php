@@ -4,15 +4,10 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\UI\Controller\Api\Connection\AccountAccess;
 
-use App\EconumoBundle\Application\Connection\AccountAccessService;
-use App\EconumoBundle\Application\Connection\Dto\RevokeAccountAccessV1RequestDto;
-use App\EconumoBundle\UI\Controller\Api\Connection\AccountAccess\Validation\RevokeAccountAccessV1Form;
 use App\EconumoBundle\Application\Exception\ValidationException;
-use App\EconumoBundle\Domain\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\EconumoBundle\UI\Service\Validator\ValidatorInterface;
 use App\EconumoBundle\UI\Service\Response\ResponseFactory;
 use Symfony\Component\Routing\Annotation\Route;
 use Nelmio\ApiDocBundle\Annotation\Model;
@@ -20,10 +15,6 @@ use OpenApi\Annotations as OA;
 
 class RevokeAccountAccessV1Controller extends AbstractController
 {
-    public function __construct(private readonly AccountAccessService $accountAccessService, private readonly ValidatorInterface $validator)
-    {
-    }
-
     /**
      * Revoke accountAccess
      *
@@ -53,15 +44,9 @@ class RevokeAccountAccessV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/connection/revoke-account-access', methods: ['POST'])]
+    #[Route(path: '/api/v1/connection/revoke-account-access', name: 'api_connection_revoke_account_access', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
-        $dto = new RevokeAccountAccessV1RequestDto();
-        $this->validator->validate(RevokeAccountAccessV1Form::class, $request->request->all(), $dto);
-        /** @var User $user */
-        $user = $this->getUser();
-        $result = $this->accountAccessService->revokeAccountAccess($dto, $user->getId());
-
-        return ResponseFactory::createOkResponse($request, $result);
+        return ResponseFactory::createNotImplementedResponse('Not supported in Econumo One');
     }
 }
