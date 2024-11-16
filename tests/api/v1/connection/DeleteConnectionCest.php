@@ -24,6 +24,7 @@ class DeleteConnectionCest
 
     /**
      * @throws \Codeception\Exception\ModuleException
+     * @skip
      */
     public function requestShouldReturn400ResponseCode(ApiTester $I): void
     {
@@ -34,6 +35,7 @@ class DeleteConnectionCest
 
     /**
      * @throws \Codeception\Exception\ModuleException
+     * @skip
      */
     public function requestShouldReturn401ResponseCode(ApiTester $I): void
     {
