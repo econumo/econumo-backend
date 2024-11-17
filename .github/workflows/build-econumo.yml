@@ -1,0 +1,11 @@
+name: "Build Econumo"
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  build:
+    uses: ./.github/workflows/embedded-build-econumo-one.yml
+    secrets: inherit

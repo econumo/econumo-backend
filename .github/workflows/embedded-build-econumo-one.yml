@@ -1,0 +1,44 @@
+on:
+  workflow_call:
+    secrets:
+      APP_QASE_TOKEN:
+        required: true
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_IMAGE: 'econumo-one'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build APP image for testing
+        if: success()
+        run: |
+          docker build --tag ${DOCKER_IMAGE} --target test -f build/docker/app/Dockerfile .
+
+      - name: Test APP image
+        if: success()
+        run: |
+          docker run --volume shared-volume:/var/www/var ${DOCKER_IMAGE} bin/console doctrine:database:create --env=test
+          docker run --volume shared-volume:/var/www/var ${DOCKER_IMAGE} bin/console doctrine:migration:migrate -n --env=test
+          docker run --volume shared-volume:/var/www/var ${DOCKER_IMAGE} bin/console  doctrine:schema:validate --skip-sync --env=test
+          docker run --volume shared-volume:/var/www/var ${DOCKER_IMAGE} bin/console doctrine:fixtures:load --purge-with-truncate -n --env=test
+          docker run --volume shared-volume:/var/www/var --env QASE_ENABLE=${QASE_ENABLE} --env QASE_TOKEN=${QASE_TOKEN} --env QASE_PROJECT=${QASE_PROJECT} ${DOCKER_IMAGE} vendor/bin/codecept run
+        env:
+          QASE_ENABLE: "false"
+          QASE_TOKEN: ${{ secrets.APP_QASE_TOKEN }}
+          QASE_PROJECT: "EA"
+
+      - name: Run RECTOR
+        if: success()
+        run: |
+          docker run ${DOCKER_IMAGE} vendor/bin/rector process --dry-run
+
+#            -   name: Run PSALM analysis
+#                if: success()
+#                run: |
+#                    docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE} vendor/bin/psalm --long-progress --output-format=github
+
