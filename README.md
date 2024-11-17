@@ -1,31 +1,46 @@
-# Econumo API-backend
+<p align="center">
+    <picture>
+        <img src="https://github.com/econumo/.github/raw/master/profile/econumo.png" width="194">
+    </picture>
+</p>
 
-## How to use self-hosted version
+<p align="center">
+    A getting started guide to self-hosting <a href="https://econumo.com/" target="_blank">Econumo</a>
+</p>
 
-1. Copy `docker-compose.example.yml` to your server
-2. Replace `<FIXME>` with your variables
-3. Run `docker-composer up -d`
-4. Open in web-browser url `http://localhost:8080` and check frag "self-hosted" with value `http://localhost:8082` (it's API url)
+---
 
-### Currencies 
+## Description
 
-#### How to load currencies
+This is the main backend repository for Econumo, containing the backend for [Econumo One](https://econumo.com/docs/edition/).
+The backend is built using PHP, Symfony, and SQLite.
 
-Please use the currency loader to fulfill your database: https://github.com/econumo/currency-loader
+## Contribution
 
-Alternatively, you can use the API call: 
-```bash
-curl -X 'POST' \
-  '<YOUR_API_BASE_URL>/api/v1/system/import-currency-list' \
-  -H 'accept: application/json' \
-  -H '<ECONUMO_SYSTEM_API_KEY>' \
-  -H 'Content-Type: application/json' \
-  -d '{
-  "items": [
-    "USD",
-    "EUR",
-  ]
-}'
-```
+Run the Application
 
-If you want to change base currency (by default USD) - update the value of `ECONUMO_CURRENCY_BASE` in the `.env`. 
+1. (Optional) Install [task runner v3](https://taskfile.dev/#/installation) for using shortcuts from [Taskfile.yml](Taskfile.yml)
+2. Clone the repository.
+3. Create a `.env.local` to override the default `.env`
+4. Run `task up`
+
+### For Econumo Family Users
+
+1. Clone `git@github.com:econumo/econumo-family-bundle.git` into the `src/EconumoFamilyBundle` directory
+
+### Run tests
+
+Run `task test` to execute all tests, or use arguments for Codeception: `task test -- unit`.
+
+### Api documentation: Swagger
+
+To access the Swagger documentation, follow the URL `/api/doc`. To generate a token, use the console command: `bin/console lexik:jwt:generate-token john@econumo.test`.
+
+
+## Documentation
+
+For more information on installation, upgrades, configuration, and integrations please see our [documentation.](https://econumo.com/docs/)
+
+## Contact
+
+- For a question or advice please use [GitHub discussions](https://github.com/orgs/econumo/discussions)
