@@ -5,8 +5,8 @@ on:
         required: true
 
 jobs:
-  build:
-    name: build
+  build-econumo-one:
+    name: Build Econumo One
     runs-on: ubuntu-latest
     env:
       DOCKER_IMAGE: 'econumo-one'
@@ -32,10 +32,10 @@ jobs:
           QASE_TOKEN: ${{ secrets.APP_QASE_TOKEN }}
           QASE_PROJECT: "EA"
 
-      - name: Run RECTOR
-        if: success()
-        run: |
-          docker run ${DOCKER_IMAGE} vendor/bin/rector process --dry-run
+#      - name: Run RECTOR
+#        if: success()
+#        run: |
+#          docker run ${DOCKER_IMAGE} vendor/bin/rector process --dry-run
 
 #            -   name: Run PSALM analysis
 #                if: success()
