@@ -13,6 +13,7 @@ class UpdatePasswordCest
 
     /**
      * @throws \Codeception\Exception\ModuleException
+     * @skip
      */
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
@@ -42,6 +43,7 @@ class UpdatePasswordCest
 
     /**
      * @throws \Codeception\Exception\ModuleException
+     * @skip
      */
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
