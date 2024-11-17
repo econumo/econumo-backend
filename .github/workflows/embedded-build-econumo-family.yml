@@ -5,14 +5,22 @@ on:
         required: true
 
 jobs:
-  build-econumo-one:
-    name: Build Econumo One
+  build-econumo-family:
+    name: Build Econumo Family
     runs-on: ubuntu-latest
     env:
-      DOCKER_IMAGE: 'econumo-one'
+      DOCKER_IMAGE: 'econumo-family'
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Clone EconumoFamilyBundle repository
+        uses: actions/checkout@v4
+        with:
+          repository: econumo/econumo-family-bundle
+          ref: main
+          token: ${{ secrets.BUILD_USER_TOKEN }}
+          path: src/EconumoFamilyBundle
 
       - name: Build APP image for testing
         if: success()

@@ -1,11 +1,18 @@
 name: "Build Econumo"
 on:
-  workflow_dispatch:
   push:
     branches:
       - '*'
 
 jobs:
-  build:
+  build-econumo-one:
     uses: ./.github/workflows/embedded-build-econumo-one.yml
+    secrets: inherit
+
+  build-econumo-family:
+    uses: ./.github/workflows/embedded-build-econumo-family.yml
+    secrets: inherit
+
+  build-econumo-cloud:
+    uses: ./.github/workflows/embedded-build-econumo-cloud.yml
     secrets: inherit
