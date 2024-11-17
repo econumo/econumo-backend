@@ -3,6 +3,8 @@ on:
     secrets:
       APP_QASE_TOKEN:
         required: true
+      BUILD_USER_TOKEN:
+        required: true
 
 jobs:
   build-econumo-family:
