@@ -10,9 +10,11 @@ jobs:
     secrets: inherit
 
   build-econumo-family:
+    needs: build-econumo-one
     uses: ./.github/workflows/embedded-build-econumo-family.yml
     secrets: inherit
 
   build-econumo-cloud:
+    needs: build-econumo-family
     uses: ./.github/workflows/embedded-build-econumo-cloud.yml
     secrets: inherit
