@@ -13,12 +13,11 @@ RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS curl-dev && \
 #    apk add libzip-dev libonig-dev && \
     docker-php-ext-configure bcmath --enable-bcmath && \
     docker-php-ext-configure opcache --enable-opcache && \
-    docker-php-ext-configure pdo_pgsql --with-pdo-pgsql && \
 #    docker-php-ext-configure mbstring --enable-mbstring && \
 #    pecl install xdebug && \
 #    docker-php-ext-enable xdebug && \
 #    docker-php-ext-install -j$(nproc) bcmath opcache json curl pdo_pgsql && \
-    docker-php-ext-install -j$(nproc) pdo_pgsql bcmath opcache curl && \
+    docker-php-ext-install -j$(nproc) bcmath opcache curl && \
     apk del -f .build-deps && \
     rm -rf /tmp/* /var/cache/apk/* \
 
