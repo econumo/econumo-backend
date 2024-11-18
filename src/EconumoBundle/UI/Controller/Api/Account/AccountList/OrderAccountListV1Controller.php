@@ -25,7 +25,7 @@ class OrderAccountListV1Controller extends AbstractController
     }
 
     /**
-     * Order accountList
+     * Order an account list
      *
      * @OA\Tag(name="Account"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Account\Dto\OrderAccountListV1RequestDto::class))),
@@ -53,7 +53,7 @@ class OrderAccountListV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/account/order-account-list', methods: ['POST'])]
+    #[Route(path: '/api/v1/account/order-account-list', name: 'api_account_order_account_list', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new OrderAccountListV1RequestDto();

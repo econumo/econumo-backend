@@ -25,7 +25,7 @@ class GetAccountListV1Controller extends AbstractController
     }
 
     /**
-     * Get AccountList
+     * Get an account list
      *
      * @OA\Tag(name="Account"),
      * @OA\Response(
@@ -52,7 +52,7 @@ class GetAccountListV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/account/get-account-list', methods: ['GET'])]
+    #[Route(path: '/api/v1/account/get-account-list', name: 'api_account_get_account_list', methods: ['GET'])]
     public function __invoke(Request $request): Response
     {
         $dto = new GetAccountListV1RequestDto();

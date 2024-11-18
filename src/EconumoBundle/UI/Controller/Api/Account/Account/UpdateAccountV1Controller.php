@@ -25,7 +25,7 @@ class UpdateAccountV1Controller extends AbstractController
     }
 
     /**
-     * Update Account
+     * Update an account
      *
      * @OA\Tag(name="Account"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Account\Dto\UpdateAccountV1RequestDto::class))),
@@ -53,7 +53,7 @@ class UpdateAccountV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/account/update-account', methods: ['POST'])]
+    #[Route(path: '/api/v1/account/update-account', name: 'api_account_update_account', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new UpdateAccountV1RequestDto();

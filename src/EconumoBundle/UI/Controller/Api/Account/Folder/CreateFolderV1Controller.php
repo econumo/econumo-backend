@@ -25,7 +25,7 @@ class CreateFolderV1Controller extends AbstractController
     }
 
     /**
-     * Create folder
+     * Create an accounts folder
      *
      * @OA\Tag(name="Account"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Account\Dto\CreateFolderV1RequestDto::class))),
@@ -53,7 +53,7 @@ class CreateFolderV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/account/create-folder', methods: ['POST'])]
+    #[Route(path: '/api/v1/account/create-folder', name: 'api_account_create_folder', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new CreateFolderV1RequestDto();

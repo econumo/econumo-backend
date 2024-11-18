@@ -25,7 +25,7 @@ class OrderFolderListV1Controller extends AbstractController
     }
 
     /**
-     * Order folderList
+     * Order an accounts folder list
      *
      * @OA\Tag(name="Account"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Account\Dto\OrderFolderListV1RequestDto::class))),
@@ -53,7 +53,7 @@ class OrderFolderListV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/account/order-folder-list', methods: ['POST'])]
+    #[Route(path: '/api/v1/account/order-folder-list', name: 'api_account_order_folder_list', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new OrderFolderListV1RequestDto();

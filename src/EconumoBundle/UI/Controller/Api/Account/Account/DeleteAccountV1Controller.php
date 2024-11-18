@@ -25,7 +25,7 @@ class DeleteAccountV1Controller extends AbstractController
     }
 
     /**
-     * Delete Account
+     * Delete an account
      *
      * @OA\Tag(name="Account"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Account\Dto\DeleteAccountV1RequestDto::class))),
@@ -53,7 +53,7 @@ class DeleteAccountV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/account/delete-account', methods: ['POST'])]
+    #[Route(path: '/api/v1/account/delete-account', name: 'api_account_delete_account', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new DeleteAccountV1RequestDto();

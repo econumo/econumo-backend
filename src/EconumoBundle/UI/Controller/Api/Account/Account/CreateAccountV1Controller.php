@@ -27,7 +27,7 @@ class CreateAccountV1Controller extends AbstractController
     }
 
     /**
-     * Create account
+     * Create an account
      *
      * @OA\Tag(name="Account"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Account\Dto\CreateAccountV1RequestDto::class))),
@@ -55,7 +55,7 @@ class CreateAccountV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/account/create-account', methods: ['POST'])]
+    #[Route(path: '/api/v1/account/create-account', name: 'api_account_create_account', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new CreateAccountV1RequestDto();

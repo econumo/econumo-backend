@@ -25,7 +25,7 @@ class GetFolderListV1Controller extends AbstractController
     }
 
     /**
-     * Get folder list
+     * Get an accounts folder list
      *
      * @OA\Tag(name="Account"),
      * @OA\Response(
@@ -52,7 +52,7 @@ class GetFolderListV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/account/get-folder-list', methods: ['GET'])]
+    #[Route(path: '/api/v1/account/get-folder-list', name: 'api_account_get_folder_list', methods: ['GET'])]
     public function __invoke(Request $request): Response
     {
         $dto = new GetFolderListV1RequestDto();

@@ -25,7 +25,7 @@ class ShowFolderV1Controller extends AbstractController
     }
 
     /**
-     * Show folder
+     * Show an accounts folder
      *
      * @OA\Tag(name="Account"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Account\Dto\ShowFolderV1RequestDto::class))),
@@ -53,7 +53,7 @@ class ShowFolderV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/account/show-folder', methods: ['POST'])]
+    #[Route(path: '/api/v1/account/show-folder', name: 'api_account_show_folder', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new ShowFolderV1RequestDto();

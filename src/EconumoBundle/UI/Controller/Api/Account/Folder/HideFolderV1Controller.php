@@ -25,7 +25,7 @@ class HideFolderV1Controller extends AbstractController
     }
 
     /**
-     * Hide folder
+     * Hide an accounts folder
      *
      * @OA\Tag(name="Account"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Account\Dto\HideFolderV1RequestDto::class))),
@@ -53,7 +53,7 @@ class HideFolderV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/account/hide-folder', methods: ['POST'])]
+    #[Route(path: '/api/v1/account/hide-folder', name: 'api_account_hide_folder', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new HideFolderV1RequestDto();
