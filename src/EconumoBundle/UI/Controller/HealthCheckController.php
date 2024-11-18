@@ -18,13 +18,13 @@ class HealthCheckController extends AbstractController
     }
 
     /**
-     * Check controller
+     * Health-Check controller
      *
      *
      * @param Request $request
      * @return Response
      */
-    #[Route(path: '/_/health-check', methods: ['GET'])]
+    #[Route(path: '/_/health-check', name: 'api_health_check', methods: ['GET'])]
     public function __invoke(): Response
     {
         $response = [

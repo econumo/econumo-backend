@@ -24,7 +24,7 @@ class RemindPasswordV1Controller extends AbstractController
     }
 
     /**
-     * Remind password
+     * Remind a password
      *
      * @OA\Tag(name="User"),
      * @OA\Post(
@@ -54,7 +54,7 @@ class RemindPasswordV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/user/remind-password', methods: ['POST'])]
+    #[Route(path: '/api/v1/user/remind-password', name: 'api_user_remind_password', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new RemindPasswordV1RequestDto();

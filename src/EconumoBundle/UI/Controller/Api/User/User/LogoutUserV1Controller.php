@@ -24,7 +24,7 @@ class LogoutUserV1Controller extends AbstractController
     }
 
     /**
-     * Logout User
+     * Logout
      *
      * @OA\Tag(name="User"),
      * @OA\Response(
@@ -50,7 +50,7 @@ class LogoutUserV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/user/logout-user', methods: ['POST'])]
+    #[Route(path: '/api/v1/user/logout-user', name: 'api_user_logout_user', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $result = $this->userService->logoutUser($request->headers->get('Authorization'));

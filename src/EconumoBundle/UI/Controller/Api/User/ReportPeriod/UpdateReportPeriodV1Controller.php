@@ -25,7 +25,7 @@ class UpdateReportPeriodV1Controller extends AbstractController
     }
 
     /**
-     * Update reportPeriod
+     * Update the default report period for a user
      *
      * @OA\Tag(name="User"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\User\Dto\UpdateReportPeriodV1RequestDto::class))),
@@ -53,7 +53,7 @@ class UpdateReportPeriodV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/user/update-report-period', methods: ['POST'])]
+    #[Route(path: '/api/v1/user/update-report-period', name: 'api_user_update_report_period', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new UpdateReportPeriodV1RequestDto();

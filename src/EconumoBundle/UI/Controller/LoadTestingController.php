@@ -13,13 +13,13 @@ use Symfony\Component\Routing\Annotation\Route;
 class LoadTestingController extends AbstractController
 {
     /**
-     * Check controller
+     * Load Testing controller
      *
      *
      * @param Request $request
      * @return Response
      */
-    #[Route(path: '/_/load-testing', methods: ['GET'])]
+    #[Route(path: '/_/load-testing', name: 'api_load_testing', methods: ['GET'])]
     public function __invoke(): Response
     {
         sleep(1);

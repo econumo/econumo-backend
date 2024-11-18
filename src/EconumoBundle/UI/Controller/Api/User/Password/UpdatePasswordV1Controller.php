@@ -25,7 +25,7 @@ class UpdatePasswordV1Controller extends AbstractController
     }
 
     /**
-     * Update password
+     * Update a password
      *
      * @OA\Tag(name="User"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\User\Dto\UpdatePasswordV1RequestDto::class))),
@@ -53,7 +53,7 @@ class UpdatePasswordV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/user/update-password', methods: ['POST'])]
+    #[Route(path: '/api/v1/user/update-password', name: 'api_user_update_password', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new UpdatePasswordV1RequestDto();

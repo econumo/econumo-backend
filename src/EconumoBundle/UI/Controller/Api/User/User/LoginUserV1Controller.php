@@ -27,7 +27,7 @@ class LoginUserV1Controller extends AbstractController
     }
 
     /**
-     * Login User
+     * Login
      *
      * @OA\Tag(name="User"),
      * @OA\Post(
@@ -58,7 +58,7 @@ class LoginUserV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/user/login-user', methods: ['POST'])]
+    #[Route(path: '/api/v1/user/login-user', name: 'api_user_login_user', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         /** @var User $user */

@@ -25,7 +25,7 @@ class GetUserDataV1Controller extends AbstractController
     }
 
     /**
-     * Get UserData
+     * Get a user's data
      * @OA\Tag(name="User"),
      * @OA\Response(
      *     response=200,
@@ -51,7 +51,7 @@ class GetUserDataV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/user/get-user-data', methods: ['GET'])]
+    #[Route(path: '/api/v1/user/get-user-data', name: 'api_user_get_user_data', methods: ['GET'])]
     public function __invoke(Request $request): Response
     {
         $dto = new GetUserDataV1RequestDto();

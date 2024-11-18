@@ -25,7 +25,7 @@ class UpdateCurrencyV1Controller extends AbstractController
     }
 
     /**
-     * Update currency
+     * Update a default currency for a user
      *
      * @OA\Tag(name="User"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\User\Dto\UpdateCurrencyV1RequestDto::class))),
@@ -53,7 +53,7 @@ class UpdateCurrencyV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/user/update-currency', methods: ['POST'])]
+    #[Route(path: '/api/v1/user/update-currency', name: 'api_user_update_currency', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new UpdateCurrencyV1RequestDto();

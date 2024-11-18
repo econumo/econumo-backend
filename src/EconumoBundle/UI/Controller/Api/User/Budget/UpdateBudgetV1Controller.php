@@ -25,7 +25,7 @@ class UpdateBudgetV1Controller extends AbstractController
     }
 
     /**
-     * Update the default budget
+     * Update the default budget for a user
      *
      * @OA\Tag(name="User"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\User\Dto\UpdateUserBudgetV1RequestDto::class))),
@@ -53,7 +53,7 @@ class UpdateBudgetV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/user/update-budget', methods: ['POST'])]
+    #[Route(path: '/api/v1/user/update-budget', name: 'api_user_update_budget', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new UpdateUserBudgetV1RequestDto();

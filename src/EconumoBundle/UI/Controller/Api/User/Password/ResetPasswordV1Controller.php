@@ -25,7 +25,7 @@ class ResetPasswordV1Controller extends AbstractController
     }
 
     /**
-     * Reset password
+     * Reset a password
      *
      * @OA\Tag(name="User"),
      * @OA\Post(
@@ -54,7 +54,7 @@ class ResetPasswordV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/user/reset-password', methods: ['POST'])]
+    #[Route(path: '/api/v1/user/reset-password', name: 'api_user_reset_password', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new ResetPasswordV1RequestDto();

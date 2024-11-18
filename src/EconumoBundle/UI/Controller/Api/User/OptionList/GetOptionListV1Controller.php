@@ -25,7 +25,7 @@ class GetOptionListV1Controller extends AbstractController
     }
 
     /**
-     * Get OptionList
+     * Get user options
      *
      * @OA\Tag(name="User"),
      * @OA\Response(
@@ -52,7 +52,7 @@ class GetOptionListV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/user/get-option-list', methods: ['GET'])]
+    #[Route(path: '/api/v1/user/get-option-list', name: 'api_user_get_option_list', methods: ['GET'])]
     public function __invoke(Request $request): Response
     {
         $dto = new GetOptionListV1RequestDto();

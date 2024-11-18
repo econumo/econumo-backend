@@ -24,7 +24,7 @@ class RegisterUserV1Controller extends AbstractController
     }
 
     /**
-     * Register User
+     * Registration
      *
      * @OA\Tag(name="User"),
      * @OA\Post(
@@ -54,7 +54,7 @@ class RegisterUserV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/user/register-user', methods: ['POST'])]
+    #[Route(path: '/api/v1/user/register-user', name: 'api_user_register_user', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new RegisterUserV1RequestDto();
