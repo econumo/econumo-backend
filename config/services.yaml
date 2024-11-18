@@ -90,3 +90,7 @@ services:
     class: App\EconumoBundle\Domain\Service\EncodeService
     arguments:
       $econumoSalt: '%env(string:ECONUMO_DATA_SALT)%'
+
+  App\EconumoBundle\Infrastructure\Datetime\TimezoneListener:
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, priority: 255 }
