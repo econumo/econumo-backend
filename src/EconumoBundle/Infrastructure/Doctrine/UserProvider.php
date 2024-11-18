@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Infrastructure\Doctrine;
 
+use Exception;
 use App\EconumoBundle\Domain\Entity\User;
 use App\EconumoBundle\Domain\Entity\ValueObject\Identifier;
 use App\EconumoBundle\Domain\Exception\NotFoundException;
@@ -64,7 +65,7 @@ readonly class UserProvider implements UserProviderInterface, PasswordUpgraderIn
 
         // Return a User object after making sure its data is "fresh".
         // Or throw a UserNotFoundException if the user no longer exists.
-        throw new \Exception('TODO: fill in refreshUser() inside ' . __FILE__);
+        throw new Exception('TODO: fill in refreshUser() inside ' . __FILE__);
     }
 
     /**

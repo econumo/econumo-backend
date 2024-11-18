@@ -22,5 +22,5 @@ class OrderBudgetFolderListV1RequestDto
      * @var OrderBudgetFolderListItemV1RequestDto[]
      * @OA\Property()
      */
-    public array $items;
+    public array $items = [];
 }

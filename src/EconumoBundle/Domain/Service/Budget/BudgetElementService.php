@@ -67,6 +67,7 @@ readonly class BudgetElementService implements BudgetElementServiceInterface
                 $category->isArchived()
             );
         }
+
         $this->budgetElementRepository->save($entities);
 
         return [$position, $result];
@@ -103,6 +104,7 @@ readonly class BudgetElementService implements BudgetElementServiceInterface
                 $tag->isArchived()
             );
         }
+
         $this->budgetElementRepository->save($entities);
 
         return [$position, $result];
@@ -122,6 +124,7 @@ readonly class BudgetElementService implements BudgetElementServiceInterface
             } else {
                 $position = $this->budgetElementRepository->getNextPosition($budget->getId(), null);
             }
+
             $item = $this->budgetElementFactory->createCategoryElement(
                 $budget->getId(),
                 $category->getId(),
@@ -129,6 +132,7 @@ readonly class BudgetElementService implements BudgetElementServiceInterface
             );
             $newElements[] = $item;
         }
+
         $this->budgetElementRepository->save($newElements);
     }
 
@@ -157,6 +161,7 @@ readonly class BudgetElementService implements BudgetElementServiceInterface
             } else {
                 $position = $this->budgetElementRepository->getNextPosition($budget->getId(), null);
             }
+
             $item = $this->budgetElementFactory->createTagElement(
                 $budget->getId(),
                 $tag->getId(),
@@ -164,6 +169,7 @@ readonly class BudgetElementService implements BudgetElementServiceInterface
             );
             $newElements[] = $item;
         }
+
         $this->budgetElementRepository->save($newElements);
     }
 
@@ -211,6 +217,7 @@ readonly class BudgetElementService implements BudgetElementServiceInterface
             $element->updatePosition($position);
             $element->changeFolder(null);
         }
+
         $this->budgetElementRepository->save($elements);
     }
 
@@ -236,6 +243,7 @@ readonly class BudgetElementService implements BudgetElementServiceInterface
         foreach ($categories as $category) {
             $ids[] = $category->getId();
         }
+
         $this->budgetElementsActionsService->deleteElements($budgetId, $ids);
     }
 
@@ -246,6 +254,7 @@ readonly class BudgetElementService implements BudgetElementServiceInterface
         foreach ($tags as $tag) {
             $ids[] = $tag->getId();
         }
+
         $this->budgetElementsActionsService->deleteElements($budgetId, $ids);
     }
 

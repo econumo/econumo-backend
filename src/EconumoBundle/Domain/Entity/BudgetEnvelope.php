@@ -50,8 +50,10 @@ class BudgetEnvelope
             if (!$category instanceof Category) {
                 throw new DomainException('Category must be instance of Category');
             }
+
             $this->categories->add($category);
         }
+
         $this->registerEvent(new BudgetEnvelopeCreatedEvent($id, $budget->getId(), $name, $icon, $createdAt));
     }
 

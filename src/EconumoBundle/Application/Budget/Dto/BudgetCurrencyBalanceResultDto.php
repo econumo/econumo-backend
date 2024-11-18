@@ -21,30 +21,30 @@ class BudgetCurrencyBalanceResultDto
     /**
      * @OA\Property(example="12.05")
      */
-    public ?float $startBalance;
+    public ?float $startBalance = null;
 
     /**
      * @OA\Property(example="12.05")
      */
-    public ?float $endBalance;
+    public ?float $endBalance = null;
 
     /**
      * @OA\Property(example="12.05")
      */
-    public ?float $income;
+    public ?float $income = null;
 
     /**
      * @OA\Property(example="12.05")
      */
-    public ?float $expenses;
+    public ?float $expenses = null;
 
     /**
      * @OA\Property(example="12.05")
      */
-    public ?float $exchanges;
+    public ?float $exchanges = null;
 
     /**
      * @OA\Property(example="12.05")
      */
-    public ?float $holdings;
+    public ?float $holdings = null;
 }

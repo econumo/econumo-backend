@@ -165,6 +165,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 return true;
             }
         }
+
         return false;
     }
 
@@ -250,6 +251,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 if (!$option->getValue()) {
                     return null;
                 }
+
                 return new Id($option->getValue());
             }
         }
@@ -279,11 +281,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         foreach ($this->options as $option) {
             if ($option->getName() === UserOption::BUDGET) {
-                if ($budgetId === null) {
+                if (!$budgetId instanceof Id) {
                     $option->updateValue(null);
                 } else {
                     $option->updateValue($budgetId->getValue());
                 }
+
                 return;
             }
         }

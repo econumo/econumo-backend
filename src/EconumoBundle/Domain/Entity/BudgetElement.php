@@ -12,7 +12,10 @@ use DateTimeInterface;
 
 class BudgetElement
 {
-    public const POSITION_UNSET = 0;
+    /**
+     * @var int
+     */
+    final public const POSITION_UNSET = 0;
 
     private DateTimeImmutable $createdAt;
 
@@ -95,9 +98,9 @@ class BudgetElement
 
     public function updateCurrency(?Currency $currency): void
     {
-        if (($this->currency !== null && $currency !== null && !$this->currency->getId()->isEqual($currency->getId()))
-            || ($this->currency === null && $currency !== null)
-            || ($this->currency !== null && $currency === null)) {
+        if (($this->currency instanceof Currency && $currency instanceof Currency && !$this->currency->getId()->isEqual($currency->getId()))
+            || (!$this->currency instanceof Currency && $currency instanceof Currency)
+            || ($this->currency instanceof Currency && !$currency instanceof Currency)) {
             $this->currency = $currency;
             $this->updated();
         }

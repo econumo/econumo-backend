@@ -40,6 +40,7 @@ readonly class FolderListService
                 $item->position,
             );
         }
+
         $this->budgetService->orderFolders($userId, $budgetId, $affectedFolders);
         return $this->orderFolderListV1ResultAssembler->assemble($dto);
     }

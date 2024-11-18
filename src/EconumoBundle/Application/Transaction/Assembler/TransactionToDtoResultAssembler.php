@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Application\Transaction\Assembler;
 
+use App\EconumoBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoBundle\Application\Transaction\Dto\TransactionResultDto;
 use App\EconumoBundle\Application\User\Assembler\UserToDtoResultAssembler;
 use App\EconumoBundle\Domain\Entity\Transaction;
@@ -25,13 +26,13 @@ readonly class TransactionToDtoResultAssembler
         $item->type = $transaction->getType()->getAlias();
         $item->accountId = $transaction->getAccountId()->getValue();
         $item->accountRecipientId = $transaction->getAccountRecipientId(
-        ) === null ? null : $transaction->getAccountRecipientId()->getValue();
+        ) instanceof Id ? $transaction->getAccountRecipientId()->getValue() : null;
         $item->amount = $transaction->getAmount();
         $item->amountRecipient = $transaction->getAmountRecipient() ?? $transaction->getAmount();
-        $item->categoryId = $transaction->getCategoryId() === null ? null : $transaction->getCategoryId()->getValue();
+        $item->categoryId = $transaction->getCategoryId() instanceof Id ? $transaction->getCategoryId()->getValue() : null;
         $item->description = $transaction->getDescription();
-        $item->payeeId = $transaction->getPayeeId() === null ? null : $transaction->getPayeeId()->getValue();
-        $item->tagId = $transaction->getTagId() === null ? null : $transaction->getTagId()->getValue();
+        $item->payeeId = $transaction->getPayeeId() instanceof Id ? $transaction->getPayeeId()->getValue() : null;
+        $item->tagId = $transaction->getTagId() instanceof Id ? $transaction->getTagId()->getValue() : null;
         $item->date = $transaction->getSpentAt()->format('Y-m-d H:i:s');
 
         return $item;

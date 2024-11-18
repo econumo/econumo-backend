@@ -46,7 +46,7 @@ class UserOption
     /**
      * @var string[]
      */
-    public const OPTIONS = [
+    final public const OPTIONS = [
         self::CURRENCY,
         self::REPORT_PERIOD,
         self::BUDGET,
@@ -90,6 +90,7 @@ class UserOption
         if ($this->value === $value) {
             return;
         }
+
         $this->value = $value;
         $this->updated();
     }

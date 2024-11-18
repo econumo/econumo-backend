@@ -41,9 +41,11 @@ readonly class BalanceAnalyticsService implements BalanceAnalyticsServiceInterfa
                 if ($account->isDeleted()) {
                     continue;
                 }
-                if ($account->getUserId()->isEqual($userId) === false) {
+
+                if (!$account->getUserId()->isEqual($userId)) {
                     continue;
                 }
+
                 $accountBalance = $this->transactionRepository->getAccountBalance($account->getId(), $date);
                 $accountBalanceConverted = $this->currencyConvertor->convert(
                     $account->getCurrencyCode(),
@@ -52,6 +54,7 @@ readonly class BalanceAnalyticsService implements BalanceAnalyticsServiceInterfa
                 );
                 $balance += $accountBalanceConverted;
             }
+
             $item = new BalanceAnalyticsDto();
             $item->balance = $balance;
             $item->date = $date;

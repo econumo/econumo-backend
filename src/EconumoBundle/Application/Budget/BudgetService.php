@@ -50,7 +50,7 @@ readonly class BudgetService
         $startDate = empty($dto->startDate) ? null : DateTimeImmutable::createFromFormat('Y-m-d', $dto->startDate);
         $currencyId = empty($dto->currencyId) ? null : new Id($dto->currencyId);
         $excludedAccountsIds = array_map(
-            fn(string $id) => new Id($id),
+            static fn(string $id): Id => new Id($id),
             $dto->excludedAccounts
         );
         $budget = $this->budgetService->createBudget(
@@ -88,14 +88,12 @@ readonly class BudgetService
         }
 
         $budget = $this->budgetRepository->get($budgetId);
-        if (!$budget->getName()->isEqual($budgetName)) {
-            if (!$this->budgetAccessService->canUpdateBudget($userId, $budgetId)) {
-                throw new AccessDeniedException();
-            }
+        if (!$budget->getName()->isEqual($budgetName) && !$this->budgetAccessService->canUpdateBudget($userId, $budgetId)) {
+            throw new AccessDeniedException();
         }
 
         $excludedAccountsIds = array_map(
-            fn(string $id) => new Id($id),
+            static fn(string $id): Id => new Id($id),
             $dto->excludedAccounts
         );
 
@@ -116,6 +114,7 @@ readonly class BudgetService
         if (!$this->budgetAccessService->canResetBudget($userId, $budgetId)) {
             throw new AccessDeniedException();
         }
+
         $startedAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dto->startedAt);
         $budgetDto = $this->budgetService->resetBudget($userId, $budgetId, $startedAt);
         return $this->resetBudgetV1ResultAssembler->assemble($budgetDto);

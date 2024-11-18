@@ -4,19 +4,23 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Domain\Entity\ValueObject;
 
+use Stringable;
 use App\EconumoBundle\Domain\Exception\DomainException;
 use App\EconumoBundle\Domain\Traits\ValueObjectTrait;
 use JsonSerializable;
 
-final class PlanPeriodType implements JsonSerializable, \Stringable
+final class PlanPeriodType implements JsonSerializable, Stringable
 {
     use ValueObjectTrait;
 
     /**
-     * @var int
+     * @var string
      */
-    final public const MONTHLY = 'month';
+    public const MONTHLY = 'month';
 
+    /**
+     * @var string[]
+     */
     private const MAPPING = [self::MONTHLY,];
 
     public static function validate($value): void

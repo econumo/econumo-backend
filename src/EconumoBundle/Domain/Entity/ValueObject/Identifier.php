@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Domain\Entity\ValueObject;
 
+use Stringable;
 use App\EconumoBundle\Domain\Entity\ValueObject\Email;
 
-final readonly class Identifier implements \Stringable
+final readonly class Identifier implements Stringable
 {
     public static function createFromEmail(Email $email): self
     {

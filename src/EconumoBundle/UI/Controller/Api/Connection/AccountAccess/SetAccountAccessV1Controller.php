@@ -45,7 +45,7 @@ class SetAccountAccessV1Controller extends AbstractController
      * @throws ValidationException
      */
     #[Route(path: '/api/v1/connection/set-account-access', name: 'api_connection_set_account_access', methods: ['POST'])]
-    public function __invoke(Request $request): Response
+    public function __invoke() : Response
     {
         return ResponseFactory::createNotImplementedResponse('Not supported in Econumo One');
     }

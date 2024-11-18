@@ -24,9 +24,9 @@ use DateTimeInterface;
 
 class CurrencyConvertor implements CurrencyConvertorInterface
 {
-    private CurrencyCode $baseCurrency;
+    private readonly CurrencyCode $baseCurrency;
 
-    private ?Id $baseCurrencyId;
+    private ?Id $baseCurrencyId = null;
 
     public function __construct(
         string $baseCurrency,
@@ -37,7 +37,6 @@ class CurrencyConvertor implements CurrencyConvertorInterface
         readonly private DatetimeServiceInterface $datetimeService
     ) {
         $this->baseCurrency = new CurrencyCode($baseCurrency);
-        $this->baseCurrencyId = null;
     }
 
     public function convertForUser(Id $userId, CurrencyCode $originalCurrency, float $sum): float
@@ -78,9 +77,11 @@ class CurrencyConvertor implements CurrencyConvertorInterface
                     if ($subItem->fromCurrencyId->isEqual($subItem->toCurrencyId)) {
                         continue;
                     }
+
                     if (array_key_exists($index, $conversionNeeded)) {
                         continue;
                     }
+
                     $conversionNeeded[$index] = [$subItem->periodStart, $subItem->periodEnd];
                 }
             } else {
@@ -88,13 +89,16 @@ class CurrencyConvertor implements CurrencyConvertorInterface
                 if ($item->fromCurrencyId->isEqual($item->toCurrencyId)) {
                     continue;
                 }
+
                 if (array_key_exists($index, $conversionNeeded)) {
                     continue;
                 }
+
                 $conversionNeeded[$index] = [$item->periodStart, $item->periodEnd];
             }
         }
-        if (count($conversionNeeded) === 0) {
+
+        if ($conversionNeeded === []) {
             return [];
         }
 
@@ -123,10 +127,6 @@ class CurrencyConvertor implements CurrencyConvertorInterface
 
     /**
      * @param FullCurrencyRateDto[] $rates
-     * @param CurrencyCode $originalCurrency
-     * @param CurrencyCode $resultCurrency
-     * @param float $sum
-     * @return float
      */
     private function convertInternal(
         array $rates,
@@ -162,10 +162,6 @@ class CurrencyConvertor implements CurrencyConvertorInterface
 
     /**
      * @param FullCurrencyRateDto[] $rates
-     * @param Id $originalCurrencyId
-     * @param Id $resultCurrencyId
-     * @param float $amount
-     * @return float
      */
     private function convertInternalById(
         array $rates,
@@ -177,7 +173,7 @@ class CurrencyConvertor implements CurrencyConvertorInterface
             return $amount;
         }
 
-        if ($this->baseCurrencyId) {
+        if ($this->baseCurrencyId instanceof Id) {
             $baseCurrencyId = $this->baseCurrencyId;
         } else {
             $baseCurrencyId = null;
@@ -189,7 +185,8 @@ class CurrencyConvertor implements CurrencyConvertorInterface
                 }
             }
         }
-        if (!$baseCurrencyId) {
+
+        if (!$baseCurrencyId instanceof Id) {
             throw new DomainException('Base Currency not found');
         }
 

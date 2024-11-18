@@ -30,7 +30,7 @@ readonly class UpdateAccountV1ResultAssembler
         $result = new UpdateAccountV1ResultDto();
         $balance = $this->accountService->getBalance($account->getId());
         $result->item = $this->accountToDtoV1ResultAssembler->assemble($userId, $account, $balance);
-        if ($transaction !== null) {
+        if ($transaction instanceof Transaction) {
             $result->transaction = $this->transactionToDtoV1ResultAssembler->assemble($transaction);
         }
 

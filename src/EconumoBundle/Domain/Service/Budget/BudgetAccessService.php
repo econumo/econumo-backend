@@ -23,7 +23,7 @@ readonly class BudgetAccessService implements BudgetAccessServiceInterface
     {
         try {
             $this->getBudgetRole($userId, $budgetId);
-        } catch (AccessDeniedException $e) {
+        } catch (AccessDeniedException) {
             return false;
         }
 
@@ -43,9 +43,11 @@ readonly class BudgetAccessService implements BudgetAccessServiceInterface
                 if (!$access->isAccepted()) {
                     throw new AccessDeniedException();
                 }
+
                 return $access->getRole();
             }
         }
+
         throw new AccessDeniedException();
     }
 
@@ -56,7 +58,7 @@ readonly class BudgetAccessService implements BudgetAccessServiceInterface
             if ($role->isOwner() || $role->isAdmin()) {
                 return true;
             }
-        } catch (AccessDeniedException $e) {
+        } catch (AccessDeniedException) {
             return false;
         }
 
@@ -70,7 +72,7 @@ readonly class BudgetAccessService implements BudgetAccessServiceInterface
             if ($role->isOwner() || $role->isAdmin() || $role->isUser()) {
                 return true;
             }
-        } catch (AccessDeniedException $e) {
+        } catch (AccessDeniedException) {
             return false;
         }
 
@@ -84,7 +86,7 @@ readonly class BudgetAccessService implements BudgetAccessServiceInterface
             if ($role->isOwner() || $role->isAdmin()) {
                 return true;
             }
-        } catch (AccessDeniedException $e) {
+        } catch (AccessDeniedException) {
             return false;
         }
 
@@ -98,7 +100,7 @@ readonly class BudgetAccessService implements BudgetAccessServiceInterface
             if ($role->isOwner() || $role->isAdmin() || $role->isUser()) {
                 return true;
             }
-        } catch (AccessDeniedException $e) {
+        } catch (AccessDeniedException) {
             return false;
         }
 
@@ -112,7 +114,7 @@ readonly class BudgetAccessService implements BudgetAccessServiceInterface
             if ($role->isOwner() || $role->isAdmin()) {
                 return true;
             }
-        } catch (AccessDeniedException $e) {
+        } catch (AccessDeniedException) {
             return false;
         }
 
@@ -125,13 +127,11 @@ readonly class BudgetAccessService implements BudgetAccessServiceInterface
             $budget = $this->budgetRepository->get($budgetId);
             $accessList = $budget->getAccessList();
             foreach ($accessList as $access) {
-                if ($access->getUserId()->isEqual($userId)) {
-                    if (!$access->isAccepted()) {
-                        return true;
-                    }
+                if ($access->getUserId()->isEqual($userId) && !$access->isAccepted()) {
+                    return true;
                 }
             }
-        } catch (AccessDeniedException $e) {
+        } catch (AccessDeniedException) {
             return false;
         }
 
@@ -148,7 +148,7 @@ readonly class BudgetAccessService implements BudgetAccessServiceInterface
                     return true;
                 }
             }
-        } catch (AccessDeniedException $e) {
+        } catch (AccessDeniedException) {
             return false;
         }
 

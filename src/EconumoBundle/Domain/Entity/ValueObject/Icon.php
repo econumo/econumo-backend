@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Domain\Entity\ValueObject;
 
+use Stringable;
 use App\EconumoBundle\Domain\Entity\ValueObject\ValueObjectInterface;
 use DomainException;
 use JsonSerializable;
 
-class Icon implements ValueObjectInterface, JsonSerializable, \Stringable
+class Icon implements ValueObjectInterface, JsonSerializable, Stringable
 {
     private string $value;
 

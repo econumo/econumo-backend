@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace App\EconumoBundle\Domain\Service\Budget;
 
 
+use Throwable;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoBundle\Domain\Repository\BudgetElementLimitRepositoryInterface;
 use App\EconumoBundle\Domain\Repository\BudgetElementRepositoryInterface;
@@ -33,9 +34,9 @@ readonly class BudgetDeletionService
             // @todo change the default budget for all budget users
 
             $this->antiCorruptionService->commit(__METHOD__);
-        } catch (\Throwable $exception) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback(__METHOD__);
-            throw $exception;
+            throw $throwable;
         }
     }
 }

@@ -28,5 +28,5 @@ class BudgeFiltersResultDto
      * @var string[]
      * @OA\Property()
      */
-    public array $excludedAccountsIds;
+    public array $excludedAccountsIds = [];
 }

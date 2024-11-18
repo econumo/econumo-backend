@@ -21,9 +21,7 @@ readonly class BudgetFoldersService
     }
 
     /**
-     * @param Id $budgetId
      * @param BudgetStructureOrderItemDto[] $affectedFolders
-     * @return void
      */
     public function orderFolders(Id $budgetId, array $affectedFolders): void
     {
@@ -37,6 +35,7 @@ readonly class BudgetFoldersService
             if (!array_key_exists($budgetFolder->getId()->getValue(), $tmpAffectedFolders)) {
                 continue;
             }
+
             if (!$budgetFolder->getBudget()->getId()->isEqual($budgetId)) {
                 throw new BudgetFolderMismatchException();
             }
@@ -44,9 +43,7 @@ readonly class BudgetFoldersService
             $budgetFolder->updatePosition($tmpAffectedFolders[$budgetFolder->getId()->getValue()]->position);
         }
 
-        usort($budgetFolders, function (BudgetFolder $a, BudgetFolder $b) {
-            return $a->getPosition() <=> $b->getPosition();
-        });
+        usort($budgetFolders, static fn(BudgetFolder $a, BudgetFolder $b): int => $a->getPosition() <=> $b->getPosition());
 
         $position = 0;
         foreach ($budgetFolders as $budgetFolder) {

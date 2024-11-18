@@ -9,6 +9,6 @@ trait EntityTrait
 {
     public function __toString(): string
     {
-        return __CLASS__;
+        return self::class;
     }
 }

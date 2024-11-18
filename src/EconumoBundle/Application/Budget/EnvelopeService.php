@@ -48,9 +48,7 @@ readonly class EnvelopeService
             new Icon($dto->icon),
             0,
             false,
-            array_map(function (string $id) {
-                return new Id($id);
-            }, $dto->categories)
+            array_map(static fn(string $id): Id => new Id($id), $dto->categories)
         );
         $folderId = $dto->folderId === null ? null : new Id($dto->folderId);
         $element = $this->budgetEnvelopeService->create($budgetId, $envelopeDto, $folderId);
@@ -73,9 +71,7 @@ readonly class EnvelopeService
             new Icon($dto->icon),
             0,
             (bool)$dto->isArchived,
-            array_map(function (string $id) {
-                return new Id($id);
-            }, $dto->categories)
+            array_map(static fn(string $id): Id => new Id($id), $dto->categories)
         );
         $element = $this->budgetEnvelopeService->update($budgetId, $envelopeDto);
         return $this->updateEnvelopeV1ResultAssembler->assemble($element);
@@ -89,6 +85,7 @@ readonly class EnvelopeService
         if (!$this->budgetAccessService->canDeleteBudget($userId, $budgetId)) {
             throw new AccessDeniedException();
         }
+
         $envelopeId = new Id($dto->id);
 
         $this->budgetEnvelopeService->delete($budgetId, $envelopeId);

@@ -17,5 +17,5 @@ class AcceptAccessV1ResultDto
      * @var BudgetMetaResultDto[]
      * @OA\Property()
      */
-    public array $items;
+    public array $items = [];
 }

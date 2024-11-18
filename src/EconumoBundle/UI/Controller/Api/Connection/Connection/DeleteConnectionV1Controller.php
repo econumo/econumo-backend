@@ -45,7 +45,7 @@ class DeleteConnectionV1Controller extends AbstractController
      * @throws ValidationException
      */
     #[Route(path: '/api/v1/connection/delete-connection', name: 'api_connection_delete_connection', methods: ['POST'])]
-    public function __invoke(Request $request): Response
+    public function __invoke() : Response
     {
         return ResponseFactory::createNotImplementedResponse('Not supported in Econumo One');
     }

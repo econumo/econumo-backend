@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Domain\Entity\ValueObject;
 
+use Stringable;
 use DomainException;
 use JsonSerializable;
 
-final class CategoryType implements JsonSerializable, \Stringable
+final class CategoryType implements JsonSerializable, Stringable
 {
     /**
      * @var int

@@ -20,7 +20,7 @@ final class Version20241103192302 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->skipIf($this->connection->getDatabasePlatform()->getName() !== 'sqlite', 'Migration can only be executed safely on \'sqlite\'.');
+        $this->skipIf($this->connection->getDatabasePlatform()->getName() !== 'sqlite', "Migration can only be executed safely on 'sqlite'.");
 
         $this->addSql(
             <<<'SQL'
@@ -182,7 +182,7 @@ SQL
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->skipIf($this->connection->getDatabasePlatform()->getName() !== 'sqlite', 'Migration can only be executed safely on \'sqlite\'.');
+        $this->skipIf($this->connection->getDatabasePlatform()->getName() !== 'sqlite', "Migration can only be executed safely on 'sqlite'.");
 
         $this->addSql('DROP TABLE IF EXISTS "budgets_elements_limits"');
         $this->addSql('DROP TABLE IF EXISTS "budgets_elements"');

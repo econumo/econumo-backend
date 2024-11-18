@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Application\User;
 
+use Throwable;
 use App\EconumoBundle\Application\Exception\ValidationException;
 use App\EconumoBundle\Application\User\Assembler\RemindPasswordV1ResultAssembler;
 use App\EconumoBundle\Application\User\Dto\RemindPasswordV1RequestDto;
@@ -66,9 +67,9 @@ readonly class PasswordService
     ): ResetPasswordV1ResultDto {
         try {
             $this->passwordUserReminderService->resetPassword(new Email($dto->username), new UserPasswordRequestCode($dto->code), $dto->password);
-        } catch (UserPasswordRequestExpiredException $e) {
+        } catch (UserPasswordRequestExpiredException) {
             throw new ValidationException('The code is expired');
-        } catch (\Throwable) {
+        } catch (Throwable) {
             throw new ValidationException('Reset password error');
         }
 

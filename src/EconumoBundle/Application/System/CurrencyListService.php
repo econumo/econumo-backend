@@ -27,6 +27,7 @@ readonly class CurrencyListService
             $currencyDto->symbol = '';
             $currencies[] = $currencyDto;
         }
+
         $this->currencyUpdateService->updateCurrencies($currencies);
         return $this->importCurrencyListV1ResultAssembler->assemble($dto);
     }

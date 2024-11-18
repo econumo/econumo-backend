@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Infrastructure\Symfony\Form;
 
+use DomainException;
 use App\EconumoBundle\Domain\Entity\ValueObject\ValueObjectInterface;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -25,8 +26,8 @@ class ValueObjectValidator
     {
         try {
             $this->valueObject::validate($value);
-        } catch (\DomainException $domainException) {
-            if ($this->translator !== null) {
+        } catch (DomainException $domainException) {
+            if ($this->translator instanceof TranslatorInterface) {
                 $message = $this->translator->trans($domainException->getMessage());
             } else {
                 $message = $domainException->getMessage();

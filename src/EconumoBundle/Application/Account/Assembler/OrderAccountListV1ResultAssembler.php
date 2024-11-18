@@ -27,7 +27,7 @@ readonly class OrderAccountListV1ResultAssembler
         $result = new OrderAccountListV1ResultDto();
         $result->items = [];
         $accounts = $this->accountRepository->getAvailableForUserId($userId);
-        $accountsIds = array_map(fn(Account $account) => $account->getId(), $accounts);
+        $accountsIds = array_map(static fn(Account $account): Id => $account->getId(), $accounts);
         $balances = $this->accountService->getAccountsBalance($accountsIds);
         foreach ($accounts as $account) {
             $result->items[] = $this->accountToDtoV1ResultAssembler->assemble(

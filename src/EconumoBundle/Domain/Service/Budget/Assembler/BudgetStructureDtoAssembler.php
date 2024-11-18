@@ -34,10 +34,7 @@ readonly class BudgetStructureDtoAssembler
     }
 
     /**
-     * @param Budget $budget
      * @param BudgetElementAmountDto[] $elementsAmounts
-     * @param BudgetFiltersDto $budgetFilters
-     * @return BudgetStructureDto
      */
     public function assemble(
         Budget $budget,
@@ -95,6 +92,7 @@ readonly class BudgetStructureDtoAssembler
                             $spent->amount
                         );
                     }
+
                     foreach ($children[$subIndex]['currenciesSpentBefore'] as $spentBefore) {
                         $toConvert[sprintf('spent-before-%s', $subIndex)][] = new CurrencyConvertorDto(
                             $spentBefore->periodStart,
@@ -104,9 +102,11 @@ readonly class BudgetStructureDtoAssembler
                             $spentBefore->amount
                         );
                     }
+
                     $categoryUsed[$category->getId()->getValue()] = $category->getId()->getValue();
                 }
             }
+
             $item = [
                 'id' => $envelope->getId(),
                 'type' => $type,
@@ -123,7 +123,7 @@ readonly class BudgetStructureDtoAssembler
                 'currenciesSpentBefore' => $currenciesSpentBefore,
                 'children' => $children,
             ];
-            if (!$envelope->isArchived() || count($currenciesSpent) || count($currenciesSpentBefore) || $budgeted != 0 || $budgetedBefore != 0 || count($children) > 0) {
+            if (!$envelope->isArchived() || count($currenciesSpent) || count($currenciesSpentBefore) || $budgeted != 0 || $budgetedBefore != 0 || $children !== []) {
                 $elements[] = $item;
             }
         }
@@ -169,6 +169,7 @@ readonly class BudgetStructureDtoAssembler
                             $spent->amount
                         );
                     }
+
                     foreach ($elementsAmount->currenciesSpentBefore as $spentBefore) {
                         $toConvert[sprintf('spent-before-%s', $subIndex)][] = new CurrencyConvertorDto(
                             $spentBefore->periodStart,
@@ -180,6 +181,7 @@ readonly class BudgetStructureDtoAssembler
                     }
                 }
             }
+
             $item = [
                 'id' => $tag->getId(),
                 'type' => $type,
@@ -196,7 +198,7 @@ readonly class BudgetStructureDtoAssembler
                 'currenciesSpentBefore' => $currenciesSpentBefore,
                 'children' => $children
             ];
-            if (!$tag->isArchived() || count($currenciesSpent) || count($currenciesSpentBefore) || $budgeted != 0 || $budgetedBefore != 0 || count($children) > 0) {
+            if (!$tag->isArchived() || count($currenciesSpent) || count($currenciesSpentBefore) || $budgeted != 0 || $budgetedBefore != 0 || $children !== []) {
                 $elements[$index] = $item;
                 foreach ($currenciesSpent as $spent) {
                     $toConvert[sprintf('spent-%s', $index)][] = new CurrencyConvertorDto(
@@ -214,6 +216,7 @@ readonly class BudgetStructureDtoAssembler
                         $spent->amount
                     );
                 }
+
                 foreach ($currenciesSpentBefore as $spentBefore) {
                     $toConvert[sprintf('spent-before-%s', $index)][] = new CurrencyConvertorDto(
                         $spentBefore->periodStart,
@@ -231,9 +234,11 @@ readonly class BudgetStructureDtoAssembler
             if ($category->getType()->isIncome()) {
                 continue;
             }
+
             if (array_key_exists($category->getId()->getValue(), $categoryUsed)) {
                 continue;
             }
+
             $type = BudgetElementType::category();
             $index = sprintf('%s-%s', $category->getId()->getValue(), $type->getAlias());
             $currencyId = ($elementsOptions[$index] ?? null)?->getCurrency()?->getId() ?? $budget->getCurrencyId();
@@ -277,6 +282,7 @@ readonly class BudgetStructureDtoAssembler
                         $spent->amount
                     );
                 }
+
                 foreach ($currenciesSpentBefore as $spentBefore) {
                     $toConvert[sprintf('spent-before-%s', $index)][] = new CurrencyConvertorDto(
                         $spentBefore->periodStart,
@@ -307,6 +313,7 @@ readonly class BudgetStructureDtoAssembler
                     if ($element['type']->isTag() && $subElementSpent == 0) {
                         continue;
                     }
+
                     $children[] = new BudgetStructureChildElementDto(
                         $subElement['id'],
                         $subElement['type'],
@@ -320,10 +327,12 @@ readonly class BudgetStructureDtoAssembler
                     );
                 }
             }
+
             $available = $element['budgetedBefore'] - $spentBefore;
             if ($element['isArchived'] && ($available == 0 && $spent == 0 && $element['budgeted'] == 0)) {
                 continue;
             }
+
             $result[] = new BudgetStructureParentElementDto(
                 $element['id'],
                 $element['type'],
@@ -343,44 +352,33 @@ readonly class BudgetStructureDtoAssembler
             );
         }
 
-        usort($result, function (BudgetStructureParentElementDto $a, BudgetStructureParentElementDto $b) {
-            if ($a->position === $b->position) {
-                return 0;
-            }
-            return ($a->position < $b->position) ? -1 : 1;
-        });
+        usort($result, static fn(BudgetStructureParentElementDto $a, BudgetStructureParentElementDto $b): int => $a->position <=> $b->position);
 
         return new BudgetStructureDto($folders, $result);
     }
 
     /**
-     * @param Id $budgetId
      * @return BudgetFolder[]
      */
     private function getFolders(Id $budgetId): array
     {
         $folders = [];
-        foreach ($this->budgetFolderRepository->getByBudgetId($budgetId) as $folder) {
-            $folders[] = $folder;
-        }
+        $folders = $this->budgetFolderRepository->getByBudgetId($budgetId);
+
         return array_values($folders);
     }
 
     /**
-     * @param Id $budgetId
      * @return BudgetEnvelope[]
      */
     private function getEnvelopes(Id $budgetId): array
     {
         $envelopes = [];
-        foreach ($this->budgetEnvelopeRepository->getByBudgetId($budgetId) as $envelope) {
-            $envelopes[] = $envelope;
-        }
-        return $envelopes;
+
+        return $this->budgetEnvelopeRepository->getByBudgetId($budgetId);
     }
 
     /**
-     * @param Id $budgetId
      * @return BudgetElement[]
      */
     private function getElementOptions(Id $budgetId): array

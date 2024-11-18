@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Domain\Entity\ValueObject;
 
+use Stringable;
 use App\EconumoBundle\Domain\Entity\ValueObject\ValueObjectInterface;
 use DomainException;
 use JsonSerializable;
 
-final class UserRole implements JsonSerializable, ValueObjectInterface, \Stringable
+final class UserRole implements JsonSerializable, ValueObjectInterface, Stringable
 {
     /**
      * @var int
      */
     public const OWNER = -1;
+
     /**
      * @var int
      */

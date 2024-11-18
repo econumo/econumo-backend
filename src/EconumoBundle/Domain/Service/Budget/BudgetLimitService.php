@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace App\EconumoBundle\Domain\Service\Budget;
 
 
+use App\EconumoBundle\Domain\Entity\BudgetElementLimit;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoBundle\Domain\Exception\BudgetLimitInvalidDateException;
 use App\EconumoBundle\Domain\Factory\BudgetElementLimitFactoryInterface;
@@ -34,11 +35,11 @@ readonly class BudgetLimitService implements BudgetLimitServiceInterface
         $element = $this->budgetElementRepository->get($budgetId, $elementId);
         $elementLimit = $this->budgetElementLimitRepository->get($element->getId(), $period);
         if (null === $amount) {
-            if (null !== $elementLimit) {
+            if ($elementLimit instanceof BudgetElementLimit) {
                 $this->budgetElementLimitRepository->delete([$elementLimit]);
             }
         } else {
-            if (null === $elementLimit) {
+            if (!$elementLimit instanceof BudgetElementLimit) {
                 $elementLimit = $this->budgetElementLimitFactory->create(
                     $element,
                     $amount,
@@ -47,6 +48,7 @@ readonly class BudgetLimitService implements BudgetLimitServiceInterface
             } else {
                 $elementLimit->updateAmount($amount);
             }
+
             $this->budgetElementLimitRepository->save([$elementLimit]);
         }
     }

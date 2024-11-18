@@ -104,7 +104,7 @@ readonly class AccountService implements AccountServiceInterface
     {
         $account = $this->accountRepository->get($accountId);
         $account->updateName($name);
-        if ($icon !== null) {
+        if ($icon instanceof Icon) {
             $account->updateIcon($icon);
         }
 
@@ -187,7 +187,7 @@ readonly class AccountService implements AccountServiceInterface
             $this->accountOptionsRepository->save($tmpOptions);
             $this->folderRepository->save($folders);
             $this->antiCorruptionService->commit(__METHOD__);
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback(__METHOD__);
             throw $throwable;
         }

@@ -19,7 +19,6 @@ interface CurrencyRepositoryInterface
     public function get(Id $id): Currency;
 
     /**
-     * @param array $ids
      * @return Currency[]
      */
     public function getByIds(array $ids): array;

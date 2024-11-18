@@ -49,8 +49,6 @@ interface TransactionRepositoryInterface
     /**
      * @param Id[] $categoryIds
      * @param Id[] $accountsIds
-     * @param DateTimeInterface $startDate
-     * @param DateTimeInterface $endDate
      * @return array
      */
     public function countSpendingForCategories(
@@ -63,8 +61,6 @@ interface TransactionRepositoryInterface
     /**
      * @param Id[] $tagsIds
      * @param Id[] $accountsIds
-     * @param DateTimeInterface $startDate
-     * @param DateTimeInterface $endDate
      * @return array
      */
     public function countSpendingForTags(
@@ -77,8 +73,6 @@ interface TransactionRepositoryInterface
     /**
      * @param Id[] $categoriesIds
      * @param Id[] $accountsIds
-     * @param DateTimeInterface $startDate
-     * @param DateTimeInterface $endDate
      * @return array
      */
     public function countSpending(
@@ -89,9 +83,6 @@ interface TransactionRepositoryInterface
     ): array;
 
     /**
-     * @param array $categoriesIds
-     * @param DateTimeInterface $periodStart
-     * @param DateTimeInterface $periodEnd
      * @param Id[] $accountIds
      * @return Transaction[]
      */
@@ -103,11 +94,7 @@ interface TransactionRepositoryInterface
     ): array;
 
     /**
-     * @param array $tagIds
-     * @param DateTimeInterface $periodStart
-     * @param DateTimeInterface $periodEnd
      * @param Id[] $accountIds
-     * @param array $categoriesIds
      * @return Transaction[]
      */
     public function getByTagsIdsForAccountsIds(

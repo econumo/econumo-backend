@@ -126,6 +126,7 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
                     break;
                 }
             }
+
             if (!$found) {
                 $filteredAccounts[] = $account;
             }
@@ -212,13 +213,15 @@ FROM (SELECT tmp.account_id, SUM(tmp.expenses) as expenses, SUM(tmp.incomes) as 
 SQL;
         $rsm = new ResultSetMappingBuilder($this->getEntityManager());
         $rsm->addScalarResult('balance', 'balance', 'float');
+
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
 
         try {
             $result = (float)$query->getSingleScalarResult();
-        } catch (NoResultException $e) {
+        } catch (NoResultException) {
             $result = 0.0;
         }
+
         return $result;
     }
 
@@ -228,12 +231,12 @@ SQL;
         DateTimeInterface $startDate,
         DateTimeInterface $endDate
     ): array {
-        if (count($categoryIds) === 0) {
+        if ($categoryIds === []) {
             return [];
         }
 
-        $categoriesString = implode("', '", array_map(fn(Id $id) => $id->getValue(), $categoryIds));
-        $accountsString = implode("', '", array_map(fn(Id $id) => $id->getValue(), $accountsIds));
+        $categoriesString = implode("', '", array_map(static fn(Id $id): string => $id->getValue(), $categoryIds));
+        $accountsString = implode("', '", array_map(static fn(Id $id): string => $id->getValue(), $accountsIds));
         $startDateString = $startDate->format('Y-m-d H:i:s');
         $endDateString = $endDate->format('Y-m-d H:i:s');
         $sql = <<<SQL
@@ -246,6 +249,7 @@ SQL;
         $rsm->addScalarResult('category_id', 'category_id');
         $rsm->addScalarResult('currency_id', 'currency_id');
         $rsm->addScalarResult('amount', 'amount', 'float');
+
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
         return $query->getResult();
     }
@@ -256,12 +260,12 @@ SQL;
         DateTimeInterface $startDate,
         DateTimeInterface $endDate
     ): array {
-        if (count($tagsIds) === 0) {
+        if ($tagsIds === []) {
             return [];
         }
 
-        $tagsString = implode("', '", array_map(fn(Id $id) => $id->getValue(), $tagsIds));
-        $accountsString = implode("', '", array_map(fn(Id $id) => $id->getValue(), $accountsIds));
+        $tagsString = implode("', '", array_map(static fn(Id $id): string => $id->getValue(), $tagsIds));
+        $accountsString = implode("', '", array_map(static fn(Id $id): string => $id->getValue(), $accountsIds));
         $startDateString = $startDate->format('Y-m-d H:i:s');
         $endDateString = $endDate->format('Y-m-d H:i:s');
         $sql = <<<SQL
@@ -274,6 +278,7 @@ SQL;
         $rsm->addScalarResult('tag_id', 'tag_id');
         $rsm->addScalarResult('currency_id', 'currency_id');
         $rsm->addScalarResult('amount', 'amount', 'float');
+
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
         return $query->getResult();
     }
@@ -284,12 +289,12 @@ SQL;
         DateTimeInterface $startDate,
         DateTimeInterface $endDate
     ): array {
-        if (count($categoriesIds) === 0) {
+        if ($categoriesIds === []) {
             return [];
         }
 
-        $categoriesString = implode("', '", array_map(fn(Id $id) => $id->getValue(), $categoriesIds));
-        $accountsString = implode("', '", array_map(fn(Id $id) => $id->getValue(), $accountsIds));
+        $categoriesString = implode("', '", array_map(static fn(Id $id): string => $id->getValue(), $categoriesIds));
+        $accountsString = implode("', '", array_map(static fn(Id $id): string => $id->getValue(), $accountsIds));
         $startDateString = $startDate->format('Y-m-d H:i:s');
         $endDateString = $endDate->format('Y-m-d H:i:s');
         $sql = <<<SQL
@@ -303,6 +308,7 @@ SQL;
         $rsm->addScalarResult('tag_id', 'tag_id');
         $rsm->addScalarResult('currency_id', 'currency_id');
         $rsm->addScalarResult('amount', 'amount', 'float');
+
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
         return $query->getResult();
     }
@@ -313,7 +319,7 @@ SQL;
         DateTimeInterface $periodEnd,
         array $accountIds
     ): array {
-        if (count($categoriesIds) === 0 || count($accountIds) === 0) {
+        if ($categoriesIds === [] || $accountIds === []) {
             throw new DomainException('Categories and accounts are required.');
         }
 
@@ -321,6 +327,7 @@ SQL;
         foreach ($categoriesIds as $categoryId) {
             $categories[] = $this->getEntityReference(Category::class, $categoryId);
         }
+
         $accounts = [];
         foreach ($accountIds as $accountId) {
             $accounts[] = $this->getEntityReference(Account::class, $accountId);
@@ -352,7 +359,7 @@ SQL;
         array $accountIds,
         array $categoriesIds
     ): array {
-        if (count($tagIds) === 0 || count($accountIds) === 0) {
+        if ($tagIds === [] || $accountIds === []) {
             throw new DomainException('Tags and accounts are required.');
         }
 
@@ -360,10 +367,12 @@ SQL;
         foreach ($tagIds as $tagId) {
             $tags[] = $this->getEntityReference(Tag::class, $tagId);
         }
+
         $accounts = [];
         foreach ($accountIds as $accountId) {
             $accounts[] = $this->getEntityReference(Account::class, $accountId);
         }
+
         $categories = [];
         foreach ($categoriesIds as $categoryId) {
             $categories[] = $this->getEntityReference(Category::class, $categoryId);
@@ -382,11 +391,12 @@ SQL;
             ->setParameter('accounts', $accounts)
             ->setParameter('tags', $tags)
             ->setParameter('type', TransactionType::createFromAlias(TransactionType::EXPENSE_ALIAS));
-        if (count($categories) > 0) {
+        if ($categories !== []) {
             $builder
                 ->andWhere('t.category IN (:categories)')
                 ->setParameter('categories', $categories);
         }
+
         $query = $builder->getQuery();
 
         return $query->getResult();

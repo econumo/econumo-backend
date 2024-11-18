@@ -32,6 +32,7 @@ readonly class BudgetDtoToResultDtoAssembler
         foreach ($dto->financialSummary->currencyBalances as $balance) {
             $result->balances[] = $this->budgetCurrencyBalanceToResultDtoAssembler->assemble($balance);
         }
+
         $result->structure = $this->budgetStructureToResultDtoAssembler->assemble($dto->structure);
 
         return $result;

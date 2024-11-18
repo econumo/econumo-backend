@@ -5,17 +5,15 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Infrastructure\Doctrine\Repository\Traits;
 
+use Doctrine\ORM\Exception\ORMException;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
 
 trait GetEntityReferenceTrait
 {
     /**
-     * @param string $entityName
-     * @param Id|array $id
-     * @return object|string|null
-     * @throws \Doctrine\ORM\Exception\ORMException
+     * @throws ORMException
      */
-    public function getEntityReference(string $entityName, Id | array $id)
+    public function getEntityReference(string $entityName, Id | array $id): object|string|null
     {
         return $this->getEntityManager()->getReference($entityName, $id);
     }

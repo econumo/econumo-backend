@@ -33,6 +33,7 @@ class Kernel extends BaseKernel
                 yield new $class();
             }
         }
+
         foreach ($this->getEconumoBundles() as $className) {
             $bundle = new $className();
             if (method_exists($bundle, 'isActive') && $bundle->isActive()) {
@@ -101,7 +102,7 @@ class Kernel extends BaseKernel
         $files = glob($bundlesPattern);
         $bundles = [];
         foreach ($files as $file) {
-            $filename = pathinfo($file, PATHINFO_FILENAME);
+            $filename = pathinfo((string) $file, PATHINFO_FILENAME);
             $bundles[] = sprintf('App\%s\%s', $filename, $filename);
         }
 

@@ -22,8 +22,6 @@ readonly class CurrencyBalanceDtoAssembler
     }
 
     /**
-     * @param DateTimeInterface $periodStart
-     * @param DateTimeInterface $periodEnd
      * @param Id[] $includedAccountsIds
      * @param Id[] $currenciesIds
      * @return CurrencyBalanceDto[]
@@ -39,10 +37,12 @@ readonly class CurrencyBalanceDtoAssembler
         if ($periodStart <= $now) {
             $startBalances = $this->accountRepository->getAccountsBalancesOnDate($includedAccountsIds, $periodStart);
         }
+
         $endBalances = [];
         if ($periodEnd <= $now){
             $endBalances = $this->accountRepository->getAccountsBalancesBeforeDate($includedAccountsIds, $periodEnd);
         }
+
         $reports = [];
         if ($periodStart <= $now) {
             $reports = $this->accountRepository->getAccountsReport($includedAccountsIds, $periodStart, $periodEnd);

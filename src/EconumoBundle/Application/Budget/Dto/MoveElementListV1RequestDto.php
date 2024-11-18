@@ -22,5 +22,5 @@ class MoveElementListV1RequestDto
      * @var MoveElementListItemV1RequestDto[]
      * @OA\Property()
      */
-    public array $items;
+    public array $items = [];
 }

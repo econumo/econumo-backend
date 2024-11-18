@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Domain\Service;
 
+use Throwable;
 use App\EconumoBundle\Domain\Entity\Folder;
 use App\EconumoBundle\Domain\Entity\ValueObject\FolderName;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
@@ -72,7 +73,7 @@ final readonly class FolderService implements FolderServiceInterface
             $this->folderRepository->delete($folder);
             $this->resetOrderFolders($userId);
             $this->antiCorruptionService->commit(__METHOD__);
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback(__METHOD__);
             throw $throwable;
         }
@@ -101,7 +102,7 @@ final readonly class FolderService implements FolderServiceInterface
 
             $this->resetOrderFolders($userId);
             $this->antiCorruptionService->commit(__METHOD__);
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback(__METHOD__);
             throw $throwable;
         }

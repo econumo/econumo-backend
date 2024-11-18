@@ -31,7 +31,7 @@ class BudgetRepository extends ServiceEntityRepository implements BudgetReposito
     use GetEntityReferenceTrait;
 
     public function __construct(
-        private BudgetAccessRepositoryInterface $budgetAccessRepository,
+        private readonly BudgetAccessRepositoryInterface $budgetAccessRepository,
         ManagerRegistry $registry
     ) {
         parent::__construct($registry, Budget::class);

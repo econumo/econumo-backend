@@ -37,7 +37,6 @@ interface BudgetEnvelopeRepositoryInterface
     public function getReference(Id $id): BudgetEnvelope;
 
     /**
-     * @param Id $budgetId
      * @param Id[] $categoriesIds
      * @return void
      */

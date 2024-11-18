@@ -57,6 +57,7 @@ readonly class EmailService implements EmailServiceInterface
         if (!empty($this->replyToEmail)) {
             $container->replyTo($this->replyToEmail);
         }
+
         $this->mailer->send($container);
     }
 }

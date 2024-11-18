@@ -33,6 +33,7 @@ readonly class AccountService
         if (!$this->budgetAccessService->canUpdateBudget($userId, $budgetId)) {
             throw new AccessDeniedException();
         }
+
         $accountId = new Id($dto->accountId);
         $budgetDto = $this->budgetService->excludeAccount($userId, $budgetId, $accountId);
         return $this->excludeAccountV1ResultAssembler->assemble($budgetDto);
@@ -46,6 +47,7 @@ readonly class AccountService
         if (!$this->budgetAccessService->canUpdateBudget($userId, $budgetId)) {
             throw new AccessDeniedException();
         }
+
         $accountId = new Id($dto->accountId);
         $budgetDto = $this->budgetService->includeAccount($userId, $budgetId, $accountId);
         return $this->includeAccountV1ResultAssembler->assemble($budgetDto);

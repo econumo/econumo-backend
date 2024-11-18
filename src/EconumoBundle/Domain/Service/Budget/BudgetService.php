@@ -55,13 +55,14 @@ readonly class BudgetService implements BudgetServiceInterface
     ): BudgetDto {
         $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
-            $date = $startDate !== null ? $startDate : $this->datetimeService->getCurrentDatetime();
-            if ($currencyId === null) {
+            $date = $startDate ?? $this->datetimeService->getCurrentDatetime();
+            if (!$currencyId instanceof Id) {
                 $user = $this->userRepository->get($userId);
                 $currency = $this->currencyRepository->getByCode($user->getCurrency());
             } else {
                 $currency = $this->currencyRepository->getReference($currencyId);
             }
+
             $budget = $this->budgetFactory->create(
                 $userId,
                 $budgetId,
@@ -76,9 +77,9 @@ readonly class BudgetService implements BudgetServiceInterface
             $this->userService->updateBudget($userId, $budgetId);
 
             $this->antiCorruptionService->commit(__METHOD__);
-        } catch (Throwable $e) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback(__METHOD__);
-            throw $e;
+            throw $throwable;
         }
 
         return $this->budgetDtoAssembler->assemble($userId, $budget, $this->datetimeService->getCurrentDatetime());
@@ -121,6 +122,7 @@ readonly class BudgetService implements BudgetServiceInterface
 
         $budget = $this->budgetRepository->get($budgetId);
         $budget->excludeAccount($account);
+
         $this->budgetRepository->save([$budget]);
         return $this->budgetMetaDtoAssembler->assemble($budget);
     }
@@ -134,6 +136,7 @@ readonly class BudgetService implements BudgetServiceInterface
 
         $budget = $this->budgetRepository->get($budgetId);
         $budget->includeAccount($account);
+
         $this->budgetRepository->save([$budget]);
         return $this->budgetMetaDtoAssembler->assemble($budget);
     }
@@ -148,19 +151,19 @@ readonly class BudgetService implements BudgetServiceInterface
             $budget->startFrom($startedAt);
             $this->budgetRepository->save([$budget]);
             $this->antiCorruptionService->commit(__METHOD__);
-        } catch (Throwable $e) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback(__METHOD__);
-            throw $e;
+            throw $throwable;
         }
+
         return $this->budgetMetaDtoAssembler->assemble($budget);
     }
 
     public function getBudget(Id $userId, Id $budgetId, DateTimeInterface $periodStart): BudgetDto
     {
         $budget = $this->budgetRepository->get($budgetId);
-        $dto = $this->budgetDtoAssembler->assemble($userId, $budget, $periodStart);
 
-        return $dto;
+        return $this->budgetDtoAssembler->assemble($userId, $budget, $periodStart);
     }
 
     public function moveElements(Id $userId, Id $budgetId, array $affectedElements): void

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Domain\Service\Connection;
 
+use Throwable;
 use App\EconumoBundle\Domain\Entity\ConnectionInvite;
 use App\EconumoBundle\Domain\Entity\ValueObject\ConnectionCode;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
@@ -63,7 +64,7 @@ class ConnectionInviteService implements ConnectionInviteServiceInterface
             $this->connectionInviteRepository->save([$connectionInvite]);
 
             $this->antiCorruptionService->commit(__METHOD__);
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback(__METHOD__);
             throw $throwable;
         }

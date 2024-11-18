@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Domain\Entity\ValueObject;
 
+use Stringable;
 use DomainException;
 use JsonSerializable;
 
-final class BudgetUserRole implements JsonSerializable, ValueObjectInterface, \Stringable
+final class BudgetUserRole implements JsonSerializable, ValueObjectInterface, Stringable
 {
     /**
      * @var int

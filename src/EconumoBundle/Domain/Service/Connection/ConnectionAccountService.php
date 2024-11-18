@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Domain\Service\Connection;
 
+use Throwable;
 use App\EconumoBundle\Domain\Entity\ValueObject\AccountUserRole;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoBundle\Domain\Exception\NotFoundException;
@@ -40,7 +41,7 @@ class ConnectionAccountService implements ConnectionAccountServiceInterface
             $this->accountAccessRepository->delete($accountAccess);
 
             $this->antiCorruptionService->commit(__METHOD__);
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback(__METHOD__);
             throw $throwable;
         }
@@ -85,6 +86,7 @@ class ConnectionAccountService implements ConnectionAccountServiceInterface
                 } catch (NotFoundException) {
                     $accountOptions = $this->accountOptionsFactory->create($sharedAccountId, $userId, ++$position);
                 }
+
                 $this->accountOptionsRepository->save([$accountOptions]);
 
                 $folder = $this->folderRepository->getLastFolder($userId);
@@ -95,7 +97,7 @@ class ConnectionAccountService implements ConnectionAccountServiceInterface
             $accountAccess->updateRole($role);
             $this->accountAccessRepository->save([$accountAccess]);
             $this->antiCorruptionService->commit(__METHOD__);
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback(__METHOD__);
             throw $throwable;
         }

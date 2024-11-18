@@ -45,7 +45,7 @@ class RevokeAccountAccessV1Controller extends AbstractController
      * @throws ValidationException
      */
     #[Route(path: '/api/v1/connection/revoke-account-access', name: 'api_connection_revoke_account_access', methods: ['POST'])]
-    public function __invoke(Request $request): Response
+    public function __invoke() : Response
     {
         return ResponseFactory::createNotImplementedResponse('Not supported in Econumo One');
     }

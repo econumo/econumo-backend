@@ -44,9 +44,9 @@ readonly class PasswordUserReminderService implements PasswordUserReminderServic
             $this->eventDispatcher->dispatchAll($userPasswordRequest->releaseEvents());
 
             $this->antiCorruptionService->commit(__METHOD__);
-        } catch (Throwable $e) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback(__METHOD__);
-            throw $e;
+            throw $throwable;
         }
     }
 
@@ -63,9 +63,9 @@ readonly class PasswordUserReminderService implements PasswordUserReminderServic
             $this->userPasswordService->updatePassword($user->getId(), $password);
             $this->userPasswordRequestRepository->delete($userPasswordRequest);
             $this->antiCorruptionService->commit(__METHOD__);
-        } catch (Throwable $e) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback(__METHOD__);
-            throw $e;
+            throw $throwable;
         }
     }
 }

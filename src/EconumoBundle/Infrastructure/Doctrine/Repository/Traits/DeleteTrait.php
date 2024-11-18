@@ -12,7 +12,8 @@ trait DeleteTrait
         foreach ($items as $item) {
             $this->getEntityManager()->remove($item);
         }
-        if (count($items) > 0) {
+
+        if ($items !== []) {
             $this->getEntityManager()->flush();
         }
     }

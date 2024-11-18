@@ -23,12 +23,8 @@ readonly class BudgetFinancialSummaryDtoAssembler
     }
 
     /**
-     * @param Id $budgetCurrencyId
-     * @param DateTimeInterface $periodStart
-     * @param DateTimeInterface $periodEnd
      * @param Id[] $currenciesIds
      * @param Id[] $accountsIds
-     * @return BudgetFinancialSummaryDto
      */
     public function assemble(
         Id $budgetCurrencyId,
@@ -50,6 +46,7 @@ readonly class BudgetFinancialSummaryDtoAssembler
                 break;
             }
         }
+
         foreach ($currencyBalancesTmp as $item) {
             if (!$item->currencyId->isEqual($budgetCurrencyId)) {
                 $currencyBalances[] = $item;
@@ -69,8 +66,6 @@ readonly class BudgetFinancialSummaryDtoAssembler
     }
 
     /**
-     * @param DateTimeInterface $periodStart
-     * @param DateTimeInterface $periodEnd
      * @param Id[] $includedAccountsIds
      * @param Id[] $currenciesIds
      * @return CurrencyBalanceDto[]
@@ -90,8 +85,6 @@ readonly class BudgetFinancialSummaryDtoAssembler
     }
 
     /**
-     * @param DateTimeInterface $periodStart
-     * @param DateTimeInterface $periodEnd
      * @param Id[] $currenciesIds
      * @return AverageCurrencyRateDto[]
      */

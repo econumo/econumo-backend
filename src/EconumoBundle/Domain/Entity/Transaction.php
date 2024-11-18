@@ -91,7 +91,7 @@ class Transaction
 
     public function getAccountRecipientId(): ?Id
     {
-        return $this->accountRecipient === null ? null : $this->accountRecipient->getId();
+        return $this->accountRecipient instanceof Account ? $this->accountRecipient->getId() : null;
     }
 
     public function getAmount(): float
@@ -111,7 +111,7 @@ class Transaction
 
     public function getCategoryId(): ?Id
     {
-        return $this->category === null ? null : $this->category->getId();
+        return $this->category instanceof Category ? $this->category->getId() : null;
     }
 
     public function getDescription(): string
@@ -126,7 +126,7 @@ class Transaction
 
     public function getPayeeId(): ?Id
     {
-        return $this->payee === null ? null : $this->payee->getId();
+        return $this->payee instanceof Payee ? $this->payee->getId() : null;
     }
 
     public function getTag(): ?Tag
@@ -136,7 +136,7 @@ class Transaction
 
     public function getTagId(): ?Id
     {
-        return $this->tag === null ? null : $this->tag->getId();
+        return $this->tag instanceof Tag ? $this->tag->getId() : null;
     }
 
     public function getSpentAt(): DateTimeInterface
@@ -186,13 +186,13 @@ class Transaction
 
     public function updateAmountRecipient(?float $amount): void
     {
-        if ($this->accountRecipient === null && $amount !== null) {
+        if (!$this->accountRecipient instanceof Account && $amount !== null) {
             $this->amountRecipient = (string)$amount;
             $this->updated();
-        } elseif ($this->accountRecipient !== null && $amount === null) {
+        } elseif ($this->accountRecipient instanceof Account && $amount === null) {
             $this->amountRecipient = null;
             $this->updated();
-        } elseif ($this->accountRecipient !== null && $amount !== null && abs(
+        } elseif ($this->accountRecipient instanceof Account && $amount !== null && abs(
                 (float)$this->amountRecipient - $amount
             ) >= PHP_FLOAT_EPSILON) {
             $this->amountRecipient = (string)$amount;
@@ -292,6 +292,6 @@ class Transaction
 
     private function updated(): void
     {
-        $this->updatedAt = new \DateTime();
+        $this->updatedAt = new DateTime();
     }
 }

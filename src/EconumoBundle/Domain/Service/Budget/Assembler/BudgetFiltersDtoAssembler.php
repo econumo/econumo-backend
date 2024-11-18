@@ -24,13 +24,6 @@ readonly class BudgetFiltersDtoAssembler
     ) {
     }
 
-    /**
-     * @param Budget $budget
-     * @param Id $userId
-     * @param DateTimeInterface $periodStart
-     * @param DateTimeInterface $periodEnd
-     * @return BudgetFiltersDto
-     */
     public function assemble(
         Budget $budget,
         Id $userId,
@@ -59,7 +52,7 @@ readonly class BudgetFiltersDtoAssembler
 
     private function getExcludedAccountIds(Budget $budget, Id $userId): array
     {
-        return array_map(fn(Account $account) => $account->getId(), $budget->getExcludedAccounts($userId)->toArray());
+        return array_map(static fn(Account $account): Id => $account->getId(), $budget->getExcludedAccounts($userId)->toArray());
     }
 
     public function getBudgetUserIds(Budget $budget): array
@@ -70,17 +63,17 @@ readonly class BudgetFiltersDtoAssembler
                 $userIds[] = $entry->getUserId();
             }
         }
+
         return $userIds;
     }
 
     /**
-     * @param Budget $budget
      * @param Id[] $userIds
      * @return Account[]
      */
     private function getIncludedUserAccounts(Budget $budget, array $userIds): array
     {
-        $excludedAccounts = array_map(fn(Account $account) => $account->getId()->getValue(), $budget->getExcludedAccounts()->toArray());
+        $excludedAccounts = array_map(static fn(Account $account): string => $account->getId()->getValue(), $budget->getExcludedAccounts()->toArray());
         $userAccounts = $this->accountRepository->findByOwnersIds($userIds);
         $result = [];
         foreach ($userAccounts as $account) {
@@ -88,6 +81,7 @@ readonly class BudgetFiltersDtoAssembler
                 $result[] = $account;
             }
         }
+
         return $result;
     }
 
@@ -97,7 +91,7 @@ readonly class BudgetFiltersDtoAssembler
      */
     private function getIncludedUserAccountsIds(array $userAccounts): array
     {
-        return array_map(fn(Account $account) => $account->getId(), $userAccounts);
+        return array_map(static fn(Account $account): Id => $account->getId(), $userAccounts);
     }
 
     /**
@@ -110,11 +104,11 @@ readonly class BudgetFiltersDtoAssembler
         foreach ($userAccounts as $account) {
             $tmpCurrencies[$account->getCurrencyId()->getValue()] = $account->getCurrencyId();
         }
+
         return array_values($tmpCurrencies);
     }
 
     /**
-     * @param array $userIds
      * @return Category[]
      */
     public function getCategories(array $userIds): array
@@ -123,11 +117,11 @@ readonly class BudgetFiltersDtoAssembler
         foreach ($this->categoryRepository->findByOwnersIds($userIds) as $category) {
             $result[$category->getId()->getValue()] = $category;
         }
+
         return $result;
     }
 
     /**
-     * @param array $userIds
      * @return Tag[]
      */
     public function getTags(array $userIds): array
@@ -136,6 +130,7 @@ readonly class BudgetFiltersDtoAssembler
         foreach ($this->tagRepository->findByOwnersIds($userIds) as $tag) {
             $result[$tag->getId()->getValue()] = $tag;
         }
+
         return $result;
     }
 }

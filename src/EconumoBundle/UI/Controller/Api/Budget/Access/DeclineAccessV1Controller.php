@@ -45,7 +45,7 @@ class DeclineAccessV1Controller extends AbstractController
      * @throws ValidationException
      */
     #[Route(path: '/api/v1/budget/decline-access', name: 'api_budget_decline_access', methods: ['POST'])]
-    public function __invoke(Request $request): Response
+    public function __invoke() : Response
     {
         return ResponseFactory::createNotImplementedResponse('Not supported in Econumo One');
     }

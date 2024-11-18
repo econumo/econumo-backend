@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace App\EconumoBundle\Domain\Service\Budget;
 
 
+use Throwable;
 use App\EconumoBundle\Domain\Entity\BudgetAccess;
 use App\EconumoBundle\Domain\Entity\ValueObject\BudgetUserRole;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
@@ -45,6 +46,7 @@ readonly class BudgetSharedAccessService implements BudgetSharedAccessServiceInt
                 break;
             }
         }
+
         if (!$usersConnected) {
             throw new AccessDeniedException();
         }
@@ -57,11 +59,13 @@ readonly class BudgetSharedAccessService implements BudgetSharedAccessServiceInt
                 break;
             }
         }
-        if ($invitation === null) {
+
+        if (!$invitation instanceof BudgetAccess) {
             $invitation = $this->budgetAccessFactory->create($budgetId, $invitedUserId, $role);
         } else {
             $invitation->updateRole(UserRole::createFromAlias($role->getAlias()));
         }
+
         $this->budgetAccessRepository->save([$invitation]);
     }
 
@@ -75,7 +79,8 @@ readonly class BudgetSharedAccessService implements BudgetSharedAccessServiceInt
                 break;
             }
         }
-        if ($invitation === null) {
+
+        if (!$invitation instanceof BudgetAccess) {
             throw new AccessDeniedException();
         }
 
@@ -86,11 +91,14 @@ readonly class BudgetSharedAccessService implements BudgetSharedAccessServiceInt
             if (!$budgetAccess->isAccepted()) {
                 continue;
             }
+
             if ($budgetAccess->getUserId()->isEqual($invitedUserId)) {
                 continue;
             }
+
             $usersMap[$budgetAccess->getUserId()->getValue()] = $budgetAccess->getUserId();
         }
+
         $usersMap[$budget->getUser()->getId()->getValue()] = $budget->getUser()->getId();
 
         $usersConnected = false;
@@ -101,6 +109,7 @@ readonly class BudgetSharedAccessService implements BudgetSharedAccessServiceInt
                 break;
             }
         }
+
         if (!$usersConnected) {
             throw new AccessDeniedException();
         }
@@ -119,10 +128,11 @@ readonly class BudgetSharedAccessService implements BudgetSharedAccessServiceInt
                 );
                 $this->budgetElementService->createTagsElements($invitedUserId, $budgetId, $position);
             }
+
             $this->antiCorruptionService->commit(__METHOD__);
-        } catch (\Throwable $exception) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback(__METHOD__);
-            throw $exception;
+            throw $throwable;
         }
     }
 
@@ -136,7 +146,8 @@ readonly class BudgetSharedAccessService implements BudgetSharedAccessServiceInt
                 break;
             }
         }
-        if ($access === null) {
+
+        if (!$access instanceof BudgetAccess) {
             return;
         }
 
@@ -144,9 +155,7 @@ readonly class BudgetSharedAccessService implements BudgetSharedAccessServiceInt
     }
 
     /**
-     * @param BudgetAccess $access
-     * @return void
-     * @throws \Throwable
+     * @throws Throwable
      */
     private function removeUserAccess(BudgetAccess $access): void {
         $this->antiCorruptionService->beginTransaction(__METHOD__);
@@ -155,6 +164,7 @@ readonly class BudgetSharedAccessService implements BudgetSharedAccessServiceInt
                 $this->budgetElementService->deleteCategoriesElements($access->getUserId(), $access->getBudgetId());
                 $this->budgetElementService->deleteTagsElements($access->getUserId(), $access->getBudgetId());
             }
+
             $this->budgetAccessRepository->delete([$access]);
             $user = $this->userRepository->get($access->getUserId());
             if ($user->getDefaultPlanId() && $user->getDefaultPlanId()->isEqual($access->getBudgetId())) {
@@ -166,13 +176,14 @@ readonly class BudgetSharedAccessService implements BudgetSharedAccessServiceInt
                         break;
                     }
                 }
+
                 $this->userService->updateBudget($access->getUserId(), $newBudgetId);
             }
 
             $this->antiCorruptionService->commit(__METHOD__);
-        } catch (\Throwable $exception) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback(__METHOD__);
-            throw $exception;
+            throw $throwable;
         }
     }
 }

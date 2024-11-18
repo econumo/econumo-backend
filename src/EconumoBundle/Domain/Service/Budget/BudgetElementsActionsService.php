@@ -6,6 +6,8 @@ declare(strict_types=1);
 namespace App\EconumoBundle\Domain\Service\Budget;
 
 
+use App\EconumoBundle\Domain\Entity\BudgetFolder;
+use Throwable;
 use App\EconumoBundle\Domain\Entity\Budget;
 use App\EconumoBundle\Domain\Entity\ValueObject\BudgetElementType;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
@@ -34,9 +36,7 @@ readonly class BudgetElementsActionsService
     }
 
     /**
-     * @param Budget $budget
      * @param BudgetStructureMoveElementDto[] $elementsToMove
-     * @return void
      */
     public function moveElements(Budget $budget, array $elementsToMove): void
     {
@@ -47,20 +47,22 @@ readonly class BudgetElementsActionsService
             if (!array_key_exists($option->getExternalId()->getValue(), $elementsToMove)) {
                 continue;
             }
+
             if (array_key_exists($option->getExternalId()->getValue(), $seen)) {
                 continue;
             }
+
             $seen[$option->getExternalId()->getValue()] = true;
 
             $isUpdated = false;
             $element = $elementsToMove[$option->getExternalId()->getValue()];
-            if ($element->folderId === null && $option->getFolder() !== null) {
+            if (!$element->folderId instanceof Id && $option->getFolder() instanceof BudgetFolder) {
                 $option->changeFolder(null);
                 $isUpdated = true;
-            } elseif ($element->folderId !== null && $option->getFolder() === null) {
+            } elseif ($element->folderId instanceof Id && !$option->getFolder() instanceof BudgetFolder) {
                 $option->changeFolder($this->budgetFolderRepository->getReference($element->folderId));
                 $isUpdated = true;
-            } elseif ($element->folderId !== null && $option->getFolder() !== null && !$option->getFolder()->getId(
+            } elseif ($element->folderId instanceof Id && $option->getFolder() instanceof BudgetFolder && !$option->getFolder()->getId(
                 )->isEqual($element->folderId)) {
                 $option->changeFolder($this->budgetFolderRepository->getReference($element->folderId));
                 $isUpdated = true;
@@ -107,11 +109,13 @@ readonly class BudgetElementsActionsService
                 $optionsAssoc[$envelopeIndex] = $this->budgetElementFactory->createEnvelopeElement($budgetId, $envelope->getId(), PHP_INT_MAX);
                 $options[] = $optionsAssoc[$envelopeIndex];
             }
+
             if ($envelope->isArchived()) {
                 $optionsAssoc[$envelopeIndex]->unsetPosition();
             } elseif ($optionsAssoc[$envelopeIndex]->isPositionUnset()) {
                 $optionsAssoc[$envelopeIndex]->updatePosition(PHP_INT_MAX);
             }
+
             foreach ($envelope->getCategories() as $category) {
                 $childCategoriesMap[$category->getId()->getValue()] = $category;
             }
@@ -127,11 +131,13 @@ readonly class BudgetElementsActionsService
                 $optionsAssoc[$categoryIndex] = $this->budgetElementFactory->createCategoryElement($budgetId, $category->getId(), PHP_INT_MAX);
                 $options[] = $optionsAssoc[$categoryIndex];
             }
+
             if ($category->isArchived()) {
                 $optionsAssoc[$categoryIndex]->unsetPosition();
             } elseif ($optionsAssoc[$categoryIndex]->isPositionUnset()) {
                 $optionsAssoc[$categoryIndex]->updatePosition(PHP_INT_MAX);
             }
+
             if (array_key_exists($category->getId()->getValue(), $childCategoriesMap)) {
                 $optionsAssoc[$categoryIndex]->unsetPosition();
                 $optionsAssoc[$categoryIndex]->changeFolder(null);
@@ -147,6 +153,7 @@ readonly class BudgetElementsActionsService
                 $optionsAssoc[$tagIndex] = $this->budgetElementFactory->createTagElement($budgetId, $tag->getId(), PHP_INT_MAX);
                 $options[] = $optionsAssoc[$tagIndex];
             }
+
             if ($tag->isArchived()) {
                 $optionsAssoc[$tagIndex]->unsetPosition();
             } elseif ($optionsAssoc[$tagIndex]->isPositionUnset()) {
@@ -161,9 +168,11 @@ readonly class BudgetElementsActionsService
                 if (!$option->getFolder() || !$option->getFolder()->getId()->isEqual($folder->getId())) {
                     continue;
                 }
+
                 if ($option->isPositionUnset()) {
                     continue;
                 }
+
                 $option->updatePosition($position++);
             }
         }
@@ -174,8 +183,10 @@ readonly class BudgetElementsActionsService
             if ($option->getFolder() || $option->isPositionUnset()) {
                 continue;
             }
+
             $option->updatePosition($position++);
         }
+
         $this->budgetElementRepository->save($options);
 
         $keysToDelete = array_diff(array_keys($optionsAssoc), array_keys($seen));
@@ -183,6 +194,7 @@ readonly class BudgetElementsActionsService
         foreach ($keysToDelete as $optionId) {
             $toDelete[] = $optionsAssoc[$optionId];
         }
+
         if ($toDelete !== []) {
             $this->budgetElementRepository->delete($toDelete);
         }
@@ -194,18 +206,22 @@ readonly class BudgetElementsActionsService
         $position = $startPosition;
         $updated = [];
         foreach ($elements as $option) {
-            if ($folderId === null && $option->getFolder() !== null) {
+            if (!$folderId instanceof Id && $option->getFolder() instanceof BudgetFolder) {
                 continue;
             }
-            if ($folderId !== null && $option->getFolder() === null) {
+
+            if ($folderId instanceof Id && !$option->getFolder() instanceof BudgetFolder) {
                 continue;
             }
-            if ($folderId !== null && $option->getFolder() !== null && !$option->getFolder()->getId()->isEqual($folderId)) {
+
+            if ($folderId instanceof Id && $option->getFolder() instanceof BudgetFolder && !$option->getFolder()->getId()->isEqual($folderId)) {
                 continue;
             }
+
             if ($option->getPosition() < $startPosition) {
                 continue;
             }
+
             $option->updatePosition(++$position);
             $updated[] = $option;
         }
@@ -218,10 +234,8 @@ readonly class BudgetElementsActionsService
     }
 
     /**
-     * @param Id $budgetId
      * @param Id[] $elementsIds
-     * @return void
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function deleteElements(Id $budgetId, array $elementsIds): void
     {
@@ -229,6 +243,7 @@ readonly class BudgetElementsActionsService
         foreach ($elementsIds as $elementId) {
             $elementsIdsMap[$elementId->getValue()] = $elementId;
         }
+
         $elements = $this->budgetElementRepository->getByBudgetId($budgetId);
         $toDelete = [];
         $toDeleteIds = [];
@@ -245,9 +260,9 @@ readonly class BudgetElementsActionsService
             $this->budgetElementRepository->delete($toDelete);
             $this->restoreElementsOrder($budgetId);
             $this->antiCorruptionService->commit(__METHOD__);
-        } catch (\Throwable $e) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback(__METHOD__);
-            throw $e;
+            throw $throwable;
         }
     }
 }

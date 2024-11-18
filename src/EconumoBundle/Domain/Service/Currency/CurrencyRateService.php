@@ -31,7 +31,7 @@ readonly class CurrencyRateService implements CurrencyRateServiceInterface
     /**
      * @inheritDoc
      */
-    public function getCurrencyRates(\DateTimeInterface $dateTime): array
+    public function getCurrencyRates(DateTimeInterface $dateTime): array
     {
         return $this->currencyRateRepository->getAll($dateTime);
     }
@@ -43,7 +43,7 @@ readonly class CurrencyRateService implements CurrencyRateServiceInterface
     {
         try {
             $result = $this->currencyRateRepository->getAll();
-        } catch (NoResultException $exception) {
+        } catch (NoResultException) {
             $result = [];
         }
 
@@ -83,6 +83,7 @@ readonly class CurrencyRateService implements CurrencyRateServiceInterface
                 'rate' => $rate['rate'],
             ];
         }
+
         $currencies = $this->currencyRepository->getByIds(array_column($data, 'id'));
         $result = [];
         foreach ($currencies as $currency) {

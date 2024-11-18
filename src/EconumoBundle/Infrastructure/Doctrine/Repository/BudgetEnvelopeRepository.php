@@ -46,7 +46,7 @@ class BudgetEnvelopeRepository extends ServiceEntityRepository implements Budget
         } else {
             return $this->findBy([
                 'budget' => $this->getEntityReference(Budget::class, $budgetId),
-                'isArchived' => !!$onlyActive
+                'isArchived' => (bool) $onlyActive
             ]);
         }
     }
@@ -65,22 +65,23 @@ class BudgetEnvelopeRepository extends ServiceEntityRepository implements Budget
             $placeholders[] = $placeholder;
             $categoriesIdsString[$placeholder] = $categoryId->getValue();
         }
-        $parameters = array_merge(['budget_id' => $budgetId->getValue()], $categoriesIdsString);
+
+        $parameters = ['budget_id' => $budgetId->getValue(), ...$categoriesIdsString];
         $placeholdersString = implode(', ', $placeholders);
 
         $sql = <<<SQL
 DELETE FROM budgets_envelopes_categories 
 WHERE budget_envelope_id IN (
     SELECT id FROM budgets_envelopes WHERE budget_id = :budget_id
-) AND category_id IN ($placeholdersString)
+) AND category_id IN ({$placeholdersString})
 SQL;
 
         try {
             $stmt = $conn->prepare($sql);
             $stmt->executeStatement($parameters);
-        } catch (Throwable $e) {
+        } catch (Throwable $throwable) {
             // Handle any database errors
-            throw new RuntimeException('Database error: ' . $e->getMessage());
+            throw new RuntimeException('Database error: ' . $throwable->getMessage(), $throwable->getCode(), $throwable);
         }
     }
 

@@ -26,14 +26,12 @@ class TransactionListService
         if ($dto->accountId) {
             $this->accountAccessService->checkViewTransactionsAccess($userId, new Id($dto->accountId));
             $transactions = $this->transactionRepository->findByAccountId(new Id($dto->accountId));
+        } elseif ($dto->periodStart && $dto->periodEnd) {
+            $periodStart = new DateTimeImmutable($dto->periodStart);
+            $periodEnd = new DateTimeImmutable($dto->periodEnd);
+            $transactions = $this->transactionService->getTransactionsForVisibleAccounts($userId, $periodStart, $periodEnd);
         } else {
-            if ($dto->periodStart && $dto->periodEnd) {
-                $periodStart = new DateTimeImmutable($dto->periodStart);
-                $periodEnd = new DateTimeImmutable($dto->periodEnd);
-                $transactions = $this->transactionService->getTransactionsForVisibleAccounts($userId, $periodStart, $periodEnd);
-            } else {
-                $transactions = $this->transactionService->getTransactionsForVisibleAccounts($userId);
-            }
+            $transactions = $this->transactionService->getTransactionsForVisibleAccounts($userId);
         }
 
         return $this->getTransactionListV1ResultAssembler->assemble($dto, $userId, $transactions);
