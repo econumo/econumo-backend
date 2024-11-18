@@ -17,7 +17,7 @@ class GenerateInviteV1Controller extends AbstractController
 {
 
     /**
-     * Generate invite
+     * Generate an invitation
      *
      * @OA\Tag(name="Connection"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Connection\Dto\GenerateInviteV1RequestDto::class))),

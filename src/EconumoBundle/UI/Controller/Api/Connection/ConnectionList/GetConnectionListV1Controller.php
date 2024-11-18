@@ -25,7 +25,7 @@ class GetConnectionListV1Controller extends AbstractController
     }
 
     /**
-     * Get ConnectionList
+     * Get a user connections
      *
      * @OA\Tag(name="Connection"),
      * @OA\Response(

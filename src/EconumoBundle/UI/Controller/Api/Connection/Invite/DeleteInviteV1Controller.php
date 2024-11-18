@@ -16,7 +16,7 @@ use OpenApi\Annotations as OA;
 class DeleteInviteV1Controller extends AbstractController
 {
     /**
-     * Delete invite
+     * Delete an invitation
      *
      * @OA\Tag(name="Connection"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Connection\Dto\DeleteInviteV1RequestDto::class))),

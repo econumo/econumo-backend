@@ -16,7 +16,7 @@ use OpenApi\Annotations as OA;
 class DeleteConnectionV1Controller extends AbstractController
 {
     /**
-     * Delete connection
+     * Delete a user connection
      *
      * @OA\Tag(name="Connection"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Connection\Dto\DeleteConnectionV1RequestDto::class))),

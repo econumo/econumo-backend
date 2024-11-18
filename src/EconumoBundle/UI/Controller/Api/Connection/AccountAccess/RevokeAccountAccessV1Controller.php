@@ -16,7 +16,7 @@ use OpenApi\Annotations as OA;
 class RevokeAccountAccessV1Controller extends AbstractController
 {
     /**
-     * Revoke accountAccess
+     * Revoke an account access
      *
      * @OA\Tag(name="Connection"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Connection\Dto\RevokeAccountAccessV1RequestDto::class))),

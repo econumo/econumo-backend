@@ -16,7 +16,7 @@ use OpenApi\Annotations as OA;
 class SetAccountAccessV1Controller extends AbstractController
 {
     /**
-     * Set accountAccess
+     * Set an account access
      *
      * @OA\Tag(name="Connection"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Connection\Dto\SetAccountAccessV1RequestDto::class))),

@@ -16,7 +16,7 @@ use OpenApi\Annotations as OA;
 class AcceptInviteV1Controller extends AbstractController
 {
     /**
-     * Accept invite
+     * Accept an invitation
      *
      * @OA\Tag(name="Connection"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Connection\Dto\AcceptInviteV1RequestDto::class))),
