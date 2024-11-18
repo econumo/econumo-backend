@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\EconumoBundle\UI\Controller\Api\User\Budget;
 
 use App\EconumoBundle\Application\User\BudgetService;
-use App\EconumoBundle\Application\User\Dto\UpdateBudgetV1RequestDto;
+use App\EconumoBundle\Application\User\Dto\UpdateUserBudgetV1RequestDto;
 use App\EconumoBundle\UI\Controller\Api\User\Budget\Validation\UpdateBudgetV1Form;
 use App\EconumoBundle\Application\Exception\ValidationException;
 use App\EconumoBundle\Domain\Entity\User;
@@ -28,7 +28,7 @@ class UpdateBudgetV1Controller extends AbstractController
      * Update the default budget
      *
      * @OA\Tag(name="User"),
-     * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\User\Dto\UpdateBudgetV1RequestDto::class))),
+     * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\User\Dto\UpdateUserBudgetV1RequestDto::class))),
      * @OA\Response(
      *     response=200,
      *     description="OK",
@@ -39,7 +39,7 @@ class UpdateBudgetV1Controller extends AbstractController
      *             @OA\Schema(
      *                 @OA\Property(
      *                     property="data",
-     *                     ref=@Model(type=\App\EconumoBundle\Application\User\Dto\UpdateBudgetV1ResultDto::class)
+     *                     ref=@Model(type=\App\EconumoBundle\Application\User\Dto\UpdateUserBudgetV1ResultDto::class)
      *                 )
      *             )
      *         }
@@ -56,7 +56,7 @@ class UpdateBudgetV1Controller extends AbstractController
     #[Route(path: '/api/v1/user/update-budget', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
-        $dto = new UpdateBudgetV1RequestDto();
+        $dto = new UpdateUserBudgetV1RequestDto();
         $this->validator->validate(UpdateBudgetV1Form::class, $request->request->all(), $dto);
         /** @var User $user */
         $user = $this->getUser();

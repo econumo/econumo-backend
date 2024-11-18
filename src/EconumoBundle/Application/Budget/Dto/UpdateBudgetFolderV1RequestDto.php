@@ -11,7 +11,7 @@ use OpenApi\Annotations as OA;
  *     required={"budgetId", "id", "name"}
  * )
  */
-class UpdateFolderV1RequestDto
+class UpdateBudgetFolderV1RequestDto
 {
     /**
      * @OA\Property(example="9b29b760-ddca-46fb-a754-8743fc2c49a7")

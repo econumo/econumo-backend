@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Application\Budget;
 
-use App\EconumoBundle\Application\Budget\Dto\OrderFolderListV1RequestDto;
-use App\EconumoBundle\Application\Budget\Dto\OrderFolderListV1ResultDto;
+use App\EconumoBundle\Application\Budget\Dto\OrderBudgetFolderListV1RequestDto;
+use App\EconumoBundle\Application\Budget\Dto\OrderBudgetFolderListV1ResultDto;
 use App\EconumoBundle\Application\Budget\Assembler\OrderFolderListV1ResultAssembler;
 use App\EconumoBundle\Application\Exception\AccessDeniedException;
 use App\EconumoBundle\Domain\Entity\ValueObject\BudgetElementType;
@@ -25,9 +25,9 @@ readonly class FolderListService
     }
 
     public function orderFolderList(
-        OrderFolderListV1RequestDto $dto,
+        OrderBudgetFolderListV1RequestDto $dto,
         Id $userId
-    ): OrderFolderListV1ResultDto {
+    ): OrderBudgetFolderListV1ResultDto {
         $budgetId = new Id($dto->budgetId);
         if (!$this->budgetAccessService->canUpdateBudget($userId, $budgetId)) {
             throw new AccessDeniedException();

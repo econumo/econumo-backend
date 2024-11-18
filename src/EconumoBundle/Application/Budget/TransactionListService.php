@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\EconumoBundle\Application\Budget;
 
 use App\EconumoBundle\Application\Budget\Dto\GetTransactionListV1RequestDto;
-use App\EconumoBundle\Application\Budget\Dto\GetTransactionListV1ResultDto;
+use App\EconumoBundle\Application\Budget\Dto\GetBudgetTransactionListV1ResultDto;
 use App\EconumoBundle\Application\Budget\Assembler\GetTransactionListV1ResultAssembler;
 use App\EconumoBundle\Application\Exception\AccessDeniedException;
 use App\EconumoBundle\Application\Exception\ValidationException;
@@ -26,7 +26,7 @@ readonly class TransactionListService
     public function getTransactionList(
         GetTransactionListV1RequestDto $dto,
         Id $userId
-    ): GetTransactionListV1ResultDto {
+    ): GetBudgetTransactionListV1ResultDto {
         $budgetId = new Id($dto->budgetId);
         $periodStart = DateTimeImmutable::createFromFormat('Y-m-d', $dto->periodStart);
         $tagId = empty($dto->tagId) ? null : new Id($dto->tagId);

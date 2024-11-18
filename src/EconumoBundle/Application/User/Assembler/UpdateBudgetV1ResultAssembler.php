@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Application\User\Assembler;
 
-use App\EconumoBundle\Application\User\Dto\UpdateBudgetV1RequestDto;
-use App\EconumoBundle\Application\User\Dto\UpdateBudgetV1ResultDto;
+use App\EconumoBundle\Application\User\Dto\UpdateUserBudgetV1RequestDto;
+use App\EconumoBundle\Application\User\Dto\UpdateUserBudgetV1ResultDto;
 use App\EconumoBundle\Application\User\Assembler\CurrentUserToDtoResultAssembler;
 use App\EconumoBundle\Domain\Entity\User;
 
@@ -16,10 +16,10 @@ readonly class UpdateBudgetV1ResultAssembler
     }
 
     public function assemble(
-        UpdateBudgetV1RequestDto $dto,
+        UpdateUserBudgetV1RequestDto $dto,
         User $user
-    ): UpdateBudgetV1ResultDto {
-        $result = new UpdateBudgetV1ResultDto();
+    ): UpdateUserBudgetV1ResultDto {
+        $result = new UpdateUserBudgetV1ResultDto();
         $result->user = $this->currentUserToDtoResultAssembler->assemble($user);
 
         return $result;

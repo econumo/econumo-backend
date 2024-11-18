@@ -73,7 +73,7 @@ class GetTransactionListV1Controller extends AbstractController
      *             @OA\Schema(
      *                 @OA\Property(
      *                     property="data",
-     *                     ref=@Model(type=\App\EconumoBundle\Application\Budget\Dto\GetTransactionListV1ResultDto::class)
+     *                     ref=@Model(type=\App\EconumoBundle\Application\Budget\Dto\GetBudgetTransactionListV1ResultDto::class)
      *                 )
      *             )
      *         }

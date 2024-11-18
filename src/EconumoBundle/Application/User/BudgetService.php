@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\EconumoBundle\Application\User;
 
 use App\EconumoBundle\Application\Exception\ValidationException;
-use App\EconumoBundle\Application\User\Dto\UpdateBudgetV1RequestDto;
-use App\EconumoBundle\Application\User\Dto\UpdateBudgetV1ResultDto;
+use App\EconumoBundle\Application\User\Dto\UpdateUserBudgetV1RequestDto;
+use App\EconumoBundle\Application\User\Dto\UpdateUserBudgetV1ResultDto;
 use App\EconumoBundle\Application\User\Assembler\UpdateBudgetV1ResultAssembler;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoBundle\Domain\Exception\NotFoundException;
@@ -23,9 +23,9 @@ readonly class BudgetService
     }
 
     public function updateBudget(
-        UpdateBudgetV1RequestDto $dto,
+        UpdateUserBudgetV1RequestDto $dto,
         Id $userId
-    ): UpdateBudgetV1ResultDto {
+    ): UpdateUserBudgetV1ResultDto {
         try {
             $this->userService->updateBudget($userId, new Id($dto->value));
             $user = $this->userRepository->get($userId);

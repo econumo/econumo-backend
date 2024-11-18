@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\EconumoBundle\UI\Controller\Api\Budget\Folder;
 
 use App\EconumoBundle\Application\Budget\FolderService;
-use App\EconumoBundle\Application\Budget\Dto\UpdateFolderV1RequestDto;
+use App\EconumoBundle\Application\Budget\Dto\UpdateBudgetFolderV1RequestDto;
 use App\EconumoBundle\UI\Controller\Api\Budget\Folder\Validation\UpdateFolderV1Form;
 use App\EconumoBundle\Application\Exception\ValidationException;
 use App\EconumoBundle\Domain\Entity\User;
@@ -28,7 +28,7 @@ class UpdateFolderV1Controller extends AbstractController
      * Update folder
      *
      * @OA\Tag(name="Budget"),
-     * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Budget\Dto\UpdateFolderV1RequestDto::class))),
+     * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Budget\Dto\UpdateBudgetFolderV1RequestDto::class))),
      * @OA\Response(
      *     response=200,
      *     description="OK",
@@ -39,7 +39,7 @@ class UpdateFolderV1Controller extends AbstractController
      *             @OA\Schema(
      *                 @OA\Property(
      *                     property="data",
-     *                     ref=@Model(type=\App\EconumoBundle\Application\Budget\Dto\UpdateFolderV1ResultDto::class)
+     *                     ref=@Model(type=\App\EconumoBundle\Application\Budget\Dto\UpdateBudgetFolderV1ResultDto::class)
      *                 )
      *             )
      *         }
@@ -56,7 +56,7 @@ class UpdateFolderV1Controller extends AbstractController
     #[Route(path: '/api/v1/budget/update-folder', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
-        $dto = new UpdateFolderV1RequestDto();
+        $dto = new UpdateBudgetFolderV1RequestDto();
         $this->validator->validate(UpdateFolderV1Form::class, $request->request->all(), $dto);
         /** @var User $user */
         $user = $this->getUser();

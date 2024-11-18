@@ -11,7 +11,7 @@ use OpenApi\Annotations as OA;
  *     required={}
  * )
  */
-class UpdateFolderV1ResultDto
+class UpdateBudgetFolderV1ResultDto
 {
     /**
      * @OA\Property()

@@ -8,7 +8,7 @@ use App\EconumoBundle\Application\Budget\Dto\BudgetTransactionCategoryResultDto;
 use App\EconumoBundle\Application\Budget\Dto\BudgetTransactionPayeeResultDto;
 use App\EconumoBundle\Application\Budget\Dto\BudgetTransactionResultDto;
 use App\EconumoBundle\Application\Budget\Dto\BudgetTransactionTagResultDto;
-use App\EconumoBundle\Application\Budget\Dto\GetTransactionListV1ResultDto;
+use App\EconumoBundle\Application\Budget\Dto\GetBudgetTransactionListV1ResultDto;
 use App\EconumoBundle\Application\User\Assembler\UserToDtoResultAssembler;
 use App\EconumoBundle\Domain\Entity\Transaction;
 
@@ -21,12 +21,12 @@ readonly class GetTransactionListV1ResultAssembler
 
     /**
      * @param Transaction[] $transactions
-     * @return GetTransactionListV1ResultDto
+     * @return GetBudgetTransactionListV1ResultDto
      */
     public function assemble(
         array $transactions
-    ): GetTransactionListV1ResultDto {
-        $result = new GetTransactionListV1ResultDto();
+    ): GetBudgetTransactionListV1ResultDto {
+        $result = new GetBudgetTransactionListV1ResultDto();
         $result->items = [];
         foreach ($transactions as $transaction) {
             $dto = new BudgetTransactionResultDto();

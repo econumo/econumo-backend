@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Application\Budget\Assembler;
 
-use App\EconumoBundle\Application\Budget\Dto\OrderFolderListV1RequestDto;
-use App\EconumoBundle\Application\Budget\Dto\OrderFolderListV1ResultDto;
+use App\EconumoBundle\Application\Budget\Dto\OrderBudgetFolderListV1RequestDto;
+use App\EconumoBundle\Application\Budget\Dto\OrderBudgetFolderListV1ResultDto;
 
 readonly class OrderFolderListV1ResultAssembler
 {
     public function assemble(
-        OrderFolderListV1RequestDto $dto
-    ): OrderFolderListV1ResultDto {
-        return new OrderFolderListV1ResultDto();
+        OrderBudgetFolderListV1RequestDto $dto
+    ): OrderBudgetFolderListV1ResultDto {
+        return new OrderBudgetFolderListV1ResultDto();
     }
 }

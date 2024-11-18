@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\UI\Controller\Api\Budget\FolderList\Validation;
 
-use App\EconumoBundle\Application\Budget\Dto\OrderFolderListItemV1RequestDto;
+use App\EconumoBundle\Application\Budget\Dto\OrderBudgetFolderListItemV1RequestDto;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -20,7 +20,7 @@ class OrderFolderListItemV1Form extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => OrderFolderListItemV1RequestDto::class,
+            'data_class' => OrderBudgetFolderListItemV1RequestDto::class,
             'csrf_protection' => false
         ]);
     }

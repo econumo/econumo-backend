@@ -8,9 +8,13 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     required={}
+ *     required={"item"}
  * )
  */
-class OrderFolderListV1ResultDto
+class CreateBudgetFolderV1ResultDto
 {
+    /**
+     * @OA\Property()
+     */
+    public BudgetFolderResultDto $item;
 }

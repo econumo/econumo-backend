@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Application\Budget;
 
-use App\EconumoBundle\Application\Budget\Dto\CreateFolderV1RequestDto;
-use App\EconumoBundle\Application\Budget\Dto\CreateFolderV1ResultDto;
+use App\EconumoBundle\Application\Budget\Dto\CreateBudgetFolderV1RequestDto;
+use App\EconumoBundle\Application\Budget\Dto\CreateBudgetFolderV1ResultDto;
 use App\EconumoBundle\Application\Budget\Assembler\CreateFolderV1ResultAssembler;
 use App\EconumoBundle\Application\Exception\AccessDeniedException;
 use App\EconumoBundle\Domain\Entity\ValueObject\BudgetFolderName;
@@ -15,8 +15,8 @@ use App\EconumoBundle\Domain\Service\Budget\BudgetFolderServiceInterface;
 use App\EconumoBundle\Application\Budget\Dto\DeleteFolderV1RequestDto;
 use App\EconumoBundle\Application\Budget\Dto\DeleteFolderV1ResultDto;
 use App\EconumoBundle\Application\Budget\Assembler\DeleteFolderV1ResultAssembler;
-use App\EconumoBundle\Application\Budget\Dto\UpdateFolderV1RequestDto;
-use App\EconumoBundle\Application\Budget\Dto\UpdateFolderV1ResultDto;
+use App\EconumoBundle\Application\Budget\Dto\UpdateBudgetFolderV1RequestDto;
+use App\EconumoBundle\Application\Budget\Dto\UpdateBudgetFolderV1ResultDto;
 use App\EconumoBundle\Application\Budget\Assembler\UpdateFolderV1ResultAssembler;
 
 readonly class FolderService
@@ -31,9 +31,9 @@ readonly class FolderService
     }
 
     public function createFolder(
-        CreateFolderV1RequestDto $dto,
+        CreateBudgetFolderV1RequestDto $dto,
         Id $userId
-    ): CreateFolderV1ResultDto {
+    ): CreateBudgetFolderV1ResultDto {
         $budgetId = new Id($dto->budgetId);
         if (!$this->budgetAccessService->canUpdateBudget($userId, $budgetId)) {
             throw new AccessDeniedException();
@@ -59,9 +59,9 @@ readonly class FolderService
     }
 
     public function updateFolder(
-        UpdateFolderV1RequestDto $dto,
+        UpdateBudgetFolderV1RequestDto $dto,
         Id $userId
-    ): UpdateFolderV1ResultDto {
+    ): UpdateBudgetFolderV1ResultDto {
         $budgetId = new Id($dto->budgetId);
         $folderId = new Id($dto->id);
         $folderName = new BudgetFolderName($dto->name);

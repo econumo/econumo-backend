@@ -8,19 +8,18 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     required={"budgetId", "items"}
+ *     required={"id", "position"}
  * )
  */
-class OrderFolderListV1RequestDto
+class OrderBudgetFolderListItemV1RequestDto
 {
     /**
      * @OA\Property(example="05c8f3e1-d77f-4b37-b2ca-0fc5f0f0c7a9")
      */
-    public string $budgetId;
+    public string $id;
 
     /**
-     * @var OrderFolderListItemV1RequestDto[]
-     * @OA\Property()
+     * @OA\Property(example=0)
      */
-    public array $items;
+    public int $position;
 }

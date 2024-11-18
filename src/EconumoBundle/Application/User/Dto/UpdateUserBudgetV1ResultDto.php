@@ -12,7 +12,7 @@ use OpenApi\Annotations as OA;
  *     required={"user"}
  * )
  */
-class UpdateBudgetV1ResultDto
+class UpdateUserBudgetV1ResultDto
 {
     /**
      * @OA\Property()
