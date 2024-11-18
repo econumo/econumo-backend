@@ -25,7 +25,7 @@ class OrderTagListV1Controller extends AbstractController
     }
 
     /**
-     * Order tagList
+     * Order tags
      *
      * @OA\Tag(name="Tag"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Tag\Dto\OrderTagListV1RequestDto::class))),
@@ -53,7 +53,7 @@ class OrderTagListV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/tag/order-tag-list', methods: ['POST'])]
+    #[Route(path: '/api/v1/tag/order-tag-list', name: 'api_tag_order_tag_list', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new OrderTagListV1RequestDto();

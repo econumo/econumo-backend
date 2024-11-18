@@ -25,7 +25,7 @@ class DeleteTagV1Controller extends AbstractController
     }
 
     /**
-     * Delete tag
+     * Delete a tag
      *
      * @OA\Tag(name="Tag"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Tag\Dto\DeleteTagV1RequestDto::class))),
@@ -53,7 +53,7 @@ class DeleteTagV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/tag/delete-tag', methods: ['POST'])]
+    #[Route(path: '/api/v1/tag/delete-tag', name: 'api_tag_delete_tag', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new DeleteTagV1RequestDto();

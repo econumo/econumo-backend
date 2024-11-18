@@ -25,7 +25,7 @@ class ArchiveTagV1Controller extends AbstractController
     }
 
     /**
-     * Archive tag
+     * Archive a tag
      *
      * @OA\Tag(name="Tag"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Tag\Dto\ArchiveTagV1RequestDto::class))),
@@ -53,7 +53,7 @@ class ArchiveTagV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/tag/archive-tag', methods: ['POST'])]
+    #[Route(path: '/api/v1/tag/archive-tag', name: 'api_tag_archive_tag', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new ArchiveTagV1RequestDto();

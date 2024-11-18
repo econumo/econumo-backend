@@ -25,7 +25,7 @@ class GetTagListV1Controller extends AbstractController
     }
 
     /**
-     * Get TagList
+     * Get tags
      *
      * @OA\Tag(name="Tag"),
      * @OA\Response(
@@ -52,7 +52,7 @@ class GetTagListV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/tag/get-tag-list', methods: ['GET'])]
+    #[Route(path: '/api/v1/tag/get-tag-list', name: 'api_tag_get_tag_list', methods: ['GET'])]
     public function __invoke(Request $request): Response
     {
         $dto = new GetTagListV1RequestDto();

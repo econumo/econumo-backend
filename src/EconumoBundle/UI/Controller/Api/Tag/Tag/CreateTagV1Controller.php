@@ -27,7 +27,7 @@ class CreateTagV1Controller extends AbstractController
     }
 
     /**
-     * Create Tag
+     * Create a tag
      *
      * @OA\Tag(name="Tag"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Tag\Dto\CreateTagV1RequestDto::class))),
@@ -55,7 +55,7 @@ class CreateTagV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/tag/create-tag', methods: ['POST'])]
+    #[Route(path: '/api/v1/tag/create-tag', name: 'api_tag_create_tag', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new CreateTagV1RequestDto();

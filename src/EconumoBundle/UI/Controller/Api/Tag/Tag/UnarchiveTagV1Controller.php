@@ -25,7 +25,7 @@ class UnarchiveTagV1Controller extends AbstractController
     }
 
     /**
-     * Unarchive tag
+     * Unarchive a tag
      *
      * @OA\Tag(name="Tag"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Tag\Dto\UnarchiveTagV1RequestDto::class))),
@@ -53,7 +53,7 @@ class UnarchiveTagV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/tag/unarchive-tag', methods: ['POST'])]
+    #[Route(path: '/api/v1/tag/unarchive-tag', name: 'api_tag_unarchive_tag', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new UnarchiveTagV1RequestDto();

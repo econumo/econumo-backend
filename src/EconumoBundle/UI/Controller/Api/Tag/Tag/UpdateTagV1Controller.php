@@ -25,7 +25,7 @@ class UpdateTagV1Controller extends AbstractController
     }
 
     /**
-     * Update tag
+     * Update a tag
      *
      * @OA\Tag(name="Tag"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Tag\Dto\UpdateTagV1RequestDto::class))),
@@ -53,7 +53,7 @@ class UpdateTagV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/tag/update-tag', methods: ['POST'])]
+    #[Route(path: '/api/v1/tag/update-tag', name: 'api_tag_update_tag', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new UpdateTagV1RequestDto();
