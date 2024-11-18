@@ -56,6 +56,7 @@ class Budget
                 $this->excludeAccount($excludedAccount);
             }
         }
+
         $this->budgetAccess = new ArrayCollection();
         $this->budgetFolders = new ArrayCollection();
     }
@@ -119,11 +120,12 @@ class Budget
      */
     public function getExcludedAccounts(Id $userId = null): Collection
     {
-        if ($userId) {
+        if ($userId instanceof Id) {
             return $this->excludedAccounts->filter(
-                fn(Account $account) => $account->getUserId()->isEqual($userId)
+                static fn(Account $account): bool => $account->getUserId()->isEqual($userId)
             );
         }
+
         return $this->excludedAccounts;
     }
 
@@ -133,6 +135,7 @@ class Budget
             $this->excludedAccounts->add($account);
             $this->updated();
         }
+
         return $this;
     }
 

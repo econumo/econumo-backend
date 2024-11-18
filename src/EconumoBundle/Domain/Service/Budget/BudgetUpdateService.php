@@ -23,11 +23,7 @@ readonly class BudgetUpdateService
     }
 
     /**
-     * @param Id $userId
-     * @param Id $budgetId
-     * @param BudgetName $name
      * @param Id[] $excludedAccountsIds
-     * @return BudgetMetaDto
      */
     public function updateBudget(
         Id $userId,
@@ -41,15 +37,18 @@ readonly class BudgetUpdateService
             if (!$account->getUserId()->isEqual($userId)) {
                 throw new AccessDeniedException();
             }
+
             $accounts[] = $account;
         }
 
         $budget = $this->budgetRepository->get($budgetId);
         $budget->updateName($name);
+
         $alreadyExcludedAccounts = $budget->getExcludedAccounts($userId);
         foreach ($alreadyExcludedAccounts as $alreadyExcludedAccount) {
             $budget->includeAccount($alreadyExcludedAccount);
         }
+
         foreach ($accounts as $account) {
             $budget->excludeAccount($account);
         }

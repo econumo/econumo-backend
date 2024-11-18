@@ -31,7 +31,7 @@ readonly class CreateTransactionV1ResultAssembler
         $result = new CreateTransactionV1ResultDto();
         $result->item = $this->transactionToDtoV1ResultAssembler->assemble($transaction);
         $accounts = $this->accountRepository->getAvailableForUserId($userId);
-        $accountsIds = array_map(fn(Account $account) => $account->getId(), $accounts);
+        $accountsIds = array_map(static fn(Account $account): Id => $account->getId(), $accounts);
         $balances = $this->accountService->getAccountsBalance($accountsIds);
         foreach (array_reverse($accounts) as $account) {
             $result->accounts[] = $this->accountToDtoV1ResultAssembler->assemble(

@@ -42,7 +42,6 @@ interface BudgetAccessRepositoryInterface
     public function getReference(Id $id): BudgetAccess;
 
     /**
-     * @param Id $userId
      * @return BudgetAccess[]
      */
     public function getByUser(Id $userId): array;

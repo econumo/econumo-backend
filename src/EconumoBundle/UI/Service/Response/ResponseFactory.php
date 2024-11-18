@@ -51,7 +51,7 @@ class ResponseFactory
             'message' => $message,
             'code' => $code
         ];
-        if (null !== $exception) {
+        if ($exception instanceof Throwable) {
             $data['exceptionType'] = $exception::class;
             $data['stackTrace'] = $exception->getTrace();
         }

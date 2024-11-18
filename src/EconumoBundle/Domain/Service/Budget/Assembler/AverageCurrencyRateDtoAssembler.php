@@ -21,8 +21,6 @@ readonly class AverageCurrencyRateDtoAssembler
     }
 
     /**
-     * @param DateTimeInterface $periodStart
-     * @param DateTimeInterface $periodEnd
      * @param Id[] $currenciesIds
      * @return AverageCurrencyRateDto[]
      */
@@ -32,13 +30,13 @@ readonly class AverageCurrencyRateDtoAssembler
         array $currenciesIds
     ): array {
         $baseCurrency = $this->currencyService->getBaseCurrency();
-        $supportedCurrencyIds = array_map(fn(Id $id) => $id->getValue(), $currenciesIds);
+        $supportedCurrencyIds = array_map(static fn(Id $id): string => $id->getValue(), $currenciesIds);
         $currencyRates = $this->currencyRateRepository->getAverage($periodStart, $periodEnd, $baseCurrency->getId());
 
         $result = [];
         foreach ($currencyRates as $item) {
             if (in_array($item['currencyId'], $supportedCurrencyIds, true)) {
-                $result[] = new AverageCurrencyRateDto(new Id($item['currencyId']), round(floatval($item['rate']), 8));
+                $result[] = new AverageCurrencyRateDto(new Id($item['currencyId']), round((float) $item['rate'], 8));
             }
         }
 

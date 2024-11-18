@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Domain\Service;
 
+use Throwable;
 use App\EconumoBundle\Domain\Entity\User;
 use App\EconumoBundle\Domain\Entity\UserOption;
 use App\EconumoBundle\Domain\Entity\ValueObject\CurrencyCode;
@@ -79,7 +80,7 @@ readonly class UserService implements UserServiceInterface
             );
 
             $this->antiCorruptionService->commit(__METHOD__);
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback(__METHOD__);
             throw $throwable;
         }
@@ -107,7 +108,7 @@ readonly class UserService implements UserServiceInterface
             $user->updateCurrency($currencyCode);
             $this->userRepository->save([$user]);
             $this->antiCorruptionService->commit(__METHOD__);
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback(__METHOD__);
             throw $throwable;
         }
@@ -121,7 +122,7 @@ readonly class UserService implements UserServiceInterface
             $user->updateReportPeriod($reportPeriod);
             $this->userRepository->save([$user]);
             $this->antiCorruptionService->commit(__METHOD__);
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback(__METHOD__);
             throw $throwable;
         }
@@ -135,7 +136,7 @@ readonly class UserService implements UserServiceInterface
             $user->updateDefaultBudget($budgetId);
             $this->userRepository->save([$user]);
             $this->antiCorruptionService->commit(__METHOD__);
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback(__METHOD__);
             throw $throwable;
         }

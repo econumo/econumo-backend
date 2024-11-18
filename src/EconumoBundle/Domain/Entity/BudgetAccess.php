@@ -29,7 +29,7 @@ class BudgetAccess
         private Budget $budget,
         private User $user,
         private UserRole $role,
-        \DateTimeInterface $createdAt
+        DateTimeInterface $createdAt
     ) {
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
@@ -80,7 +80,7 @@ class BudgetAccess
 
     public function accept(): void
     {
-        if ($this->isAccepted === false) {
+        if (!$this->isAccepted) {
             $this->isAccepted = true;
             $this->updated();
         }

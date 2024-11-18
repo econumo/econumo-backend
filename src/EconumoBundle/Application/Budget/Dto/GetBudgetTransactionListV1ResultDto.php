@@ -17,5 +17,5 @@ class GetBudgetTransactionListV1ResultDto
      * @var BudgetTransactionResultDto[]
      * @OA\Property()
      */
-    public array $items;
+    public array $items = [];
 }

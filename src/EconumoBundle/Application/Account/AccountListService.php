@@ -33,7 +33,7 @@ class AccountListService
         Id $userId
     ): GetAccountListV1ResultDto {
         $accounts = $this->accountRepository->getAvailableForUserId($userId);
-        $accountsIds = array_map(fn(Account $account) => $account->getId(), $accounts);
+        $accountsIds = array_map(static fn(Account $account): Id => $account->getId(), $accounts);
         $balances = $this->accountService->getAccountsBalance($accountsIds);
         return $this->getAccountListV1ResultAssembler->assemble($dto, $userId, $accounts, $balances);
     }

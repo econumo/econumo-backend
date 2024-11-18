@@ -32,6 +32,7 @@ readonly class CurrencyRatesService
             $item->base = $currencyBase;
             $rates[] = $item;
         }
+
         $this->currencyRatesUpdateService->updateCurrencyRates($rates);
         return $this->importCurrencyRatesV1ResultAssembler->assemble($dto);
     }

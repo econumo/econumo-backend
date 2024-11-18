@@ -13,7 +13,6 @@ interface BudgetRepositoryInterface
     public function get(Id $id): Budget;
 
     /**
-     * @param Id $userId
      * @return Budget[]
      */
     public function getByUserId(Id $userId): array;

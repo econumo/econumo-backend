@@ -45,6 +45,7 @@ class MigrateUsersCommand extends Command
             $identifier = $this->encodeService->hash($originalEmail);
             $user->updateUserIdentifier($identifier);
         }
+
         $this->userRepository->save($users);
 
         return Command::SUCCESS;

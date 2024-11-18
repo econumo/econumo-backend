@@ -38,6 +38,7 @@ readonly class FolderService
         if (!$this->budgetAccessService->canUpdateBudget($userId, $budgetId)) {
             throw new AccessDeniedException();
         }
+
         $folderId = new Id($dto->id);
         $folderName = new BudgetFolderName($dto->name);
         $folder = $this->budgetFolderService->create($budgetId, $folderId, $folderName);

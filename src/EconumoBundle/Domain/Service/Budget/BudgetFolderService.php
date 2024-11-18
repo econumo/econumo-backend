@@ -33,13 +33,15 @@ readonly class BudgetFolderService implements BudgetFolderServiceInterface
         $folders = $this->budgetFolderRepository->getByBudgetId($budgetId);
         $position = 0;
         foreach ($folders as $folder) {
-            $position++;
+            ++$position;
             if ($folder->getPosition() === $position) {
                 continue;
             }
+
             $folder->updatePosition($position);
             $toSave[] = $folder;
         }
+
         $this->budgetFolderRepository->save($toSave);
 
         return $this->budgetStructureFolderDtoAssembler->assemble($newFolder);
@@ -59,13 +61,15 @@ readonly class BudgetFolderService implements BudgetFolderServiceInterface
         $position = 0;
         foreach ($folders as $folder) {
             if ($folder->getPosition() === $position) {
-                $position++;
+                ++$position;
                 continue;
             }
+
             $folder->updatePosition($position);
             $toSave[] = $folder;
-            $position++;
+            ++$position;
         }
+
         $this->budgetFolderRepository->save($toSave);
     }
 

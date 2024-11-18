@@ -18,7 +18,6 @@ interface UserOptionRepositoryInterface
     public function delete(UserOption $userOption): void;
 
     /**
-     * @param Id $userId
      * @return UserOption[]
      */
     public function findByUserId(Id $userId): array;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Infrastructure\Doctrine\Repository;
 
+use DateTime;
 use App\EconumoBundle\Domain\Entity\Currency;
 use App\EconumoBundle\Domain\Entity\CurrencyRate;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
@@ -38,7 +39,7 @@ class CurrencyRateRepository extends ServiceEntityRepository implements Currency
      */
     public function getAll(?DateTimeInterface $date = null): array
     {
-        if ($date === null) {
+        if (!$date instanceof DateTimeInterface) {
             $dateBuilder = $this->createQueryBuilder('cr')
                 ->select('cr.publishedAt')
                 ->setMaxResults(1)
@@ -51,16 +52,16 @@ class CurrencyRateRepository extends ServiceEntityRepository implements Currency
                 ->where('cr.publishedAt <= :date')
                 ->setParameter('date', $date);
         }
+
         $lastDate = $dateBuilder->getQuery()->getSingleScalarResult();
-        $ratesDate = \DateTime::createFromFormat('Y-m-d', $lastDate);
+        $ratesDate = DateTime::createFromFormat('Y-m-d', $lastDate);
 
         $query = $this->createQueryBuilder('cr')
             ->andWhere('cr.publishedAt = :date')
             ->setParameter('date', $ratesDate, Types::DATE_MUTABLE)
             ->getQuery();
-        $result = $query->getResult();
 
-        return $result;
+        return $query->getResult();
     }
 
     public function get(Id $currencyId, DateTimeInterface $date): CurrencyRate
@@ -90,7 +91,7 @@ class CurrencyRateRepository extends ServiceEntityRepository implements Currency
             $builder->where('cr.currency = :currency')
                 ->setParameter('currency', $this->getEntityManager()->getReference(Currency::class, $currencyId))
                 ->setMaxResults(1);
-            if ($date === null) {
+            if (!$date instanceof DateTimeInterface) {
                 $builder->orderBy('cr.publishedAt', Criteria::DESC);
             } else {
                 $builder->andWhere('cr.publishedAt <= :date')

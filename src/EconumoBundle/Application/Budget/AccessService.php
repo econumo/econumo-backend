@@ -44,6 +44,7 @@ readonly class AccessService
         if (!$this->budgetAccessService->canShareBudget($userId, $budgetId)) {
             throw new AccessDeniedException();
         }
+
         $invitedUserId = new Id($dto->userId);
         $role = BudgetUserRole::createFromAlias($dto->role);
 

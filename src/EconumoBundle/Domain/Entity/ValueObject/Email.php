@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Domain\Entity\ValueObject;
 
+use Stringable;
 use App\EconumoBundle\Domain\Exception\DomainException;
 
-final class Email implements \Stringable
+final class Email implements Stringable
 {
     private string $value;
 

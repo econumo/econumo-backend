@@ -66,7 +66,7 @@ readonly class BudgetTransactionService implements BudgetTransactionServiceInter
 
         $this->checkTagAccess($tagId, $budgetFilters->userIds);
         $categoriesFilter = [];
-        if ($categoryId) {
+        if ($categoryId instanceof Id) {
             $this->checkCategoryAccess($categoryId, $budgetFilters->userIds);
             $categoriesFilter[] = $categoryId;
         }
@@ -112,7 +112,6 @@ readonly class BudgetTransactionService implements BudgetTransactionServiceInter
     }
 
     /**
-     * @param DateTimeInterface $periodStart
      * @return DateTimeInterface[]
      */
     private function getPeriod(DateTimeInterface $periodStart): array
@@ -124,9 +123,7 @@ readonly class BudgetTransactionService implements BudgetTransactionServiceInter
     }
 
     /**
-     * @param Id $categoryId
      * @param Id[] $usersIds
-     * @return void
      */
     private function checkCategoryAccess(Id $categoryId, array $usersIds): void
     {
@@ -137,15 +134,14 @@ readonly class BudgetTransactionService implements BudgetTransactionServiceInter
                 $isCategoryOwnedByBudgetUsers = true;
             }
         }
+
         if (!$isCategoryOwnedByBudgetUsers) {
             throw new AccessDeniedException();
         }
     }
 
     /**
-     * @param Id $tagId
      * @param Id[] $usersIds
-     * @return void
      */
     private function checkTagAccess(Id $tagId, array $usersIds): void
     {
@@ -156,6 +152,7 @@ readonly class BudgetTransactionService implements BudgetTransactionServiceInter
                 $isTagOwnedByBudgetUsers = true;
             }
         }
+
         if (!$isTagOwnedByBudgetUsers) {
             throw new AccessDeniedException();
         }

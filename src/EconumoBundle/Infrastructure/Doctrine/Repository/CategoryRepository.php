@@ -118,6 +118,7 @@ DQL;
         foreach ($userIds as $userId) {
             $users[] = $this->getEntityManager()->getReference(User::class, $userId);
         }
+
         $builder = $this->createQueryBuilder('c');
         $builder->select('c')
             ->where($builder->expr()->in('c.user', ':users'))
@@ -125,8 +126,9 @@ DQL;
         if ($onlyActive !== null) {
             $builder
                 ->andWhere('c.isArchived = :isArchived')
-                ->setParameter('isArchived', !!$onlyActive);
+                ->setParameter('isArchived', (bool) $onlyActive);
         }
+
         return $builder->getQuery()->getResult();
     }
 }

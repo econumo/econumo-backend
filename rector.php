@@ -27,12 +27,13 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->importNames();
     $rectorConfig->skip([
         __DIR__ . '/config/bundles.php',
+//        __DIR__ . '/src/EconumoBundle/Infrastructure/Doctrine/Migration/*.php',
 //        __DIR__ . '/tests/_*',
         ReadOnlyClassRector::class => [
-            __DIR__ . '/src/Domain/Entity/*.php',
+            __DIR__ . '/src/*Bundle/Domain/Entity/*.php',
         ],
         ReadOnlyPropertyRector::class => [
-            __DIR__ . '/src/Domain/Entity/*.php',
+            __DIR__ . '/src/*Bundle/Domain/Entity/*.php',
         ],
     ]);
 

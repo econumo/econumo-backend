@@ -40,6 +40,7 @@ readonly class ElementListService
                 ($item->folderId === null ? null : new Id($item->folderId)),
             );
         }
+
         $this->budgetService->moveElements($userId, $budgetId, $affectedElements);
         return $this->moveElementListV1ResultAssembler->assemble($dto);
     }

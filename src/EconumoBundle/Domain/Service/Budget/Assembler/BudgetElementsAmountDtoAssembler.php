@@ -28,8 +28,6 @@ readonly class BudgetElementsAmountDtoAssembler
     }
 
     /**
-     * @param Budget $budget
-     * @param BudgetFiltersDto $budgetFilters
      * @return BudgetElementAmountDto[]
      * @throws \DateMalformedPeriodStringException
      */
@@ -37,16 +35,14 @@ readonly class BudgetElementsAmountDtoAssembler
         Budget $budget,
         BudgetFiltersDto $budgetFilters
     ): array {
-        if (count($budgetFilters->currenciesIds) === 1) {
+        if ((is_countable($budgetFilters->currenciesIds) ? count($budgetFilters->currenciesIds) : 0) === 1) {
             return $this->getEntityAmountsForOneCurrency($budget, $budgetFilters);
         }
+
         return $this->getEntityAmountsForMultipleCurrencies($budget, $budgetFilters);
     }
 
     /**
-     * @param Budget $budget
-     * @param BudgetFiltersDto $budgetFilters
-     * @return array
      * @throws \DateMalformedPeriodStringException
      */
     private function getEntityAmountsForMultipleCurrencies(
@@ -93,11 +89,6 @@ readonly class BudgetElementsAmountDtoAssembler
         return $result;
     }
 
-    /**
-     * @param Budget $budget
-     * @param BudgetFiltersDto $budgetFilters
-     * @return array
-     */
     private function getEntityAmountsForOneCurrency(
         Budget $budget,
         BudgetFiltersDto $budgetFilters
@@ -146,12 +137,6 @@ readonly class BudgetElementsAmountDtoAssembler
         return sprintf('%s-%s', $id, $type);
     }
 
-    /**
-     * @param Budget $budget
-     * @param DateTimeInterface $periodStart
-     * @param array $data
-     * @return array
-     */
     private function generateByAmounts(
         Budget $budget,
         DateTimeInterface $periodStart,
@@ -173,18 +158,13 @@ readonly class BudgetElementsAmountDtoAssembler
                     'type' => $amount->getElement()->getType(),
                 ];
             }
+
             $data[$index]['budget'] = $amount;
         }
+
         return $data;
     }
 
-    /**
-     * @param Budget $budget
-     * @param DateTimeInterface $periodStart
-     * @param DateTimeInterface $periodEnd
-     * @param array $data
-     * @return array
-     */
     private function countSummarizedAmounts(
         Budget $budget,
         DateTimeInterface $periodStart,
@@ -214,19 +194,13 @@ readonly class BudgetElementsAmountDtoAssembler
                     'type' => $summarizedAmount['elementType'],
                 ];
             }
+
             $data[$index]['overall_budget'] += $summarizedAmount['amount'];
         }
+
         return $data;
     }
 
-    /**
-     * @param Budget $budget
-     * @param BudgetFiltersDto $budgetFilters
-     * @param DateTimeInterface $periodStart
-     * @param DateTimeInterface $periodEnd
-     * @param array $data
-     * @return array
-     */
     private function countSummarizedSpending(
         Budget $budget,
         BudgetFiltersDto $budgetFilters,
@@ -239,8 +213,10 @@ readonly class BudgetElementsAmountDtoAssembler
             if ($category->getType()->isIncome()) {
                 continue;
             }
+
             $categoriesIds[] = $category->getId();
         }
+
         $spending = $this->transactionRepository->countSpending(
             $categoriesIds,
             $budgetFilters->includedAccountsIds,
@@ -248,11 +224,8 @@ readonly class BudgetElementsAmountDtoAssembler
             $periodEnd
         );
         foreach ($spending as $item) {
-            if (empty($item['tag_id'])) {
-                $type = BudgetElementType::category();
-            } else {
-                $type = BudgetElementType::tag();
-            }
+            $type = empty($item['tag_id']) ? BudgetElementType::category() : BudgetElementType::tag();
+
             $index = $this->getKey($item['category_id'], $type->getAlias());
             if (!array_key_exists($index, $data)) {
                 $data[$index] = [
@@ -267,23 +240,18 @@ readonly class BudgetElementsAmountDtoAssembler
                     'type' => BudgetElementType::tag(),
                 ];
             }
+
             $data[$index]['overall_spent'][] = new BudgetElementAmountSpentDto(
                 new Id($item['currency_id']),
-                round(floatval($item['amount']), 2),
+                round((float) $item['amount'], 2),
                 $periodStart,
                 $periodEnd
             );
         }
+
         return $data;
     }
 
-    /**
-     * @param BudgetFiltersDto $budgetFilters
-     * @param DateTimeInterface $periodStart
-     * @param DateTimeInterface $periodEnd
-     * @param array $data
-     * @return array
-     */
     private function countSpending(
         BudgetFiltersDto $budgetFilters,
         DateTimeInterface $periodStart,
@@ -295,8 +263,10 @@ readonly class BudgetElementsAmountDtoAssembler
             if ($category->getType()->isIncome()) {
                 continue;
             }
+
             $categoriesIds[] = $category->getId();
         }
+
         $spending = $this->transactionRepository->countSpending(
             $categoriesIds,
             $budgetFilters->includedAccountsIds,
@@ -311,6 +281,7 @@ readonly class BudgetElementsAmountDtoAssembler
                 $type = BudgetElementType::tag();
                 $tagId = new Id($category['tag_id']);
             }
+
             $index = $this->getKey($category['category_id'], $type->getAlias());
             if (!array_key_exists($index, $data)) {
                 $data[$index] = [
@@ -326,13 +297,15 @@ readonly class BudgetElementsAmountDtoAssembler
                     'currency_id' => $category['currency_id'],
                 ];
             }
+
             $data[$index]['spent'][] = new BudgetElementAmountSpentDto(
                 new Id($category['currency_id']),
-                round(floatval($category['amount']), 2),
+                round((float) $category['amount'], 2),
                 $periodStart,
                 $periodEnd
             );
         }
+
         return $data;
     }
 }

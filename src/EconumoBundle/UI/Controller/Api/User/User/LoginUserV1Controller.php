@@ -59,14 +59,13 @@ class LoginUserV1Controller extends AbstractController
      * @throws ValidationException
      */
     #[Route(path: '/api/v1/user/login-user', name: 'api_user_login_user', methods: ['POST'])]
-    public function __invoke(Request $request): Response
+    public function __invoke() : Response
     {
         /** @var User $user */
         $user = $this->getUser();
         if ($user === null) {
             throw new AccessDeniedHttpException('Auth failed');
         }
-
         $result = $this->userService->loginUser($user);
         return new JsonResponse($result);
     }

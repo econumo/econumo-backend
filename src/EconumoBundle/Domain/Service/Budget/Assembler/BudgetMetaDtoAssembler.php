@@ -31,6 +31,7 @@ readonly class BudgetMetaDtoAssembler
             );
             $accessList[] = $dto;
         }
+
         $owner = $budget->getUser();
         $accessList[] = new BudgetUserAccessDto(
             $owner->getId(),

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\UI\Middleware\HttpApiResponse;
 
+use Throwable;
 use App\EconumoBundle\Application\Exception\ValidationException;
 use App\EconumoBundle\Domain\Exception\AccessDeniedException as DomainAccessDeniedException;
 use App\EconumoBundle\UI\Service\Response\ResponseFactory;
@@ -17,7 +18,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 class HttpApiExceptionListener
 {
     /**
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function onKernelException(ExceptionEvent $event): void
     {

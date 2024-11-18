@@ -80,15 +80,16 @@ class BudgetElementRepository extends ServiceEntityRepository implements BudgetE
             ->setParameter('budget', $this->getEntityReference(Budget::class, $budgetId))
             ->orderBy('e.position', 'DESC')
             ->setMaxResults(1);
-        if ($folderId) {
+        if ($folderId instanceof Id) {
             $builder
                 ->andWhere('e.folder = :folder')
                 ->setParameter('folder', $this->getEntityReference(Folder::class, $folderId));
         }
+
         try {
             $element = $builder->getQuery()->getSingleResult();
             $position = $element->getPosition() + 1;
-        } catch (NoResultException $e) {
+        } catch (NoResultException) {
             $position = 0;
         }
 

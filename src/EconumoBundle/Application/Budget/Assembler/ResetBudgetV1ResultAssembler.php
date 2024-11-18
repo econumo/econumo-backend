@@ -14,6 +14,7 @@ readonly class ResetBudgetV1ResultAssembler
         private BudgetMetaToResultDtoAssembler $budgetMetaToResultDtoAssembler
     ) {
     }
+
     public function assemble(
         BudgetMetaDto $budgetDto
     ): ResetBudgetV1ResultDto {

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Application\Budget\Assembler;
 
+use App\EconumoBundle\Domain\Entity\Category;
+use App\EconumoBundle\Domain\Entity\Payee;
+use App\EconumoBundle\Domain\Entity\Tag;
 use App\EconumoBundle\Application\Budget\Dto\BudgetTransactionCategoryResultDto;
 use App\EconumoBundle\Application\Budget\Dto\BudgetTransactionPayeeResultDto;
 use App\EconumoBundle\Application\Budget\Dto\BudgetTransactionResultDto;
@@ -21,7 +24,6 @@ readonly class GetTransactionListV1ResultAssembler
 
     /**
      * @param Transaction[] $transactions
-     * @return GetBudgetTransactionListV1ResultDto
      */
     public function assemble(
         array $transactions
@@ -37,7 +39,7 @@ readonly class GetTransactionListV1ResultAssembler
             $dto->amount = round($transaction->getAmount(), 2);
             $dto->spentAt = $transaction->getSpentAt()->format('Y-m-d H:i:s');
             $dto->category = null;
-            if ($transaction->getCategory()) {
+            if ($transaction->getCategory() instanceof Category) {
                 $dto->category = new BudgetTransactionCategoryResultDto();
                 $dto->category->id = $transaction->getCategory()->getId()->getValue();
                 $dto->category->name = $transaction->getCategory()->getName()->getValue();
@@ -45,18 +47,19 @@ readonly class GetTransactionListV1ResultAssembler
             }
 
             $dto->payee = null;
-            if ($transaction->getPayee()) {
+            if ($transaction->getPayee() instanceof Payee) {
                 $dto->payee = new BudgetTransactionPayeeResultDto();
                 $dto->payee->id = $transaction->getPayee()->getId()->getValue();
                 $dto->payee->name = $transaction->getPayee()->getName()->getValue();
             }
 
             $dto->tag = null;
-            if ($transaction->getTag()) {
+            if ($transaction->getTag() instanceof Tag) {
                 $dto->tag = new BudgetTransactionTagResultDto();
                 $dto->tag->id = $transaction->getTag()->getId()->getValue();
                 $dto->tag->name = $transaction->getTag()->getName()->getValue();
             }
+
             $result->items[] = $dto;
         }
 

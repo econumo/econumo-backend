@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Domain\Factory;
 
+use DateTimeInterface;
 use App\EconumoBundle\Domain\Entity\Transaction;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoBundle\Domain\Entity\ValueObject\TransactionType;
@@ -26,30 +27,31 @@ class TransactionFactory implements TransactionFactoryInterface
 
     public function create(TransactionDto $dto): Transaction
     {
-        if ($dto->type->isTransfer() && $dto->accountRecipientId === null) {
+        if ($dto->type->isTransfer() && !$dto->accountRecipientId instanceof Id) {
             throw new RecipientIsRequiredException('Recipient account is required for transfer transaction');
         }
+
         return new Transaction(
             $this->transactionRepository->getNextIdentity(),
             $this->userRepository->getReference($dto->userId),
             $dto->type,
             $this->accountRepository->getReference($dto->accountId),
-            ($dto->categoryId === null ? null : $this->categoryRepository->getReference($dto->categoryId)),
+            ($dto->categoryId instanceof Id ? $this->categoryRepository->getReference($dto->categoryId) : null),
             $dto->amount,
             $dto->date,
             $this->datetimeService->getCurrentDatetime(),
-            ($dto->accountRecipientId === null ? null : $this->accountRepository->getReference($dto->accountRecipientId)),
+            ($dto->accountRecipientId instanceof Id ? $this->accountRepository->getReference($dto->accountRecipientId) : null),
             $dto->amountRecipient,
             $dto->description,
-            ($dto->payeeId === null ? null : $this->payeeRepository->getReference($dto->payeeId)),
-            ($dto->tagId === null ? null :  $this->tagRepository->getReference($dto->tagId)),
+            ($dto->payeeId instanceof Id ? $this->payeeRepository->getReference($dto->payeeId) : null),
+            ($dto->tagId instanceof Id ? $this->tagRepository->getReference($dto->tagId) :  null),
         );
     }
 
     public function createTransaction(
         Id $accountId,
         float $transaction,
-        \DateTimeInterface $transactionDate,
+        DateTimeInterface $transactionDate,
         string $comment = ''
     ): Transaction {
         $account = $this->accountRepository->get($accountId);
@@ -73,7 +75,7 @@ class TransactionFactory implements TransactionFactoryInterface
     public function createCorrection(
         Id $accountId,
         float $correction,
-        \DateTimeInterface $transactionDate,
+        DateTimeInterface $transactionDate,
         string $comment = ''
     ): Transaction {
         $account = $this->accountRepository->get($accountId);

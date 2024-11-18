@@ -39,6 +39,7 @@ readonly class BudgetFactory implements BudgetFactoryInterface
             $account = $this->accountRepository->getReference($excludedAccountId);
             $accounts[] = $account;
         }
+
         $currency = $this->currencyRepository->getReference($currencyId);
         return new Budget(
             $this->userRepository->getReference($userId),

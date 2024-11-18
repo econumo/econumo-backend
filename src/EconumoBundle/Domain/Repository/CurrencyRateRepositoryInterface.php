@@ -27,9 +27,6 @@ interface CurrencyRateRepositoryInterface
     public function save(array $items): void;
 
     /**
-     * @param DateTimeInterface $startDate
-     * @param DateTimeInterface $endDate
-     * @param Id $baseCurrencyId
      * @return array
      */
     public function getAverage(DateTimeInterface $startDate, DateTimeInterface $endDate, Id $baseCurrencyId): array;

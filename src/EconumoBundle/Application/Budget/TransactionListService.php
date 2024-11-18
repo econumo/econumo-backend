@@ -36,11 +36,11 @@ readonly class TransactionListService
             throw new AccessDeniedException();
         }
 
-        if ($categoryId !== null && $tagId === null && $envelopeId === null) {
+        if ($categoryId instanceof Id && !$tagId instanceof Id && !$envelopeId instanceof Id) {
             $transactions = $this->budgetTransactionService->getTransactionsForCategory($userId, $budgetId, $periodStart, $categoryId);
-        } elseif ($tagId !== null && $envelopeId === null) {
+        } elseif ($tagId instanceof Id && !$envelopeId instanceof Id) {
             $transactions = $this->budgetTransactionService->getTransactionsForTag($userId, $budgetId, $periodStart, $tagId, $categoryId);
-        } elseif ($envelopeId !== null && $tagId === null && $categoryId === null) {
+        } elseif ($envelopeId instanceof Id && !$tagId instanceof Id && !$categoryId instanceof Id) {
             $transactions = $this->budgetTransactionService->getTransactionsForEnvelope($userId, $budgetId, $periodStart, $envelopeId);
         } else {
             throw new ValidationException();

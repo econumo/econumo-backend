@@ -129,7 +129,7 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
             return [];
         }
 
-        $parametersString = implode("', '", array_map(fn(Id $id) => $id->getValue(), $accountIds));
+        $parametersString = implode("', '", array_map(static fn(Id $id): string => $id->getValue(), $accountIds));
         $dateString = $date->format('Y-m-d H:i:s');
         $sql =<<<SQL
 SELECT a.id as account_id,
@@ -161,6 +161,7 @@ SQL;
         $rsm->addScalarResult('account_id', 'account_id');
         $rsm->addScalarResult('currency_id', 'currency_id');
         $rsm->addScalarResult('balance', 'balance', 'float');
+
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
         return $query->getResult();
     }
@@ -171,7 +172,7 @@ SQL;
             return [];
         }
 
-        $parametersString = implode("', '", array_map(fn(Id $id) => $id->getValue(), $accountIds));
+        $parametersString = implode("', '", array_map(static fn(Id $id): string => $id->getValue(), $accountIds));
         $dateString = $date->format('Y-m-d H:i:s');
         $sql =<<<SQL
 SELECT a.id as account_id,
@@ -203,6 +204,7 @@ SQL;
         $rsm->addScalarResult('account_id', 'account_id');
         $rsm->addScalarResult('currency_id', 'currency_id');
         $rsm->addScalarResult('balance', 'balance', 'float');
+
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
         return $query->getResult();
     }
@@ -217,6 +219,7 @@ SQL;
         foreach ($accountIds as $accountId) {
             $accounts[] = $accountId->getValue();
         }
+
         $accountsString = implode("', '", $accounts);
         $periodStartString = $periodStart->format('Y-m-d H:i:s');
         $periodEndString = $periodEnd->format('Y-m-d H:i:s');
@@ -264,6 +267,7 @@ SQL;
         $rsm->addScalarResult('expenses', 'expenses', 'float');
         $rsm->addScalarResult('transfer_expenses', 'transfer_expenses', 'float');
         $rsm->addScalarResult('exchange_expenses', 'exchange_expenses', 'float');
+
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
         return $query->getResult();
     }
@@ -282,10 +286,12 @@ SQL;
         foreach ($reportAccountIds as $accountId) {
             $reportAccounts[] = $accountId->getValue();
         }
+
         $holdingsAccounts = [];
         foreach ($holdingAccountIds as $accountId) {
             $holdingsAccounts[] = $accountId->getValue();
         }
+
         $reportAccountsString = implode("', '", $reportAccounts);
         $holdingsAccountsString = implode("', '", $holdingsAccounts);
         $periodStartString = $periodStart->format('Y-m-d H:i:s');
@@ -300,6 +306,7 @@ SQL;
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('currency_id', 'currency_id');
         $rsm->addScalarResult('amount', 'amount', 'float');
+
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
         $toHoard = $query->getResult();
 
@@ -312,6 +319,7 @@ SQL;
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('currency_id', 'currency_id');
         $rsm->addScalarResult('amount', 'amount', 'float');
+
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
         $fromHoard = $query->getResult();
 
@@ -323,8 +331,10 @@ SQL;
                     'from_holdings' => 0.0,
                 ];
             }
+
             $result[$item['currency_id']]['to_holdings'] += (float)$item['amount'];
         }
+
         foreach ($fromHoard as $item) {
             if (!isset($result[$item['currency_id']])) {
                 $result[$item['currency_id']] = [
@@ -332,6 +342,7 @@ SQL;
                     'from_holdings' => 0.0,
                 ];
             }
+
             $result[$item['currency_id']]['from_holdings'] += (float)$item['amount'];
         }
 
@@ -356,6 +367,7 @@ SQL;
         foreach ($userIds as $userId) {
             $users[] = $this->getEntityManager()->getReference(User::class, $userId);
         }
+
         $builder = $this->createQueryBuilder('a');
         $builder->select('a')
             ->where($builder->expr()->in('a.user', ':users'))

@@ -33,6 +33,7 @@ readonly class BudgetEnvelopeFactory implements BudgetEnvelopeFactoryInterface
         foreach ($categoriesIds as $categoryId) {
             $categories[] = $this->categoryRepository->getReference($categoryId);
         }
+
         return new BudgetEnvelope(
             $id,
             $this->budgetRepository->getReference($budgetId),

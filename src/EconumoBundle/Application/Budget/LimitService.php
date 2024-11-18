@@ -32,14 +32,15 @@ readonly class LimitService
         if (!$this->budgetAccessService->canUpdateBudget($userId, $budgetId)) {
             throw new AccessDeniedException();
         }
+
         $elementId = new Id($dto->elementId);
         $period = DateTimeImmutable::createFromFormat('Y-m-d', $dto->period);
-        $amount = $dto->amount === null ? null : floatval($dto->amount);
+        $amount = $dto->amount === null ? null : (float) $dto->amount;
 
         try {
             $this->budgetLimitService->setLimit($budgetId, $elementId, $period, $amount);
-        } catch (BudgetLimitInvalidDateException $e) {
-            throw new ValidationException($e->getMessage());
+        } catch (BudgetLimitInvalidDateException $budgetLimitInvalidDateException) {
+            throw new ValidationException($budgetLimitInvalidDateException->getMessage());
         }
 
         return $this->setLimitV1ResultAssembler->assemble();

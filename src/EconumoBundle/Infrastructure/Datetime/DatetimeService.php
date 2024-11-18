@@ -14,7 +14,7 @@ class DatetimeService implements DatetimeServiceInterface
     /**
      * @inheritDoc
      */
-    public function getCurrentDatetime(): \DateTimeInterface
+    public function getCurrentDatetime(): DateTimeInterface
     {
         return new DateTimeImmutable();
     }

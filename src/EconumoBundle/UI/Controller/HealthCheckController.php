@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\UI\Controller;
 
+use Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -34,7 +35,7 @@ class HealthCheckController extends AbstractController
         $status = true;
         try {
             $response['database'] = $this->entityManager->getConnection()->connect();
-        } catch (\Exception) {
+        } catch (Exception) {
             $response['database'] = false;
             $status = false;
         }

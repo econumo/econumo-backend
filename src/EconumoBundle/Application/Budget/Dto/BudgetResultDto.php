@@ -31,7 +31,7 @@ class BudgetResultDto
      * @var BudgetCurrencyBalanceResultDto[]
      * @OA\Property()
      */
-    public array $balances;
+    public array $balances = [];
 
     /**
      * @OA\Property()

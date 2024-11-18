@@ -16,7 +16,6 @@ readonly class AcceptAccessV1ResultAssembler
 
     /**
      * @param BudgetMetaDto[] $budgets
-     * @return AcceptAccessV1ResultDto
      */
     public function assemble(
         array $budgets

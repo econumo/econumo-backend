@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Domain\Service;
 
+use Throwable;
 use App\EconumoBundle\Domain\Entity\Transaction;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoBundle\Domain\Factory\TransactionFactoryInterface;
@@ -31,7 +32,7 @@ readonly class TransactionService implements TransactionServiceInterface
             $transaction = $this->transactionFactory->create($transactionDto);
             $this->transactionRepository->save([$transaction]);
             $this->antiCorruptionService->commit(__METHOD__);
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback(__METHOD__);
             throw $throwable;
         }
@@ -47,7 +48,7 @@ readonly class TransactionService implements TransactionServiceInterface
             $transaction->update($transactionDto);
             $this->transactionRepository->save([$transaction]);
             $this->antiCorruptionService->commit(__METHOD__);
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback(__METHOD__);
             throw $throwable;
         }
@@ -61,7 +62,7 @@ readonly class TransactionService implements TransactionServiceInterface
         try {
             $this->transactionRepository->delete($transaction);
             $this->antiCorruptionService->commit(__METHOD__);
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback(__METHOD__);
             throw $throwable;
         }
@@ -70,7 +71,7 @@ readonly class TransactionService implements TransactionServiceInterface
     public function updateBalance(
         Id $accountId,
         float $correction,
-        \DateTimeInterface $updatedAt,
+        DateTimeInterface $updatedAt,
         string $comment = ''
     ): Transaction {
         $this->antiCorruptionService->beginTransaction(__METHOD__);
@@ -78,7 +79,7 @@ readonly class TransactionService implements TransactionServiceInterface
             $transaction = $this->transactionFactory->createCorrection($accountId, $correction, $updatedAt, $comment);
             $this->transactionRepository->save([$transaction]);
             $this->antiCorruptionService->commit(__METHOD__);
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback(__METHOD__);
             throw $throwable;
         }
@@ -107,6 +108,7 @@ readonly class TransactionService implements TransactionServiceInterface
                 $excludeAccountIds[] = $account->getId();
                 continue;
             }
+
             foreach ($folders as $folder) {
                 if ($folder->containsAccount($account) && !$folder->isVisible()) {
                     $excludeAccountIds[] = $account->getId();

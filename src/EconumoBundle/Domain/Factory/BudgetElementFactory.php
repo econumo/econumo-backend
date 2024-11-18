@@ -35,13 +35,15 @@ readonly class BudgetElementFactory implements BudgetElementFactoryInterface
         ?Id $folderId
     ): BudgetElement {
         $currency = null;
-        if ($currencyId) {
+        if ($currencyId instanceof Id) {
             $currency = $this->currencyRepository->getReference($currencyId);
         }
+
         $budgetFolder = null;
-        if ($folderId) {
+        if ($folderId instanceof Id) {
             $budgetFolder = $this->budgetFolderRepository->getReference($folderId);
         }
+
         return new BudgetElement(
             $this->budgetElementRepository->getNextIdentity(),
             $this->budgetRepository->getReference($budgetId),

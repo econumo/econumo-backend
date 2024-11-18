@@ -145,6 +145,7 @@ class BudgetElementLimitRepository extends ServiceEntityRepository implements Bu
         foreach ($elementIds as $elementId) {
             $elements[] = $this->getEntityReference(BudgetElement::class, $elementId);
         }
+
         $this->createQueryBuilder('el')
             ->delete()
             ->where('el.element IN (:elements)')

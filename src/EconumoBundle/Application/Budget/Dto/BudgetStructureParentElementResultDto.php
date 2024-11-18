@@ -77,10 +77,10 @@ class BudgetStructureParentElementResultDto
      * @var BudgetStructureChildElementResultDto[]
      * @OA\Property()
      */
-    public array $children;
+    public array $children = [];
 
     /**
      * @OA\Property(example="05c8f3e1-d77f-4b37-b2ca-0fc5f0f0c7a9")
      */
-    public ?string $ownerUserId;
+    public ?string $ownerUserId = null;
 }

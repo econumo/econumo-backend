@@ -22,7 +22,7 @@ final class Version20210812210548 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->skipIf(
             $this->connection->getDatabasePlatform()->getName() !== 'sqlite',
-            'Migration can only be executed safely on \'sqlite\'.'
+            "Migration can only be executed safely on 'sqlite'."
         );
 
         $this->addSql(
@@ -414,7 +414,7 @@ SQL
         // this down() migration is auto-generated, please modify it to your needs
         $this->skipIf(
             $this->connection->getDatabasePlatform()->getName() !== 'sqlite',
-            'Migration can only be executed safely on \'sqlite\'.'
+            "Migration can only be executed safely on 'sqlite'."
         );
 
         $this->addSql('DROP TABLE IF EXISTS "messenger_messages"');
