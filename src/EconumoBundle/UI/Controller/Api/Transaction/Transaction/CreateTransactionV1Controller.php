@@ -27,7 +27,7 @@ class CreateTransactionV1Controller extends AbstractController
     }
 
     /**
-     * Create Transaction
+     * Create a transaction
      *
      * @OA\Tag(name="Transaction"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Transaction\Dto\CreateTransactionV1RequestDto::class))),
@@ -55,7 +55,7 @@ class CreateTransactionV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/transaction/create-transaction', methods: ['POST'])]
+    #[Route(path: '/api/v1/transaction/create-transaction', name: 'api_transaction_create_transaction', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new CreateTransactionV1RequestDto();

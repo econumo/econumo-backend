@@ -25,7 +25,7 @@ class UpdateTransactionV1Controller extends AbstractController
     }
 
     /**
-     * Update transaction
+     * Update a transaction
      *
      * @OA\Tag(name="Transaction"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Transaction\Dto\UpdateTransactionV1RequestDto::class))),
@@ -53,7 +53,7 @@ class UpdateTransactionV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/transaction/update-transaction', methods: ['POST'])]
+    #[Route(path: '/api/v1/transaction/update-transaction', name: 'api_transaction_update_transaction', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new UpdateTransactionV1RequestDto();

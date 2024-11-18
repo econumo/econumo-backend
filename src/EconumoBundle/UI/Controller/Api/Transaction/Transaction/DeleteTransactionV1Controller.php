@@ -25,7 +25,7 @@ class DeleteTransactionV1Controller extends AbstractController
     }
 
     /**
-     * Delete Transaction
+     * Delete a transaction
      *
      * @OA\Tag(name="Transaction"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Transaction\Dto\DeleteTransactionV1RequestDto::class))),
@@ -53,7 +53,7 @@ class DeleteTransactionV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/transaction/delete-transaction', methods: ['POST'])]
+    #[Route(path: '/api/v1/transaction/delete-transaction', name: 'api_transaction_delete_transaction', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new DeleteTransactionV1RequestDto();
