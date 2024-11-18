@@ -25,7 +25,7 @@ class OrderCategoryListV1Controller extends AbstractController
     }
 
     /**
-     * Order categoryList
+     * Order categories
      *
      * @OA\Tag(name="Category"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Category\Dto\OrderCategoryListV1RequestDto::class))),
@@ -53,7 +53,7 @@ class OrderCategoryListV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/category/order-category-list', methods: ['POST'])]
+    #[Route(path: '/api/v1/category/order-category-list', name: 'api_category_order_category_list', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new OrderCategoryListV1RequestDto();

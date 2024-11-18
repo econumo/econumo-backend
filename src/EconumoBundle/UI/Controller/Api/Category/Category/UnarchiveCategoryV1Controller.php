@@ -25,7 +25,7 @@ class UnarchiveCategoryV1Controller extends AbstractController
     }
 
     /**
-     * Unarchive category
+     * Unarchive a category
      *
      * @OA\Tag(name="Category"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Category\Dto\UnarchiveCategoryV1RequestDto::class))),
@@ -53,7 +53,7 @@ class UnarchiveCategoryV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/category/unarchive-category', methods: ['POST'])]
+    #[Route(path: '/api/v1/category/unarchive-category', name: 'api_category_unarchive_category', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new UnarchiveCategoryV1RequestDto();

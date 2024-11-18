@@ -25,7 +25,7 @@ class UpdateCategoryV1Controller extends AbstractController
     }
 
     /**
-     * Update category
+     * Update a category
      *
      * @OA\Tag(name="Category"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Category\Dto\UpdateCategoryV1RequestDto::class))),
@@ -53,7 +53,7 @@ class UpdateCategoryV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/category/update-category', methods: ['POST'])]
+    #[Route(path: '/api/v1/category/update-category', name: 'api_category_update_category', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new UpdateCategoryV1RequestDto();

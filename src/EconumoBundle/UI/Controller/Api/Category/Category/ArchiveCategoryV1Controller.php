@@ -25,7 +25,7 @@ class ArchiveCategoryV1Controller extends AbstractController
     }
 
     /**
-     * Archive category
+     * Archive a category
      *
      * @OA\Tag(name="Category"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Category\Dto\ArchiveCategoryV1RequestDto::class))),
@@ -53,7 +53,7 @@ class ArchiveCategoryV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/category/archive-category', methods: ['POST'])]
+    #[Route(path: '/api/v1/category/archive-category', name: 'api_category_archive_category', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new ArchiveCategoryV1RequestDto();

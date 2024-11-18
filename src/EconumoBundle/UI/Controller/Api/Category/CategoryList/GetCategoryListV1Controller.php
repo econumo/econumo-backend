@@ -25,7 +25,7 @@ class GetCategoryListV1Controller extends AbstractController
     }
 
     /**
-     * Get CategoryList
+     * Get categories
      *
      * @OA\Tag(name="Category"),
      * @OA\Response(
@@ -52,7 +52,7 @@ class GetCategoryListV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/category/get-category-list', methods: ['GET'])]
+    #[Route(path: '/api/v1/category/get-category-list', name: 'api_category_get_category_list', methods: ['GET'])]
     public function __invoke(Request $request): Response
     {
         $dto = new GetCategoryListV1RequestDto();

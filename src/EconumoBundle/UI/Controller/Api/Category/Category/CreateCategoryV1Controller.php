@@ -27,7 +27,7 @@ class CreateCategoryV1Controller extends AbstractController
     }
 
     /**
-     * Create Category
+     * Create a category
      *
      * @OA\Tag(name="Category"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Category\Dto\CreateCategoryV1RequestDto::class))),
@@ -55,7 +55,7 @@ class CreateCategoryV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/category/create-category', methods: ['POST'])]
+    #[Route(path: '/api/v1/category/create-category', name: 'api_category_create_category', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new CreateCategoryV1RequestDto();

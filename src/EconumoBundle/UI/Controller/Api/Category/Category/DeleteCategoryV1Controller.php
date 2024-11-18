@@ -25,7 +25,7 @@ class DeleteCategoryV1Controller extends AbstractController
     }
 
     /**
-     * Delete category
+     * Delete a category
      *
      * @OA\Tag(name="Category"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Category\Dto\DeleteCategoryV1RequestDto::class))),
@@ -53,7 +53,7 @@ class DeleteCategoryV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/category/delete-category', methods: ['POST'])]
+    #[Route(path: '/api/v1/category/delete-category', name: 'api_category_delete_category', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new DeleteCategoryV1RequestDto();
