@@ -26,7 +26,7 @@ class ImportCurrencyRatesV1Controller extends AbstractController implements Syst
     }
 
     /**
-     * Import currencies rates
+     * Import currency rates
      *
      * @OA\Tag(name="System"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\System\Dto\ImportCurrencyRatesV1RequestDto::class))),
@@ -54,7 +54,7 @@ class ImportCurrencyRatesV1Controller extends AbstractController implements Syst
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/system/import-currency-rates', methods: ['POST'])]
+    #[Route(path: '/api/v1/system/import-currency-rates', name: 'api_system_import_currency_rates', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new ImportCurrencyRatesV1RequestDto();

@@ -53,7 +53,7 @@ class ImportCurrencyListV1Controller extends AbstractController implements Syste
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/system/import-currency-list', methods: ['POST'])]
+    #[Route(path: '/api/v1/system/import-currency-list', name: 'api_system_import_currency_list', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new ImportCurrencyListV1RequestDto();
