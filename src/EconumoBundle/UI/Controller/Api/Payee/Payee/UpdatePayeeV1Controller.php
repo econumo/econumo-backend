@@ -25,7 +25,7 @@ class UpdatePayeeV1Controller extends AbstractController
     }
 
     /**
-     * Update payee
+     * Update a payee
      *
      * @OA\Tag(name="Payee"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Payee\Dto\UpdatePayeeV1RequestDto::class))),
@@ -53,7 +53,7 @@ class UpdatePayeeV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/payee/update-payee', methods: ['POST'])]
+    #[Route(path: '/api/v1/payee/update-payee', name: 'api_payee_update_payee', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new UpdatePayeeV1RequestDto();

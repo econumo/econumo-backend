@@ -25,7 +25,7 @@ class GetPayeeListV1Controller extends AbstractController
     }
 
     /**
-     * Get PayeeList
+     * Get payees
      *
      * @OA\Tag(name="Payee"),
      * @OA\Response(
@@ -52,7 +52,7 @@ class GetPayeeListV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/payee/get-payee-list', methods: ['GET'])]
+    #[Route(path: '/api/v1/payee/get-payee-list', name: 'api_payee_get_payee_list', methods: ['GET'])]
     public function __invoke(Request $request): Response
     {
         $dto = new GetPayeeListV1RequestDto();

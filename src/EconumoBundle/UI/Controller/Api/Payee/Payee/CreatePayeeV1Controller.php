@@ -27,7 +27,7 @@ class CreatePayeeV1Controller extends AbstractController
     }
 
     /**
-     * Create Payee
+     * Create a payee
      *
      * @OA\Tag(name="Payee"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Payee\Dto\CreatePayeeV1RequestDto::class))),
@@ -55,7 +55,7 @@ class CreatePayeeV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/payee/create-payee', methods: ['POST'])]
+    #[Route(path: '/api/v1/payee/create-payee', name: 'api_payee_create_payee', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new CreatePayeeV1RequestDto();

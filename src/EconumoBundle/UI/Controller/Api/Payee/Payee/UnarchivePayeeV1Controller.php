@@ -25,7 +25,7 @@ class UnarchivePayeeV1Controller extends AbstractController
     }
 
     /**
-     * Unarchive payee
+     * Unarchive a payee
      *
      * @OA\Tag(name="Payee"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Payee\Dto\UnarchivePayeeV1RequestDto::class))),
@@ -53,7 +53,7 @@ class UnarchivePayeeV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/payee/unarchive-payee', methods: ['POST'])]
+    #[Route(path: '/api/v1/payee/unarchive-payee', name: 'api_payee_unarchive_payee', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new UnarchivePayeeV1RequestDto();

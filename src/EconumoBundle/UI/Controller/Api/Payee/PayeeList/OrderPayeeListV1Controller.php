@@ -25,7 +25,7 @@ class OrderPayeeListV1Controller extends AbstractController
     }
 
     /**
-     * Order payeeList
+     * Order payees
      *
      * @OA\Tag(name="Payee"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Payee\Dto\OrderPayeeListV1RequestDto::class))),
@@ -53,7 +53,7 @@ class OrderPayeeListV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/payee/order-payee-list', methods: ['POST'])]
+    #[Route(path: '/api/v1/payee/order-payee-list', name: 'api_payee_order_payee_list', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new OrderPayeeListV1RequestDto();

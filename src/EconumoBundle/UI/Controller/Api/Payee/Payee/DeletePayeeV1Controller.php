@@ -25,7 +25,7 @@ class DeletePayeeV1Controller extends AbstractController
     }
 
     /**
-     * Delete payee
+     * Delete a payee
      *
      * @OA\Tag(name="Payee"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Payee\Dto\DeletePayeeV1RequestDto::class))),
@@ -53,7 +53,7 @@ class DeletePayeeV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/payee/delete-payee', methods: ['POST'])]
+    #[Route(path: '/api/v1/payee/delete-payee', name: 'api_payee_delete_payee', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new DeletePayeeV1RequestDto();
