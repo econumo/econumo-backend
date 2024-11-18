@@ -352,13 +352,7 @@ readonly class BudgetStructureDtoAssembler
             );
         }
 
-        usort($result, static function (BudgetStructureParentElementDto $a, BudgetStructureParentElementDto $b) : int {
-            if ($a->position === $b->position) {
-                return 0;
-            }
-            
-            return ($a->position < $b->position) ? -1 : 1;
-        });
+        usort($result, static fn(BudgetStructureParentElementDto $a, BudgetStructureParentElementDto $b): int => $a->position <=> $b->position);
 
         return new BudgetStructureDto($folders, $result);
     }
@@ -380,9 +374,8 @@ readonly class BudgetStructureDtoAssembler
     private function getEnvelopes(Id $budgetId): array
     {
         $envelopes = [];
-        $envelopes = $this->budgetEnvelopeRepository->getByBudgetId($budgetId);
 
-        return $envelopes;
+        return $this->budgetEnvelopeRepository->getByBudgetId($budgetId);
     }
 
     /**

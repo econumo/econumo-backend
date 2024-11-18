@@ -66,6 +66,7 @@ class LoginUserV1Controller extends AbstractController
         if ($user === null) {
             throw new AccessDeniedHttpException('Auth failed');
         }
+
         $result = $this->userService->loginUser($user);
         return new JsonResponse($result);
     }
