@@ -25,7 +25,7 @@ class GetCurrencyListV1Controller extends AbstractController
     }
 
     /**
-     * Get CurrencyList
+     * Get currencies
      *
      * @OA\Tag(name="Currency"),
      * @OA\Response(
@@ -52,7 +52,7 @@ class GetCurrencyListV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/currency/get-currency-list', methods: ['GET'])]
+    #[Route(path: '/api/v1/currency/get-currency-list', name: 'api_currency_get_currency_list', methods: ['GET'])]
     public function __invoke(Request $request): Response
     {
         $dto = new GetCurrencyListV1RequestDto();
