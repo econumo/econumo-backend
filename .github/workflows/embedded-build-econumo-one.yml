@@ -19,6 +19,11 @@ jobs:
         run: |
           docker build --tag ${DOCKER_IMAGE} --target test -f build/docker/app/Dockerfile .
 
+      - name: Run RECTOR
+        if: success()
+        run: |
+          docker run ${DOCKER_IMAGE} vendor/bin/rector process --dry-run
+
       - name: Test APP image
         if: success()
         run: |
@@ -31,11 +36,6 @@ jobs:
           QASE_ENABLE: "false"
           QASE_TOKEN: ${{ secrets.APP_QASE_TOKEN }}
           QASE_PROJECT: "EA"
-
-#      - name: Run RECTOR
-#        if: success()
-#        run: |
-#          docker run ${DOCKER_IMAGE} vendor/bin/rector process --dry-run
 
 #            -   name: Run PSALM analysis
 #                if: success()

@@ -41,14 +41,3 @@ jobs:
           QASE_ENABLE: "false"
           QASE_TOKEN: ${{ secrets.APP_QASE_TOKEN }}
           QASE_PROJECT: "EA"
-
-#      - name: Run RECTOR
-#        if: success()
-#        run: |
-#          docker run ${DOCKER_IMAGE} vendor/bin/rector process --dry-run
-
-#            -   name: Run PSALM analysis
-#                if: success()
-#                run: |
-#                    docker run --network="host" --add-host=db:127.0.0.1 ${DOCKER_IMAGE} vendor/bin/psalm --long-progress --output-format=github
-
