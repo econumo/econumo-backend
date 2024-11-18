@@ -25,7 +25,7 @@ class GetFolderListV1Controller extends AbstractController
     }
 
     /**
-     * Get an accounts folder list
+     * Get accounts folders
      *
      * @OA\Tag(name="Account"),
      * @OA\Response(

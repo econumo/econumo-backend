@@ -25,7 +25,7 @@ class OrderAccountListV1Controller extends AbstractController
     }
 
     /**
-     * Order an account list
+     * Order accounts
      *
      * @OA\Tag(name="Account"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Account\Dto\OrderAccountListV1RequestDto::class))),

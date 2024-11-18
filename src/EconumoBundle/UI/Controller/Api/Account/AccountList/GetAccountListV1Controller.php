@@ -25,7 +25,7 @@ class GetAccountListV1Controller extends AbstractController
     }
 
     /**
-     * Get an account list
+     * Get accounts
      *
      * @OA\Tag(name="Account"),
      * @OA\Response(

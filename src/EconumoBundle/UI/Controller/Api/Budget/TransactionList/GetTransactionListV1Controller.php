@@ -25,7 +25,7 @@ class GetTransactionListV1Controller extends AbstractController
     }
 
     /**
-     * Get a transaction list
+     * Get a budget transactions
      *
      * @OA\Tag(name="Budget"),
      * @OA\Parameter(

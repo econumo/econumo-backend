@@ -25,7 +25,7 @@ class GetBudgetListV1Controller extends AbstractController
     }
 
     /**
-     * Get a user's budget list
+     * Get a user's budgets
      *
      * @OA\Tag(name="Budget"),
      * @OA\Response(

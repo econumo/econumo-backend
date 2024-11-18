@@ -25,7 +25,7 @@ class OrderFolderListV1Controller extends AbstractController
     }
 
     /**
-     * Order an accounts folder list
+     * Order accounts folders
      *
      * @OA\Tag(name="Account"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Account\Dto\OrderFolderListV1RequestDto::class))),
