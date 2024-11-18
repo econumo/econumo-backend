@@ -25,7 +25,7 @@ class UpdateEnvelopeV1Controller extends AbstractController
     }
 
     /**
-     * Update envelope
+     * Update a budget's envelope
      *
      * @OA\Tag(name="Budget"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Budget\Dto\UpdateEnvelopeV1RequestDto::class))),
@@ -53,7 +53,7 @@ class UpdateEnvelopeV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/budget/update-envelope', methods: ['POST'])]
+    #[Route(path: '/api/v1/budget/update-envelope', name: 'api_budget_update_envelope', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new UpdateEnvelopeV1RequestDto();

@@ -25,7 +25,7 @@ class MoveElementListV1Controller extends AbstractController
     }
 
     /**
-     * Move elementList
+     * Move and reorder elements
      *
      * @OA\Tag(name="Budget"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Budget\Dto\MoveElementListV1RequestDto::class))),
@@ -53,7 +53,7 @@ class MoveElementListV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/budget/move-element-list', methods: ['POST'])]
+    #[Route(path: '/api/v1/budget/move-element-list', name: 'api_budget_move_element_list', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new MoveElementListV1RequestDto();

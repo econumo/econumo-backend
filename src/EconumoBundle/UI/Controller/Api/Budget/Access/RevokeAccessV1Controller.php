@@ -16,7 +16,7 @@ use OpenApi\Annotations as OA;
 class RevokeAccessV1Controller extends AbstractController
 {
     /**
-     * Revoke access
+     * Revoke a budget access
      *
      * @OA\Tag(name="Budget"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Budget\Dto\RevokeAccessV1RequestDto::class))),

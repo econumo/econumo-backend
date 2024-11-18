@@ -25,7 +25,7 @@ class CreateEnvelopeV1Controller extends AbstractController
     }
 
     /**
-     * Create envelope
+     * Create a budget's envelope
      *
      * @OA\Tag(name="Budget"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Budget\Dto\CreateEnvelopeV1RequestDto::class))),
@@ -53,7 +53,7 @@ class CreateEnvelopeV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/budget/create-envelope', methods: ['POST'])]
+    #[Route(path: '/api/v1/budget/create-envelope', name: 'api_budget_create_envelope', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new CreateEnvelopeV1RequestDto();

@@ -25,7 +25,7 @@ class GetTransactionListV1Controller extends AbstractController
     }
 
     /**
-     * Get TransactionList
+     * Get a transaction list
      *
      * @OA\Tag(name="Budget"),
      * @OA\Parameter(
@@ -87,7 +87,7 @@ class GetTransactionListV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/budget/get-transaction-list', methods: ['GET'])]
+    #[Route(path: '/api/v1/budget/get-transaction-list', name: 'api_budget_get_transaction_list', methods: ['GET'])]
     public function __invoke(Request $request): Response
     {
         $dto = new GetTransactionListV1RequestDto();

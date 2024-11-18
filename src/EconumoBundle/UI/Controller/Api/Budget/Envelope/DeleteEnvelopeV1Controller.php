@@ -25,7 +25,7 @@ class DeleteEnvelopeV1Controller extends AbstractController
     }
 
     /**
-     * Delete envelope
+     * Delete a budget's envelope
      *
      * @OA\Tag(name="Budget"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Budget\Dto\DeleteEnvelopeV1RequestDto::class))),
@@ -53,7 +53,7 @@ class DeleteEnvelopeV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/budget/delete-envelope', methods: ['POST'])]
+    #[Route(path: '/api/v1/budget/delete-envelope', name: 'api_budget_delete_envelope', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new DeleteEnvelopeV1RequestDto();

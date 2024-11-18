@@ -16,7 +16,7 @@ use OpenApi\Annotations as OA;
 class AcceptAccessV1Controller extends AbstractController
 {
     /**
-     * Accept access
+     * Accept a budget access
      *
      * @OA\Tag(name="Budget"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Budget\Dto\AcceptAccessV1RequestDto::class))),

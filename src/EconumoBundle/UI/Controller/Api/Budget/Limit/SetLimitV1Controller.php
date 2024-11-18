@@ -25,7 +25,7 @@ class SetLimitV1Controller extends AbstractController
     }
 
     /**
-     * Set limit
+     * Set an expenses limit for an element
      *
      * @OA\Tag(name="Budget"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Budget\Dto\SetLimitV1RequestDto::class))),
@@ -53,7 +53,7 @@ class SetLimitV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/budget/set-limit', methods: ['POST'])]
+    #[Route(path: '/api/v1/budget/set-limit', name: 'api_budget_set_limit', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new SetLimitV1RequestDto();

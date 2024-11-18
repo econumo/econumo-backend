@@ -16,7 +16,7 @@ use OpenApi\Annotations as OA;
 class DeclineAccessV1Controller extends AbstractController
 {
     /**
-     * Decline access
+     * Decline a budget access
      *
      * @OA\Tag(name="Budget"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Budget\Dto\DeclineAccessV1RequestDto::class))),

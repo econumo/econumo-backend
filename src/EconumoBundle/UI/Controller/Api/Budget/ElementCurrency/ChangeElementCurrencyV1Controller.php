@@ -25,7 +25,7 @@ class ChangeElementCurrencyV1Controller extends AbstractController
     }
 
     /**
-     * Change ElementCurrency
+     * Change an element's currency
      *
      * @OA\Tag(name="Budget"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Budget\Dto\ChangeElementCurrencyV1RequestDto::class))),
@@ -53,7 +53,7 @@ class ChangeElementCurrencyV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/budget/change-element-currency', methods: ['POST'])]
+    #[Route(path: '/api/v1/budget/change-element-currency', name: 'api_budget_change_element_currency', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new ChangeElementCurrencyV1RequestDto();

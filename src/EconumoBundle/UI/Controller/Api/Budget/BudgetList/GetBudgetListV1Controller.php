@@ -25,7 +25,7 @@ class GetBudgetListV1Controller extends AbstractController
     }
 
     /**
-     * Get BudgetList
+     * Get a user's budget list
      *
      * @OA\Tag(name="Budget"),
      * @OA\Response(
@@ -52,7 +52,7 @@ class GetBudgetListV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/budget/get-budget-list', methods: ['GET'])]
+    #[Route(path: '/api/v1/budget/get-budget-list', name: 'api_budget_get_budget_list', methods: ['GET'])]
     public function __invoke(Request $request): Response
     {
         $dto = new GetBudgetListV1RequestDto();

@@ -25,7 +25,7 @@ class ExcludeAccountV1Controller extends AbstractController
     }
 
     /**
-     * Exclude account
+     * Exclude an account from a budget
      *
      * @OA\Tag(name="Budget"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Budget\Dto\ExcludeAccountV1RequestDto::class))),
@@ -53,7 +53,7 @@ class ExcludeAccountV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/budget/exclude-account', methods: ['POST'])]
+    #[Route(path: '/api/v1/budget/exclude-account', name: 'api_budget_exclude_account', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new ExcludeAccountV1RequestDto();

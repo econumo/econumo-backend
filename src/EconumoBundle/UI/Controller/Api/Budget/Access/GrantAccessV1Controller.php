@@ -16,7 +16,7 @@ use OpenApi\Annotations as OA;
 class GrantAccessV1Controller extends AbstractController
 {
     /**
-     * Grant access
+     * Grant a budget access
      *
      * @OA\Tag(name="Budget"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Budget\Dto\GrantAccessV1RequestDto::class))),

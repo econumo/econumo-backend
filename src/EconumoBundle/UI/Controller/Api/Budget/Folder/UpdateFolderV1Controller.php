@@ -25,7 +25,7 @@ class UpdateFolderV1Controller extends AbstractController
     }
 
     /**
-     * Update folder
+     * Update a budget's folder
      *
      * @OA\Tag(name="Budget"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Budget\Dto\UpdateBudgetFolderV1RequestDto::class))),
@@ -53,7 +53,7 @@ class UpdateFolderV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/budget/update-folder', methods: ['POST'])]
+    #[Route(path: '/api/v1/budget/update-folder', name: 'api_budget_update_folder', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new UpdateBudgetFolderV1RequestDto();

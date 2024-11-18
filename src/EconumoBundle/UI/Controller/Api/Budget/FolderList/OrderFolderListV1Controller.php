@@ -25,7 +25,7 @@ class OrderFolderListV1Controller extends AbstractController
     }
 
     /**
-     * Order folderList
+     * Order a budget's folders
      *
      * @OA\Tag(name="Budget"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Budget\Dto\OrderBudgetFolderListV1RequestDto::class))),
@@ -53,7 +53,7 @@ class OrderFolderListV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/budget/order-folder-list', methods: ['POST'])]
+    #[Route(path: '/api/v1/budget/order-folder-list', name: 'api_budget_order_folder_list', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new OrderBudgetFolderListV1RequestDto();

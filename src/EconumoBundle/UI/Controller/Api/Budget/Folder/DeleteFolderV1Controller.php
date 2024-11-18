@@ -25,7 +25,7 @@ class DeleteFolderV1Controller extends AbstractController
     }
 
     /**
-     * Delete folder
+     * Delete a budget's folder
      *
      * @OA\Tag(name="Budget"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Budget\Dto\DeleteFolderV1RequestDto::class))),
@@ -53,7 +53,7 @@ class DeleteFolderV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/budget/delete-folder', methods: ['POST'])]
+    #[Route(path: '/api/v1/budget/delete-folder', name: 'api_budget_delete_folder', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new DeleteFolderV1RequestDto();

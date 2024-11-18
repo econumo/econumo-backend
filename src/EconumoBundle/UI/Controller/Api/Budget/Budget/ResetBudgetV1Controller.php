@@ -25,7 +25,7 @@ class ResetBudgetV1Controller extends AbstractController
     }
 
     /**
-     * Reset budget
+     * Reset a budget
      *
      * @OA\Tag(name="Budget"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Budget\Dto\ResetBudgetV1RequestDto::class))),
@@ -53,7 +53,7 @@ class ResetBudgetV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/budget/reset-budget', methods: ['POST'])]
+    #[Route(path: '/api/v1/budget/reset-budget', name: 'api_budget_reset_budget', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new ResetBudgetV1RequestDto();

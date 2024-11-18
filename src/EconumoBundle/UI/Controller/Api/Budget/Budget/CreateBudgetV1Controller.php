@@ -25,7 +25,7 @@ class CreateBudgetV1Controller extends AbstractController
     }
 
     /**
-     * Create budget
+     * Create a budget
      *
      * @OA\Tag(name="Budget"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Budget\Dto\CreateBudgetV1RequestDto::class))),
@@ -53,7 +53,7 @@ class CreateBudgetV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/budget/create-budget', methods: ['POST'])]
+    #[Route(path: '/api/v1/budget/create-budget', name: 'api_budget_create_budget', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new CreateBudgetV1RequestDto();

@@ -25,7 +25,7 @@ class CreateFolderV1Controller extends AbstractController
     }
 
     /**
-     * Create folder
+     * Create a budget's folder
      *
      * @OA\Tag(name="Budget"),
      * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Budget\Dto\CreateBudgetFolderV1RequestDto::class))),
@@ -53,7 +53,7 @@ class CreateFolderV1Controller extends AbstractController
      * @return Response
      * @throws ValidationException
      */
-    #[Route(path: '/api/v1/budget/create-folder', methods: ['POST'])]
+    #[Route(path: '/api/v1/budget/create-folder', name: 'api_budget_create_folder', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $dto = new CreateBudgetFolderV1RequestDto();
