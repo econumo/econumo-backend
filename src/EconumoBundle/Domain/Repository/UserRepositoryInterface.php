@@ -24,4 +24,9 @@ interface UserRepositoryInterface
     public function get(Id $id): User;
 
     public function getReference(Id $id): User;
+
+    /**
+     * @return User[]
+     */
+    public function getAll(): array;
 }

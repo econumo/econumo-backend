@@ -11,10 +11,13 @@ use App\EconumoBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoBundle\Domain\Service\Connection\ConnectionAccountServiceInterface;
 use App\EconumoBundle\Domain\Service\Connection\ConnectionServiceInterface;
 
-class ConnectionListService
+readonly class ConnectionListService
 {
-    public function __construct(private readonly GetConnectionListV1ResultAssembler $getConnectionListV1ResultAssembler, private readonly ConnectionServiceInterface $connectionService, private readonly ConnectionAccountServiceInterface $connectionAccountService)
-    {
+    public function __construct(
+        private GetConnectionListV1ResultAssembler $getConnectionListV1ResultAssembler,
+        private ConnectionServiceInterface $connectionService,
+        private ConnectionAccountServiceInterface $connectionAccountService
+    ) {
     }
 
     public function getConnectionList(
@@ -24,6 +27,13 @@ class ConnectionListService
         $receivedAccountAccess = $this->connectionAccountService->getReceivedAccountAccess($userId);
         $issuedAccountAccess = $this->connectionAccountService->getIssuedAccountAccess($userId);
         $connectedUsers = $this->connectionService->getUserList($userId);
-        return $this->getConnectionListV1ResultAssembler->assemble($dto, $userId, $receivedAccountAccess, $issuedAccountAccess, $connectedUsers);
+
+        return $this->getConnectionListV1ResultAssembler->assemble(
+            $dto,
+            $userId,
+            $receivedAccountAccess,
+            $issuedAccountAccess,
+            $connectedUsers
+        );
     }
 }

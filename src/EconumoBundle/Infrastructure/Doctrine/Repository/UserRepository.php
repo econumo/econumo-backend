@@ -105,4 +105,9 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     {
         return $this->getEntityManager()->getReference(User::class, $id);
     }
+
+    public function getAll(): array
+    {
+        return $this->findAll();
+    }
 }

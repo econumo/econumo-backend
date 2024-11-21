@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\EconumoBundle\Command;
 
 use App\EconumoBundle\Domain\Entity\ValueObject\Email;
-use App\EconumoBundle\Domain\Factory\UserFactoryInterface;
-use App\EconumoBundle\Domain\Repository\UserRepositoryInterface;
+use App\EconumoBundle\Domain\Service\UserServiceInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,8 +18,9 @@ class CreateUserCommand extends Command
 
     protected static $defaultDescription = 'Create new user';
 
-    public function __construct(private readonly UserFactoryInterface $userFactory, private readonly UserRepositoryInterface $userRepository)
-    {
+    public function __construct(
+        private readonly UserServiceInterface $userService,
+    ) {
         parent::__construct(self::$defaultName);
     }
 
@@ -36,12 +36,11 @@ class CreateUserCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $name = trim((string) $input->getArgument('name'));
-        $email = trim((string) $input->getArgument('email'));
-        $password = trim((string) $input->getArgument('password'));
+        $name = trim((string)$input->getArgument('name'));
+        $email = trim((string)$input->getArgument('email'));
+        $password = trim((string)$input->getArgument('password'));
 
-        $user = $this->userFactory->create($name, new Email($email), $password);
-        $this->userRepository->save([$user]);
+        $user = $this->userService->register(new Email($email), $password, $name);
         $io->success(sprintf('User %s successfully created! (id: %s)', $name, $user->getId()));
 
         return Command::SUCCESS;
