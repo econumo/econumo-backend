@@ -3,18 +3,84 @@ on:
   push:
     branches:
       - '*'
-
 jobs:
-  build-econumo-one:
-    uses: ./.github/workflows/embedded-build-econumo-one.yml
-    secrets: inherit
+  build-econumo:
+    name: Build Econumo
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_IMAGE: 'econumo-one'
 
-  build-econumo-family:
-    needs: build-econumo-one
-    uses: ./.github/workflows/embedded-build-econumo-family.yml
-    secrets: inherit
+    steps:
+      - uses: actions/checkout@v4
 
-  build-econumo-cloud:
-    needs: build-econumo-family
-    uses: ./.github/workflows/embedded-build-econumo-cloud.yml
-    secrets: inherit
+      - name: Clone EconumoFamilyBundle repository
+        uses: actions/checkout@v4
+        with:
+          repository: econumo/econumo-family-bundle
+          ref: main
+          token: ${{ secrets.BUILD_USER_TOKEN }}
+          path: src/EconumoFamilyBundle
+
+      - name: Clone EconumoCloudBundle repository
+        uses: actions/checkout@v4
+        with:
+          repository: econumo/econumo-cloud-bundle
+          ref: main
+          token: ${{ secrets.BUILD_USER_TOKEN }}
+          path: src/EconumoCloudBundle
+
+      - name: Ignore bundles
+        run: |
+          touch src/EconumoFamilyBundle/.disabled
+          touch src/EconumoCloudBundle/.disabled
+
+      - name: Build Econumo image for testing
+        if: success()
+        run: |
+          docker build --tag ${DOCKER_IMAGE} --target test -f build/docker/app/Dockerfile .
+
+      - name: Test Econumo One
+        if: success()
+        run: |
+          docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} bin/console cache:clear --env=test
+          docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} bin/console doctrine:database:create --env=test
+          docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} bin/console doctrine:migration:migrate -n --env=test
+          docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} bin/console doctrine:schema:validate --skip-sync --env=test
+          docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} bin/console doctrine:fixtures:load --purge-with-truncate -n --env=test
+          docker run --volume shared-volume:/var/www/var/db --env QASE_ENABLE=${QASE_ENABLE} --env QASE_TOKEN=${QASE_TOKEN} --env QASE_PROJECT=${QASE_PROJECT} ${DOCKER_IMAGE} vendor/bin/codecept run
+        env:
+          QASE_ENABLE: "false"
+          QASE_TOKEN: ${{ secrets.APP_QASE_TOKEN }}
+          QASE_PROJECT: "EA"
+
+      - name: Test Econumo Family
+        if: success()
+        run: |
+          docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} rm -f src/EconumoFamilyBundle/.disabled
+          docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} bin/console cache:clear --env=test
+          docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} bin/console doctrine:database:create --env=test
+          docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} bin/console doctrine:migration:migrate -n --env=test
+          docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} bin/console doctrine:schema:validate --skip-sync --env=test
+          docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} bin/console doctrine:fixtures:load --purge-with-truncate -n --env=test
+          docker run --volume shared-volume:/var/www/var/db --env QASE_ENABLE=${QASE_ENABLE} --env QASE_TOKEN=${QASE_TOKEN} --env QASE_PROJECT=${QASE_PROJECT} ${DOCKER_IMAGE} vendor/bin/codecept run
+          docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} touch src/EconumoFamilyBundle/.disabled
+        env:
+          QASE_ENABLE: "false"
+          QASE_TOKEN: ${{ secrets.APP_QASE_TOKEN }}
+          QASE_PROJECT: "EA"
+
+      - name: Test Econumo Cloud
+        if: success()
+        run: |
+          docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} rm -f src/EconumoCloudBundle/.disabled
+          docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} bin/console cache:clear --env=test
+          docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} bin/console doctrine:database:create --env=test
+          docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} bin/console doctrine:migration:migrate -n --env=test
+          docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} bin/console doctrine:schema:validate --skip-sync --env=test
+          docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} bin/console doctrine:fixtures:load --purge-with-truncate -n --env=test
+          docker run --volume shared-volume:/var/www/var/db --env QASE_ENABLE=${QASE_ENABLE} --env QASE_TOKEN=${QASE_TOKEN} --env QASE_PROJECT=${QASE_PROJECT} ${DOCKER_IMAGE} vendor/bin/codecept run
+          docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} touch src/EconumoCloudBundle/.disabled
+        env:
+          QASE_ENABLE: "false"
+          QASE_TOKEN: ${{ secrets.APP_QASE_TOKEN }}
+          QASE_PROJECT: "EA"
