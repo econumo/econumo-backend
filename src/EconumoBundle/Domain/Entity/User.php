@@ -32,6 +32,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private string $password;
 
+    private bool $isActive = true;
+
     /**
      * @var Collection|self[]
      */
@@ -175,6 +177,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             return;
         }
 
+        if (!$user->isActive()) {
+            return;
+        }
+
         $this->connections->add($user);
     }
 
@@ -189,6 +195,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getConnections(): Collection
     {
         $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('isActive', true))
             ->orderBy(['name' => Criteria::ASC]);
         return $this->connections->matching($criteria);
     }
@@ -289,6 +296,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
                 return;
             }
+        }
+    }
+
+    public function isActive(): bool
+    {
+        return $this->isActive;
+    }
+
+    public function deactivate(): void
+    {
+        if ($this->isActive()) {
+            $this->isActive = false;
+            $this->updatedAt = new DateTime();
         }
     }
 }

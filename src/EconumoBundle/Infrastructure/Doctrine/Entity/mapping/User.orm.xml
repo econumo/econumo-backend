@@ -17,6 +17,11 @@
         <field name="avatarUrl" type="string" column="avatar_url" nullable="false"/>
         <field name="password" type="string" column="password" nullable="false"/>
         <field name="salt" type="string" column="salt" length="40" nullable="false"/>
+        <field name="isActive" type="boolean" column="is_active" nullable="false">
+            <options>
+                <option name="default">1</option>
+            </options>
+        </field>
         <field name="createdAt" type="datetime_immutable" column="created_at" nullable="false"/>
         <field name="updatedAt" type="datetime" column="updated_at" nullable="false"/>
 

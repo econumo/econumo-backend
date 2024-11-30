@@ -9,6 +9,7 @@ use App\EconumoBundle\Domain\Entity\ValueObject\Email;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoBundle\Domain\Entity\ValueObject\Identifier;
 use App\EconumoBundle\Domain\Exception\NotFoundException;
+use App\EconumoBundle\Domain\Exception\UserDeactivatedException;
 use App\EconumoBundle\Domain\Repository\UserRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Exception\ORMException;
@@ -78,6 +79,10 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             throw new NotFoundException(sprintf('User with identifier %s not found', $identifier));
         }
 
+        if (!$user->isActive()) {
+            throw new UserDeactivatedException('User is deactivated');
+        }
+
         return $user;
     }
 
@@ -86,6 +91,10 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $item = $this->find($id);
         if (!$item instanceof User) {
             throw new NotFoundException(sprintf('User with ID %s not found', $id));
+        }
+
+        if (!$item->isActive()) {
+            throw new UserDeactivatedException('User is deactivated');
         }
 
         return $item;
@@ -98,6 +107,10 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             throw new NotFoundException(sprintf('User with email %s not found', $email));
         }
 
+        if (!$user->isActive()) {
+            throw new UserDeactivatedException('User is deactivated');
+        }
+
         return $user;
     }
 
@@ -108,6 +121,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     public function getAll(): array
     {
-        return $this->findAll();
+        return $this->findBy(['isActive' => true]);
     }
 }
