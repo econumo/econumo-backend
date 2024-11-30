@@ -311,4 +311,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             $this->updatedAt = new DateTime();
         }
     }
+
+    public function getCreatedAt(): DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
 }
