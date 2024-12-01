@@ -176,18 +176,12 @@ class CurrencyConvertor implements CurrencyConvertorInterface
         if ($this->baseCurrencyId instanceof Id) {
             $baseCurrencyId = $this->baseCurrencyId;
         } else {
-            $baseCurrencyId = null;
-            foreach ($rates as $rate) {
-                if ($rate->currencyCode->isEqual($this->baseCurrency)) {
-                    $baseCurrencyId = $rate->currencyId;
-                    $this->baseCurrencyId = $baseCurrencyId;
-                    break;
-                }
+            $baseCurrency = $this->currencyRepository->getByCode($this->baseCurrency);
+            if (null === $baseCurrency) {
+                throw new DomainException('Base Currency not found');
             }
-        }
-
-        if (!$baseCurrencyId instanceof Id) {
-            throw new DomainException('Base Currency not found');
+            $baseCurrencyId = $baseCurrency->getId();
+            $this->baseCurrencyId = $baseCurrencyId;
         }
 
         $result = $amount;
