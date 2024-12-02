@@ -5,14 +5,14 @@
 </p>
 
 <p align="center">
-    A getting started guide to self-hosting <a href="https://econumo.com/" target="_blank">Econumo</a>
+    A getting started guide to self-hosting <a href="https://econumo.com/" target="_blank">Econumo CE</a>
 </p>
 
 ---
 
 ## Description
 
-This is the main backend repository for Econumo, containing the backend for [Econumo One](https://econumo.com/docs/edition/).
+This is the main backend repository for Econumo, containing the backend for [Econumo CE](https://econumo.com/docs/edition/).
 The backend is built using PHP, Symfony, and SQLite.
 
 ## Contribution
@@ -23,10 +23,6 @@ Run the Application
 2. Clone the repository.
 3. Create a `.env.local` to override the default `.env`
 4. Run `task up`
-
-### For Econumo Family Users
-
-1. Clone `git@github.com:econumo/econumo-family-bundle.git` into the `src/EconumoFamilyBundle` directory
 
 ### Run tests
 

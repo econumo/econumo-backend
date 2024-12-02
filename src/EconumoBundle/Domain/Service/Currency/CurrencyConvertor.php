@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace App\EconumoBundle\Domain\Service\Currency;
 
 
+use App\EconumoBundle\Domain\Entity\Currency;
 use App\EconumoBundle\Domain\Entity\CurrencyRate;
 use App\EconumoBundle\Domain\Entity\ValueObject\CurrencyCode;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
@@ -177,9 +178,10 @@ class CurrencyConvertor implements CurrencyConvertorInterface
             $baseCurrencyId = $this->baseCurrencyId;
         } else {
             $baseCurrency = $this->currencyRepository->getByCode($this->baseCurrency);
-            if (null === $baseCurrency) {
+            if (!$baseCurrency instanceof Currency) {
                 throw new DomainException('Base Currency not found');
             }
+
             $baseCurrencyId = $baseCurrency->getId();
             $this->baseCurrencyId = $baseCurrencyId;
         }

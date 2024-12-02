@@ -1,0 +1,4 @@
+# src/EconumoFamilyBundle/Resources/config/routes.yaml
+econumo_family:
+  resource: '../../UI/Controller/'
+  type: annotation

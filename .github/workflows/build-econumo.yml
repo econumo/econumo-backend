@@ -13,14 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Clone EconumoFamilyBundle repository
-        uses: actions/checkout@v4
-        with:
-          repository: econumo/econumo-family-bundle
-          ref: main
-          token: ${{ secrets.BUILD_USER_TOKEN }}
-          path: src/EconumoFamilyBundle
-
       - name: Clone EconumoCloudBundle repository
         uses: actions/checkout@v4
         with:
@@ -53,7 +45,7 @@ jobs:
           QASE_TOKEN: ${{ secrets.APP_QASE_TOKEN }}
           QASE_PROJECT: "EA"
 
-      - name: Test Econumo Family
+      - name: Test Econumo CE
         if: success()
         run: |
           docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} rm -f src/EconumoFamilyBundle/.disabled
