@@ -1,6 +1,8 @@
 account:
   correction:
     message: Balance adjustment
+  folder:
+    all_accounts: All accounts
 email:
   reset_password_confirmation_code:
     subject: Reset password confirmation code
