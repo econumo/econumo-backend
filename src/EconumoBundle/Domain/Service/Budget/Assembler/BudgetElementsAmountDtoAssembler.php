@@ -16,6 +16,7 @@ use App\EconumoBundle\Domain\Service\Budget\Dto\BudgetElementAmountSpentDto;
 use App\EconumoBundle\Domain\Service\Budget\Dto\BudgetFiltersDto;
 
 use DateInterval;
+use DateMalformedPeriodStringException;
 use DatePeriod;
 use DateTimeInterface;
 
@@ -29,23 +30,19 @@ readonly class BudgetElementsAmountDtoAssembler
 
     /**
      * @return BudgetElementAmountDto[]
-     * @throws \DateMalformedPeriodStringException
+     * @throws DateMalformedPeriodStringException
      */
     public function assemble(
         Budget $budget,
         BudgetFiltersDto $budgetFilters
     ): array {
-        if ((is_countable($budgetFilters->currenciesIds) ? count($budgetFilters->currenciesIds) : 0) === 1) {
-            return $this->getEntityAmountsForOneCurrency($budget, $budgetFilters);
-        }
-
-        return $this->getEntityAmountsForMultipleCurrencies($budget, $budgetFilters);
+        return $this->getEntityAmounts($budget, $budgetFilters);
     }
 
     /**
-     * @throws \DateMalformedPeriodStringException
+     * @throws DateMalformedPeriodStringException
      */
-    private function getEntityAmountsForMultipleCurrencies(
+    private function getEntityAmounts(
         Budget $budget,
         BudgetFiltersDto $budgetFilters,
     ): array {
@@ -84,49 +81,6 @@ readonly class BudgetElementsAmountDtoAssembler
                 $item['overall_spent']
             );
             $result[$index] = $item;
-        }
-
-        return $result;
-    }
-
-    private function getEntityAmountsForOneCurrency(
-        Budget $budget,
-        BudgetFiltersDto $budgetFilters
-    ): array {
-        $data = [];
-        $data = $this->generateByAmounts($budget, $budgetFilters->periodStart, $data);
-        $data = $this->countSpending(
-            $budgetFilters,
-            $budgetFilters->periodStart,
-            $budgetFilters->periodEnd,
-            $data
-        );
-        $data = $this->countSummarizedAmounts(
-            $budget,
-            $budget->getStartedAt(),
-            $budgetFilters->periodStart,
-            $data
-        );
-        $data = $this->countSummarizedSpending(
-            $budget,
-            $budgetFilters,
-            $budget->getStartedAt(),
-            $budgetFilters->periodEnd,
-            $data
-        );
-
-        $result = [];
-        foreach ($data as $item) {
-            $item = new BudgetElementAmountDto(
-                $item['id'],
-                $item['type'],
-                $item['tag_id'],
-                $item['budget']?->getAmount(),
-                round($item['overall_budget'], 2),
-                $item['spent'],
-                $item['overall_spent']
-            );
-            $result[] = $item;
         }
 
         return $result;
