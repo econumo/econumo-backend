@@ -280,14 +280,22 @@ class Transaction
     {
         $this->updateType($dto->type);
         $this->updateAccount($dto->account);
-        $this->updateAccountRecipient($dto->accountRecipient);
         $this->updateAmount($dto->amount);
-        $this->updateAmountRecipient($dto->amountRecipient);
-        $this->updateCategory($dto->category);
         $this->updateDescription($dto->description);
-        $this->updatePayee($dto->payee);
-        $this->updateTag($dto->tag);
         $this->updateDate($dto->date);
+        if ($dto->type->isTransfer()) {
+            $this->category = null;
+            $this->payee = null;
+            $this->tag = null;
+            $this->updateAccountRecipient($dto->accountRecipient);
+            $this->updateAmountRecipient($dto->amountRecipient);
+        } else {
+            $this->accountRecipient = null;
+            $this->amountRecipient = null;
+            $this->updateCategory($dto->category);
+            $this->updatePayee($dto->payee);
+            $this->updateTag($dto->tag);
+        }
     }
 
     private function updated(): void
