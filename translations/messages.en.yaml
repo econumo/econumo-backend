@@ -13,7 +13,8 @@ email:
       If you didn't request this code, please ignore this email.
 
       --
-      Econumo — https://econumo.com
+      Econumo — Manage money. Together.
+      https://econumo.com
 
   welcome_with_password:
     subject: Welcome to Econumo
@@ -27,4 +28,5 @@ email:
       You can access your account here: {{baseUrl}}.
 
       --
-      Econumo — https://econumo.com
+      Econumo — Manage money. Together.
+      https://econumo.com
