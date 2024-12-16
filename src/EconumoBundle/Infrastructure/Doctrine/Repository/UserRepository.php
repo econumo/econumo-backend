@@ -11,6 +11,7 @@ use App\EconumoBundle\Domain\Entity\ValueObject\Identifier;
 use App\EconumoBundle\Domain\Exception\NotFoundException;
 use App\EconumoBundle\Domain\Exception\UserDeactivatedException;
 use App\EconumoBundle\Domain\Repository\UserRepositoryInterface;
+use App\EconumoBundle\Domain\Service\EncodeServiceInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\ORMInvalidArgumentException;
@@ -29,8 +30,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface, UserRepositoryInterface
 {
-    public function __construct(ManagerRegistry $registry)
-    {
+    public function __construct(
+        ManagerRegistry $registry,
+        private readonly EncodeServiceInterface $encodeService
+    ) {
         parent::__construct($registry, User::class);
     }
 
@@ -67,7 +70,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             }
 
             $this->getEntityManager()->flush();
-        } catch (ORMException | ORMInvalidArgumentException $e) {
+        } catch (ORMException|ORMInvalidArgumentException $e) {
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
     }
@@ -102,7 +105,8 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     public function getByEmail(Email $email): User
     {
-        $user = $this->findOneBy(['email' => $email->getValue()]);
+        $encodedEmail = $this->encodeService->hash($email->getValue());
+        $user = $this->findOneBy(['identifier' => $encodedEmail]);
         if (!$user instanceof User) {
             throw new NotFoundException(sprintf('User with email %s not found', $email));
         }

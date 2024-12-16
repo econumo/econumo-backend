@@ -12,5 +12,19 @@ email:
 
       If you didn't request this code, please ignore this email.
 
-      Thanks,
-      Econumo Team
+      --
+      Econumo — https://econumo.com
+
+  welcome_with_password:
+    subject: Welcome to Econumo
+    body: |
+      Thank you for choosing Econumo!
+
+      Your login credentials are as follows:
+      E-mail: {{email}}
+      Password: {{password}}
+      
+      You can access your account here: {{baseUrl}}.
+
+      --
+      Econumo — https://econumo.com

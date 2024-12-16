@@ -26,12 +26,10 @@ readonly class EmailService implements EmailServiceInterface
     ) {
     }
 
-
     public function sendResetPasswordConfirmationCode(Email $recipient, Id $userId): void
     {
         $user = $this->userRepository->get($userId);
         $passwordRequest = $this->userPasswordRequestRepository->getByUser($userId);
-        $this->translationService->trans('email.reset_password_confirmation_code.subject');
         $container = (new EmailContainer())
             ->to($recipient->getValue())
             ->subject($this->translationService->trans('email.reset_password_confirmation_code.subject'))
@@ -39,6 +37,21 @@ readonly class EmailService implements EmailServiceInterface
                 $this->translationService->trans('email.reset_password_confirmation_code.body', [
                     '{{name}}' => $user->getName(),
                     '{{code}}' => $passwordRequest->getCode()->getValue(),
+                ])
+            );
+        $this->send($container);
+    }
+
+    public function sendWelcomeEmailWithPassword(Email $recipient, string $password, string $baseUrl): void
+    {
+        $container = (new EmailContainer())
+            ->to($recipient->getValue())
+            ->subject($this->translationService->trans('email.welcome_with_password.subject'))
+            ->text(
+                $this->translationService->trans('email.welcome_with_password.body', [
+                    '{{email}}' => $recipient->getValue(),
+                    '{{password}}' => $password,
+                    '{{baseUrl}}' => $baseUrl,
                 ])
             );
         $this->send($container);

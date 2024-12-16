@@ -12,4 +12,6 @@ use App\EconumoBundle\Domain\Entity\ValueObject\Id;
 interface EmailServiceInterface
 {
     public function sendResetPasswordConfirmationCode(Email $recipient, Id $userId): void;
+
+    public function sendWelcomeEmailWithPassword(Email $recipient, string $password, string $baseUrl): void;
 }

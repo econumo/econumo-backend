@@ -14,7 +14,6 @@ use App\EconumoBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoBundle\Domain\Entity\ValueObject\ReportPeriod;
 use App\EconumoBundle\Domain\Exception\NotFoundException;
 use App\EconumoBundle\Domain\Exception\UserRegisteredException;
-use App\EconumoBundle\Domain\Exception\UserRegistrationDisabledException;
 use App\EconumoBundle\Domain\Factory\ConnectionInviteFactoryInterface;
 use App\EconumoBundle\Domain\Factory\FolderFactoryInterface;
 use App\EconumoBundle\Domain\Factory\UserFactoryInterface;
@@ -23,11 +22,7 @@ use App\EconumoBundle\Domain\Repository\ConnectionInviteRepositoryInterface;
 use App\EconumoBundle\Domain\Repository\FolderRepositoryInterface;
 use App\EconumoBundle\Domain\Repository\UserOptionRepositoryInterface;
 use App\EconumoBundle\Domain\Repository\UserRepositoryInterface;
-use App\EconumoBundle\Domain\Service\AntiCorruptionServiceInterface;
-use App\EconumoBundle\Domain\Service\EventDispatcherInterface;
 use App\EconumoBundle\Domain\Service\Translation\TranslationServiceInterface;
-use App\EconumoBundle\Domain\Service\User\UserRegistrationServiceInterface;
-use App\EconumoBundle\Domain\Service\UserServiceInterface;
 
 readonly class UserService implements UserServiceInterface
 {
@@ -42,18 +37,13 @@ readonly class UserService implements UserServiceInterface
         private ConnectionInviteFactoryInterface $connectionInviteFactory,
         private ConnectionInviteRepositoryInterface $connectionInviteRepository,
         private UserOptionFactoryInterface $userOptionFactory,
-        private UserOptionRepositoryInterface $userOptionRepository,
-        private UserRegistrationServiceInterface $userRegistrationService
+        private UserOptionRepositoryInterface $userOptionRepository
     )
     {
     }
 
     public function register(Email $email, string $password, string $name): User
     {
-        if (!$this->userRegistrationService->isRegistrationAllowed()) {
-            throw new UserRegistrationDisabledException();
-        }
-
         try {
             $this->userRepository->getByEmail($email);
             throw new UserRegisteredException();

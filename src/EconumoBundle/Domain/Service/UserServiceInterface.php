@@ -17,7 +17,6 @@ interface UserServiceInterface
      * @param string $password
      * @param string $name
      * @return User
-     * @throws UserRegistrationDisabledException
      */
     public function register(Email $email, string $password, string $name): User;
 
