@@ -94,3 +94,8 @@ services:
   App\EconumoBundle\Infrastructure\Datetime\TimezoneListener:
     tags:
       - { name: kernel.event_listener, event: kernel.request, priority: 255 }
+
+  App\EconumoBundle\Domain\Service\EconumoServiceInterface:
+    class: App\EconumoBundle\Domain\Service\EconumoService
+    arguments:
+      $baseUrl: '%env(string:ECONUMO_BASE_URL)%'

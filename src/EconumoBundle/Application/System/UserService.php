@@ -10,6 +10,7 @@ use App\EconumoBundle\Application\System\Dto\CreateUserV1ResultDto;
 use App\EconumoBundle\Application\System\Assembler\CreateUserV1ResultAssembler;
 use App\EconumoBundle\Domain\Entity\ValueObject\Email;
 use App\EconumoBundle\Domain\Exception\UserRegisteredException;
+use App\EconumoBundle\Domain\Service\EconumoServiceInterface;
 use App\EconumoBundle\Domain\Service\EmailServiceInterface;
 use App\EconumoBundle\Domain\Service\Translation\TranslationServiceInterface;
 use App\EconumoBundle\Domain\Service\UserServiceInterface;
@@ -21,6 +22,7 @@ readonly class UserService
         private UserServiceInterface $userService,
         private EmailServiceInterface $emailService,
         private TranslationServiceInterface $translationService,
+        private EconumoServiceInterface $econumoService
     ) {
     }
 
@@ -33,6 +35,7 @@ readonly class UserService
         $name = $dto->name;
         try {
             $user = $this->userService->register($email, $password, $name);
+            $baseUrl = empty($this->econumoService->getBaseUrl()) ? $baseUrl : $this->econumoService->getBaseUrl();
             $this->emailService->sendWelcomeEmailWithPassword($email, $password, $baseUrl);
         } catch (UserRegisteredException $userRegisteredException) {
             throw new ValidationException(
