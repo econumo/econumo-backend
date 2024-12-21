@@ -82,7 +82,9 @@ services:
     tags:
       - { name: kernel.event_listener }
 
-  App\EconumoBundle\Infrastructure\Doctrine\SQLiteForeignKeyEnabler:
+  App\EconumoBundle\Infrastructure\Doctrine\SQLiteConfiguration:
+    arguments:
+      $busyTimeout: '%env(int:ECONUMO_SQLITE_BUSY_TIMEOUT)%'
     tags:
       - { name: doctrine.event_listener, event: postConnect }
 
