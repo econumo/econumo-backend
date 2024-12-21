@@ -101,3 +101,4 @@ services:
     class: App\EconumoBundle\Domain\Service\EconumoService
     arguments:
       $baseUrl: '%env(string:ECONUMO_BASE_URL)%'
+      $isFamilyMode: '%env(bool:ECONUMO_FAMILY_MODE)%'

@@ -37,7 +37,7 @@ readonly class UserProvider implements UserProviderInterface, PasswordUpgraderIn
     public function loadUserByIdentifier(string $identifier): UserInterface
     {
         try {
-            $hashedIdentifier = new Identifier($this->encodeService->hash($identifier));
+            $hashedIdentifier = new Identifier($this->encodeService->hash(strtolower($identifier)));
             return $this->userRepository->loadByIdentifier($hashedIdentifier);
         } catch (NotFoundException $notFoundException) {
             throw new UserNotFoundException($notFoundException->getMessage(), $notFoundException->getCode(), $notFoundException);

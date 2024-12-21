@@ -24,9 +24,10 @@ readonly class UserFactory implements UserFactoryInterface
 
     public function create(string $name, Email $email, string $password): User
     {
-        $identifier = $this->encodeService->hash($email->getValue());
+        $emailValue = strtolower($email->getValue());
+        $identifier = $this->encodeService->hash($emailValue);
         $encodedEmail = $this->encodeService->encode($email->getValue());
-        $avatarUrl = sprintf('https://www.gravatar.com/avatar/%s', md5($email->getValue()));
+        $avatarUrl = sprintf('https://www.gravatar.com/avatar/%s', md5($emailValue));
         $user = new User(
             $this->userRepository->getNextIdentity(),
             $identifier,

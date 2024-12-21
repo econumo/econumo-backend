@@ -8,17 +8,23 @@ namespace App\EconumoFamilyBundle\Application\UseCase\ConnectUsers;
 
 use App\EconumoBundle\Domain\Events\UserRegisteredEvent;
 use App\EconumoBundle\Domain\Repository\UserRepositoryInterface;
+use App\EconumoBundle\Domain\Service\EconumoServiceInterface;
 use App\EconumoBundle\Domain\Service\EventHandlerInterface;
 
 readonly class ConnectUsersEventHandler implements EventHandlerInterface
 {
     public function __construct(
-        private UserRepositoryInterface $userRepository
+        private UserRepositoryInterface $userRepository,
+        private EconumoServiceInterface $econumoService
     ) {
     }
 
     public function __invoke(UserRegisteredEvent $event): void
     {
+        if (!$this->econumoService->isFamilyModeOn()) {
+            return;
+        }
+
         $users = $this->userRepository->getAll();
         $newUser = $this->userRepository->get($event->getUserId());
         $toSave = [
