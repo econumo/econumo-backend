@@ -20,7 +20,6 @@ interface TransactionServiceInterface
     public function updateBalance(Id $accountId, float $correction, DateTimeInterface $updatedAt, string $comment = ''): Transaction;
 
     /**
-     * @param Id $userId
      * @return Transaction[]
      */
     public function getTransactionsForVisibleAccounts(Id $userId, DateTimeInterface $periodStart = null, DateTimeInterface $periodEnd = null): array;

@@ -20,8 +20,6 @@ interface BudgetServiceInterface
      * @param Id $userId User ID
      * @param Id $budgetId Budget ID
      * @param BudgetName $name Budget name
-     * @param DateTimeInterface|null $startDate
-     * @param Id|null $currencyId
      * @param Id[] $excludedAccountsIds
      * @return BudgetDto
      */
@@ -35,20 +33,13 @@ interface BudgetServiceInterface
     ): BudgetDto;
 
     /**
-     * @param Id $userId
      * @return BudgetMetaDto[]
      */
     public function getBudgetList(Id $userId): array;
 
-    /**
-     * @param Id $budgetId
-     */
     public function deleteBudget(Id $budgetId): void;
 
     /**
-     * @param Id $userId
-     * @param Id $budgetId
-     * @param BudgetName $name
      * @param Id[] $excludedAccountsIds
      * @return BudgetMetaDto
      */
@@ -68,16 +59,12 @@ interface BudgetServiceInterface
     public function getBudget(Id $userId, Id $budgetId, DateTimeInterface $periodStart): BudgetDto;
 
     /**
-     * @param Id $userId
-     * @param Id $budgetId
      * @param BudgetStructureMoveElementDto[] $affectedElements
      * @return void
      */
     public function moveElements(Id $userId, Id $budgetId, array $affectedElements): void;
 
     /**
-     * @param Id $userId
-     * @param Id $budgetId
      * @param BudgetStructureOrderItemDto[] $affectedFolders
      * @return void
      */
