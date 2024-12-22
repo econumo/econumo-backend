@@ -248,11 +248,16 @@ readonly class BudgetElementsActionsService
         $toDelete = [];
         $toDeleteIds = [];
         foreach ($elements as $element) {
-            if (array_key_exists($element->getExternalId()->getValue(), $elementsIdsMap)) {
+            $externalIdValue = $element->getExternalId()->getValue();
+            if (array_key_exists($externalIdValue, $elementsIdsMap)) {
                 $toDelete[] = $element;
                 $toDeleteIds[] = $element->getId();
             }
         }
+
+         if ($toDelete === []) {
+             return;
+         }
 
         $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {

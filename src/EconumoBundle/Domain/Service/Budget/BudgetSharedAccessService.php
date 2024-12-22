@@ -160,14 +160,8 @@ readonly class BudgetSharedAccessService implements BudgetSharedAccessServiceInt
     private function removeUserAccess(BudgetAccess $access): void {
         $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
-            if (!$access->getRole()->isReader() && $access->isAccepted()) {
-                $this->budgetElementService->deleteCategoriesElements($access->getUserId(), $access->getBudgetId());
-                $this->budgetElementService->deleteTagsElements($access->getUserId(), $access->getBudgetId());
-            }
-
-            $this->budgetAccessRepository->delete([$access]);
-            $user = $this->userRepository->get($access->getUserId());
-            if ($user->getDefaultPlanId() && $user->getDefaultPlanId()->isEqual($access->getBudgetId())) {
+            $user = $access->getUser();
+            if ($user->getDefaultBudgetId() && $user->getDefaultBudgetId()->isEqual($access->getBudgetId())) {
                 $availableBudgets = $this->budgetRepository->getByUserId($access->getUserId());
                 $newBudgetId = null;
                 foreach ($availableBudgets as $budget) {
@@ -177,9 +171,12 @@ readonly class BudgetSharedAccessService implements BudgetSharedAccessServiceInt
                     }
                 }
 
-                $this->userService->updateBudget($access->getUserId(), $newBudgetId);
+                $this->userService->updateBudget($user->getId(), $newBudgetId);
             }
 
+            $this->budgetAccessRepository->delete([$access]);
+            $this->budgetElementService->deleteCategoriesElements($user->getId(), $access->getBudgetId());
+            $this->budgetElementService->deleteTagsElements($user->getId(), $access->getBudgetId());
             $this->antiCorruptionService->commit(__METHOD__);
         } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback(__METHOD__);

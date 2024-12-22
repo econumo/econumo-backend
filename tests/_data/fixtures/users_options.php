@@ -37,7 +37,7 @@ $data = <<<'JSON'
   {
     "id": "a066bf7e-e84f-451f-94d8-c0d7cd7aaa57",
     "user_id": "48044d88-5081-11ec-bf63-0242ac130002",
-    "name": "default_plan",
+    "name": "budget",
     "value": null,
     "created_at": "2021-08-12 19:43:09",
     "updated_at": "2021-08-12 19:43:09"
@@ -45,7 +45,7 @@ $data = <<<'JSON'
   {
     "id": "c953abb8-06b9-4418-9d0c-aa5dedb29fc6",
     "user_id": "aff21334-96f0-4fb1-84d8-0223d0280954",
-    "name": "default_plan",
+    "name": "budget",
     "value": "bceed17e-d492-40be-921a-e7fa6f663fa6",
     "created_at": "2021-08-12 19:43:09",
     "updated_at": "2023-10-15 02:26:41"
@@ -61,7 +61,7 @@ $data = <<<'JSON'
   {
     "id": "0fb1c5cd-9ab5-4b4f-939e-59a214346658",
     "user_id": "77be9577-147b-4f05-9aa7-91d9b159de5b",
-    "name": "default_plan",
+    "name": "budget",
     "value": "bceed17e-d492-40be-921a-e7fa6f663fa6",
     "created_at": "2021-08-12 19:43:09",
     "updated_at": "2023-10-20 04:47:47"

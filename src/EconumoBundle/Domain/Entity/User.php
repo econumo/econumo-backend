@@ -251,7 +251,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return new CurrencyCode(UserOption::DEFAULT_CURRENCY);
     }
 
-    public function getDefaultPlanId(): ?Id
+    public function getDefaultBudgetId(): ?Id
     {
         foreach ($this->options as $option) {
             if ($option->getName() === UserOption::BUDGET) {

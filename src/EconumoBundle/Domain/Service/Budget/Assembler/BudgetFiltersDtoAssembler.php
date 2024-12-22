@@ -115,7 +115,9 @@ readonly class BudgetFiltersDtoAssembler
     {
         $result = [];
         foreach ($this->categoryRepository->findByOwnersIds($userIds) as $category) {
-            $result[$category->getId()->getValue()] = $category;
+            if ($category->getType()->isExpense()) {
+                $result[$category->getId()->getValue()] = $category;
+            }
         }
 
         return $result;
