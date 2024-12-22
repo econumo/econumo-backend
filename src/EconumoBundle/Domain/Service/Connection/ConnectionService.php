@@ -9,8 +9,8 @@ use App\EconumoBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoBundle\Domain\Exception\DomainException;
 use App\EconumoBundle\Domain\Repository\UserRepositoryInterface;
 use App\EconumoBundle\Domain\Service\AntiCorruptionServiceInterface;
-use App\EconumoBundle\Domain\Service\Connection\ConnectionAccountServiceInterface;
-use App\EconumoBundle\Domain\Service\Connection\ConnectionServiceInterface;
+use App\EconumoBundle\Domain\Service\Budget\BudgetServiceInterface;
+use App\EconumoBundle\Domain\Service\Budget\BudgetSharedAccessServiceInterface;
 use Throwable;
 
 readonly class ConnectionService implements ConnectionServiceInterface
@@ -18,7 +18,9 @@ readonly class ConnectionService implements ConnectionServiceInterface
     public function __construct(
         private UserRepositoryInterface $userRepository,
         private AntiCorruptionServiceInterface $antiCorruptionService,
-        private ConnectionAccountServiceInterface $connectionAccountService
+        private ConnectionAccountServiceInterface $connectionAccountService,
+        private BudgetServiceInterface $budgetService,
+        private BudgetSharedAccessServiceInterface $budgetAccess
     ) {
     }
 
@@ -47,6 +49,22 @@ readonly class ConnectionService implements ConnectionServiceInterface
             foreach ($this->connectionAccountService->getIssuedAccountAccess($initiator->getId()) as $accountAccess) {
                 if ($accountAccess->getUserId()->isEqual($connectedUser->getId())) {
                     $this->connectionAccountService->revokeAccountAccess($accountAccess->getUserId(), $accountAccess->getAccountId());
+                }
+            }
+
+            foreach($this->budgetService->getBudgetList($initiatorUserId) as $budget) {
+                foreach ($budget->access as $budgetUserAccess) {
+                    if ($budgetUserAccess->id->isEqual($connectedUserId)) {
+                        $this->budgetAccess->revokeAccess($budget->id, $connectedUserId);
+                    }
+                }
+            }
+
+            foreach($this->budgetService->getBudgetList($connectedUserId) as $budget) {
+                foreach ($budget->access as $budgetUserAccess) {
+                    if ($budgetUserAccess->id->isEqual($initiatorUserId)) {
+                        $this->budgetAccess->revokeAccess($budget->id, $initiatorUserId);
+                    }
                 }
             }
 
