@@ -73,6 +73,30 @@ $data = <<<'JSON'
     "value": "RUB",
     "created_at": "2021-10-07 12:22:18",
     "updated_at": "2023-10-20 04:48:13"
+  },
+  {
+    "id": "b1a6b623-d727-4579-8484-50355eebaecd",
+    "user_id": "aff21334-96f0-4fb1-84d8-0223d0280954",
+    "name": "onboarding",
+    "value": "started",
+    "created_at": "2024-12-01 10:00:00",
+    "updated_at": "2024-12-22 15:23:37"
+  },
+  {
+    "id": "4f35d1b6-a9f0-4696-bd21-b4a5e0e135e5",
+    "user_id": "77be9577-147b-4f05-9aa7-91d9b159de5b",
+    "name": "onboarding",
+    "value": "started",
+    "created_at": "2024-12-01 10:00:00",
+    "updated_at": "2024-12-01 11:00:00"
+  },
+  {
+    "id": "c9930459-f10f-419b-af1b-415fb95b8f5b",
+    "user_id": "48044d88-5081-11ec-bf63-0242ac130002",
+    "name": "onboarding",
+    "value": "started",
+    "created_at": "2024-12-01 10:00:00",
+    "updated_at": "2024-12-01 11:00:00"
   }
 ]
 JSON;

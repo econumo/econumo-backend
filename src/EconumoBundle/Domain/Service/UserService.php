@@ -65,7 +65,8 @@ readonly class UserService implements UserServiceInterface
                 [
                     $this->userOptionFactory->create($user, UserOption::CURRENCY, UserOption::DEFAULT_CURRENCY),
                     $this->userOptionFactory->create($user, UserOption::REPORT_PERIOD, UserOption::DEFAULT_REPORT_PERIOD),
-                    $this->userOptionFactory->create($user, UserOption::BUDGET, null)
+                    $this->userOptionFactory->create($user, UserOption::BUDGET, null),
+                    $this->userOptionFactory->create($user, UserOption::ONBOARDING, UserOption::ONBOARDING_VALUE_STARTED)
                 ]
             );
 
@@ -124,6 +125,20 @@ readonly class UserService implements UserServiceInterface
         try {
             $user = $this->userRepository->get($userId);
             $user->updateDefaultBudget($budgetId);
+            $this->userRepository->save([$user]);
+            $this->antiCorruptionService->commit(__METHOD__);
+        } catch (Throwable $throwable) {
+            $this->antiCorruptionService->rollback(__METHOD__);
+            throw $throwable;
+        }
+    }
+
+    public function completeOnboarding(Id $userId): void
+    {
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
+        try {
+            $user = $this->userRepository->get($userId);
+            $user->completeOnboarding();
             $this->userRepository->save([$user]);
             $this->antiCorruptionService->commit(__METHOD__);
         } catch (Throwable $throwable) {

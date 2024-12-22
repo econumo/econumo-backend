@@ -13,9 +13,6 @@ use App\EconumoBundle\Domain\Exception\UserRegistrationDisabledException;
 interface UserServiceInterface
 {
     /**
-     * @param Email $email
-     * @param string $password
-     * @param string $name
      * @return User
      */
     public function register(Email $email, string $password, string $name): User;
@@ -27,4 +24,6 @@ interface UserServiceInterface
     public function updateReportPeriod(Id $userId, ReportPeriod $reportPeriod): void;
 
     public function updateBudget(Id $userId, ?Id $budgetId): void;
+
+    public function completeOnboarding(Id $userId): void;
 }

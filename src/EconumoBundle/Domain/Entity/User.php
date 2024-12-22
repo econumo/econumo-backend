@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Domain\Entity;
 
-use App\EconumoBundle\Domain\Entity\UserOption;
 use App\EconumoBundle\Domain\Entity\ValueObject\CurrencyCode;
-use App\EconumoBundle\Domain\Entity\ValueObject\Email;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
-use App\EconumoBundle\Domain\Entity\ValueObject\Identifier;
 use App\EconumoBundle\Domain\Entity\ValueObject\ReportPeriod;
 use App\EconumoBundle\Domain\Events\UserRegisteredEvent;
 use App\EconumoBundle\Domain\Traits\EntityTrait;
@@ -295,6 +292,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 }
 
                 return;
+            }
+        }
+    }
+
+    public function completeOnboarding(): void
+    {
+        foreach ($this->options as $option) {
+            if ($option->getName() === UserOption::ONBOARDING) {
+                $option->updateValue(UserOption::ONBOARDING_VALUE_COMPLETED);
             }
         }
     }

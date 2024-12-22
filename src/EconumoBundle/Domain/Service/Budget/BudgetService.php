@@ -75,6 +75,7 @@ readonly class BudgetService implements BudgetServiceInterface
             [$position, $categoriesOptions] = $this->budgetElementService->createCategoriesElements($userId, $budgetId);
             $this->budgetElementService->createTagsElements($userId, $budgetId, $position);
             $this->userService->updateBudget($userId, $budgetId);
+            $this->userService->completeOnboarding($userId);
 
             $this->antiCorruptionService->commit(__METHOD__);
         } catch (Throwable $throwable) {

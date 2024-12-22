@@ -42,6 +42,21 @@ class UserOption
      */
     final public const BUDGET = 'budget';
 
+    /**
+     * @var string
+     */
+    final public const ONBOARDING = 'onboarding';
+
+    /**
+     * @var string
+     */
+    final public const ONBOARDING_VALUE_STARTED = 'started';
+
+    /**
+     * @var string
+     */
+    final public const ONBOARDING_VALUE_COMPLETED = 'completed';
+
 
     /**
      * @var string[]
@@ -50,6 +65,7 @@ class UserOption
         self::CURRENCY,
         self::REPORT_PERIOD,
         self::BUDGET,
+        self::ONBOARDING,
     ];
 
     private readonly DateTimeImmutable $createdAt;
