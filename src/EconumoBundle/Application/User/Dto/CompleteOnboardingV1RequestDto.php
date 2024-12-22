@@ -8,13 +8,9 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     required={"id"}
+ *     required={}
  * )
  */
 class CompleteOnboardingV1RequestDto
 {
-    /**
-     * @OA\Property(example="123")
-     */
-    public string $id;
 }
