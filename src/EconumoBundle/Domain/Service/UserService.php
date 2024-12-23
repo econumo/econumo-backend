@@ -37,7 +37,8 @@ readonly class UserService implements UserServiceInterface
         private ConnectionInviteFactoryInterface $connectionInviteFactory,
         private ConnectionInviteRepositoryInterface $connectionInviteRepository,
         private UserOptionFactoryInterface $userOptionFactory,
-        private UserOptionRepositoryInterface $userOptionRepository
+        private UserOptionRepositoryInterface $userOptionRepository,
+        private EncodeServiceInterface $encodeService
     )
     {
     }
@@ -145,5 +146,21 @@ readonly class UserService implements UserServiceInterface
             $this->antiCorruptionService->rollback(__METHOD__);
             throw $throwable;
         }
+    }
+
+    public function updateEmail(Id $userId, Email $email): void
+    {
+        $user = $this->userRepository->get($userId);
+
+        $emailValue = strtolower($email->getValue());
+        $identifier = $this->encodeService->hash($emailValue);
+        $encodedEmail = $this->encodeService->encode($email->getValue());
+        $avatarUrl = sprintf('https://www.gravatar.com/avatar/%s', md5($emailValue));
+
+        $user->updateUserIdentifier($identifier);
+        $user->updateEmail($encodedEmail);
+        $user->updateAvatarUrl($avatarUrl);
+
+        $this->userRepository->save([$user]);
     }
 }

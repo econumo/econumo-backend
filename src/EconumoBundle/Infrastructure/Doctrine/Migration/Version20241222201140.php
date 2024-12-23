@@ -29,7 +29,7 @@ final class Version20241222201140 extends AbstractMigration
             $userId = $user['id'];
             $createdAt = $user['created_at'];
             $updatedAt = $user['updated_at'];
-            $this->addSql(sprintf('INSERT INTO users_options (id, user_id, name, value, created_at, updated_at) VALUES (\'%s\', \'%s\', \'onboarding\', \'started\', \'%s\', \'%s\')', $id, $userId, $createdAt, $updatedAt));
+            $this->addSql(sprintf("INSERT INTO users_options (id, user_id, name, value, created_at, updated_at) VALUES ('%s', '%s', 'onboarding', 'started', '%s', '%s')", $id, $userId, $createdAt, $updatedAt));
         }
     }
 

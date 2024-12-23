@@ -318,6 +318,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
     }
 
+    public function activate(): void
+    {
+        if (!$this->isActive()) {
+            $this->isActive = true;
+            $this->updatedAt = new DateTime();
+        }
+    }
+
     public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;

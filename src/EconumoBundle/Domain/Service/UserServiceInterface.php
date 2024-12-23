@@ -26,4 +26,6 @@ interface UserServiceInterface
     public function updateBudget(Id $userId, ?Id $budgetId): void;
 
     public function completeOnboarding(Id $userId): void;
+
+    public function updateEmail(Id $userId, Email $email): void;
 }
