@@ -45,9 +45,9 @@ class InviteService
         AcceptInviteV1RequestDto $dto,
         Id $userId
     ): AcceptInviteV1ResultDto {
+        $this->connectionInviteService->accept($userId, new ConnectionCode($dto->code));
         $sharedWithUserAccess = $this->connectionAccountService->getReceivedAccountAccess($userId);
         $connectedUsers = $this->connectionService->getUserList($userId);
-        $this->connectionInviteService->accept($userId, new ConnectionCode($dto->code));
         return $this->acceptInviteV1ResultAssembler->assemble($dto, $userId, $sharedWithUserAccess, $connectedUsers);
     }
 }
