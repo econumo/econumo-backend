@@ -10,7 +10,7 @@ readonly class EconumoService implements EconumoServiceInterface
 {
     public function __construct(
         private string $baseUrl,
-        private bool $isFamilyMode
+        private bool $connectUsers
     ) {
     }
 
@@ -19,8 +19,8 @@ readonly class EconumoService implements EconumoServiceInterface
         return $this->baseUrl;
     }
 
-    public function isFamilyModeOn(): bool
+    public function connectUsers(): bool
     {
-        return $this->isFamilyMode;
+        return $this->connectUsers;
     }
 }

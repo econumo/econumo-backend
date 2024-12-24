@@ -21,7 +21,7 @@ readonly class ConnectUsersEventHandler implements EventHandlerInterface
 
     public function __invoke(UserRegisteredEvent $event): void
     {
-        if (!$this->econumoService->isFamilyModeOn()) {
+        if (!$this->econumoService->connectUsers()) {
             return;
         }
 

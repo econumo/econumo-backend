@@ -10,5 +10,5 @@ interface EconumoServiceInterface
 {
     public function getBaseUrl(): string;
 
-    public function isFamilyModeOn(): bool;
+    public function connectUsers(): bool;
 }
