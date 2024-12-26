@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-    A getting started guide to self-hosting <a href="https://econumo.com/" target="_blank">Econumo CE</a>
+    A getting started guide to self-hosting <a href="https://econumo.com/docs/" target="_blank">Econumo CE</a>
 </p>
 
 ---
@@ -14,6 +14,8 @@
 
 This is the main backend repository for Econumo, containing the backend for [Econumo CE](https://econumo.com/docs/edition/).
 The backend is built using PHP, Symfony, and SQLite.
+
+The "main" branch may not be stable. Use tags for stable versions.
 
 ## Contribution
 
