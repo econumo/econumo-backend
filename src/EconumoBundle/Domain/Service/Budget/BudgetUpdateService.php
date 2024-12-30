@@ -17,7 +17,7 @@ readonly class BudgetUpdateService
 {
     public function __construct(
         private BudgetRepositoryInterface $budgetRepository,
-        private BudgetMetaBuilder $budgetMetaDtoAssembler,
+        private BudgetMetaBuilder $budgetMetaBuilder,
         private AccountRepositoryInterface $accountRepository,
     ) {
     }
@@ -54,6 +54,6 @@ readonly class BudgetUpdateService
         }
 
         $this->budgetRepository->save([$budget]);
-        return $this->budgetMetaDtoAssembler->build($budget);
+        return $this->budgetMetaBuilder->build($budget);
     }
 }

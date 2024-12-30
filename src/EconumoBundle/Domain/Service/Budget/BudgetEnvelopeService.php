@@ -41,7 +41,7 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
         private AntiCorruptionServiceInterface $antiCorruptionService,
         private BudgetEnvelopeRepositoryInterface $budgetEnvelopeRepository,
         private BudgetElementRepositoryInterface $budgetElementRepository,
-        private BudgetFiltersBuilder $budgetFiltersDtoAssembler,
+        private BudgetFiltersBuilder $budgetFiltersBuilder,
         private BudgetElementLimitRepositoryInterface $budgetElementLimitRepository,
         private BudgetElementLimitFactoryInterface $budgetElementLimitFactory,
         private CurrencyRepositoryInterface $currencyRepository,
@@ -285,8 +285,8 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
     private function getEligibleCategories(Budget $budget, array $categoriesIds): array
     {
         $result = [];
-        $budgetUserIds = $this->budgetFiltersDtoAssembler->getBudgetUserIds($budget);
-        $availableCategories = $this->budgetFiltersDtoAssembler->getCategories($budgetUserIds);
+        $budgetUserIds = $this->budgetFiltersBuilder->getBudgetUserIds($budget);
+        $availableCategories = $this->budgetFiltersBuilder->getCategories($budgetUserIds);
         foreach ($categoriesIds as $category) {
             if (!array_key_exists($category->getValue(), $availableCategories)) {
                 throw new AccessDeniedException();

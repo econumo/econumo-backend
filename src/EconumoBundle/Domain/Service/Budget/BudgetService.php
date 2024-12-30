@@ -32,11 +32,11 @@ readonly class BudgetService implements BudgetServiceInterface
         private UserServiceInterface $userService,
         private AntiCorruptionServiceInterface $antiCorruptionService,
         private BudgetElementServiceInterface $budgetElementService,
-        private BudgetMetaBuilder $budgetMetaDtoAssembler,
+        private BudgetMetaBuilder $budgetMetaBuilder,
         private BudgetDeletionService $budgetDeletionService,
         private AccountRepositoryInterface $accountRepository,
         private BudgetElementLimitRepositoryInterface $budgetElementLimitRepository,
-        private BudgetBuilder $budgetDtoAssembler,
+        private BudgetBuilder $budgetBuilder,
         private UserRepositoryInterface $userRepository,
         private CurrencyRepositoryInterface $currencyRepository,
         private BudgetUpdateService $budgetUpdateService,
@@ -83,7 +83,7 @@ readonly class BudgetService implements BudgetServiceInterface
             throw $throwable;
         }
 
-        return $this->budgetDtoAssembler->build($userId, $budget, $this->datetimeService->getCurrentDatetime());
+        return $this->budgetBuilder->build($userId, $budget, $this->datetimeService->getCurrentDatetime());
     }
 
     public function getBudgetList(Id $userId): array
@@ -91,7 +91,7 @@ readonly class BudgetService implements BudgetServiceInterface
         $budgets = $this->budgetRepository->getByUserId($userId);
         $result = [];
         foreach ($budgets as $budget) {
-            $result[] = $this->budgetMetaDtoAssembler->build($budget);
+            $result[] = $this->budgetMetaBuilder->build($budget);
         }
 
         return $result;
@@ -125,7 +125,7 @@ readonly class BudgetService implements BudgetServiceInterface
         $budget->excludeAccount($account);
 
         $this->budgetRepository->save([$budget]);
-        return $this->budgetMetaDtoAssembler->build($budget);
+        return $this->budgetMetaBuilder->build($budget);
     }
 
     public function includeAccount(Id $userId, Id $budgetId, Id $accountId): BudgetMetaDto
@@ -139,7 +139,7 @@ readonly class BudgetService implements BudgetServiceInterface
         $budget->includeAccount($account);
 
         $this->budgetRepository->save([$budget]);
-        return $this->budgetMetaDtoAssembler->build($budget);
+        return $this->budgetMetaBuilder->build($budget);
     }
 
     public function resetBudget(Id $userId, Id $budgetId, DateTimeInterface $startedAt): BudgetMetaDto
@@ -157,14 +157,14 @@ readonly class BudgetService implements BudgetServiceInterface
             throw $throwable;
         }
 
-        return $this->budgetMetaDtoAssembler->build($budget);
+        return $this->budgetMetaBuilder->build($budget);
     }
 
     public function getBudget(Id $userId, Id $budgetId, DateTimeInterface $periodStart): BudgetDto
     {
         $budget = $this->budgetRepository->get($budgetId);
 
-        return $this->budgetDtoAssembler->build($userId, $budget, $periodStart);
+        return $this->budgetBuilder->build($userId, $budget, $periodStart);
     }
 
     public function moveElements(Id $userId, Id $budgetId, array $affectedElements): void

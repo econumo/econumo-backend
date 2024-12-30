@@ -13,12 +13,12 @@ use DateTimeInterface;
 readonly class BudgetBuilder
 {
     public function __construct(
-        private BudgetMetaBuilder $budgetMetaDtoAssembler,
-        private BudgetFiltersBuilder $budgetFiltersDtoAssembler,
-        private BudgetFinancialSummaryBuilder $budgetFinancialSummaryDtoAssembler,
-        private BudgetElementsSpendingBuilder $budgetElementsSpendingDtoAssembler,
-        private BudgetStructureBuilder $budgetStructureDtoAssembler,
-        private BudgetElementsLimitsBuilder $budgetElementsLimitsDtoAssembler
+        private BudgetMetaBuilder $budgetMetaBuilder,
+        private BudgetFiltersBuilder $budgetFiltersBuilder,
+        private BudgetFinancialSummaryBuilder $budgetFinancialSummaryBuilder,
+        private BudgetElementsSpendingBuilder $budgetElementsSpendingBuilder,
+        private BudgetStructureBuilder $budgetStructureBuilder,
+        private BudgetElementsLimitsBuilder $budgetElementsLimitsBuilder
     ) {
     }
 
@@ -29,18 +29,18 @@ readonly class BudgetBuilder
     ): BudgetDto {
         $periodStart = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $periodStart->format('Y-m-01 00:00:00'));
         $periodEnd = $periodStart->modify('next month');
-        $budgetMeta = $this->budgetMetaDtoAssembler->build($budget);
-        $budgetFilters = $this->budgetFiltersDtoAssembler->build($budget, $userId, $periodStart, $periodEnd);
-        $budgetFinancialSummary = $this->budgetFinancialSummaryDtoAssembler->build(
+        $budgetMeta = $this->budgetMetaBuilder->build($budget);
+        $budgetFilters = $this->budgetFiltersBuilder->build($budget, $userId, $periodStart, $periodEnd);
+        $budgetFinancialSummary = $this->budgetFinancialSummaryBuilder->build(
             $budget->getCurrencyId(),
             $budgetFilters->periodStart,
             $budgetFilters->periodEnd,
             $budgetFilters->currenciesIds,
             $budgetFilters->includedAccountsIds
         );
-        $elementsLimits = $this->budgetElementsLimitsDtoAssembler->build($budget, $budgetFilters);
-        $elementsSpending = $this->budgetElementsSpendingDtoAssembler->build($budget, $budgetFilters);
-        $budgetStructure = $this->budgetStructureDtoAssembler->build($budget, $budgetFilters, $elementsLimits, $elementsSpending);
+        $elementsLimits = $this->budgetElementsLimitsBuilder->build($budget, $budgetFilters);
+        $elementsSpending = $this->budgetElementsSpendingBuilder->build($budget, $budgetFilters);
+        $budgetStructure = $this->budgetStructureBuilder->build($budget, $budgetFilters, $elementsLimits, $elementsSpending);
 
         return new BudgetDto(
             $budgetMeta,

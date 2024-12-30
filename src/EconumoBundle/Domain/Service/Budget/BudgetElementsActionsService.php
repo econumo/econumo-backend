@@ -27,7 +27,7 @@ readonly class BudgetElementsActionsService
         private BudgetElementRepositoryInterface $budgetElementRepository,
         private BudgetElementFactoryInterface $budgetElementFactory,
         private BudgetFolderRepositoryInterface $budgetFolderRepository,
-        private BudgetFiltersBuilder $budgetFiltersDtoAssembler,
+        private BudgetFiltersBuilder $budgetFiltersBuilder,
         private BudgetEnvelopeRepositoryInterface $budgetEnvelopeRepository,
         private BudgetRepositoryInterface $budgetRepository,
         private BudgetElementLimitRepositoryInterface $budgetElementLimitRepository,
@@ -121,8 +121,8 @@ readonly class BudgetElementsActionsService
             }
         }
 
-        $budgetUserIds = $this->budgetFiltersDtoAssembler->getBudgetUserIds($budget);
-        $categories = $this->budgetFiltersDtoAssembler->getCategories($budgetUserIds);
+        $budgetUserIds = $this->budgetFiltersBuilder->getBudgetUserIds($budget);
+        $categories = $this->budgetFiltersBuilder->getCategories($budgetUserIds);
         $categoryType = BudgetElementType::category()->getAlias();
         foreach ($categories as $category) {
             $categoryIndex = sprintf('%s_%s', $category->getId()->getValue(), $categoryType);
@@ -144,7 +144,7 @@ readonly class BudgetElementsActionsService
             }
         }
 
-        $tags = $this->budgetFiltersDtoAssembler->getTags($budgetUserIds);
+        $tags = $this->budgetFiltersBuilder->getTags($budgetUserIds);
         $tagType = BudgetElementType::tag()->getAlias();
         foreach ($tags as $tag) {
             $tagIndex = sprintf('%s_%s', $tag->getId()->getValue(), $tagType);
