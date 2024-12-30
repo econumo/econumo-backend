@@ -6,9 +6,8 @@ declare(strict_types=1);
 namespace App\EconumoBundle\Domain\Service\Budget;
 
 
-use App\EconumoBundle\Domain\Entity\BudgetFolder;
-use Throwable;
 use App\EconumoBundle\Domain\Entity\Budget;
+use App\EconumoBundle\Domain\Entity\BudgetFolder;
 use App\EconumoBundle\Domain\Entity\ValueObject\BudgetElementType;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoBundle\Domain\Factory\BudgetElementFactoryInterface;
@@ -18,8 +17,9 @@ use App\EconumoBundle\Domain\Repository\BudgetEnvelopeRepositoryInterface;
 use App\EconumoBundle\Domain\Repository\BudgetFolderRepositoryInterface;
 use App\EconumoBundle\Domain\Repository\BudgetRepositoryInterface;
 use App\EconumoBundle\Domain\Service\AntiCorruptionServiceInterface;
-use App\EconumoBundle\Domain\Service\Budget\Assembler\BudgetFiltersDtoAssembler;
+use App\EconumoBundle\Domain\Service\Budget\Builder\BudgetFiltersBuilder;
 use App\EconumoBundle\Domain\Service\Budget\Dto\BudgetStructureMoveElementDto;
+use Throwable;
 
 readonly class BudgetElementsActionsService
 {
@@ -27,7 +27,7 @@ readonly class BudgetElementsActionsService
         private BudgetElementRepositoryInterface $budgetElementRepository,
         private BudgetElementFactoryInterface $budgetElementFactory,
         private BudgetFolderRepositoryInterface $budgetFolderRepository,
-        private BudgetFiltersDtoAssembler $budgetFiltersDtoAssembler,
+        private BudgetFiltersBuilder $budgetFiltersDtoAssembler,
         private BudgetEnvelopeRepositoryInterface $budgetEnvelopeRepository,
         private BudgetRepositoryInterface $budgetRepository,
         private BudgetElementLimitRepositoryInterface $budgetElementLimitRepository,

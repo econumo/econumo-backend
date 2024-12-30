@@ -10,14 +10,14 @@ use App\EconumoBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoBundle\Domain\Exception\AccessDeniedException;
 use App\EconumoBundle\Domain\Repository\AccountRepositoryInterface;
 use App\EconumoBundle\Domain\Repository\BudgetRepositoryInterface;
-use App\EconumoBundle\Domain\Service\Budget\Assembler\BudgetMetaDtoAssembler;
+use App\EconumoBundle\Domain\Service\Budget\Builder\BudgetMetaBuilder;
 use App\EconumoBundle\Domain\Service\Budget\Dto\BudgetMetaDto;
 
 readonly class BudgetUpdateService
 {
     public function __construct(
         private BudgetRepositoryInterface $budgetRepository,
-        private BudgetMetaDtoAssembler $budgetMetaDtoAssembler,
+        private BudgetMetaBuilder $budgetMetaDtoAssembler,
         private AccountRepositoryInterface $accountRepository,
     ) {
     }
@@ -54,6 +54,6 @@ readonly class BudgetUpdateService
         }
 
         $this->budgetRepository->save([$budget]);
-        return $this->budgetMetaDtoAssembler->assemble($budget);
+        return $this->budgetMetaDtoAssembler->build($budget);
     }
 }

@@ -2,19 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\EconumoBundle\Domain\Service\Budget\Assembler;
+namespace App\EconumoBundle\Domain\Service\Budget\Builder;
 
-use App\EconumoBundle\Domain\Entity\Budget;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoBundle\Domain\Service\Budget\Assembler\AverageCurrencyRateDtoAssembler;
 use App\EconumoBundle\Domain\Service\Budget\Assembler\CurrencyBalanceDtoAssembler;
 use App\EconumoBundle\Domain\Service\Budget\Dto\AverageCurrencyRateDto;
-use App\EconumoBundle\Domain\Service\Budget\Dto\BudgetMetaDto;
 use App\EconumoBundle\Domain\Service\Budget\Dto\BudgetFinancialSummaryDto;
 use App\EconumoBundle\Domain\Service\Budget\Dto\CurrencyBalanceDto;
 use DateTimeInterface;
 
-readonly class BudgetFinancialSummaryDtoAssembler
+readonly class BudgetFinancialSummaryBuilder
 {
     public function __construct(
         private CurrencyBalanceDtoAssembler $currencyBalanceDtoAssembler,
@@ -26,7 +24,7 @@ readonly class BudgetFinancialSummaryDtoAssembler
      * @param Id[] $currenciesIds
      * @param Id[] $accountsIds
      */
-    public function assemble(
+    public function build(
         Id $budgetCurrencyId,
         DateTimeInterface $periodStart,
         DateTimeInterface $periodEnd,
