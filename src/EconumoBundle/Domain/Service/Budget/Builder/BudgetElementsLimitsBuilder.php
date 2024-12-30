@@ -41,7 +41,7 @@ readonly class BudgetElementsLimitsBuilder
                 $item['id'],
                 $item['type'],
                 $item['budgeted']?->getAmount(),
-                round($item['budgeted_before'], 2)
+                round($item['budgetedBefore'], 2)
             );
             $result[$index] = $item;
         }
@@ -67,7 +67,7 @@ readonly class BudgetElementsLimitsBuilder
             );
             if (!array_key_exists($index, $data)) {
                 $data[$index] = [
-                    'budgeted_before' => 0,
+                    'budgetedBefore' => 0,
                     'id' => $elementLimit->getElement()->getExternalId(),
                     'type' => $elementLimit->getElement()->getType(),
                 ];
@@ -98,13 +98,13 @@ readonly class BudgetElementsLimitsBuilder
             if (!array_key_exists($index, $data)) {
                 $data[$index] = [
                     'budgeted' => null,
-                    'budgeted_before' => 0,
+                    'budgetedBefore' => 0,
                     'id' => $summarizedLimit['elementId'],
                     'type' => $summarizedLimit['elementType'],
                 ];
             }
 
-            $data[$index]['budgeted_before'] += $summarizedLimit['amount'];
+            $data[$index]['budgetedBefore'] += $summarizedLimit['amount'];
         }
 
         return $data;

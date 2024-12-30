@@ -49,12 +49,13 @@ readonly class BudgetStructureBuilder
         foreach ($this->getFolders($budget->getId()) as $folder) {
             $folders[] = $this->budgetStructureFolderDtoAssembler->assemble($folder);
         }
-
         $toConvert = [];
         $categoryUsed = [];
         $elements = [];
-        $envelopes = $this->getEnvelopes($budget->getId());
         $budgetCurrencyId = $budget->getCurrencyId();
+
+        // Envelopes -->
+        $envelopes = $this->getEnvelopes($budget->getId());
         foreach ($envelopes as $envelope) {
             $index = sprintf('%s-%s', $envelope->getId()->getValue(), BudgetElementType::ENVELOPE_ALIAS);
             $currencyId = ($elementsOptions[$index] ?? null)?->getCurrency()?->getId() ?? $budget->getCurrencyId();
@@ -129,7 +130,6 @@ readonly class BudgetStructureBuilder
                 $elements[$index] = $item;
             }
         }
-
         // Envelopes <--
 
 
@@ -142,46 +142,48 @@ readonly class BudgetStructureBuilder
             $budgeted = $elementsBudgets[$index]?->budgeted ?? .0;
             $budgetedBefore = $elementsBudgets[$index]?->budgetedBefore ?? .0;
             $children = [];
-            if (array_key_exists($index, $elementsSpending)) {
-                foreach ($elementsSpending[$index]->spendingInCategories as $categoryId => $categorySpending) {
-                    $category = $budgetFilters->categories[$categoryId];
-                    $subIndex = sprintf('%s-%s', $categoryId, BudgetElementType::CATEGORY_ALIAS);
-                    $children[$subIndex] = [
-                        'id' => $categorySpending->categoryId,
-                        'type' => BudgetElementType::category(),
-                        'name' => $category->getName(),
-                        'icon' => $category->getIcon(),
-                        'ownerId' => $category->getUserId(),
-                        'isArchived' => $category->isArchived(),
-                        'currenciesSpent' => $categorySpending->currenciesSpent,
-                        'currenciesSpentBefore' => $categorySpending->currenciesSpentBefore
-                    ];
-                    foreach ($categorySpending->currenciesSpent as $spent) {
-                        $toConvert[sprintf('%s_spent-%s', $index, $subIndex)][] = new CurrencyConvertorDto(
-                            $spent->periodStart,
-                            $spent->periodEnd,
-                            $spent->currencyId,
-                            $currencyId,
-                            $spent->amount
-                        );
-                        $toConvert[sprintf('%s_spent-budget-%s', $index, $subIndex)][] = new CurrencyConvertorDto(
-                            $spent->periodStart,
-                            $spent->periodEnd,
-                            $spent->currencyId,
-                            $budgetCurrencyId,
-                            $spent->amount
-                        );
-                    }
+            if (!array_key_exists($index, $elementsSpending)) {
+                continue;
+            }
 
-                    foreach ($categorySpending->currenciesSpentBefore as $spentBefore) {
-                        $toConvert[sprintf('%s_spent-before-%s', $index, $subIndex)][] = new CurrencyConvertorDto(
-                            $spentBefore->periodStart,
-                            $spentBefore->periodEnd,
-                            $spentBefore->currencyId,
-                            $currencyId,
-                            $spentBefore->amount
-                        );
-                    }
+            foreach ($elementsSpending[$index]->spendingInCategories as $categoryId => $categorySpending) {
+                $category = $budgetFilters->categories[$categoryId];
+                $subIndex = sprintf('%s-%s', $categoryId, BudgetElementType::CATEGORY_ALIAS);
+                $children[$subIndex] = [
+                    'id' => $categorySpending->categoryId,
+                    'type' => BudgetElementType::category(),
+                    'name' => $category->getName(),
+                    'icon' => $category->getIcon(),
+                    'ownerId' => $category->getUserId(),
+                    'isArchived' => $category->isArchived(),
+                    'currenciesSpent' => $categorySpending->currenciesSpent,
+                    'currenciesSpentBefore' => $categorySpending->currenciesSpentBefore
+                ];
+                foreach ($categorySpending->currenciesSpent as $spent) {
+                    $toConvert[sprintf('%s_spent-%s', $index, $subIndex)][] = new CurrencyConvertorDto(
+                        $spent->periodStart,
+                        $spent->periodEnd,
+                        $spent->currencyId,
+                        $currencyId,
+                        $spent->amount
+                    );
+                    $toConvert[sprintf('%s_spent-budget-%s', $index, $subIndex)][] = new CurrencyConvertorDto(
+                        $spent->periodStart,
+                        $spent->periodEnd,
+                        $spent->currencyId,
+                        $budgetCurrencyId,
+                        $spent->amount
+                    );
+                }
+
+                foreach ($categorySpending->currenciesSpentBefore as $spentBefore) {
+                    $toConvert[sprintf('%s_spent-before-%s', $index, $subIndex)][] = new CurrencyConvertorDto(
+                        $spentBefore->periodStart,
+                        $spentBefore->periodEnd,
+                        $spentBefore->currencyId,
+                        $currencyId,
+                        $spentBefore->amount
+                    );
                 }
             }
 
@@ -205,7 +207,6 @@ readonly class BudgetStructureBuilder
                 $elements[$index] = $item;
             }
         }
-
         // Tags <--
 
 
@@ -230,7 +231,6 @@ readonly class BudgetStructureBuilder
             if (array_key_exists($index, $elementsSpending)) {
                 $itemCategorySpending = $elementsSpending[$index]->spendingInCategories[$category->getId()->getValue()] ?? null;
             }
-
             $currenciesSpent = $itemCategorySpending?->currenciesSpent ?? [];
             $currenciesSpentBefore = $itemCategorySpending?->currenciesSpentBefore ?? [];
             $item = [
@@ -279,7 +279,6 @@ readonly class BudgetStructureBuilder
                 }
             }
         }
-
         // Categories <--
 
         $result = [];
