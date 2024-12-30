@@ -129,6 +129,7 @@ readonly class BudgetStructureBuilder
                 $elements[$index] = $item;
             }
         }
+
         // Envelopes <--
 
 
@@ -204,6 +205,7 @@ readonly class BudgetStructureBuilder
                 $elements[$index] = $item;
             }
         }
+
         // Tags <--
 
 
@@ -212,6 +214,7 @@ readonly class BudgetStructureBuilder
             if ($category->getType()->isIncome()) {
                 continue;
             }
+
             if (array_key_exists($category->getId()->getValue(), $categoryUsed)) {
                 continue;
             }
@@ -227,6 +230,7 @@ readonly class BudgetStructureBuilder
             if (array_key_exists($index, $elementsSpending)) {
                 $itemCategorySpending = $elementsSpending[$index]->spendingInCategories[$category->getId()->getValue()] ?? null;
             }
+
             $currenciesSpent = $itemCategorySpending?->currenciesSpent ?? [];
             $currenciesSpentBefore = $itemCategorySpending?->currenciesSpentBefore ?? [];
             $item = [
@@ -275,6 +279,7 @@ readonly class BudgetStructureBuilder
                 }
             }
         }
+
         // Categories <--
 
         $result = [];

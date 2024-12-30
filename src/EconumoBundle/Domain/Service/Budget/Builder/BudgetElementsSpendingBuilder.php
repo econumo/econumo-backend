@@ -63,11 +63,6 @@ readonly class BudgetElementsSpendingBuilder
     }
 
     /**
-     * @param array $data
-     * @param BudgetFiltersDto $budgetFilters
-     * @param DateTimeInterface $periodStart
-     * @param DateTimeInterface $periodEnd
-     * @param bool $isCurrentPeriod
      * @return BudgetElementSpendingDto[]
      */
     private function countSpending(
@@ -100,6 +95,7 @@ readonly class BudgetElementsSpendingBuilder
                 $type = BudgetElementType::category();
                 $id = new Id($item['category_id']);
             }
+
             $index = $this->getKey($id->getValue(), $type->getAlias());
 
             if (!array_key_exists($index, $data)) {
