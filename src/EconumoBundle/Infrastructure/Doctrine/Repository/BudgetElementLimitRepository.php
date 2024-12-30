@@ -64,7 +64,7 @@ class BudgetElementLimitRepository extends ServiceEntityRepository implements Bu
             ->execute();
     }
 
-    public function getSummarizedAmountsForPeriod(
+    public function getSummarizedLimitsForPeriod(
         Id $budgetId,
         DateTimeInterface $periodStart,
         DateTimeInterface $periodEnd

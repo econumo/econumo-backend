@@ -11,7 +11,7 @@ use App\EconumoBundle\Domain\Repository\BudgetRepositoryInterface;
 use App\EconumoBundle\Domain\Repository\CategoryRepositoryInterface;
 use App\EconumoBundle\Domain\Repository\TagRepositoryInterface;
 use App\EconumoBundle\Domain\Repository\TransactionRepositoryInterface;
-use App\EconumoBundle\Domain\Service\Budget\Assembler\BudgetFiltersDtoAssembler;
+use App\EconumoBundle\Domain\Service\Budget\Builder\BudgetFiltersBuilder;
 use DateTimeImmutable;
 use DateTimeInterface;
 
@@ -19,7 +19,7 @@ readonly class BudgetTransactionService implements BudgetTransactionServiceInter
 {
     public function __construct(
         private TransactionRepositoryInterface $transactionRepository,
-        private BudgetFiltersDtoAssembler $budgetFiltersDtoAssembler,
+        private BudgetFiltersBuilder $budgetFiltersBuilder,
         private BudgetRepositoryInterface $budgetRepository,
         private BudgetEnvelopeRepositoryInterface $budgetEnvelopeRepository,
         private CategoryRepositoryInterface $categoryRepository,
@@ -38,7 +38,7 @@ readonly class BudgetTransactionService implements BudgetTransactionServiceInter
     ): array {
         [$periodStart, $periodEnd] = $this->getPeriod($periodStart);
         $budget = $this->budgetRepository->get($budgetId);
-        $budgetFilters = $this->budgetFiltersDtoAssembler->assemble($budget, $userId, $periodStart, $periodEnd);
+        $budgetFilters = $this->budgetFiltersBuilder->build($budget, $userId, $periodStart, $periodEnd);
         $this->checkCategoryAccess($categoryId, $budgetFilters->userIds);
 
         return $this->transactionRepository->getByCategoriesIdsForAccountsIds(
@@ -62,7 +62,7 @@ readonly class BudgetTransactionService implements BudgetTransactionServiceInter
         // @TODO group tags with the same name
         [$periodStart, $periodEnd] = $this->getPeriod($periodStart);
         $budget = $this->budgetRepository->get($budgetId);
-        $budgetFilters = $this->budgetFiltersDtoAssembler->assemble($budget, $userId, $periodStart, $periodEnd);
+        $budgetFilters = $this->budgetFiltersBuilder->build($budget, $userId, $periodStart, $periodEnd);
 
         $this->checkTagAccess($tagId, $budgetFilters->userIds);
         $categoriesFilter = [];
@@ -101,7 +101,7 @@ readonly class BudgetTransactionService implements BudgetTransactionServiceInter
 
         [$periodStart, $periodEnd] = $this->getPeriod($periodStart);
         $budget = $this->budgetRepository->get($budgetId);
-        $budgetFilters = $this->budgetFiltersDtoAssembler->assemble($budget, $userId, $periodStart, $periodEnd);
+        $budgetFilters = $this->budgetFiltersBuilder->build($budget, $userId, $periodStart, $periodEnd);
 
         return $this->transactionRepository->getByCategoriesIdsForAccountsIds(
             $categoriesIds,

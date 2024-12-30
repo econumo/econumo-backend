@@ -2,22 +2,21 @@
 
 declare(strict_types=1);
 
-namespace App\EconumoBundle\Domain\Service\Budget\Assembler;
+namespace App\EconumoBundle\Domain\Service\Budget\Builder;
 
 use App\EconumoBundle\Domain\Entity\Budget;
-use App\EconumoBundle\Domain\Entity\BudgetAccess;
 use App\EconumoBundle\Domain\Entity\ValueObject\UserName;
 use App\EconumoBundle\Domain\Entity\ValueObject\UserRole;
 use App\EconumoBundle\Domain\Service\Budget\Dto\BudgetMetaDto;
 use App\EconumoBundle\Domain\Service\Budget\Dto\BudgetUserAccessDto;
 
-readonly class BudgetMetaDtoAssembler
+readonly class BudgetMetaBuilder
 {
     public function __construct()
     {
     }
 
-    public function assemble(Budget $budget): BudgetMetaDto
+    public function build(Budget $budget): BudgetMetaDto
     {
         /** @var BudgetUserAccessDto[] $accessList */
         $accessList = [];

@@ -17,9 +17,19 @@ final class BudgetElementType implements JsonSerializable, ValueObjectInterface,
     public const ENVELOPE = 0;
 
     /**
+     * @var string
+     */
+    public const ENVELOPE_ALIAS = 'envelope';
+
+    /**
      * @var int
      */
     public const CATEGORY = 1;
+
+    /**
+     * @var string
+     */
+    public const CATEGORY_ALIAS = 'category';
 
     /**
      * @var int
@@ -27,12 +37,17 @@ final class BudgetElementType implements JsonSerializable, ValueObjectInterface,
     public const TAG = 2;
 
     /**
+     * @var string
+     */
+    public const TAG_ALIAS = 'tag';
+
+    /**
      * @var string[]
      */
     public const MAPPING = [
-        self::ENVELOPE => 'envelope',
-        self::CATEGORY => 'category',
-        self::TAG => 'tag',
+        self::ENVELOPE => self::ENVELOPE_ALIAS,
+        self::CATEGORY => self::CATEGORY_ALIAS,
+        self::TAG => self::TAG_ALIAS,
     ];
 
     private int $value;

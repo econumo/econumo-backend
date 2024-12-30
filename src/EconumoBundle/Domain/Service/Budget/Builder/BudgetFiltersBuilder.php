@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\EconumoBundle\Domain\Service\Budget\Assembler;
+namespace App\EconumoBundle\Domain\Service\Budget\Builder;
 
 use App\EconumoBundle\Domain\Entity\Account;
 use App\EconumoBundle\Domain\Entity\Budget;
@@ -15,7 +15,7 @@ use App\EconumoBundle\Domain\Repository\TagRepositoryInterface;
 use App\EconumoBundle\Domain\Service\Budget\Dto\BudgetFiltersDto;
 use DateTimeInterface;
 
-readonly class BudgetFiltersDtoAssembler
+readonly class BudgetFiltersBuilder
 {
     public function __construct(
         private CategoryRepositoryInterface $categoryRepository,
@@ -24,7 +24,7 @@ readonly class BudgetFiltersDtoAssembler
     ) {
     }
 
-    public function assemble(
+    public function build(
         Budget $budget,
         Id $userId,
         DateTimeInterface $periodStart,

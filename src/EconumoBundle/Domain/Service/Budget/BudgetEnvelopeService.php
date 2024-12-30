@@ -6,18 +6,17 @@ declare(strict_types=1);
 namespace App\EconumoBundle\Domain\Service\Budget;
 
 
-use Throwable;
-use App\EconumoBundle\Domain\Entity\Currency;
-use App\EconumoBundle\Domain\Entity\BudgetFolder;
 use App\EconumoBundle\Domain\Entity\Budget;
 use App\EconumoBundle\Domain\Entity\BudgetElement;
 use App\EconumoBundle\Domain\Entity\BudgetEnvelope;
+use App\EconumoBundle\Domain\Entity\BudgetFolder;
 use App\EconumoBundle\Domain\Entity\Category;
+use App\EconumoBundle\Domain\Entity\Currency;
 use App\EconumoBundle\Domain\Entity\ValueObject\BudgetElementType;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoBundle\Domain\Exception\AccessDeniedException;
-use App\EconumoBundle\Domain\Factory\BudgetElementLimitFactoryInterface;
 use App\EconumoBundle\Domain\Factory\BudgetElementFactoryInterface;
+use App\EconumoBundle\Domain\Factory\BudgetElementLimitFactoryInterface;
 use App\EconumoBundle\Domain\Factory\BudgetEnvelopeFactoryInterface;
 use App\EconumoBundle\Domain\Repository\BudgetElementLimitRepositoryInterface;
 use App\EconumoBundle\Domain\Repository\BudgetElementRepositoryInterface;
@@ -25,11 +24,12 @@ use App\EconumoBundle\Domain\Repository\BudgetEnvelopeRepositoryInterface;
 use App\EconumoBundle\Domain\Repository\BudgetRepositoryInterface;
 use App\EconumoBundle\Domain\Repository\CurrencyRepositoryInterface;
 use App\EconumoBundle\Domain\Service\AntiCorruptionServiceInterface;
-use App\EconumoBundle\Domain\Service\Budget\Assembler\BudgetFiltersDtoAssembler;
+use App\EconumoBundle\Domain\Service\Budget\Builder\BudgetFiltersBuilder;
 use App\EconumoBundle\Domain\Service\Budget\Dto\BudgetEnvelopeDto;
 use App\EconumoBundle\Domain\Service\Budget\Dto\BudgetStructureChildElementDto;
 use App\EconumoBundle\Domain\Service\Budget\Dto\BudgetStructureParentElementDto;
 use DateTime;
+use Throwable;
 
 readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
 {
@@ -41,7 +41,7 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
         private AntiCorruptionServiceInterface $antiCorruptionService,
         private BudgetEnvelopeRepositoryInterface $budgetEnvelopeRepository,
         private BudgetElementRepositoryInterface $budgetElementRepository,
-        private BudgetFiltersDtoAssembler $budgetFiltersDtoAssembler,
+        private BudgetFiltersBuilder $budgetFiltersBuilder,
         private BudgetElementLimitRepositoryInterface $budgetElementLimitRepository,
         private BudgetElementLimitFactoryInterface $budgetElementLimitFactory,
         private CurrencyRepositoryInterface $currencyRepository,
@@ -285,8 +285,8 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
     private function getEligibleCategories(Budget $budget, array $categoriesIds): array
     {
         $result = [];
-        $budgetUserIds = $this->budgetFiltersDtoAssembler->getBudgetUserIds($budget);
-        $availableCategories = $this->budgetFiltersDtoAssembler->getCategories($budgetUserIds);
+        $budgetUserIds = $this->budgetFiltersBuilder->getBudgetUserIds($budget);
+        $availableCategories = $this->budgetFiltersBuilder->getCategories($budgetUserIds);
         foreach ($categoriesIds as $category) {
             if (!array_key_exists($category->getValue(), $availableCategories)) {
                 throw new AccessDeniedException();
