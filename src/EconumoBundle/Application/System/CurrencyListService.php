@@ -13,8 +13,10 @@ use App\EconumoBundle\Domain\Service\Dto\CurrencyDto;
 
 readonly class CurrencyListService
 {
-    public function __construct(private ImportCurrencyListV1ResultAssembler $importCurrencyListV1ResultAssembler, private CurrencyUpdateServiceInterface $currencyUpdateService)
-    {
+    public function __construct(
+        private ImportCurrencyListV1ResultAssembler $importCurrencyListV1ResultAssembler,
+        private CurrencyUpdateServiceInterface $currencyUpdateService
+    ) {
     }
 
     public function importCurrencyList(
