@@ -64,24 +64,34 @@ class CurrencyRateRepository extends ServiceEntityRepository implements Currency
         return $query->getResult();
     }
 
-    public function get(Id $currencyId, DateTimeInterface $date): CurrencyRate
+    public function get(Id $currencyId, Id $baseCurrencyId, DateTimeInterface $date): CurrencyRate
     {
-        try {
-            $builder = $this->createQueryBuilder('cr');
-            $builder->where('cr.currency = :currency')
-                ->setParameter('currency', $this->getEntityManager()->getReference(Currency::class, $currencyId))
-                ->andWhere('cr.publishedAt = :date')
-                ->setParameter('date', $date)
-                ->setMaxResults(1);
-            $item = $builder->getQuery()->getSingleResult();
-            if ($item === null) {
-                throw new NotFoundException(sprintf('Currency with identifier (%s, %s) not found', $currencyId->getValue(), $date->format('Y-m-d')));
-            }
-
-            return $item;
-        } catch (NoResultException) {
+        $sql =<<<'SQL'
+SELECT cr.id FROM currencies_rates cr
+WHERE cr.currency_id = :currency
+AND cr.base_currency_id = :baseCurrency
+AND cr.published_at = :date
+ORDER BY cr.published_at DESC
+LIMIT 1
+SQL;
+        $conn = $this->getEntityManager()->getConnection();
+        $stmt = $conn->prepare($sql);
+        $result = $stmt->executeQuery([
+            'currency' => $currencyId->getValue(),
+            'baseCurrency' => $baseCurrencyId->getValue(),
+            'date' => $date->format('Y-m-d')
+        ]);
+        $id = $result->fetchOne();
+        if ($id === false) {
             throw new NotFoundException(sprintf('Currency with identifier (%s, %s) not found', $currencyId->getValue(), $date->format('Y-m-d')));
         }
+
+        $item = $this->find(new Id($id));
+        if (!$item instanceof CurrencyRate) {
+            throw new NotFoundException(sprintf('Currency with identifier (%s, %s) not found', $currencyId->getValue(), $date->format('Y-m-d')));
+        }
+
+        return $item;
     }
 
     public function getLatest(Id $currencyId, ?DateTimeInterface $date = null): CurrencyRate

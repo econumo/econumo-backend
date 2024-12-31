@@ -49,6 +49,7 @@ readonly class BudgetStructureBuilder
         foreach ($this->getFolders($budget->getId()) as $folder) {
             $folders[] = $this->budgetStructureFolderDtoAssembler->assemble($folder);
         }
+
         $toConvert = [];
         $categoryUsed = [];
         $elements = [];
@@ -130,6 +131,7 @@ readonly class BudgetStructureBuilder
                 $elements[$index] = $item;
             }
         }
+
         // Envelopes <--
 
 
@@ -207,6 +209,7 @@ readonly class BudgetStructureBuilder
                 $elements[$index] = $item;
             }
         }
+
         // Tags <--
 
 
@@ -231,6 +234,7 @@ readonly class BudgetStructureBuilder
             if (array_key_exists($index, $elementsSpending)) {
                 $itemCategorySpending = $elementsSpending[$index]->spendingInCategories[$category->getId()->getValue()] ?? null;
             }
+
             $currenciesSpent = $itemCategorySpending?->currenciesSpent ?? [];
             $currenciesSpentBefore = $itemCategorySpending?->currenciesSpentBefore ?? [];
             $item = [
@@ -279,6 +283,7 @@ readonly class BudgetStructureBuilder
                 }
             }
         }
+
         // Categories <--
 
         $result = [];

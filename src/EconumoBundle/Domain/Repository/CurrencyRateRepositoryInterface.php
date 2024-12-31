@@ -12,7 +12,7 @@ interface CurrencyRateRepositoryInterface
 {
     public function getNextIdentity(): Id;
 
-    public function get(Id $currencyId, DateTimeInterface $date): CurrencyRate;
+    public function get(Id $currencyId, Id $baseCurrencyId, DateTimeInterface $date): CurrencyRate;
 
     public function getLatest(Id $currencyId, ?DateTimeInterface $date = null): CurrencyRate;
 

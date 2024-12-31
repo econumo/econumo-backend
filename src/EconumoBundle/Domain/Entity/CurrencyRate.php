@@ -26,12 +26,17 @@ class CurrencyRate
         DateTimeInterface $createdAt
     ) {
         $this->rate = (string)$rate;
-        $this->publishedAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
+        $this->publishedAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d') . ' 00:00:00');
     }
 
     public function getRate(): float
     {
         return (float)$this->rate;
+    }
+
+    public function updateRate(float $rate): void
+    {
+        $this->rate = (string)round($rate, 8);
     }
 
     public function getCurrency(): Currency

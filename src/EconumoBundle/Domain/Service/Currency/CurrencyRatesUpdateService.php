@@ -11,13 +11,14 @@ use App\EconumoBundle\Domain\Exception\NotFoundException;
 use App\EconumoBundle\Domain\Factory\CurrencyRateFactoryInterface;
 use App\EconumoBundle\Domain\Repository\CurrencyRateRepositoryInterface;
 use App\EconumoBundle\Domain\Repository\CurrencyRepositoryInterface;
-use App\EconumoBundle\Domain\Service\Currency\CurrencyRatesUpdateServiceInterface;
-use App\EconumoBundle\Domain\Service\Dto\CurrencyRateDto;
 
-class CurrencyRatesUpdateService implements CurrencyRatesUpdateServiceInterface
+readonly class CurrencyRatesUpdateService implements CurrencyRatesUpdateServiceInterface
 {
-    public function __construct(private readonly CurrencyRateRepositoryInterface $currencyRateRepository, private readonly CurrencyRepositoryInterface $currencyRepository, private readonly CurrencyRateFactoryInterface $currencyRateFactory)
-    {
+    public function __construct(
+        private CurrencyRateRepositoryInterface $currencyRateRepository,
+        private CurrencyRepositoryInterface $currencyRepository,
+        private CurrencyRateFactoryInterface $currencyRateFactory
+    ) {
     }
 
     /**
@@ -30,17 +31,18 @@ class CurrencyRatesUpdateService implements CurrencyRatesUpdateServiceInterface
         /** @var CurrencyRate[] $forUpdate */
         $forUpdate = [];
         foreach ($currencyRates as $currencyRateDto) {
-            $item = $this->currencyRateFactory->create(
-                $currencyRateDto->date,
-                $this->getCurrency($currencies, $currencyRateDto->code),
-                $this->getCurrency($currencies, $currencyRateDto->base),
-                $currencyRateDto->rate
-            );
+            $currency = $this->getCurrency($currencies, $currencyRateDto->code);
+            $baseCurrency = $this->getCurrency($currencies, $currencyRateDto->base);
             try {
-                if ($this->currencyRateRepository->get($item->getCurrency()->getId(), $item->getPublishedAt())) {
-                    continue;
-                }
+                $item = $this->currencyRateRepository->get($currency->getId(), $baseCurrency->getId(), $currencyRateDto->date);
+                $item->updateRate($currencyRateDto->rate);
             } catch (NotFoundException) {
+                $item = $this->currencyRateFactory->create(
+                    $currencyRateDto->date,
+                    $currency,
+                    $baseCurrency,
+                    $currencyRateDto->rate
+                );
             }
 
             $forUpdate[] = $item;

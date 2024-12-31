@@ -6,13 +6,12 @@ namespace App\EconumoBundle\Domain\Factory;
 
 use App\EconumoBundle\Domain\Entity\Currency;
 use App\EconumoBundle\Domain\Entity\CurrencyRate;
-use App\EconumoBundle\Domain\Factory\CurrencyRateFactoryInterface;
 use App\EconumoBundle\Domain\Repository\CurrencyRateRepositoryInterface;
 use DateTimeInterface;
 
-class CurrencyRateFactory implements CurrencyRateFactoryInterface
+readonly class CurrencyRateFactory implements CurrencyRateFactoryInterface
 {
-    public function __construct(private readonly CurrencyRateRepositoryInterface $currencyRateRepository)
+    public function __construct(private CurrencyRateRepositoryInterface $currencyRateRepository)
     {
     }
 
