@@ -38,7 +38,7 @@ jobs:
           docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} bin/console doctrine:database:create --env=test
           docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} bin/console doctrine:migration:migrate -n --env=test
           docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} bin/console doctrine:schema:validate --skip-sync --env=test
-          docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} bin/console doctrine:fixtures:load --purge-with-truncate -n --env=test
+          docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} bin/console doctrine:fixtures:load -n --env=test
           docker run --volume shared-volume:/var/www/var/db --env QASE_ENABLE=${QASE_ENABLE} --env QASE_TOKEN=${QASE_TOKEN} --env QASE_PROJECT=${QASE_PROJECT} ${DOCKER_IMAGE} vendor/bin/codecept run
         env:
           QASE_ENABLE: "false"
@@ -53,7 +53,7 @@ jobs:
           docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} bin/console doctrine:database:create --env=test
           docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} bin/console doctrine:migration:migrate -n --env=test
           docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} bin/console doctrine:schema:validate --skip-sync --env=test
-          docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} bin/console doctrine:fixtures:load --purge-with-truncate -n --env=test
+          docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} bin/console doctrine:fixtures:load -n --env=test
           docker run --volume shared-volume:/var/www/var/db --env QASE_ENABLE=${QASE_ENABLE} --env QASE_TOKEN=${QASE_TOKEN} --env QASE_PROJECT=${QASE_PROJECT} ${DOCKER_IMAGE} vendor/bin/codecept run
           docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} touch src/EconumoFamilyBundle/.disabled
         env:
@@ -69,7 +69,7 @@ jobs:
           docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} bin/console doctrine:database:create --env=test
           docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} bin/console doctrine:migration:migrate -n --env=test
           docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} bin/console doctrine:schema:validate --skip-sync --env=test
-          docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} bin/console doctrine:fixtures:load --purge-with-truncate -n --env=test
+          docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} bin/console doctrine:fixtures:load -n --env=test
           docker run --volume shared-volume:/var/www/var/db --env QASE_ENABLE=${QASE_ENABLE} --env QASE_TOKEN=${QASE_TOKEN} --env QASE_PROJECT=${QASE_PROJECT} ${DOCKER_IMAGE} vendor/bin/codecept run
           docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} touch src/EconumoCloudBundle/.disabled
         env:
