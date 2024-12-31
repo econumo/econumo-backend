@@ -28,21 +28,21 @@ $data = <<<'JSON'
     "currency_id": "1ae5bfd5-03e8-412b-80d2-c0ecf3ce32fe",
     "base_currency_id": "a98daee8-1740-4514-a33e-dccaa90fc07b",
     "rate": 0.91474200,
-    "published_at": "2020-cc-01"
+    "published_at": "2020-cc-28"
   },
   {
     "id": "7b29813d-7b50-488f-b587-e14064f2e924",
     "currency_id": "fe5d9269-b69c-4841-9c04-136225447eca",
     "base_currency_id": "a98daee8-1740-4514-a33e-dccaa90fc07b",
     "rate": 132.73333300,
-    "published_at": "2020-cc-01"
+    "published_at": "2020-cc-28"
   },
   {
     "id": "f3034128-2a1d-4981-b4d4-921376431e15",
     "currency_id": "a98daee8-1740-4514-a33e-dccaa90fc07b",
     "base_currency_id": "a98daee8-1740-4514-a33e-dccaa90fc07b",
     "rate": 1.00000000,
-    "published_at": "2020-cc-01"
+    "published_at": "2020-cc-28"
   },
   {
     "id": "7b7504a6-df5c-4f4c-a28d-3469f5993141",
