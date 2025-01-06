@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\UI\Controller\Api\User\Currency\Validation;
 
+use App\EconumoBundle\Domain\Entity\ValueObject\CurrencyCode;
 use App\EconumoBundle\UI\Service\Validator\ValueObjectValidationFactoryInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Currency;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class UpdateCurrencyV1Form extends AbstractType
@@ -26,7 +26,10 @@ class UpdateCurrencyV1Form extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('currency', TextType::class, [
-            'constraints' => [new NotBlank(), new Currency()],
+            'constraints' => [
+                new NotBlank(),
+                $this->valueObjectValidationFactory->create(CurrencyCode::class)
+            ],
         ]);
     }
 }
