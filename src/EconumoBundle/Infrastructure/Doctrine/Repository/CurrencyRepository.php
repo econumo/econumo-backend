@@ -44,7 +44,7 @@ class CurrencyRepository extends ServiceEntityRepository implements CurrencyRepo
      */
     public function getAll(): array
     {
-        return $this->findAll();
+        return $this->findBy([], ['code' => 'ASC']);
     }
 
     /**
