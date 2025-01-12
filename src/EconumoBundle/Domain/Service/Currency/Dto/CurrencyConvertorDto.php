@@ -7,6 +7,7 @@ namespace App\EconumoBundle\Domain\Service\Currency\Dto;
 
 
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use DateTimeInterface;
 
 readonly class CurrencyConvertorDto
@@ -16,7 +17,7 @@ readonly class CurrencyConvertorDto
         public DateTimeInterface $periodEnd,
         public Id $fromCurrencyId,
         public Id $toCurrencyId,
-        public float $amount,
+        public DecimalNumber $amount,
     ) {
     }
 }

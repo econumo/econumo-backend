@@ -10,6 +10,7 @@ use App\EconumoBundle\Application\Transaction\Dto\UpdateTransactionV1ResultDto;
 use App\EconumoBundle\Domain\Entity\Account;
 use App\EconumoBundle\Domain\Entity\Transaction;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use App\EconumoBundle\Domain\Repository\AccountRepositoryInterface;
 use App\EconumoBundle\Domain\Service\AccountServiceInterface;
 
@@ -34,7 +35,7 @@ readonly class UpdateTransactionV1ResultAssembler
         $accountsIds = array_map(static fn(Account $account): Id => $account->getId(), $accounts);
         $balances = $this->accountService->getAccountsBalance($accountsIds);
         foreach (array_reverse($accounts) as $account) {
-            $result->accounts[] = $this->accountToDtoV1ResultAssembler->assemble($userId, $account, $balances[$account->getId()->getValue()] ?? .0);
+            $result->accounts[] = $this->accountToDtoV1ResultAssembler->assemble($userId, $account, $balances[$account->getId()->getValue()] ?? new DecimalNumber(0));
         }
 
         return $result;

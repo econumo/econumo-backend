@@ -8,7 +8,7 @@
         <id name="id" type="uuid" column="id"/>
 
         <field name="period" type="datetime_immutable" column="period" nullable="false"/>
-        <field name="amount" type="decimal" column="amount" precision="19" scale="2" nullable="false"/>
+        <field name="amount" type="decimal_number_type" column="amount" precision="19" scale="8" nullable="false"/>
         <field name="createdAt" type="datetime_immutable" column="created_at" nullable="false"/>
         <field name="updatedAt" type="datetime" column="updated_at" nullable="false"/>
 

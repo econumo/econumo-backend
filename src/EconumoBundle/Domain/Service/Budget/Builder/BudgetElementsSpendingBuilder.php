@@ -9,6 +9,7 @@ namespace App\EconumoBundle\Domain\Service\Budget\Builder;
 use App\EconumoBundle\Domain\Entity\Budget;
 use App\EconumoBundle\Domain\Entity\ValueObject\BudgetElementType;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use App\EconumoBundle\Domain\Repository\TransactionRepositoryInterface;
 use App\EconumoBundle\Domain\Service\Budget\Dto\BudgetElementAmountSpentDto;
 use App\EconumoBundle\Domain\Service\Budget\Dto\BudgetElementSpendingCategoryDto;
@@ -112,14 +113,14 @@ readonly class BudgetElementsSpendingBuilder
             if ($isCurrentPeriod) {
                 $data[$index]->spendingInCategories[$item['category_id']]->currenciesSpent[] = new BudgetElementAmountSpentDto(
                     new Id($item['currency_id']),
-                    round((float)$item['amount'], 2),
+                    new DecimalNumber($item['amount']),
                     $periodStart,
                     $periodEnd
                 );
             } else {
                 $data[$index]->spendingInCategories[$item['category_id']]->currenciesSpentBefore[] = new BudgetElementAmountSpentDto(
                     new Id($item['currency_id']),
-                    round((float)$item['amount'], 2),
+                    new DecimalNumber($item['amount']),
                     $periodStart,
                     $periodEnd
                 );

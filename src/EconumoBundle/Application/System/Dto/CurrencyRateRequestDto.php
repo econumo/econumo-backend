@@ -21,5 +21,5 @@ class CurrencyRateRequestDto
     /**
      * @OA\Property(example="1.01")
      */
-    public float $rate;
+    public float|string $rate;
 }

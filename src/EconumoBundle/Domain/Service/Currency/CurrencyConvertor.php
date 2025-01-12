@@ -10,18 +10,13 @@ use App\EconumoBundle\Domain\Entity\Currency;
 use App\EconumoBundle\Domain\Entity\CurrencyRate;
 use App\EconumoBundle\Domain\Entity\ValueObject\CurrencyCode;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use App\EconumoBundle\Domain\Exception\DomainException;
 use App\EconumoBundle\Domain\Repository\CurrencyRateRepositoryInterface;
 use App\EconumoBundle\Domain\Repository\CurrencyRepositoryInterface;
-use App\EconumoBundle\Domain\Repository\UserRepositoryInterface;
-use App\EconumoBundle\Domain\Service\Currency\CurrencyRateServiceInterface;
 use App\EconumoBundle\Domain\Service\Currency\Dto\CurrencyConvertorDto;
 use App\EconumoBundle\Domain\Service\DatetimeServiceInterface;
 use App\EconumoBundle\Domain\Service\Dto\FullCurrencyRateDto;
-use App\EconumoBundle\Domain\Service\Currency\CurrencyConvertorInterface;
-use DateInterval;
-use DatePeriod;
-use DateTimeInterface;
 
 class CurrencyConvertor implements CurrencyConvertorInterface
 {
@@ -31,7 +26,6 @@ class CurrencyConvertor implements CurrencyConvertorInterface
 
     public function __construct(
         string $baseCurrency,
-        readonly private UserRepositoryInterface $userRepository,
         readonly private CurrencyRateRepositoryInterface $currencyRateRepository,
         readonly private CurrencyRateServiceInterface $currencyRateService,
         readonly private CurrencyRepositoryInterface $currencyRepository,
@@ -40,14 +34,7 @@ class CurrencyConvertor implements CurrencyConvertorInterface
         $this->baseCurrency = new CurrencyCode($baseCurrency);
     }
 
-    public function convertForUser(Id $userId, CurrencyCode $originalCurrency, float $sum): float
-    {
-        $user = $this->userRepository->get($userId);
-        $userCurrency = $user->getCurrency();
-        return $this->convert($originalCurrency, $userCurrency, $sum);
-    }
-
-    public function convert(CurrencyCode $originalCurrency, CurrencyCode $resultCurrency, float $sum): float
+    public function convert(CurrencyCode $originalCurrency, CurrencyCode $resultCurrency, DecimalNumber $sum): DecimalNumber
     {
         if ($originalCurrency->isEqual($resultCurrency)) {
             return $sum;
@@ -110,7 +97,7 @@ class CurrencyConvertor implements CurrencyConvertorInterface
 
         $result = [];
         foreach ($items as $key => $dto) {
-            $result[$key] = .0;
+            $result[$key] = new DecimalNumber(0);
             if ($dto instanceof CurrencyConvertorDto) {
                 $existingKey = array_key_exists($dto->periodStart->format('Ym'), $rates) ? $dto->periodStart->format('Ym') : $currentPeriodStartIndex;
                 $result[$key] = $this->convertInternalById($rates[$existingKey], $dto->fromCurrencyId, $dto->toCurrencyId, $dto->amount);
@@ -118,7 +105,7 @@ class CurrencyConvertor implements CurrencyConvertorInterface
                 /** @var CurrencyConvertorDto $item */
                 foreach ($dto as $item) {
                     $existingKey = array_key_exists($item->periodStart->format('Ym'), $rates) ? $item->periodStart->format('Ym') : $currentPeriodStartIndex;
-                    $result[$key] += $this->convertInternalById($rates[$existingKey], $item->fromCurrencyId, $item->toCurrencyId, $item->amount);
+                    $result[$key]->add($this->convertInternalById($rates[$existingKey], $item->fromCurrencyId, $item->toCurrencyId, $item->amount));
                 }
             }
         }
@@ -133,17 +120,17 @@ class CurrencyConvertor implements CurrencyConvertorInterface
         array $rates,
         CurrencyCode $originalCurrency,
         CurrencyCode $resultCurrency,
-        float $sum
-    ): float {
+        DecimalNumber $sum
+    ): DecimalNumber {
         if ($originalCurrency->isEqual($resultCurrency)) {
             return $sum;
         }
 
-        $result = $sum;
+        $result = new DecimalNumber($sum->getValue());
         if (!$originalCurrency->isEqual($this->baseCurrency)) {
             foreach ($rates as $rate) {
                 if ($rate->currencyCode->isEqual($originalCurrency)) {
-                    $result /= $rate->rate;
+                    $result->div($rate->rate);
                     break;
                 }
             }
@@ -152,7 +139,7 @@ class CurrencyConvertor implements CurrencyConvertorInterface
         if (!$resultCurrency->isEqual($this->baseCurrency)) {
             foreach ($rates as $rate) {
                 if ($rate->currencyCode->isEqual($resultCurrency)) {
-                    $result *= $rate->rate;
+                    $result->mul($rate->rate);
                     break;
                 }
             }
@@ -168,8 +155,8 @@ class CurrencyConvertor implements CurrencyConvertorInterface
         array $rates,
         Id $originalCurrencyId,
         Id $resultCurrencyId,
-        float $amount
-    ): float {
+        DecimalNumber $amount
+    ): DecimalNumber {
         if ($originalCurrencyId->isEqual($resultCurrencyId)) {
             return $amount;
         }
@@ -190,7 +177,7 @@ class CurrencyConvertor implements CurrencyConvertorInterface
         if (!$originalCurrencyId->isEqual($baseCurrencyId)) {
             foreach ($rates as $rate) {
                 if ($rate->currencyId->isEqual($originalCurrencyId)) {
-                    $result /= $rate->rate;
+                    $result->div($rate->rate);
                     break;
                 }
             }
@@ -199,7 +186,7 @@ class CurrencyConvertor implements CurrencyConvertorInterface
         if (!$resultCurrencyId->isEqual($baseCurrencyId)) {
             foreach ($rates as $rate) {
                 if ($rate->currencyId->isEqual($resultCurrencyId)) {
-                    $result *= $rate->rate;
+                    $result->mul($rate->rate);
                     break;
                 }
             }

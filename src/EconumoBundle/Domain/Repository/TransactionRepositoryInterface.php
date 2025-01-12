@@ -6,6 +6,7 @@ namespace App\EconumoBundle\Domain\Repository;
 
 use App\EconumoBundle\Domain\Entity\Transaction;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use DateTimeInterface;
 
 interface TransactionRepositoryInterface
@@ -17,7 +18,7 @@ interface TransactionRepositoryInterface
      */
     public function findByAccountId(Id $accountId): array;
 
-    public function getAccountBalance(Id $accountId, DateTimeInterface $date): float;
+    public function getAccountBalance(Id $accountId, DateTimeInterface $date): DecimalNumber;
 
     /**
      * @param Transaction[] $transactions
@@ -49,6 +50,8 @@ interface TransactionRepositoryInterface
     /**
      * @param Id[] $categoryIds
      * @param Id[] $accountsIds
+     * @param DateTimeInterface $startDate
+     * @param DateTimeInterface $endDate
      * @return array
      */
     public function countSpendingForCategories(
@@ -61,6 +64,8 @@ interface TransactionRepositoryInterface
     /**
      * @param Id[] $tagsIds
      * @param Id[] $accountsIds
+     * @param DateTimeInterface $startDate
+     * @param DateTimeInterface $endDate
      * @return array
      */
     public function countSpendingForTags(
@@ -73,6 +78,8 @@ interface TransactionRepositoryInterface
     /**
      * @param Id[] $categoriesIds
      * @param Id[] $accountsIds
+     * @param DateTimeInterface $startDate
+     * @param DateTimeInterface $endDate
      * @return array
      */
     public function countSpending(

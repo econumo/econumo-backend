@@ -38,7 +38,7 @@ class BudgetTransactionResultDto
      * Amount
      * @OA\Property(example="100.5")
      */
-    public float $amount;
+    public string $amount;
 
     /**
      * Description

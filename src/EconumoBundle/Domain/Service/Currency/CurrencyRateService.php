@@ -7,6 +7,7 @@ namespace App\EconumoBundle\Domain\Service\Currency;
 
 use App\EconumoBundle\Domain\Entity\ValueObject\CurrencyCode;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use App\EconumoBundle\Domain\Repository\CurrencyRateRepositoryInterface;
 use App\EconumoBundle\Domain\Repository\CurrencyRepositoryInterface;
 use App\EconumoBundle\Domain\Service\DatetimeServiceInterface;
@@ -96,7 +97,7 @@ readonly class CurrencyRateService implements CurrencyRateServiceInterface
             $dto->baseCurrencyCode = $baseCurrency->getCode();
             $dto->currencyId = $currency->getId();
             $dto->currencyCode = $currency->getCode();
-            $dto->rate = (float)$data[$currency->getId()->getValue()]['rate'];
+            $dto->rate = new DecimalNumber($data[$currency->getId()->getValue()]['rate']);
             $dto->date = $startDate;
             $result[] = $dto;
         }

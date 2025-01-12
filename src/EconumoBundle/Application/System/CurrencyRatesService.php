@@ -8,6 +8,7 @@ use App\EconumoBundle\Application\System\Dto\ImportCurrencyRatesV1RequestDto;
 use App\EconumoBundle\Application\System\Dto\ImportCurrencyRatesV1ResultDto;
 use App\EconumoBundle\Application\System\Assembler\ImportCurrencyRatesV1ResultAssembler;
 use App\EconumoBundle\Domain\Entity\ValueObject\CurrencyCode;
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use App\EconumoBundle\Domain\Service\Currency\CurrencyRatesUpdateServiceInterface;
 use App\EconumoBundle\Domain\Service\Dto\CurrencyRateDto;
 use DateTimeImmutable;
@@ -27,7 +28,7 @@ readonly class CurrencyRatesService
         foreach ($dto->items as $currencyRate) {
             $item = new CurrencyRateDto();
             $item->code = new CurrencyCode($currencyRate->code);
-            $item->rate = $currencyRate->rate;
+            $item->rate = new DecimalNumber($currencyRate->rate);
             $item->date = $currencyRatesDate;
             $item->base = $currencyBase;
             $rates[] = $item;

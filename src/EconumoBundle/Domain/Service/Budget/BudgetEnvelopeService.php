@@ -14,6 +14,7 @@ use App\EconumoBundle\Domain\Entity\Category;
 use App\EconumoBundle\Domain\Entity\Currency;
 use App\EconumoBundle\Domain\Entity\ValueObject\BudgetElementType;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use App\EconumoBundle\Domain\Exception\AccessDeniedException;
 use App\EconumoBundle\Domain\Factory\BudgetElementFactoryInterface;
 use App\EconumoBundle\Domain\Factory\BudgetElementLimitFactoryInterface;
@@ -195,7 +196,7 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
                 $date = $targetAmount->getPeriod()->format('Y-m-d');
                 $seen[] = $date;
                 if (array_key_exists($date, $originLimits)) {
-                    $targetAmount->updateAmount($targetAmount->getAmount() + $originLimits[$date]);
+                    $targetAmount->updateAmount($targetAmount->getAmount()->add($originLimits[$date]));
                     $updated[] = $targetAmount;
                 }
             }
@@ -209,7 +210,7 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
             foreach ($keysToCreate as $key) {
                 $created[] = $this->budgetElementLimitFactory->create(
                     $element,
-                    $originLimits[$key],
+                    new DecimalNumber($originLimits[$key]),
                     DateTime::createFromFormat('Y-m-d', $key)
                 );
             }

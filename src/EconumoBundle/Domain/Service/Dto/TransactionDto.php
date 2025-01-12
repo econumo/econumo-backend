@@ -9,6 +9,7 @@ use App\EconumoBundle\Domain\Entity\Category;
 use App\EconumoBundle\Domain\Entity\Payee;
 use App\EconumoBundle\Domain\Entity\Tag;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use App\EconumoBundle\Domain\Entity\ValueObject\TransactionType;
 use DateTimeInterface;
 
@@ -18,9 +19,9 @@ class TransactionDto
 
     public Id $userId;
 
-    public float $amount;
+    public DecimalNumber $amount;
 
-    public ?float $amountRecipient = null;
+    public ?DecimalNumber $amountRecipient = null;
 
     public Id $accountId;
 

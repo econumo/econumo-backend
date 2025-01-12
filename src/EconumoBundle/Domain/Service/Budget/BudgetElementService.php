@@ -16,7 +16,6 @@ use App\EconumoBundle\Domain\Repository\CurrencyRepositoryInterface;
 use App\EconumoBundle\Domain\Repository\TagRepositoryInterface;
 use App\EconumoBundle\Domain\Service\Budget\Dto\BudgetCategoryDto;
 use App\EconumoBundle\Domain\Service\Budget\Dto\BudgetTagDto;
-use Throwable;
 
 readonly class BudgetElementService implements BudgetElementServiceInterface
 {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Domain\Service;
 
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use Throwable;
 use App\EconumoBundle\Domain\Entity\Transaction;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
@@ -70,7 +71,7 @@ readonly class TransactionService implements TransactionServiceInterface
 
     public function updateBalance(
         Id $accountId,
-        float $correction,
+        DecimalNumber $correction,
         DateTimeInterface $updatedAt,
         string $comment = ''
     ): Transaction {

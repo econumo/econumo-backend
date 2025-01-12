@@ -21,5 +21,5 @@ class BudgetCurrencyAmountDto
     /**
      * @OA\Property(example="100.0")
      */
-    public float $amount;
+    public string $amount;
 }

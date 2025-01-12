@@ -6,6 +6,7 @@ namespace App\EconumoBundle\Application\Transaction\Assembler;
 
 use App\EconumoBundle\Application\Transaction\Dto\UpdateTransactionV1RequestDto;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use App\EconumoBundle\Domain\Entity\ValueObject\TransactionType;
 use App\EconumoBundle\Domain\Repository\AccountRepositoryInterface;
 use App\EconumoBundle\Domain\Repository\CategoryRepositoryInterface;
@@ -27,12 +28,12 @@ class UpdateTransactionRequestToDomainDtoAssembler
         $result = new TransactionDto();
         $result->type = TransactionType::createFromAlias($dto->type);
         $result->userId = $userId;
-        $result->amount = $dto->amount;
+        $result->amount = new DecimalNumber($dto->amount);
         $result->accountId = new Id($dto->accountId);
         $result->account = $this->accountRepository->getReference($result->accountId);
         $result->accountRecipientId = null;
         $result->accountRecipient = null;
-        $result->amountRecipient = $dto->amountRecipient ?? $dto->amount;
+        $result->amountRecipient = $dto->amountRecipient === null ? null : new DecimalNumber($dto->amountRecipient);
         $result->description = $dto->description ?? '';
         $result->date = DateTime::createFromFormat('Y-m-d H:i:s', $dto->date);
         $result->categoryId = null;
@@ -44,7 +45,7 @@ class UpdateTransactionRequestToDomainDtoAssembler
 
         if ($result->type->isTransfer()) {
             if ($dto->amountRecipient !== null) {
-                $result->amountRecipient = $dto->amountRecipient;
+                $result->amountRecipient = new DecimalNumber($dto->amountRecipient);
             }
 
             if ($dto->accountRecipientId !== null) {

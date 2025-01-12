@@ -7,8 +7,8 @@ namespace App\EconumoBundle\Domain\Service\Budget\Assembler;
 
 
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use App\EconumoBundle\Domain\Repository\AccountRepositoryInterface;
-use App\EconumoBundle\Domain\Service\Budget\Dto\BudgetFiltersDto;
 use App\EconumoBundle\Domain\Service\Budget\Dto\CurrencyBalanceDto;
 use App\EconumoBundle\Domain\Service\DatetimeServiceInterface;
 use DateTimeInterface;
@@ -39,7 +39,7 @@ readonly class CurrencyBalanceDtoAssembler
         }
 
         $endBalances = [];
-        if ($periodEnd <= $now){
+        if ($periodEnd <= $now) {
             $endBalances = $this->accountRepository->getAccountsBalancesBeforeDate($includedAccountsIds, $periodEnd);
         }
 
@@ -54,11 +54,13 @@ readonly class CurrencyBalanceDtoAssembler
             $endBalance = $this->summarize($endBalances, $currencyId, 'balance');
             $income = $this->summarize($reports, $currencyId, 'incomes');
             $expenses = $this->summarize($reports, $currencyId, 'expenses');
-            $exchanges = $this->summarize($reports, $currencyId, 'exchange_incomes') - $this->summarize(
+            $exchanges = $this->summarize($reports, $currencyId, 'exchange_incomes')->sub(
+                $this->summarize(
                     $reports,
                     $currencyId,
                     'exchange_expenses'
-                );
+                )
+            );
             // @todo fix holdings
             $holdings = null;
             $item = new CurrencyBalanceDto(
@@ -67,7 +69,7 @@ readonly class CurrencyBalanceDtoAssembler
                 ($periodEnd <= $now ? $endBalance : null),
                 ($periodStart <= $now ? $income : null),
                 ($periodStart <= $now ? $expenses : null),
-                ($periodStart <= $now ? round($exchanges, 2) : null),
+                ($periodStart <= $now ? $exchanges : null),
                 $holdings
             );
             $result[] = $item;
@@ -76,15 +78,15 @@ readonly class CurrencyBalanceDtoAssembler
         return $result;
     }
 
-    private function summarize(array $items, Id $currencyId, string $field): float
+    private function summarize(array $items, Id $currencyId, string $field): DecimalNumber
     {
-        $result = .0;
+        $result = new DecimalNumber(0);
         foreach ($items as $item) {
             if ($item['currency_id'] === $currencyId->getValue()) {
-                $result += $item[$field];
+                $result->add($item[$field]);
             }
         }
 
-        return round($result, 2);
+        return $result;
     }
 }

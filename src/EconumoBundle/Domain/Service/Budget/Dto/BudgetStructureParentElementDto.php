@@ -10,6 +10,7 @@ use App\EconumoBundle\Domain\Entity\ValueObject\BudgetElementType;
 use App\EconumoBundle\Domain\Entity\ValueObject\Icon;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoBundle\Domain\Entity\ValueObject\NameInterface;
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 
 readonly class BudgetStructureParentElementDto
 {
@@ -23,10 +24,10 @@ readonly class BudgetStructureParentElementDto
         public bool $isArchived,
         public ?Id $folderId,
         public int $position,
-        public float $budgeted,
-        public float $available,
-        public float $spent,
-        public float $spentInBudgetCurrency,
+        public DecimalNumber $budgeted,
+        public DecimalNumber $available,
+        public DecimalNumber $spent,
+        public DecimalNumber $spentInBudgetCurrency,
         /** @var BudgetElementAmountSpentDto[] */
         public array $currenciesSpent,
         /** @var BudgetStructureChildElementDto[] */

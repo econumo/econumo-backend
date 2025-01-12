@@ -7,6 +7,7 @@ namespace App\EconumoBundle\Domain\Service\Budget\Assembler;
 
 
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use App\EconumoBundle\Domain\Repository\CurrencyRateRepositoryInterface;
 use App\EconumoBundle\Domain\Service\Budget\Dto\AverageCurrencyRateDto;
 use App\EconumoBundle\Domain\Service\Currency\CurrencyServiceInterface;
@@ -36,7 +37,7 @@ readonly class AverageCurrencyRateDtoAssembler
         $result = [];
         foreach ($currencyRates as $item) {
             if (in_array($item['currencyId'], $supportedCurrencyIds, true)) {
-                $result[] = new AverageCurrencyRateDto(new Id($item['currencyId']), round((float) $item['rate'], 8));
+                $result[] = new AverageCurrencyRateDto(new Id($item['currencyId']), new DecimalNumber($item['rate']));
             }
         }
 

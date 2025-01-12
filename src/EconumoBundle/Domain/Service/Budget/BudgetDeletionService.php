@@ -9,8 +9,6 @@ namespace App\EconumoBundle\Domain\Service\Budget;
 use App\EconumoBundle\Domain\Repository\UserRepositoryInterface;
 use Throwable;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
-use App\EconumoBundle\Domain\Repository\BudgetElementLimitRepositoryInterface;
-use App\EconumoBundle\Domain\Repository\BudgetElementRepositoryInterface;
 use App\EconumoBundle\Domain\Repository\BudgetRepositoryInterface;
 use App\EconumoBundle\Domain\Service\AntiCorruptionServiceInterface;
 
@@ -18,8 +16,6 @@ readonly class BudgetDeletionService
 {
     public function __construct(
         private BudgetRepositoryInterface $budgetRepository,
-        private BudgetElementRepositoryInterface $budgetElementRepository,
-        private BudgetElementLimitRepositoryInterface $budgetElementLimitRepository,
         private AntiCorruptionServiceInterface $antiCorruptionService,
         private UserRepositoryInterface $userRepository
     ) {

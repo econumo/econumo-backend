@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Application\Account;
 
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use DateTimeImmutable;
 use App\EconumoBundle\Application\Account\Assembler\CreateAccountV1ResultAssembler;
 use App\EconumoBundle\Application\Account\Assembler\DeleteAccountV1ResultAssembler;
@@ -47,7 +48,7 @@ class AccountService
         $accountDto->userId = $userId;
         $accountDto->name = $dto->name;
         $accountDto->currencyId = new Id($dto->currencyId);
-        $accountDto->balance = $dto->balance;
+        $accountDto->balance = new DecimalNumber($dto->balance);
         $accountDto->icon = $dto->icon;
         $accountDto->folderId = new Id($dto->folderId);
 
@@ -87,7 +88,7 @@ class AccountService
         $updatedAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dto->updatedAt);
         $transaction = $this->accountService->updateBalance(
             $accountId,
-            $dto->balance,
+            new DecimalNumber($dto->balance),
             $updatedAt,
             $this->translator->trans('account.correction.message')
         );

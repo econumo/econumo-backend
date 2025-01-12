@@ -10,6 +10,7 @@ use App\EconumoBundle\Domain\Entity\ValueObject\AccountName;
 use App\EconumoBundle\Domain\Entity\ValueObject\AccountType;
 use App\EconumoBundle\Domain\Entity\ValueObject\Icon;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use App\EconumoBundle\Domain\Exception\AccessDeniedException;
 use App\EconumoBundle\Domain\Factory\AccountFactoryInterface;
 use App\EconumoBundle\Domain\Factory\AccountOptionsFactoryInterface;
@@ -74,7 +75,7 @@ readonly class AccountService implements AccountServiceInterface
             $folder->addAccount($account);
             $this->folderRepository->save([$folder]);
 
-            if ((string)$dto->balance !== '0') {
+            if (!$dto->balance->isZero()) {
                 $transaction = $this->transactionFactory->createTransaction(
                     $account->getId(),
                     $dto->balance,
@@ -113,18 +114,18 @@ readonly class AccountService implements AccountServiceInterface
 
     public function updateBalance(
         Id $accountId,
-        float $balance,
+        DecimalNumber $balance,
         DateTimeInterface $updatedAt,
         ?string $comment = ''
     ): ?Transaction {
         $actualBalance = $this->getBalance($accountId);
-        if (sprintf('%.2f', $actualBalance) === sprintf('%.2f', $balance)) {
+        if ($actualBalance->equals($balance)) {
             return null;
         }
 
         return $this->transactionService->updateBalance(
             $accountId,
-            round($actualBalance, 2) - round($balance, 2),
+            $actualBalance->sub($balance),
             $updatedAt,
             (string)$comment
         );
@@ -206,7 +207,7 @@ readonly class AccountService implements AccountServiceInterface
         return $result;
     }
 
-    public function getBalance(Id $accountId): float
+    public function getBalance(Id $accountId): DecimalNumber
     {
         $tomorrow = $this->datetimeService->getNextDay();
         return $this->transactionRepository->getAccountBalance(
@@ -224,7 +225,7 @@ readonly class AccountService implements AccountServiceInterface
         );
         $result = [];
         foreach ($balances as $balance) {
-            $result[$balance['account_id']] = round($balance['balance'], 2);
+            $result[$balance['account_id']] = new DecimalNumber($balance['balance']);
         }
 
         return $result;

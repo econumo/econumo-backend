@@ -8,6 +8,7 @@ namespace App\EconumoBundle\Domain\Service\Budget;
 
 use App\EconumoBundle\Domain\Entity\BudgetElementLimit;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use App\EconumoBundle\Domain\Exception\BudgetLimitInvalidDateException;
 use App\EconumoBundle\Domain\Factory\BudgetElementLimitFactoryInterface;
 use App\EconumoBundle\Domain\Repository\BudgetElementLimitRepositoryInterface;
@@ -25,7 +26,7 @@ readonly class BudgetLimitService implements BudgetLimitServiceInterface
     ) {
     }
 
-    public function setLimit(Id $budgetId, Id $elementId, DateTimeInterface $period, ?float $amount): void
+    public function setLimit(Id $budgetId, Id $elementId, DateTimeInterface $period, ?DecimalNumber $amount): void
     {
         $budget = $this->budgetRepository->get($budgetId);
         if ($budget->getStartedAt() > $period) {

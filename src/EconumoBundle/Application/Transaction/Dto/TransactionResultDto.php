@@ -52,13 +52,13 @@ class TransactionResultDto
      * Amount
      * @OA\Property(example="100.5")
      */
-    public float $amount;
+    public string $amount;
 
     /**
      * Amount recipient
      * @OA\Property(example="100.5")
      */
-    public ?float $amountRecipient = null;
+    public ?string $amountRecipient = null;
 
     /**
      * Category id

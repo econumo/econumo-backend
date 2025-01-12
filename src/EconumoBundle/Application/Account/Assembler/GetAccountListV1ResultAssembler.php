@@ -9,6 +9,7 @@ use App\EconumoBundle\Application\Account\Dto\GetAccountListV1RequestDto;
 use App\EconumoBundle\Application\Account\Dto\GetAccountListV1ResultDto;
 use App\EconumoBundle\Domain\Entity\Account;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 
 class GetAccountListV1ResultAssembler
 {
@@ -28,7 +29,7 @@ class GetAccountListV1ResultAssembler
         $result = new GetAccountListV1ResultDto();
         $result->items = [];
         foreach (array_reverse($accounts) as $account) {
-            $result->items[] = $this->accountToDtoV1ResultAssembler->assemble($userId, $account, $balances[$account->getId()->getValue()] ?? .0);
+            $result->items[] = $this->accountToDtoV1ResultAssembler->assemble($userId, $account, $balances[$account->getId()->getValue()] ?? new DecimalNumber(0));
         }
 
         return $result;

@@ -8,6 +8,7 @@ use App\EconumoBundle\Application\Account\Dto\OrderAccountListV1RequestDto;
 use App\EconumoBundle\Application\Account\Dto\OrderAccountListV1ResultDto;
 use App\EconumoBundle\Domain\Entity\Account;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use App\EconumoBundle\Domain\Repository\AccountRepositoryInterface;
 use App\EconumoBundle\Domain\Service\AccountServiceInterface;
 
@@ -33,7 +34,7 @@ readonly class OrderAccountListV1ResultAssembler
             $result->items[] = $this->accountToDtoV1ResultAssembler->assemble(
                 $userId,
                 $account,
-                $balances[$account->getId()->getValue()] ?? .0
+                $balances[$account->getId()->getValue()] ?? new DecimalNumber(0)
             );
         }
 

@@ -6,6 +6,7 @@ namespace App\EconumoBundle\Domain\Service;
 
 use App\EconumoBundle\Domain\Entity\Transaction;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use App\EconumoBundle\Domain\Service\Dto\TransactionDto;
 use DateTimeInterface;
 
@@ -17,7 +18,7 @@ interface TransactionServiceInterface
 
     public function deleteTransaction(Transaction $transaction): void;
 
-    public function updateBalance(Id $accountId, float $correction, DateTimeInterface $updatedAt, string $comment = ''): Transaction;
+    public function updateBalance(Id $accountId, DecimalNumber $correction, DateTimeInterface $updatedAt, string $comment = ''): Transaction;
 
     /**
      * @return Transaction[]

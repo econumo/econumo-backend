@@ -30,10 +30,10 @@ class CurrencyRateResultDto
 
     /**
      * Currency rate
-     * @var float
+     * @var string
      * @OA\Property(example="0.123")
      */
-    public float $rate;
+    public string $rate;
 
     /**
      * Updated at

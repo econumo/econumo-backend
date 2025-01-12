@@ -8,6 +8,7 @@ use App\EconumoBundle\Domain\Entity\Budget;
 use App\EconumoBundle\Domain\Entity\BudgetElement;
 use App\EconumoBundle\Domain\Entity\BudgetElementLimit;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use App\EconumoBundle\Domain\Repository\BudgetElementLimitRepositoryInterface;
 use App\EconumoBundle\Infrastructure\Doctrine\Repository\Traits\DeleteTrait;
 use App\EconumoBundle\Infrastructure\Doctrine\Repository\Traits\GetEntityReferenceTrait;
@@ -97,7 +98,7 @@ class BudgetElementLimitRepository extends ServiceEntityRepository implements Bu
         $sourceAmounts = [];
         foreach ($amountsQuery->getArrayResult() as $item) {
             $date = DateTime::createFromInterface($item['period'])->format('Y-m-d');
-            $sourceAmounts[$date] = $item['amount'];
+            $sourceAmounts[$date] = new DecimalNumber($item['amount']);
         }
 
         return $sourceAmounts;

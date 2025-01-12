@@ -27,8 +27,8 @@ readonly class TransactionToDtoResultAssembler
         $item->accountId = $transaction->getAccountId()->getValue();
         $item->accountRecipientId = $transaction->getAccountRecipientId(
         ) instanceof Id ? $transaction->getAccountRecipientId()->getValue() : null;
-        $item->amount = $transaction->getAmount();
-        $item->amountRecipient = $transaction->getAmountRecipient() ?? $transaction->getAmount();
+        $item->amount = $transaction->getAmount()->getValue();
+        $item->amountRecipient = $transaction->getAmountRecipient() === null ? $transaction->getAmount()->getValue() : $transaction->getAmountRecipient()->getValue();
         $item->categoryId = $transaction->getCategoryId() instanceof Id ? $transaction->getCategoryId()->getValue() : null;
         $item->description = $transaction->getDescription();
         $item->payeeId = $transaction->getPayeeId() instanceof Id ? $transaction->getPayeeId()->getValue() : null;

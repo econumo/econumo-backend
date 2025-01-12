@@ -10,6 +10,7 @@ use App\EconumoBundle\Domain\Entity\Tag;
 use App\EconumoBundle\Domain\Entity\Transaction;
 use App\EconumoBundle\Domain\Entity\User;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use App\EconumoBundle\Domain\Entity\ValueObject\TransactionType;
 use App\EconumoBundle\Domain\Exception\DomainException;
 use App\EconumoBundle\Domain\Exception\NotFoundException;
@@ -189,7 +190,7 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
         return $query->getQuery()->getResult();
     }
 
-    public function getAccountBalance(Id $accountId, DateTimeInterface $date): float
+    public function getAccountBalance(Id $accountId, DateTimeInterface $date): DecimalNumber
     {
         $dateFormatted = $date->format('Y-m-d H:i:s');
         $accountIdFormatted = $accountId->getValue();
@@ -212,17 +213,17 @@ FROM (SELECT tmp.account_id, SUM(tmp.expenses) as expenses, SUM(tmp.incomes) as 
       GROUP BY tmp.account_id) bln
 SQL;
         $rsm = new ResultSetMappingBuilder($this->getEntityManager());
-        $rsm->addScalarResult('balance', 'balance', 'float');
+        $rsm->addScalarResult('balance', 'balance', 'string');
 
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
 
         try {
-            $result = (float)$query->getSingleScalarResult();
+            $result = $query->getSingleScalarResult();
         } catch (NoResultException) {
-            $result = 0.0;
+            $result = 0;
         }
 
-        return $result;
+        return new DecimalNumber($result);
     }
 
     public function countSpendingForCategories(
@@ -248,7 +249,7 @@ SQL;
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('category_id', 'category_id');
         $rsm->addScalarResult('currency_id', 'currency_id');
-        $rsm->addScalarResult('amount', 'amount', 'float');
+        $rsm->addScalarResult('amount', 'amount', 'string');
 
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
         return $query->getResult();
@@ -277,7 +278,7 @@ SQL;
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('tag_id', 'tag_id');
         $rsm->addScalarResult('currency_id', 'currency_id');
-        $rsm->addScalarResult('amount', 'amount', 'float');
+        $rsm->addScalarResult('amount', 'amount', 'string');
 
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
         return $query->getResult();
@@ -307,7 +308,7 @@ SQL;
         $rsm->addScalarResult('category_id', 'category_id');
         $rsm->addScalarResult('tag_id', 'tag_id');
         $rsm->addScalarResult('currency_id', 'currency_id');
-        $rsm->addScalarResult('amount', 'amount', 'float');
+        $rsm->addScalarResult('amount', 'amount', 'string');
 
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
         return $query->getResult();

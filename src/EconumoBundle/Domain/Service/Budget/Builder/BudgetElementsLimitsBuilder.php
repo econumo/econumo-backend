@@ -7,6 +7,7 @@ namespace App\EconumoBundle\Domain\Service\Budget\Builder;
 
 
 use App\EconumoBundle\Domain\Entity\Budget;
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use App\EconumoBundle\Domain\Repository\BudgetElementLimitRepositoryInterface;
 use App\EconumoBundle\Domain\Service\Budget\Dto\BudgetElementBudgetedAmountDto;
 use App\EconumoBundle\Domain\Service\Budget\Dto\BudgetFiltersDto;
@@ -41,7 +42,7 @@ readonly class BudgetElementsLimitsBuilder
                 $item['id'],
                 $item['type'],
                 $item['budgeted']?->getAmount(),
-                round($item['budgetedBefore'], 2)
+                $item['budgetedBefore']
             );
             $result[$index] = $item;
         }
@@ -67,7 +68,7 @@ readonly class BudgetElementsLimitsBuilder
             );
             if (!array_key_exists($index, $data)) {
                 $data[$index] = [
-                    'budgetedBefore' => 0,
+                    'budgetedBefore' => new DecimalNumber(0),
                     'id' => $elementLimit->getElement()->getExternalId(),
                     'type' => $elementLimit->getElement()->getType(),
                 ];
@@ -98,13 +99,13 @@ readonly class BudgetElementsLimitsBuilder
             if (!array_key_exists($index, $data)) {
                 $data[$index] = [
                     'budgeted' => null,
-                    'budgetedBefore' => 0,
+                    'budgetedBefore' => new DecimalNumber(0),
                     'id' => $summarizedLimit['elementId'],
                     'type' => $summarizedLimit['elementType'],
                 ];
             }
 
-            $data[$index]['budgetedBefore'] += $summarizedLimit['amount'];
+            $data[$index]['budgetedBefore']->add($summarizedLimit['amount']);
         }
 
         return $data;
