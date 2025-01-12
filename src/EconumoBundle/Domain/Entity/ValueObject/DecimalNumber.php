@@ -20,7 +20,7 @@ final class DecimalNumber implements Stringable, ValueObjectInterface
         if (!$num instanceof self) {
             $this->value = $this->normalize($num);
         } else {
-            $this->value = $num->getValue();
+            $this->value = $this->normalize($num->getValue());
         }
     }
 
@@ -29,19 +29,50 @@ final class DecimalNumber implements Stringable, ValueObjectInterface
         self::validate($num);
         
         if (is_int($num)) {
-            $num = sprintf('%d.%0' . self::SCALE . 'd', $num, 0);
+            return (string)$num;
         } elseif (is_float($num)) {
-            $num = number_format($num, self::SCALE, '.', '');
+            // Convert float to string with max precision and trim trailing zeros
+            $str = number_format($num, self::SCALE, '.', '');
+            return $this->cleanNumber($str);
         } else {
-            if (!str_contains($num, '.')) {
-                $num = $num . '.' . str_repeat('0', self::SCALE);
-            } else {
-                $parts = explode('.', $num);
-                $parts[1] = str_pad(substr($parts[1], 0, self::SCALE), self::SCALE, '0');
-                $num = implode('.', $parts);
+            // Handle string input
+            return $this->cleanNumber($num);
+        }
+    }
+
+    private function cleanNumber(string $num): string
+    {
+        // Handle empty string or zero
+        if ($num === '' || $num === '0') {
+            return '0';
+        }
+
+        $isNegative = str_starts_with($num, '-');
+        if ($isNegative) {
+            $num = substr($num, 1);
+        }
+
+        // Remove leading zeros but keep one if it's a decimal number
+        if (str_contains($num, '.')) {
+            $parts = explode('.', $num);
+            $parts[0] = $parts[0] === '' || $parts[0] === '0' ? '0' : ltrim($parts[0], '0');
+            // Limit decimal places to SCALE and trim trailing zeros
+            $parts[1] = substr($parts[1], 0, self::SCALE);
+            $parts[1] = rtrim($parts[1], '0');
+            $num = empty($parts[1]) ? $parts[0] : $parts[0] . '.' . $parts[1];
+        } else {
+            $num = ltrim($num, '0');
+            if ($num === '') {
+                $num = '0';
             }
         }
-        return $num;
+
+        // Add leading zero for decimal numbers less than 1
+        if (str_starts_with($num, '.')) {
+            $num = '0' . $num;
+        }
+
+        return $isNegative ? '-' . $num : $num;
     }
 
     private function createNumber(string|int|float|self $num): self

@@ -25,13 +25,24 @@ class DecimalNumberTest extends Unit
     public function constructorProvider(): array
     {
         return [
-            'integer' => [123, '123.00000000'],
-            'float' => [123.456, '123.45600000'],
-            'string' => ['123.456', '123.45600000'],
-            'zero' => [0, '0.00000000'],
-            'negative' => [-123.456, '-123.45600000'],
-            'large number' => [12345678999999.0, '12345678999999.00000000'],
+            'integer' => [123, '123'],
+            'float' => [123.456, '123.456'],
+            'string' => ['123.456', '123.456'],
+            'zero' => [0, '0'],
+            'negative' => [-123.456, '-123.456'],
+            'large number' => [12345678999999.0, '12345678999999'],
             'large precision' => [1.012345678999999, '1.01234568'],
+            'trailing zeros' => [123.4500, '123.45'],
+            'zero decimal' => [123.0, '123'],
+            'string with trailing zeros' => ['123.4500', '123.45'],
+            'leading zeros integer' => ['00123', '123'],
+            'leading zeros decimal' => ['00123.456', '123.456'],
+            'leading zeros after decimal' => ['123.0456', '123.0456'],
+            'negative with leading zeros' => ['-00123.456', '-123.456'],
+            'zero with leading zeros' => ['00.123', '0.123'],
+            'negative zero with leading zeros' => ['-00.123', '-0.123'],
+            'multiple leading zeros' => ['000000123', '123'],
+            'zero with multiple leading zeros' => ['000000', '0'],
         ];
     }
 
@@ -67,11 +78,11 @@ class DecimalNumberTest extends Unit
     public function additionProvider(): array
     {
         return [
-            'positive numbers' => [1.5, 2.5, '4.00000000'],
-            'negative numbers' => [-1.5, -2.5, '-4.00000000'],
-            'mixed signs' => [1.5, -2.5, '-1.00000000'],
-            'zero addition' => [1.5, 0, '1.50000000'],
-            'precision test' => [0.1, 0.2, '0.30000000'],
+            'positive numbers' => [1.5, 2.5, '4'],
+            'negative numbers' => [-1.5, -2.5, '-4'],
+            'mixed signs' => [1.5, -2.5, '-1'],
+            'zero addition' => [1.5, 0, '1.5'],
+            'precision test' => [0.1, 0.2, '0.3'],
         ];
     }
 
@@ -88,11 +99,11 @@ class DecimalNumberTest extends Unit
     public function subtractionProvider(): array
     {
         return [
-            'positive numbers' => [5.5, 2.5, '3.00000000'],
-            'negative numbers' => [-1.5, -2.5, '1.00000000'],
-            'mixed signs' => [1.5, -2.5, '4.00000000'],
-            'zero subtraction' => [1.5, 0, '1.50000000'],
-            'precision test' => [0.3, 0.1, '0.20000000'],
+            'positive numbers' => [5.5, 2.5, '3'],
+            'negative numbers' => [-1.5, -2.5, '1'],
+            'mixed signs' => [1.5, -2.5, '4'],
+            'zero subtraction' => [1.5, 0, '1.5'],
+            'precision test' => [0.3, 0.1, '0.2'],
         ];
     }
 
@@ -109,11 +120,11 @@ class DecimalNumberTest extends Unit
     public function multiplicationProvider(): array
     {
         return [
-            'positive numbers' => [2, 3, '6.00000000'],
-            'negative numbers' => [-2, -3, '6.00000000'],
-            'mixed signs' => [2, -3, '-6.00000000'],
-            'zero multiplication' => [1.5, 0, '0.00000000'],
-            'decimal multiplication' => [0.1, 0.2, '0.02000000'],
+            'positive numbers' => [2, 3, '6'],
+            'negative numbers' => [-2, -3, '6'],
+            'mixed signs' => [2, -3, '-6'],
+            'zero multiplication' => [1.5, 0, '0'],
+            'decimal multiplication' => [0.1, 0.2, '0.02'],
         ];
     }
 
@@ -130,10 +141,11 @@ class DecimalNumberTest extends Unit
     public function divisionProvider(): array
     {
         return [
-            'positive numbers' => [6, 2, '3.00000000'],
-            'negative numbers' => [-6, -2, '3.00000000'],
-            'mixed signs' => [6, -2, '-3.00000000'],
-            'decimal division' => [1, 2, '0.50000000'],
+            'positive numbers' => [6, 2, '3'],
+            'negative numbers' => [-6, -2, '3'],
+            'mixed signs' => [6, -2, '-3'],
+            'decimal division' => [1, 2, '0.5'],
+            'recurring decimal' => [1, 3, '0.33333333'],
         ];
     }
 
@@ -184,9 +196,9 @@ class DecimalNumberTest extends Unit
     public function roundingProvider(): array
     {
         return [
-            'positive decimal' => [1.55, 1, '1.60000000', '1.00000000', '2.00000000'],
-            'negative decimal' => [-1.55, 1, '-1.60000000', '-2.00000000', '-1.00000000'],
-            'integer' => [2, 0, '2.00000000', '2.00000000', '2.00000000'],
+            'positive decimal' => [1.55, 1, '1.6', '1', '2'],
+            'negative decimal' => [-1.55, 1, '-1.6', '-2', '-1'],
+            'integer' => [2, 0, '2', '2', '2'],
         ];
     }
 
@@ -202,9 +214,9 @@ class DecimalNumberTest extends Unit
     public function absProvider(): array
     {
         return [
-            'positive number' => [1.5, '1.50000000'],
-            'negative number' => [-1.5, '1.50000000'],
-            'zero' => [0, '0.00000000'],
+            'positive number' => [1.5, '1.5'],
+            'negative number' => [-1.5, '1.5'],
+            'zero' => [0, '0'],
         ];
     }
 }

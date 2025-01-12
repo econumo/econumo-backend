@@ -41,7 +41,7 @@ readonly class BudgetElementsLimitsBuilder
             $item = new BudgetElementBudgetedAmountDto(
                 $item['id'],
                 $item['type'],
-                $item['budgeted']?->getAmount(),
+                $item['budgeted'],
                 $item['budgetedBefore']
             );
             $result[$index] = $item;
@@ -74,7 +74,7 @@ readonly class BudgetElementsLimitsBuilder
                 ];
             }
 
-            $data[$index]['budgeted'] = $elementLimit;
+            $data[$index]['budgeted'] = $elementLimit->getAmount();
         }
 
         return $data;
@@ -105,7 +105,7 @@ readonly class BudgetElementsLimitsBuilder
                 ];
             }
 
-            $data[$index]['budgetedBefore']->add($summarizedLimit['amount']);
+            $data[$index]['budgetedBefore'] = $data[$index]['budgetedBefore']->add($summarizedLimit['amount']);
         }
 
         return $data;

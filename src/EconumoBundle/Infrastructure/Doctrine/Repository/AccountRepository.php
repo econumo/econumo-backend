@@ -333,7 +333,7 @@ SQL;
                 ];
             }
 
-            $result[$item['currency_id']]['to_holdings']->add($item['amount']);
+            $result[$item['currency_id']]['to_holdings'] = $result[$item['currency_id']]['to_holdings']->add($item['amount']);
         }
 
         foreach ($fromHoard as $item) {
@@ -344,7 +344,7 @@ SQL;
                 ];
             }
 
-            $result[$item['currency_id']]['from_holdings']->add($item['amount']);
+            $result[$item['currency_id']]['from_holdings'] = $result[$item['currency_id']]['from_holdings']->add($item['amount']);
         }
 
         return $result;

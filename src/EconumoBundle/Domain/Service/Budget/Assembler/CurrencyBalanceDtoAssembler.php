@@ -83,7 +83,7 @@ readonly class CurrencyBalanceDtoAssembler
         $result = new DecimalNumber(0);
         foreach ($items as $item) {
             if ($item['currency_id'] === $currencyId->getValue()) {
-                $result->add($item[$field]);
+                $result = $result->add($item[$field]);
             }
         }
 

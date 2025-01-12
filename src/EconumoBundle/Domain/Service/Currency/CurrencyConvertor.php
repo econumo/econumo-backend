@@ -105,7 +105,7 @@ class CurrencyConvertor implements CurrencyConvertorInterface
                 /** @var CurrencyConvertorDto $item */
                 foreach ($dto as $item) {
                     $existingKey = array_key_exists($item->periodStart->format('Ym'), $rates) ? $item->periodStart->format('Ym') : $currentPeriodStartIndex;
-                    $result[$key]->add($this->convertInternalById($rates[$existingKey], $item->fromCurrencyId, $item->toCurrencyId, $item->amount));
+                    $result[$key] = $result[$key]->add($this->convertInternalById($rates[$existingKey], $item->fromCurrencyId, $item->toCurrencyId, $item->amount));
                 }
             }
         }
@@ -130,7 +130,7 @@ class CurrencyConvertor implements CurrencyConvertorInterface
         if (!$originalCurrency->isEqual($this->baseCurrency)) {
             foreach ($rates as $rate) {
                 if ($rate->currencyCode->isEqual($originalCurrency)) {
-                    $result->div($rate->rate);
+                    $result = $result->div($rate->rate);
                     break;
                 }
             }
@@ -139,7 +139,7 @@ class CurrencyConvertor implements CurrencyConvertorInterface
         if (!$resultCurrency->isEqual($this->baseCurrency)) {
             foreach ($rates as $rate) {
                 if ($rate->currencyCode->isEqual($resultCurrency)) {
-                    $result->mul($rate->rate);
+                    $result = $result->mul($rate->rate);
                     break;
                 }
             }
@@ -177,7 +177,7 @@ class CurrencyConvertor implements CurrencyConvertorInterface
         if (!$originalCurrencyId->isEqual($baseCurrencyId)) {
             foreach ($rates as $rate) {
                 if ($rate->currencyId->isEqual($originalCurrencyId)) {
-                    $result->div($rate->rate);
+                    $result = $result->div($rate->rate);
                     break;
                 }
             }
@@ -186,7 +186,7 @@ class CurrencyConvertor implements CurrencyConvertorInterface
         if (!$resultCurrencyId->isEqual($baseCurrencyId)) {
             foreach ($rates as $rate) {
                 if ($rate->currencyId->isEqual($resultCurrencyId)) {
-                    $result->mul($rate->rate);
+                    $result = $result->mul($rate->rate);
                     break;
                 }
             }

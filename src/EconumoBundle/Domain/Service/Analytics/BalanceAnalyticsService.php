@@ -52,7 +52,7 @@ readonly class BalanceAnalyticsService implements BalanceAnalyticsServiceInterfa
                     $user->getCurrency(),
                     $accountBalance
                 );
-                $balance->add($accountBalanceConverted);
+                $balance = $balance->add($accountBalanceConverted);
             }
 
             $item = new BalanceAnalyticsDto();

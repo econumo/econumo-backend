@@ -283,7 +283,6 @@ readonly class BudgetStructureBuilder
                 }
             }
         }
-
         // Categories <--
 
         $result = [];
@@ -297,9 +296,9 @@ readonly class BudgetStructureBuilder
                 $subElementSpent = $amounts[sprintf('%s_spent-%s', $index, $subIndex)] ?? new DecimalNumber(0);
                 $subElementBudgetSpent = $amounts[sprintf('%s_spent-budget-%s', $index, $subIndex)] ?? new DecimalNumber(0);
                 $subElementSpentBefore = $amounts[sprintf('%s_spent-before-%s', $index, $subIndex)] ?? new DecimalNumber(0);
-                $spent->add($subElementSpent);
-                $spentBudget->add($subElementBudgetSpent);
-                $spentBefore->add($subElementSpentBefore);
+                $spent = $spent->add($subElementSpent);
+                $spentBudget = $spentBudget->add($subElementBudgetSpent);
+                $spentBefore = $spentBefore->add($subElementSpentBefore);
                 if (!$subElement['isArchived'] || !$subElementSpent->isZero()) {
                     if ($element['type']->isTag() && $subElementSpent->isZero()) {
                         continue;
