@@ -161,7 +161,7 @@ class CurrencyConvertor implements CurrencyConvertorInterface
             $this->currenciesCacheByCode[$tmpResultCurrency->getCode()->getValue()] = $tmpResultCurrency;
             $this->currenciesCacheById[$tmpResultCurrency->getId()->getValue()] = $tmpResultCurrency;
         }
-        return $result->floor($this->currenciesCacheByCode[$resultCurrency->getValue()]->getFractionDigits());
+        return $result->round($this->currenciesCacheByCode[$resultCurrency->getValue()]->getFractionDigits());
     }
 
     /**
@@ -213,7 +213,7 @@ class CurrencyConvertor implements CurrencyConvertorInterface
             $this->currenciesCacheByCode[$tmpResultCurrency->getCode()->getValue()] = $tmpResultCurrency;
             $this->currenciesCacheById[$tmpResultCurrency->getId()->getValue()] = $tmpResultCurrency;
         }
-        return $result->floor($this->currenciesCacheById[$resultCurrencyId->getValue()]->getFractionDigits());
+        return $result->round($this->currenciesCacheById[$resultCurrencyId->getValue()]->getFractionDigits());
     }
 
     private function transformCurrencyToDto(CurrencyRate $currency): FullCurrencyRateDto
