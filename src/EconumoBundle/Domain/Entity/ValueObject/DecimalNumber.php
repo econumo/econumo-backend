@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Domain\Entity\ValueObject;
 
+use InvalidArgumentException;
 use DivisionByZeroError;
 use Stringable;
 use TypeError;
@@ -131,7 +132,7 @@ final class DecimalNumber implements Stringable, ValueObjectInterface
     public function floor(int $scale = 0): self
     {
         if ($scale < 0) {
-            throw new \InvalidArgumentException('Scale must be a non-negative integer');
+            throw new InvalidArgumentException('Scale must be a non-negative integer');
         }
 
         $parts = explode('.', $this->value);
@@ -143,6 +144,7 @@ final class DecimalNumber implements Stringable, ValueObjectInterface
             if ($isNegative && isset($parts[1]) && $parts[1] !== '0') {
                 return new self(bcadd($integerPart, '-1', 0));
             }
+
             return new self($integerPart);
         }
 
@@ -163,7 +165,7 @@ final class DecimalNumber implements Stringable, ValueObjectInterface
     public function ceil(int $scale = 0): self
     {
         if ($scale < 0) {
-            throw new \InvalidArgumentException('Scale must be a non-negative integer');
+            throw new InvalidArgumentException('Scale must be a non-negative integer');
         }
 
         $parts = explode('.', $this->value);
@@ -174,6 +176,7 @@ final class DecimalNumber implements Stringable, ValueObjectInterface
             if (!isset($parts[1]) || $parts[1] === '0') {
                 return new self($integerPart);
             }
+
             return new self(str_starts_with($this->value, '-') ? $integerPart : bcadd($integerPart, '1', 0));
         }
 

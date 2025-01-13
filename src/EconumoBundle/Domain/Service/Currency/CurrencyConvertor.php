@@ -113,6 +113,7 @@ class CurrencyConvertor implements CurrencyConvertorInterface
                 }
             }
         }
+
         foreach ($flatItems as $key => $dtos) {
             $result[$key] = new DecimalNumber(0);
             foreach ($this->summarizeDtosByCurrency($dtos) as $item) {
@@ -161,6 +162,7 @@ class CurrencyConvertor implements CurrencyConvertorInterface
             $this->currenciesCacheByCode[$tmpResultCurrency->getCode()->getValue()] = $tmpResultCurrency;
             $this->currenciesCacheById[$tmpResultCurrency->getId()->getValue()] = $tmpResultCurrency;
         }
+
         return $result->round($this->currenciesCacheByCode[$resultCurrency->getValue()]->getFractionDigits());
     }
 
@@ -213,6 +215,7 @@ class CurrencyConvertor implements CurrencyConvertorInterface
             $this->currenciesCacheByCode[$tmpResultCurrency->getCode()->getValue()] = $tmpResultCurrency;
             $this->currenciesCacheById[$tmpResultCurrency->getId()->getValue()] = $tmpResultCurrency;
         }
+
         return $result->round($this->currenciesCacheById[$resultCurrencyId->getValue()]->getFractionDigits());
     }
 
