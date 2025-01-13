@@ -23,7 +23,7 @@ class Currency
         private Id $id,
         private CurrencyCode $code,
         private string $symbol,
-        private int $fraction,
+        private int $fractionDigits,
         DateTimeInterface $createdAt
     ) {
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
@@ -44,21 +44,21 @@ class Currency
         return $this->symbol;
     }
 
-    public function getFraction(): int
+    public function getFractionDigits(): int
     {
-        return $this->fraction;
+        return $this->fractionDigits;
     }
 
-    public function restoreSystemFraction(): void
+    public function restoreSystemFractionDigits(): void
     {
         try {
             Currencies::getName($this->code->getValue());
-            $fraction = Currencies::getFractionDigits($this->code->getValue());
+            $fractionDigits = Currencies::getFractionDigits($this->code->getValue());
         } catch (MissingResourceException) {
-            $fraction = DecimalNumber::SCALE;
+            $fractionDigits = DecimalNumber::SCALE;
         }
 
-        $this->fraction = $fraction;
+        $this->fractionDigits = $fractionDigits;
     }
 
     public function getName(): string

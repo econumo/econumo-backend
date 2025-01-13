@@ -193,7 +193,7 @@ class CurrencyConvertor implements CurrencyConvertorInterface
         }
 
         $resultCurrency = $this->currencyRepository->get($resultCurrencyId);
-        return $result->round($resultCurrency->getFraction());
+        return $result->round($resultCurrency->getFractionDigits());
     }
 
     private function transformCurrencyToDto(CurrencyRate $currency): FullCurrencyRateDto

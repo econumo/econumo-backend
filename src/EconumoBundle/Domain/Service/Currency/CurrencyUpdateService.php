@@ -22,7 +22,7 @@ class CurrencyUpdateService implements CurrencyUpdateServiceInterface
     /**
      * @inheritDoc
      */
-    public function updateCurrencies(array $currencies, bool $restoreFraction = false): void
+    public function updateCurrencies(array $currencies, bool $restoreFractionDigits = false): void
     {
         $savedCurrencies = $this->currencyRepository->getAll();
         $updatedCurrencies = [];
@@ -31,8 +31,8 @@ class CurrencyUpdateService implements CurrencyUpdateServiceInterface
             foreach ($savedCurrencies as $savedCurrency) {
                 if ($savedCurrency->getCode()->isEqual($currencyDto->code)) {
                     $found = true;
-                    if ($restoreFraction) {
-                        $savedCurrency->restoreSystemFraction();
+                    if ($restoreFractionDigits) {
+                        $savedCurrency->restoreSystemFractionDigits();
                         $updatedCurrencies[] = $savedCurrency;
                     }
 

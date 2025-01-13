@@ -15,11 +15,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class RestoreCurrencyFractionCommand extends Command
+class RestoreCurrencyFractionDigitsCommand extends Command
 {
-    protected static $defaultName = 'app:restore-currency-fraction';
+    protected static $defaultName = 'app:restore-currency-fraction-digits';
 
-    protected static $defaultDescription = "Restore the system's currency fraction";
+    protected static $defaultDescription = "Restore the system's currency fraction digits";
 
     public function __construct(
         private readonly CurrencyUpdateServiceInterface $currencyUpdateService,
@@ -76,7 +76,7 @@ class RestoreCurrencyFractionCommand extends Command
                         $currency->getCode()->getValue(),
                         $currency->getName(),
                         $currency->getSymbol(),
-                        $currency->getFraction(),
+                        $currency->getFractionDigits(),
                         $currency->getId()->getValue()
                     )
                 );

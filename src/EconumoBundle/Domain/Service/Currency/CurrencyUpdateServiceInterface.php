@@ -12,8 +12,8 @@ interface CurrencyUpdateServiceInterface
 {
     /**
      * @param CurrencyDto[] $currencies
-     * @param bool $restoreFraction
+     * @param bool $restoreFractionDigits
      * @return void
      */
-    public function updateCurrencies(array $currencies, bool $restoreFraction = false): void;
+    public function updateCurrencies(array $currencies, bool $restoreFractionDigits = false): void;
 }

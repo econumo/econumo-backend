@@ -43,8 +43,8 @@ class CurrencyResultDto
     public string $symbol;
 
     /**
-     * Currency's fraction
+     * Currency's fraction digits
      * @OA\Property(example="2")
      */
-    public int $fraction;
+    public int $fractionDigits;
 }
