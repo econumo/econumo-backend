@@ -20,6 +20,7 @@ readonly class BudgetDtoToResultDtoAssembler
         private BudgetStructureToResultDtoAssembler $budgetStructureToResultDtoAssembler,
         private BudgetCurrencyBalanceToResultDtoAssembler $budgetCurrencyBalanceToResultDtoAssembler,
         private BudgetFiltersToResultDtoAssembler $budgetFiltersToResultDtoAssembler,
+        private BudgetAverageCurrencyRateToResultDtoAssembler $averageCurrencyRateToResultDtoAssembler
     ) {
     }
 
@@ -31,6 +32,11 @@ readonly class BudgetDtoToResultDtoAssembler
         $result->balances = [];
         foreach ($dto->financialSummary->currencyBalances as $balance) {
             $result->balances[] = $this->budgetCurrencyBalanceToResultDtoAssembler->assemble($balance);
+        }
+
+        $result->currencyRates = [];
+        foreach ($dto->financialSummary->averageCurrencyRates as $currencyRate) {
+            $result->currencyRates[] = $this->averageCurrencyRateToResultDtoAssembler->assemble($currencyRate);
         }
 
         $result->structure = $this->budgetStructureToResultDtoAssembler->assemble($dto->structure);

@@ -288,7 +288,7 @@ readonly class BudgetStructureBuilder
         // Categories <--
 
         $result = [];
-        $amounts = $this->currencyConvertor->bulkConvert($toConvert);
+        $amounts = $this->currencyConvertor->bulkConvert($budgetFilters->periodStart, $budgetFilters->periodEnd, $toConvert);
         foreach ($elements as $index => $element) {
             $spent = $amounts[sprintf('spent-%s', $index)] ?? new DecimalNumber(0);
             $spentBudget = $amounts[sprintf('spent-budget-%s', $index)] ?? new DecimalNumber(0);
@@ -314,7 +314,7 @@ readonly class BudgetStructureBuilder
                         $subElement['ownerId'],
                         $subElement['isArchived'],
                         $subElementSpent,
-                        $spentBudget,
+                        $subElementBudgetSpent,
                         $subElement['currenciesSpent']
                     );
                 }

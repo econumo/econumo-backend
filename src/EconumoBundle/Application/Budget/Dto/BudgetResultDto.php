@@ -34,6 +34,12 @@ class BudgetResultDto
     public array $balances = [];
 
     /**
+     * @var BudgetAverageCurrencyRateResultDto[]
+     * @OA\Property()
+     */
+    public array $currencyRates = [];
+
+    /**
      * @OA\Property()
      */
     public BudgetStructureResultDto $structure;

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Infrastructure\Doctrine\Repository;
 
+use DateTimeImmutable;
 use DateTime;
-use App\EconumoBundle\Domain\Entity\Currency;
 use App\EconumoBundle\Domain\Entity\CurrencyRate;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoBundle\Domain\Exception\NotFoundException;
@@ -15,7 +15,6 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Exception\ORMException;
-use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\ORMInvalidArgumentException;
 use Doctrine\Persistence\ManagerRegistry;
 use Ramsey\Uuid\Uuid;
@@ -94,31 +93,6 @@ SQL;
         return $item;
     }
 
-    public function getLatest(Id $currencyId, ?DateTimeInterface $date = null): CurrencyRate
-    {
-        try {
-            $builder = $this->createQueryBuilder('cr');
-            $builder->where('cr.currency = :currency')
-                ->setParameter('currency', $this->getEntityManager()->getReference(Currency::class, $currencyId))
-                ->setMaxResults(1);
-            if (!$date instanceof DateTimeInterface) {
-                $builder->orderBy('cr.publishedAt', Criteria::DESC);
-            } else {
-                $builder->andWhere('cr.publishedAt <= :date')
-                    ->setParameter('date', $date);
-            }
-
-            $item = $builder->getQuery()->getSingleResult();
-            if ($item === null) {
-                throw new NotFoundException(sprintf('Currency with identifier %s not found', $item));
-            }
-
-            return $item;
-        } catch (NoResultException) {
-            throw new NotFoundException(sprintf('Currency with identifier %s not found', $currencyId));
-        }
-    }
-
     /**
      * @inheritDoc
      */
@@ -145,14 +119,46 @@ SQL;
 
     public function getAverage(DateTimeInterface $startDate, DateTimeInterface $endDate, Id $baseCurrencyId): array
     {
-        $dateBuilder = $this->createQueryBuilder('cr')
-            ->select('IDENTITY(cr.currency) as currencyId, AVG(cr.rate) as rate')
-            ->where('cr.publishedAt >= :startDate AND cr.publishedAt < :endDate')
-            ->setParameter('startDate', $startDate)
-            ->setParameter('endDate', $endDate)
-            ->andWhere('cr.baseCurrency = :baseCurrency')
-            ->setParameter('baseCurrency', $this->getEntityManager()->getReference(Currency::class, $baseCurrencyId))
-            ->groupBy('cr.currency, cr.baseCurrency');
-        return $dateBuilder->getQuery()->getArrayResult();
+        $sql =<<<'SQL'
+SELECT cr.currency_id as currencyId, AVG(cr.rate) as rate
+FROM currencies_rates cr
+WHERE cr.published_at >= :startDate AND cr.published_at < :endDate
+AND cr.base_currency_id = :baseCurrency
+GROUP BY cr.currency_id, cr.base_currency_id
+SQL;
+
+        $conn = $this->getEntityManager()->getConnection();
+        $stmt = $conn->prepare($sql);
+        $result = $stmt->executeQuery([
+            'startDate' => $startDate->format('Y-m-d'),
+            'endDate' => $endDate->format('Y-m-d'),
+            'baseCurrency' => $baseCurrencyId->getValue()
+        ]);
+
+        return $result->fetchAllAssociative();
+    }
+
+    public function getLatestDate(Id $baseCurrencyId, ?DateTimeInterface $date = null): DateTimeInterface
+    {
+        $sql =<<<'SQL'
+SELECT cr.published_at FROM currencies_rates cr
+WHERE cr.base_currency_id = :baseCurrency
+AND cr.published_at < :date
+ORDER BY cr.published_at DESC
+LIMIT 1
+SQL;
+        $conn = $this->getEntityManager()->getConnection();
+        $stmt = $conn->prepare($sql);
+        $result = $stmt->executeQuery([
+            'baseCurrency' => $baseCurrencyId->getValue(),
+            'date' => $date->format('Y-m-d')
+        ]);
+        /** @var string|false $date */
+        $date = $result->fetchOne();
+        if ($date === false) {
+            throw new NotFoundException(sprintf('Not found currency rates for the base currency with identifier %s', $baseCurrencyId->getValue()));
+        }
+
+        return new DateTimeImmutable($date);
     }
 }

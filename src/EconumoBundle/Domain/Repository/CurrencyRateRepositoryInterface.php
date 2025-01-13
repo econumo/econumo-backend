@@ -14,7 +14,7 @@ interface CurrencyRateRepositoryInterface
 
     public function get(Id $currencyId, Id $baseCurrencyId, DateTimeInterface $date): CurrencyRate;
 
-    public function getLatest(Id $currencyId, ?DateTimeInterface $date = null): CurrencyRate;
+    public function getLatestDate(Id $baseCurrencyId, ?DateTimeInterface $date = null): DateTimeInterface;
 
     /**
      * @return CurrencyRate[]
