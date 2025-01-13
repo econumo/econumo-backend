@@ -86,31 +86,38 @@ readonly class BudgetStructureBuilder
 
                 /** @var BudgetElementAmountSpentDto $spent */
                 foreach ($children[$subIndex]['currenciesSpent'] as $spent) {
-                    $toConvert[sprintf('%s_spent_%s', $index, $subIndex)][] = new CurrencyConvertorDto(
+                    $toConvertSpent = new CurrencyConvertorDto(
                         $spent->periodStart,
                         $spent->periodEnd,
                         $spent->currencyId,
                         $currencyId,
                         $spent->amount
                     );
-                    $toConvert[sprintf('%s_spent-budget_%s', $index, $subIndex)][] = new CurrencyConvertorDto(
+                    $toConvert[sprintf('%s_spent_%s', $index, $subIndex)][] = $toConvertSpent;
+                    $toConvert[sprintf('spent_%s', $index)][] = $toConvertSpent;
+
+                    $toConvertSpentBudget = new CurrencyConvertorDto(
                         $spent->periodStart,
                         $spent->periodEnd,
                         $spent->currencyId,
                         $budgetCurrencyId,
                         $spent->amount
                     );
+                    $toConvert[sprintf('%s_spent-budget_%s', $index, $subIndex)][] = $toConvertSpentBudget;
+                    $toConvert[sprintf('spent-budget_%s', $index)][] = $toConvertSpentBudget;
                 }
 
                 /** @var BudgetElementAmountSpentDto $spentBefore */
                 foreach ($children[$subIndex]['currenciesSpentBefore'] as $spentBefore) {
-                    $toConvert[sprintf('%s_spent-before_%s', $index, $subIndex)][] = new CurrencyConvertorDto(
+                    $toConvertSpentBefore = new CurrencyConvertorDto(
                         $spentBefore->periodStart,
                         $spentBefore->periodEnd,
                         $spentBefore->currencyId,
                         $currencyId,
                         $spentBefore->amount
                     );
+                    $toConvert[sprintf('%s_spent-before_%s', $index, $subIndex)][] = $toConvertSpentBefore;
+                    $toConvert[sprintf('spent-before_%s', $index)][] = $toConvertSpentBefore;
                 }
 
                 $categoryUsed[$category->getId()->getValue()] = $category->getId()->getValue();
@@ -169,31 +176,38 @@ readonly class BudgetStructureBuilder
 
                 /** @var BudgetElementAmountSpentDto $spent */
                 foreach ($children[$subIndex]['currenciesSpent'] as $spent) {
-                    $toConvert[sprintf('%s_spent_%s', $index, $subIndex)][] = new CurrencyConvertorDto(
+                    $toConvertSpent = new CurrencyConvertorDto(
                         $spent->periodStart,
                         $spent->periodEnd,
                         $spent->currencyId,
                         $currencyId,
                         $spent->amount
                     );
-                    $toConvert[sprintf('%s_spent-budget_%s', $index, $subIndex)][] = new CurrencyConvertorDto(
+                    $toConvert[sprintf('%s_spent_%s', $index, $subIndex)][] = $toConvertSpent;
+                    $toConvert[sprintf('spent_%s', $index)][] = $toConvertSpent;
+
+                    $toConvertSpentBudget = new CurrencyConvertorDto(
                         $spent->periodStart,
                         $spent->periodEnd,
                         $spent->currencyId,
                         $budgetCurrencyId,
                         $spent->amount
                     );
+                    $toConvert[sprintf('%s_spent-budget_%s', $index, $subIndex)][] = $toConvertSpentBudget;
+                    $toConvert[sprintf('spent-budget_%s', $index)][] = $toConvertSpentBudget;
                 }
 
                 /** @var BudgetElementAmountSpentDto $spentBefore */
                 foreach ($children[$subIndex]['currenciesSpentBefore'] as $spentBefore) {
-                    $toConvert[sprintf('%s_spent-before_%s', $index, $subIndex)][] = new CurrencyConvertorDto(
+                    $toConvertSpentBefore = new CurrencyConvertorDto(
                         $spentBefore->periodStart,
                         $spentBefore->periodEnd,
                         $spentBefore->currencyId,
                         $currencyId,
                         $spentBefore->amount
                     );
+                    $toConvert[sprintf('%s_spent-before_%s', $index, $subIndex)][] = $toConvertSpentBefore;
+                    $toConvert[sprintf('spent-before_%s', $index)][] = $toConvertSpentBefore;
                 }
             }
 
@@ -304,10 +318,10 @@ readonly class BudgetStructureBuilder
             foreach ($element['children'] as $subIndex => $subElement) {
                 $subElementSpent = $amounts[sprintf('%s_spent_%s', $index, $subIndex)] ?? new DecimalNumber(0);
                 $subElementBudgetSpent = $amounts[sprintf('%s_spent-budget_%s', $index, $subIndex)] ?? new DecimalNumber(0);
-                $subElementSpentBefore = $amounts[sprintf('%s_spent-before_%s', $index, $subIndex)] ?? new DecimalNumber(0);
-                $spent = $spent->add($subElementSpent);
-                $spentBudget = $spentBudget->add($subElementBudgetSpent);
-                $spentBefore = $spentBefore->add($subElementSpentBefore);
+//                $subElementSpentBefore = $amounts[sprintf('%s_spent-before_%s', $index, $subIndex)] ?? new DecimalNumber(0);
+//                $spent = $spent->add($subElementSpent);
+//                $spentBudget = $spentBudget->add($subElementBudgetSpent);
+//                $spentBefore = $spentBefore->add($subElementSpentBefore);
                 if (!$subElement['isArchived'] || !$subElementSpent->isZero()) {
                     if ($element['type']->isTag() && $subElementSpent->isZero()) {
                         continue;
