@@ -35,7 +35,7 @@ readonly class BudgetLimitService implements BudgetLimitServiceInterface
 
         $element = $this->budgetElementRepository->get($budgetId, $elementId);
         $elementLimit = $this->budgetElementLimitRepository->get($element->getId(), $period);
-        if (null === $amount) {
+        if (!$amount instanceof DecimalNumber) {
             if ($elementLimit instanceof BudgetElementLimit) {
                 $this->budgetElementLimitRepository->delete([$elementLimit]);
             }

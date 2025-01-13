@@ -176,13 +176,13 @@ class Transaction
 
     public function updateAmountRecipient(?DecimalNumber $amount): void
     {
-        if (!$this->accountRecipient instanceof Account && $amount !== null) {
+        if (!$this->accountRecipient instanceof Account && $amount instanceof DecimalNumber) {
             $this->amountRecipient = $amount;
             $this->updated();
-        } elseif ($this->accountRecipient instanceof Account && $amount === null) {
+        } elseif ($this->accountRecipient instanceof Account && !$amount instanceof DecimalNumber) {
             $this->amountRecipient = null;
             $this->updated();
-        } elseif ($this->accountRecipient instanceof Account && $amount !== null && !$this->amountRecipient->isEqual($amount)) {
+        } elseif ($this->accountRecipient instanceof Account && $amount instanceof DecimalNumber && !$this->amountRecipient->isEqual($amount)) {
             $this->amountRecipient = $amount;
             $this->updated();
         }

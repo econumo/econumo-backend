@@ -11,17 +11,16 @@ use UnexpectedValueException;
 
 final class DecimalNumber implements Stringable, ValueObjectInterface
 {
+    /**
+     * @var int
+     */
     public const SCALE = 8;
 
     protected string $value;
 
     public function __construct(string|int|float|self $num = 0)
     {
-        if (!$num instanceof self) {
-            $this->value = $this->normalize($num);
-        } else {
-            $this->value = $this->normalize($num->getValue());
-        }
+        $this->value = $num instanceof self ? $this->normalize($num->getValue()) : $this->normalize($num);
     }
 
     private function normalize(string|int|float $num): string
@@ -80,6 +79,7 @@ final class DecimalNumber implements Stringable, ValueObjectInterface
         if ($num instanceof self) {
             return new self($num->value);
         }
+
         return new self($num);
     }
 
@@ -107,6 +107,7 @@ final class DecimalNumber implements Stringable, ValueObjectInterface
         if ($num->isZero()) {
             throw new DivisionByZeroError();
         }
+
         return new self(bcdiv($this->value, $num->value, self::SCALE));
     }
 
@@ -145,10 +146,11 @@ final class DecimalNumber implements Stringable, ValueObjectInterface
         $parts = explode('.', $this->value);
         $isNegative = str_starts_with($parts[0], '-');
         $result = $parts[0];
-        
+
         if (!$isNegative && isset($parts[1]) && bccomp($parts[1], '0', self::SCALE) !== 0) {
             $result = bcadd($result, '1', 0);
         }
+
         return new self($result);
     }
 
@@ -172,6 +174,9 @@ final class DecimalNumber implements Stringable, ValueObjectInterface
         return $this->value;
     }
 
+    /**
+     * @return array{value: string}
+     */
     public function __serialize(): array
     {
         return ['value' => $this->value];
@@ -182,6 +187,7 @@ final class DecimalNumber implements Stringable, ValueObjectInterface
         if (!isset($data['value'])) {
             throw new UnexpectedValueException('Invalid serialized data');
         }
+
         $this->value = $data['value'];
     }
 
@@ -192,7 +198,7 @@ final class DecimalNumber implements Stringable, ValueObjectInterface
         }
     }
 
-    public function getValue()
+    public function getValue(): string
     {
         return $this->value;
     }
@@ -228,7 +234,7 @@ final class DecimalNumber implements Stringable, ValueObjectInterface
 
     public function float(): float
     {
-        $num = (float)$this->value;
+        $num = (float)$this->cleanNumber($this->value);
         return round($num, self::SCALE);
     }
 

@@ -40,12 +40,12 @@ class BudgetStructureChildElementResultDto
     /**
      * @OA\Property(example="10.0")
      */
-    public string $spent;
+    public float $spent;
 
     /**
      * @OA\Property(example="10.0")
      */
-    public string $budgetSpent;
+    public float $budgetSpent;
 
     /**
      * @OA\Property(example="05c8f3e1-d77f-4b37-b2ca-0fc5f0f0c7a9")

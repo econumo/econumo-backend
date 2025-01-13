@@ -14,7 +14,7 @@ readonly class BudgetCurrencyAmountToResultDtoAssembler
     {
         $result = new BudgetCurrencyAmountDto();
         $result->currencyId = $dto->currencyId->getValue();
-        $result->amount = $dto->amount->getValue();
+        $result->amount = $dto->amount->float();
 
         return $result;
     }

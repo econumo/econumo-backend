@@ -36,7 +36,7 @@ readonly class GetTransactionListV1ResultAssembler
             $dto->author = $this->userToDtoResultAssembler->assemble($transaction->getUser());
             $dto->description = $transaction->getDescription();
             $dto->currencyId = $transaction->getAccountCurrencyId()->getValue();
-            $dto->amount = $transaction->getAmount()->getValue();
+            $dto->amount = $transaction->getAmount()->float();
             $dto->spentAt = $transaction->getSpentAt()->format('Y-m-d H:i:s');
             $dto->category = null;
             if ($transaction->getCategory() instanceof Category) {

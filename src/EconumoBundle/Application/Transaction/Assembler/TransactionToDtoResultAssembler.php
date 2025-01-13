@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Application\Transaction\Assembler;
 
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoBundle\Application\Transaction\Dto\TransactionResultDto;
 use App\EconumoBundle\Application\User\Assembler\UserToDtoResultAssembler;
@@ -27,8 +28,8 @@ readonly class TransactionToDtoResultAssembler
         $item->accountId = $transaction->getAccountId()->getValue();
         $item->accountRecipientId = $transaction->getAccountRecipientId(
         ) instanceof Id ? $transaction->getAccountRecipientId()->getValue() : null;
-        $item->amount = $transaction->getAmount()->getValue();
-        $item->amountRecipient = $transaction->getAmountRecipient() === null ? $transaction->getAmount()->getValue() : $transaction->getAmountRecipient()->getValue();
+        $item->amount = $transaction->getAmount()->float();
+        $item->amountRecipient = $transaction->getAmountRecipient() instanceof DecimalNumber ? $transaction->getAmountRecipient()->float() : $transaction->getAmount()->float();
         $item->categoryId = $transaction->getCategoryId() instanceof Id ? $transaction->getCategoryId()->getValue() : null;
         $item->description = $transaction->getDescription();
         $item->payeeId = $transaction->getPayeeId() instanceof Id ? $transaction->getPayeeId()->getValue() : null;

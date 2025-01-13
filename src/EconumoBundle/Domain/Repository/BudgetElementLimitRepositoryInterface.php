@@ -54,8 +54,6 @@ interface BudgetElementLimitRepositoryInterface
     public function getByBudgetIdAndElementId(Id $budgetId, Id $externalId): array;
 
     /**
-     * @param Id $elementId
-     * @param DateTimeInterface $period
      * @return BudgetElementLimit|null
      */
     public function get(Id $elementId, DateTimeInterface $period): ?BudgetElementLimit;

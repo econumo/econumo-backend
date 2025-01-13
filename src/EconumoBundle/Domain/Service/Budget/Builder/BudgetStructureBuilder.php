@@ -210,6 +210,7 @@ readonly class BudgetStructureBuilder
                 $elements[$index] = $item;
             }
         }
+
         // Tags <--
 
 
@@ -283,6 +284,7 @@ readonly class BudgetStructureBuilder
                 }
             }
         }
+
         // Categories <--
 
         $result = [];

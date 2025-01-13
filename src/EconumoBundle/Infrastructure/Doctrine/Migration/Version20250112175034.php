@@ -20,7 +20,7 @@ final class Version20250112175034 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'sqlite', 'Migration can only be executed safely on \'sqlite\'.');
+        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'sqlite', "Migration can only be executed safely on 'sqlite'.");
 
         $this->addSql('DROP INDEX element_period_idx_budgets_elements_limits');
         $this->addSql('DROP INDEX period_idx_budgets_elements_limits');
@@ -121,7 +121,7 @@ final class Version20250112175034 extends AbstractMigration
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'sqlite', 'Migration can only be executed safely on \'sqlite\'.');
+        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'sqlite', "Migration can only be executed safely on 'sqlite'.");
 
         $this->addSql('DROP INDEX IDX_406C516F1F1F2A24');
         $this->addSql('DROP INDEX period_idx_budgets_elements_limits');

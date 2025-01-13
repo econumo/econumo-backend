@@ -40,8 +40,8 @@ class Api extends \Codeception\Module
             'type' => 'string',
             'accountId' => 'string',
             'accountRecipientId' => 'string|null',
-            'amount' => 'string',
-            'amountRecipient' => 'string|null',
+            'amount' => 'float|integer',
+            'amountRecipient' => 'float|integer|null',
             'categoryId' => 'string|null',
             'description' => 'string',
             'payeeId' => 'string|null',
@@ -130,7 +130,7 @@ class Api extends \Codeception\Module
             'name' => 'string',
             'position' => 'integer',
             'currency' => $this->getCurrencyDtoJsonType(),
-            'balance' => 'string',
+            'balance' => 'float|integer',
             'type' => 'integer',
             'icon' => 'string',
             'sharedAccess' => 'array',
@@ -170,7 +170,7 @@ class Api extends \Codeception\Module
         return [
             'currencyId' => 'string',
             'baseCurrencyId' => 'string',
-            'rate' => 'string',
+            'rate' => 'float',
             'updatedAt' => 'string',
         ];
     }
@@ -204,7 +204,7 @@ class Api extends \Codeception\Module
     {
         return [
             'date' => 'string',
-            'amount' => 'string'
+            'amount' => 'float|integer'
         ];
     }
 

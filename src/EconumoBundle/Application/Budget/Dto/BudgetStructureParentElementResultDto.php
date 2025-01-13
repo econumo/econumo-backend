@@ -56,22 +56,22 @@ class BudgetStructureParentElementResultDto
     /**
      * @OA\Property(example="150.04")
      */
-    public string $budgeted;
+    public float $budgeted;
 
     /**
      * @OA\Property(example="150.0")
      */
-    public string $available;
+    public float $available;
 
     /**
      * @OA\Property(example="10.0")
      */
-    public string $spent;
+    public float $spent;
 
     /**
      * @OA\Property(example="10.0")
      */
-    public string $budgetSpent;
+    public float $budgetSpent;
 
     /**
      * @var BudgetStructureChildElementResultDto[]

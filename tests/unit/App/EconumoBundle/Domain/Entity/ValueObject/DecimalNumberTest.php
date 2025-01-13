@@ -219,4 +219,39 @@ class DecimalNumberTest extends Unit
             'zero' => [0, '0'],
         ];
     }
+
+    /**
+     * @dataProvider floatProvider
+     */
+    public function testFloat(string|int|float $input, float $expected): void
+    {
+        $number = new DecimalNumber($input);
+        $this->assertEquals($expected, $number->float());
+    }
+
+    public function floatProvider(): array
+    {
+        return [
+            'integer' => [123, 123.0],
+            'float' => [123.456, 123.456],
+            'string' => ['123.456', 123.456],
+            'zero' => [0, 0.0],
+            'negative' => [-123.456, -123.456],
+            'large number' => [12345678999999.0, 12345678999999.0],
+            'large precision' => [1.012345678999999, 1.01234568],
+            'trailing zeros' => [123.4500, 123.45],
+            'zero decimal' => [123.0, 123.0],
+            'leading zeros integer' => ['00123', 123.0],
+            'leading zeros decimal' => ['00123.456', 123.456],
+            'leading zeros after decimal' => ['123.0456', 123.0456],
+            'negative with leading zeros' => ['-00123.456', -123.456],
+            'zero with leading zeros' => ['00.123', 0.123],
+            'negative zero with leading zeros' => ['-00.123', -0.123],
+            'multiple leading zeros' => ['000000123', 123.0],
+            'zero with multiple leading zeros' => ['000000', 0.0],
+            'small decimal' => [0.00000001, 0.00000001],
+            'very small decimal' => [0.000000001, 0.0],  // Beyond SCALE
+            'recurring decimal' => [1/3, 0.33333333],  // Should be rounded to SCALE
+        ];
+    }
 }
