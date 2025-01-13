@@ -162,6 +162,7 @@ class Api extends \Codeception\Module
             'code' => 'string',
             'symbol' => 'string',
             'name' => 'string',
+            'fractionDigits' => 'integer',
         ];
     }
 
