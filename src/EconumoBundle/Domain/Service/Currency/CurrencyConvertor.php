@@ -24,6 +24,16 @@ class CurrencyConvertor implements CurrencyConvertorInterface
 
     private ?Id $baseCurrencyId = null;
 
+    /**
+     * @var Currency[]
+     */
+    private array $currenciesCacheByCode = [];
+
+    /**
+     * @var Currency[]
+     */
+    private array $currenciesCacheById = [];
+
     public function __construct(
         string $baseCurrency,
         readonly private CurrencyRateRepositoryInterface $currencyRateRepository,
@@ -55,12 +65,9 @@ class CurrencyConvertor implements CurrencyConvertorInterface
         $conversionNeeded = [];
         $currentPeriodStartIndex = $periodStart->format('Ym');
         $conversionNeeded[$currentPeriodStartIndex] = [$periodStart, $periodEnd];
-        $currencies = [];
         foreach ($items as $item) {
             if (is_array($item)) {
                 foreach ($item as $subItem) {
-                    $currencies[$subItem->fromCurrencyId->getValue()] = $subItem->fromCurrencyId;
-                    $currencies[$subItem->toCurrencyId->getValue()] = $subItem->toCurrencyId;
                     $index = $subItem->periodStart->format('Ym');
                     if ($subItem->fromCurrencyId->isEqual($subItem->toCurrencyId)) {
                         continue;
@@ -73,8 +80,6 @@ class CurrencyConvertor implements CurrencyConvertorInterface
                     $conversionNeeded[$index] = [$subItem->periodStart, $subItem->periodEnd];
                 }
             } else {
-                $currencies[$item->fromCurrencyId->getValue()] = $item->fromCurrencyId;
-                $currencies[$item->toCurrencyId->getValue()] = $item->toCurrencyId;
                 $index = $item->periodStart->format('Ym');
                 if ($item->fromCurrencyId->isEqual($item->toCurrencyId)) {
                     continue;
@@ -94,27 +99,25 @@ class CurrencyConvertor implements CurrencyConvertorInterface
 
         $rates = [];
         foreach ($conversionNeeded as $index => $dateRange) {
-            $tmpCurrencies = $this->currencyRateService->getAverageFullCurrencyRatesDtos($dateRange[0], $dateRange[1]);
-            $rates[$index] = [];
-            foreach ($tmpCurrencies as $tmpCurrency) {
-                if (array_key_exists($tmpCurrency->currencyId->getValue(), $currencies)) {
-                    $rates[$index][] = $tmpCurrency;
-                }
-            }
+            $rates[$index] = $this->currencyRateService->getAverageFullCurrencyRatesDtos($dateRange[0], $dateRange[1]);
         }
 
         $result = [];
+        $flatItems = [];
         foreach ($items as $key => $dto) {
-            $result[$key] = new DecimalNumber(0);
             if ($dto instanceof CurrencyConvertorDto) {
-                $existingKey = array_key_exists($dto->periodStart->format('Ym'), $rates) ? $dto->periodStart->format('Ym') : $currentPeriodStartIndex;
-                $result[$key] = $this->convertInternalById($rates[$existingKey], $dto->fromCurrencyId, $dto->toCurrencyId, $dto->amount);
+                $flatItems[$key][] = $dto;
             } else {
-                /** @var CurrencyConvertorDto $item */
-                foreach ($dto as $item) {
-                    $existingKey = array_key_exists($item->periodStart->format('Ym'), $rates) ? $item->periodStart->format('Ym') : $currentPeriodStartIndex;
-                    $result[$key] = $result[$key]->add($this->convertInternalById($rates[$existingKey], $item->fromCurrencyId, $item->toCurrencyId, $item->amount));
+                foreach ($this->summarizeDtosByCurrency($dto) as $item) {
+                    $flatItems[$key][] = $item;
                 }
+            }
+        }
+        foreach ($flatItems as $key => $dtos) {
+            $result[$key] = new DecimalNumber(0);
+            foreach ($this->summarizeDtosByCurrency($dtos) as $item) {
+                $existingKey = array_key_exists($item->periodStart->format('Ym'), $rates) ? $item->periodStart->format('Ym') : $currentPeriodStartIndex;
+                $result[$key] = $result[$key]->add($this->convertInternalById($rates[$existingKey], $item->fromCurrencyId, $item->toCurrencyId, $item->amount));
             }
         }
 
@@ -153,8 +156,12 @@ class CurrencyConvertor implements CurrencyConvertorInterface
             }
         }
 
-        $resultCurrency = $this->currencyRepository->getByCode($resultCurrency);
-        return $result->round($resultCurrency->getFractionDigits());
+        if (!array_key_exists($resultCurrency->getValue(), $this->currenciesCacheByCode)) {
+            $tmpResultCurrency = $this->currencyRepository->getByCode($resultCurrency);
+            $this->currenciesCacheByCode[$tmpResultCurrency->getCode()->getValue()] = $tmpResultCurrency;
+            $this->currenciesCacheById[$tmpResultCurrency->getId()->getValue()] = $tmpResultCurrency;
+        }
+        return $result->floor($this->currenciesCacheByCode[$resultCurrency->getValue()]->getFractionDigits());
     }
 
     /**
@@ -201,8 +208,12 @@ class CurrencyConvertor implements CurrencyConvertorInterface
             }
         }
 
-        $resultCurrency = $this->currencyRepository->get($resultCurrencyId);
-        return $result->round($resultCurrency->getFractionDigits());
+        if (!array_key_exists($resultCurrencyId->getValue(), $this->currenciesCacheById)) {
+            $tmpResultCurrency = $this->currencyRepository->get($resultCurrencyId);
+            $this->currenciesCacheByCode[$tmpResultCurrency->getCode()->getValue()] = $tmpResultCurrency;
+            $this->currenciesCacheById[$tmpResultCurrency->getId()->getValue()] = $tmpResultCurrency;
+        }
+        return $result->floor($this->currenciesCacheById[$resultCurrencyId->getValue()]->getFractionDigits());
     }
 
     private function transformCurrencyToDto(CurrencyRate $currency): FullCurrencyRateDto
@@ -216,5 +227,44 @@ class CurrencyConvertor implements CurrencyConvertorInterface
         $dto->date = $currency->getPublishedAt();
 
         return $dto;
+    }
+
+
+
+    /**
+     * @param CurrencyConvertorDto[] $dtos
+     * @return CurrencyConvertorDto[]
+     */
+    private function summarizeDtosByCurrency(array $dtos): array
+    {
+        /** @var CurrencyConvertorDto[] $result */
+        $result = [];
+        foreach ($dtos as $dto) {
+            $index = sprintf('%s-%s_%s-%s',
+                $dto->fromCurrencyId->getValue(),
+                $dto->toCurrencyId->getValue(),
+                $dto->periodStart->format('Y-m-d'),
+                $dto->periodEnd->format('Y-m-d')
+            );
+            if (!array_key_exists($index, $result)) {
+                $result[$index] = new CurrencyConvertorDto(
+                    $dto->periodStart,
+                    $dto->periodEnd,
+                    $dto->fromCurrencyId,
+                    $dto->toCurrencyId,
+                    $dto->amount
+                );
+            } else {
+                $result[$index] = new CurrencyConvertorDto(
+                    $dto->periodStart,
+                    $dto->periodEnd,
+                    $dto->fromCurrencyId,
+                    $dto->toCurrencyId,
+                    $result[$index]->amount->add($dto->amount),
+                );
+            }
+        }
+
+        return array_values($result);
     }
 }

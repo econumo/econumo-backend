@@ -128,27 +128,64 @@ final class DecimalNumber implements Stringable, ValueObjectInterface
         return new self(bcsqrt($this->value, self::SCALE));
     }
 
-    public function floor(): self
+    public function floor(int $scale = 0): self
     {
-        $parts = explode('.', $this->value);
-        $isNegative = str_starts_with($parts[0], '-');
-        $result = $parts[0];
-        
-        if ($isNegative && isset($parts[1]) && bccomp($parts[1], '0', self::SCALE) !== 0) {
-            $result = bcsub($result, '1', 0);
+        if ($scale < 0) {
+            throw new \InvalidArgumentException('Scale must be a non-negative integer');
         }
-        
+
+        $parts = explode('.', $this->value);
+        $integerPart = $parts[0];
+        $decimalPart = $parts[1] ?? '';
+        $isNegative = str_starts_with($this->value, '-');
+
+        if ($scale === 0) {
+            if ($isNegative && isset($parts[1]) && $parts[1] !== '0') {
+                return new self(bcadd($integerPart, '-1', 0));
+            }
+            return new self($integerPart);
+        }
+
+        if (strlen($decimalPart) <= $scale) {
+            return new self($this->value);
+        }
+
+        $decimalPart = substr($decimalPart, 0, $scale);
+        $result = $integerPart . '.' . $decimalPart;
+
+        if ($isNegative && strlen($parts[1] ?? '') > $scale) {
+            $result = bcsub($result, bcpow('0.1', (string)$scale, $scale), $scale);
+        }
+
         return new self($result);
     }
 
-    public function ceil(): self
+    public function ceil(int $scale = 0): self
     {
-        $parts = explode('.', $this->value);
-        $isNegative = str_starts_with($parts[0], '-');
-        $result = $parts[0];
+        if ($scale < 0) {
+            throw new \InvalidArgumentException('Scale must be a non-negative integer');
+        }
 
-        if (!$isNegative && isset($parts[1]) && bccomp($parts[1], '0', self::SCALE) !== 0) {
-            $result = bcadd($result, '1', 0);
+        $parts = explode('.', $this->value);
+        $integerPart = $parts[0];
+        $decimalPart = $parts[1] ?? '';
+
+        if ($scale === 0) {
+            if (!isset($parts[1]) || $parts[1] === '0') {
+                return new self($integerPart);
+            }
+            return new self(str_starts_with($this->value, '-') ? $integerPart : bcadd($integerPart, '1', 0));
+        }
+
+        if (strlen($decimalPart) <= $scale) {
+            return new self($this->value);
+        }
+
+        $decimalPart = substr($decimalPart, 0, $scale);
+        $result = $integerPart . '.' . $decimalPart;
+
+        if (!str_starts_with($this->value, '-') && strlen($parts[1] ?? '') > $scale) {
+            $result = bcadd($result, bcpow('0.1', (string)$scale, $scale), $scale);
         }
 
         return new self($result);

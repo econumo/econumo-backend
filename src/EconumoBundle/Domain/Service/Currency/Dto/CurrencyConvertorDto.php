@@ -17,7 +17,7 @@ readonly class CurrencyConvertorDto
         public DateTimeInterface $periodEnd,
         public Id $fromCurrencyId,
         public Id $toCurrencyId,
-        public DecimalNumber $amount,
+        public DecimalNumber $amount
     ) {
     }
 }
