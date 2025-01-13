@@ -11,6 +11,11 @@
             </options>
         </field>
         <field name="symbol" type="string" column="symbol" length="12" nullable="false" />
+        <field name="fraction" type="smallint" column="fraction" nullable="false">
+            <options>
+                <option name="default">8</option>
+            </options>
+        </field>
         <field name="createdAt" type="datetime_immutable" column="created_at" nullable="false"/>
     </entity>
 </doctrine-mapping>

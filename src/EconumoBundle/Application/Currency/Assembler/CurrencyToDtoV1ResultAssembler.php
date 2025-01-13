@@ -16,6 +16,7 @@ class CurrencyToDtoV1ResultAssembler
         $dto->code = $currency->getCode()->getValue();
         $dto->name = $currency->getName();
         $dto->symbol = $currency->getSymbol();
+        $dto->fraction = $currency->getFraction();
         return $dto;
     }
 }

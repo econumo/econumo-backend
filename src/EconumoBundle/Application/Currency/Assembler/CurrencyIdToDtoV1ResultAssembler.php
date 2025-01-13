@@ -8,20 +8,17 @@ use App\EconumoBundle\Application\Currency\Dto\CurrencyResultDto;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoBundle\Domain\Repository\CurrencyRepositoryInterface;
 
-class CurrencyIdToDtoV1ResultAssembler
+readonly class CurrencyIdToDtoV1ResultAssembler
 {
-    public function __construct(private readonly CurrencyRepositoryInterface $currencyRepository)
-    {
+    public function __construct(
+        private CurrencyRepositoryInterface $currencyRepository,
+        private CurrencyToDtoV1ResultAssembler $currencyToDtoV1ResultAssembler
+    ) {
     }
 
     public function assemble(Id $currencyId): CurrencyResultDto
     {
         $currency = $this->currencyRepository->get($currencyId);
-        $dto = new CurrencyResultDto();
-        $dto->id = $currency->getId()->getValue();
-        $dto->code = $currency->getCode()->getValue();
-        $dto->name = $currency->getName();
-        $dto->symbol = $currency->getSymbol();
-        return $dto;
+        return $this->currencyToDtoV1ResultAssembler->assemble($currency);
     }
 }

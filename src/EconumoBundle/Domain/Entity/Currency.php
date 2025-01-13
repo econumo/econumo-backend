@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\EconumoBundle\Domain\Entity;
 
 use App\EconumoBundle\Domain\Entity\ValueObject\CurrencyCode;
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoBundle\Domain\Traits\EntityTrait;
 use DateTimeImmutable;
@@ -18,8 +19,13 @@ class Currency
 
     private DateTimeImmutable $createdAt;
 
-    public function __construct(private Id $id, private CurrencyCode $code, private string $symbol, DateTimeInterface $createdAt)
-    {
+    public function __construct(
+        private Id $id,
+        private CurrencyCode $code,
+        private string $symbol,
+        private int $fraction,
+        DateTimeInterface $createdAt
+    ) {
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
     }
 
@@ -36,6 +42,23 @@ class Currency
     public function getSymbol(): string
     {
         return $this->symbol;
+    }
+
+    public function getFraction(): int
+    {
+        return $this->fraction;
+    }
+
+    public function restoreSystemFraction(): void
+    {
+        try {
+            Currencies::getName($this->code->getValue());
+            $fraction = Currencies::getFractionDigits($this->code->getValue());
+        } catch (MissingResourceException) {
+            $fraction = DecimalNumber::SCALE;
+        }
+
+        $this->fraction = $fraction;
     }
 
     public function getName(): string

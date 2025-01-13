@@ -13,35 +13,42 @@ use App\EconumoBundle\Domain\Service\Currency\CurrencyUpdateServiceInterface;
 
 class CurrencyUpdateService implements CurrencyUpdateServiceInterface
 {
-    public function __construct(private readonly CurrencyRepositoryInterface $currencyRepository, private readonly CurrencyFactoryInterface $currencyFactory)
-    {
+    public function __construct(
+        private readonly CurrencyRepositoryInterface $currencyRepository,
+        private readonly CurrencyFactoryInterface $currencyFactory
+    ) {
     }
 
     /**
      * @inheritDoc
      */
-    public function updateCurrencies(array $currencies): void
+    public function updateCurrencies(array $currencies, bool $restoreFraction = false): void
     {
         $savedCurrencies = $this->currencyRepository->getAll();
-        $newCurrencies = [];
+        $updatedCurrencies = [];
         foreach ($currencies as $currencyDto) {
             $found = false;
             foreach ($savedCurrencies as $savedCurrency) {
                 if ($savedCurrency->getCode()->isEqual($currencyDto->code)) {
                     $found = true;
+                    if ($restoreFraction) {
+                        $savedCurrency->restoreSystemFraction();
+                        $updatedCurrencies[] = $savedCurrency;
+                    }
+
                     break;
                 }
             }
 
             if (!$found) {
-                $newCurrencies[] = $this->currencyFactory->create($currencyDto->code);
+                $updatedCurrencies[] = $this->currencyFactory->create($currencyDto->code);
             }
         }
 
-        if ($newCurrencies === []) {
+        if ($updatedCurrencies === []) {
             return;
         }
 
-        $this->currencyRepository->save($newCurrencies);
+        $this->currencyRepository->save($updatedCurrencies);
     }
 }
