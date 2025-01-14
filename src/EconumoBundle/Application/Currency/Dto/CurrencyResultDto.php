@@ -9,7 +9,7 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     required={"id", "code", "name", "symbol", "fraction"}
+ *     required={"id", "code", "name", "symbol", "fractionDigits"}
  * )
  */
 class CurrencyResultDto

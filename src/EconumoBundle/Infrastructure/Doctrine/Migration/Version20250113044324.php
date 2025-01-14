@@ -6,15 +6,18 @@ namespace App\EconumoBundle\Infrastructure\Doctrine\Migration;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
 final class Version20250113044324 extends AbstractMigration
 {
+    private ?ContainerInterface $container = null;
+
     public function getDescription() : string
     {
-        return '';
+        return 'Add fraction_digits column to currencies table';
     }
 
     public function up(Schema $schema) : void
@@ -22,6 +25,7 @@ final class Version20250113044324 extends AbstractMigration
         $this->skipIf($this->connection->getDatabasePlatform()->getName() !== 'sqlite', "Migration can only be executed safely on 'sqlite'.");
 
         $this->addSql("ALTER TABLE currencies ADD COLUMN fraction_digits SMALLINT DEFAULT '8' NOT NULL");
+        $this->warnIf(true, 'Please update your currencies fraction digits manually, by calling a command: bin/console app:restore-currency-fraction-digits');
     }
 
     public function down(Schema $schema) : void
