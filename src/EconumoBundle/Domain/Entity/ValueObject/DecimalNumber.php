@@ -27,11 +27,11 @@ final class DecimalNumber implements Stringable, ValueObjectInterface
     private function normalize(string|int|float $num): string
     {
         self::validate($num);
-        
+
         if (is_int($num)) {
             return (string)$num;
         } elseif (is_float($num)) {
-            // Convert float to string with max precision and trim trailing zeros
+            // Convert float to string with rounding
             $str = number_format($num, self::SCALE, '.', '');
             return $this->cleanNumber($str);
         } else {
@@ -129,7 +129,7 @@ final class DecimalNumber implements Stringable, ValueObjectInterface
         return new self(bcsqrt($this->value, self::SCALE));
     }
 
-    public function floor(int $scale = 0): self
+    public function drop(int $scale = 0): self
     {
         if ($scale < 0) {
             throw new InvalidArgumentException('Scale must be a non-negative integer');
@@ -138,60 +138,18 @@ final class DecimalNumber implements Stringable, ValueObjectInterface
         $parts = explode('.', $this->value);
         $integerPart = $parts[0];
         $decimalPart = $parts[1] ?? '';
-        $isNegative = str_starts_with($this->value, '-');
 
         if ($scale === 0) {
-            if ($isNegative && isset($parts[1]) && $parts[1] !== '0') {
-                return new self(bcadd($integerPart, '-1', 0));
-            }
-
             return new self($integerPart);
         }
 
-        if (strlen($decimalPart) <= $scale) {
+        if ($decimalPart === '') {
             return new self($this->value);
         }
 
-        $decimalPart = substr($decimalPart, 0, $scale);
-        $result = $integerPart . '.' . $decimalPart;
-
-        if ($isNegative && strlen($parts[1] ?? '') > $scale) {
-            $result = bcsub($result, bcpow('0.1', (string)$scale, $scale), $scale);
-        }
-
-        return new self($result);
-    }
-
-    public function ceil(int $scale = 0): self
-    {
-        if ($scale < 0) {
-            throw new InvalidArgumentException('Scale must be a non-negative integer');
-        }
-
-        $parts = explode('.', $this->value);
-        $integerPart = $parts[0];
-        $decimalPart = $parts[1] ?? '';
-
-        if ($scale === 0) {
-            if (!isset($parts[1]) || $parts[1] === '0') {
-                return new self($integerPart);
-            }
-
-            return new self(str_starts_with($this->value, '-') ? $integerPart : bcadd($integerPart, '1', 0));
-        }
-
-        if (strlen($decimalPart) <= $scale) {
-            return new self($this->value);
-        }
-
-        $decimalPart = substr($decimalPart, 0, $scale);
-        $result = $integerPart . '.' . $decimalPart;
-
-        if (!str_starts_with($this->value, '-') && strlen($parts[1] ?? '') > $scale) {
-            $result = bcadd($result, bcpow('0.1', (string)$scale, $scale), $scale);
-        }
-
-        return new self($result);
+        // Directly truncate the decimal part without any rounding
+        $truncatedDecimal = substr($decimalPart, 0, $scale);
+        return new self($integerPart . '.' . $truncatedDecimal);
     }
 
     public function round(int $precision = 0): self

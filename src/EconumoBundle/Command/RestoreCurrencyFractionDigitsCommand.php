@@ -61,7 +61,7 @@ class RestoreCurrencyFractionDigitsCommand extends Command
             }
         }
 
-        $this->currencyUpdateService->updateCurrencies($currencies, true);
+        $this->currencyUpdateService->restoreFractionDigits($currencies);
 
         $success = true;
         foreach ($currencies as $dto) {

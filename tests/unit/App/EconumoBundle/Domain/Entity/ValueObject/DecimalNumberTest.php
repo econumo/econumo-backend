@@ -201,71 +201,38 @@ class DecimalNumberTest extends Unit
     }
 
     /**
-     * @dataProvider floorProvider
+     * @dataProvider dropProvider
      */
-    public function testFloor(string|int|float $input, int $scale, string $expected): void
+    public function testDrop(string|int|float $input, int $scale, string $expected): void
     {
         $number = new DecimalNumber($input);
-        $this->assertEquals($expected, $number->floor($scale)->getValue());
+        $this->assertEquals($expected, $number->drop($scale)->getValue());
     }
 
-    public function floorProvider(): array
+    public function dropProvider(): array
     {
         return [
             'positive integer' => [2, 0, '2'],
             'positive decimal' => [1.55, 0, '1'],
             'positive decimal with scale' => [1.55, 1, '1.5'],
             'positive decimal with larger scale' => [1.55, 2, '1.55'],
-            'negative decimal' => [-1.55, 0, '-2'],
-            'negative decimal with scale' => [-1.55, 1, '-1.6'],
-            'negative decimal with larger scale' => [-1.55, 2, '-1.55'],
-            'zero' => [0, 0, '0'],
-            'zero with scale' => [0, 2, '0'],
-            'small decimal' => [0.01234567, 4, '0.0123'],
-            'recurring decimal' => [1/3, 2, '0.33'],
-        ];
-    }
-
-    /**
-     * @dataProvider ceilProvider
-     */
-    public function testCeil(string|int|float $input, int $scale, string $expected): void
-    {
-        $number = new DecimalNumber($input);
-        $this->assertEquals($expected, $number->ceil($scale)->getValue());
-    }
-
-    public function ceilProvider(): array
-    {
-        return [
-            'positive integer' => [2, 0, '2'],
-            'positive decimal' => [1.55, 0, '2'],
-            'positive decimal with scale' => [1.55, 1, '1.6'],
-            'positive decimal with larger scale' => [1.55, 2, '1.55'],
             'negative decimal' => [-1.55, 0, '-1'],
             'negative decimal with scale' => [-1.55, 1, '-1.5'],
             'negative decimal with larger scale' => [-1.55, 2, '-1.55'],
             'zero' => [0, 0, '0'],
             'zero with scale' => [0, 2, '0'],
-            'small decimal' => [0.01234567, 4, '0.0124'],
-            'recurring decimal' => [1/3, 2, '0.34'],
+            'small decimal' => [0.01234567, 4, '0.0123'],
+            'small long decimal' => [0.01234567, 7, '0.0123456'],
+            'recurring decimal' => [1/3, 2, '0.33'],
         ];
     }
 
-    public function testFloorWithNegativeScale(): void
+    public function testDropWithNegativeScale(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Scale must be a non-negative integer');
         $number = new DecimalNumber(1.55);
-        $number->floor(-1);
-    }
-
-    public function testCeilWithNegativeScale(): void
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Scale must be a non-negative integer');
-        $number = new DecimalNumber(1.55);
-        $number->ceil(-1);
+        $number->drop(-1);
     }
 
     /**

@@ -7,6 +7,7 @@ namespace App\EconumoBundle\Domain\Entity;
 use App\EconumoBundle\Domain\Entity\ValueObject\CurrencyCode;
 use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoBundle\Domain\Exception\DomainException;
 use App\EconumoBundle\Domain\Traits\EntityTrait;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -17,12 +18,18 @@ class Currency
 {
     use EntityTrait;
 
+    /**
+     * @var int
+     */
+    final public const DEFAULT_FRACTION_DIGITS = 2;
+
     private DateTimeImmutable $createdAt;
 
     public function __construct(
         private Id $id,
         private CurrencyCode $code,
         private string $symbol,
+        private ?string $name,
         private int $fractionDigits,
         DateTimeInterface $createdAt
     ) {
@@ -49,25 +56,36 @@ class Currency
         return $this->fractionDigits;
     }
 
-    public function restoreSystemFractionDigits(): void
-    {
-        try {
-            Currencies::getName($this->code->getValue());
-            $fractionDigits = Currencies::getFractionDigits($this->code->getValue());
-        } catch (MissingResourceException) {
-            $fractionDigits = DecimalNumber::SCALE;
-        }
-
-        $this->fractionDigits = $fractionDigits;
-    }
-
     public function getName(): string
     {
+        if ($this->name !== null) {
+            return $this->name;
+        }
+
         try {
             return Currencies::getName($this->code->getValue());
         } catch (MissingResourceException) {
             return $this->code->getValue();
         }
+    }
+
+    public function updateName(?string $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function updateSymbol(string $symbol): void
+    {
+        $this->symbol = $symbol;
+    }
+
+    public function updateFractionDigits(int $fractionDigits): void
+    {
+        if ($fractionDigits < 0 || $fractionDigits > DecimalNumber::SCALE) {
+            throw new DomainException(sprintf('Fraction digits must be between 0 and %d', DecimalNumber::SCALE));
+        }
+
+        $this->fractionDigits = $fractionDigits;
     }
 
     public function getCreatedAt(): DateTimeImmutable

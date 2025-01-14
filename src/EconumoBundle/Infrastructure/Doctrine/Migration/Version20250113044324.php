@@ -17,13 +17,14 @@ final class Version20250113044324 extends AbstractMigration
 
     public function getDescription() : string
     {
-        return 'Add fraction_digits column to currencies table';
+        return 'Add additional columns to currencies table';
     }
 
     public function up(Schema $schema) : void
     {
         $this->skipIf($this->connection->getDatabasePlatform()->getName() !== 'sqlite', "Migration can only be executed safely on 'sqlite'.");
 
+        $this->addSql("ALTER TABLE currencies ADD COLUMN name VARCHAR(36) DEFAULT NULL");
         $this->addSql("ALTER TABLE currencies ADD COLUMN fraction_digits SMALLINT DEFAULT '8' NOT NULL");
         $this->warnIf(true, 'Please update your currencies fraction digits manually, by calling a command: bin/console app:restore-currency-fraction-digits');
     }
@@ -32,6 +33,7 @@ final class Version20250113044324 extends AbstractMigration
     {
         $this->skipIf($this->connection->getDatabasePlatform()->getName() !== 'sqlite', "Migration can only be executed safely on 'sqlite'.");
 
+        $this->addSql('ALTER TABLE currencies DROP COLUMN name');
         $this->addSql('ALTER TABLE currencies DROP COLUMN fraction_digits');
     }
 }

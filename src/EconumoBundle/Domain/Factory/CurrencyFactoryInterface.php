@@ -8,8 +8,11 @@ namespace App\EconumoBundle\Domain\Factory;
 
 use App\EconumoBundle\Domain\Entity\Currency;
 use App\EconumoBundle\Domain\Entity\ValueObject\CurrencyCode;
+use App\EconumoBundle\Domain\Service\Dto\CurrencyDto;
 
 interface CurrencyFactoryInterface
 {
-    public function create(CurrencyCode $code): Currency;
+    public function createByCode(CurrencyCode $code): Currency;
+
+    public function create(CurrencyDto $dto): Currency;
 }
