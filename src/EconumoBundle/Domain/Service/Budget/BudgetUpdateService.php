@@ -10,6 +10,7 @@ use App\EconumoBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoBundle\Domain\Exception\AccessDeniedException;
 use App\EconumoBundle\Domain\Repository\AccountRepositoryInterface;
 use App\EconumoBundle\Domain\Repository\BudgetRepositoryInterface;
+use App\EconumoBundle\Domain\Repository\CurrencyRepositoryInterface;
 use App\EconumoBundle\Domain\Service\Budget\Builder\BudgetMetaBuilder;
 use App\EconumoBundle\Domain\Service\Budget\Dto\BudgetMetaDto;
 
@@ -19,6 +20,7 @@ readonly class BudgetUpdateService
         private BudgetRepositoryInterface $budgetRepository,
         private BudgetMetaBuilder $budgetMetaBuilder,
         private AccountRepositoryInterface $accountRepository,
+        private CurrencyRepositoryInterface $currencyRepository
     ) {
     }
 
@@ -29,6 +31,7 @@ readonly class BudgetUpdateService
         Id $userId,
         Id $budgetId,
         BudgetName $name,
+        Id $currencyId,
         array $excludedAccountsIds = []
     ): BudgetMetaDto {
         $accounts = [];
@@ -43,6 +46,7 @@ readonly class BudgetUpdateService
 
         $budget = $this->budgetRepository->get($budgetId);
         $budget->updateName($name);
+        $budget->updateCurrency($this->currencyRepository->getReference($currencyId));
 
         $alreadyExcludedAccounts = $budget->getExcludedAccounts($userId);
         foreach ($alreadyExcludedAccounts as $alreadyExcludedAccount) {

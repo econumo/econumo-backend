@@ -51,6 +51,9 @@ class UpdateBudgetV1Form extends AbstractType
                         ],
                     ]),
                 ],
+            ])
+            ->add('currencyId', TextType::class, [
+                'constraints' => [new NotBlank(), new Uuid()],
             ]);
     }
 }

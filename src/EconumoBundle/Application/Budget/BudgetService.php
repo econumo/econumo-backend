@@ -83,6 +83,7 @@ readonly class BudgetService
     ): UpdateBudgetV1ResultDto {
         $budgetId = new Id($dto->id);
         $budgetName = new BudgetName($dto->name);
+        $currencyId = new Id($dto->currencyId);
         if (!$this->budgetAccessService->canReadBudget($userId, $budgetId)) {
             throw new AccessDeniedException();
         }
@@ -101,6 +102,7 @@ readonly class BudgetService
             $userId,
             $budgetId,
             $budgetName,
+            $currencyId,
             $excludedAccountsIds
         );
         return $this->updateBudgetV1ResultAssembler->assemble($budgetDto);

@@ -28,4 +28,9 @@ class UpdateBudgetV1RequestDto
      * @OA\Property(type="array", @OA\Items(type="string"))
      */
     public array $excludedAccounts = [];
+
+    /**
+     * @OA\Property(example="9b29b760-ddca-46fb-a754-8743fc2c49a7")
+     */
+    public string $currencyId;
 }

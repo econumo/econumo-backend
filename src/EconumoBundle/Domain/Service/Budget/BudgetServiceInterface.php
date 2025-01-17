@@ -49,6 +49,7 @@ interface BudgetServiceInterface
         Id $userId,
         Id $budgetId,
         BudgetName $name,
+        Id $currencyId,
         array $excludedAccountsIds = []
     ): BudgetMetaDto;
 
