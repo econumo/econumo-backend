@@ -25,7 +25,7 @@ final class Version20250113044324 extends AbstractMigration
         $this->skipIf($this->connection->getDatabasePlatform()->getName() !== 'sqlite', "Migration can only be executed safely on 'sqlite'.");
 
         $this->addSql("ALTER TABLE currencies ADD COLUMN name VARCHAR(36) DEFAULT NULL");
-        $this->addSql("ALTER TABLE currencies ADD COLUMN fraction_digits SMALLINT DEFAULT '8' NOT NULL");
+        $this->addSql("ALTER TABLE currencies ADD COLUMN fraction_digits SMALLINT DEFAULT '2' NOT NULL");
         $this->warnIf(true, 'Please update your currencies fraction digits manually, by calling a command: bin/console app:restore-currency-fraction-digits');
     }
 

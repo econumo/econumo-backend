@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Domain\Service;
 
+use App\EconumoBundle\Domain\Entity\Currency;
+use App\EconumoBundle\Domain\Repository\BudgetRepositoryInterface;
+use App\EconumoBundle\Domain\Repository\CurrencyRepositoryInterface;
 use Throwable;
 use App\EconumoBundle\Domain\Entity\User;
 use App\EconumoBundle\Domain\Entity\UserOption;
@@ -38,7 +41,9 @@ readonly class UserService implements UserServiceInterface
         private ConnectionInviteRepositoryInterface $connectionInviteRepository,
         private UserOptionFactoryInterface $userOptionFactory,
         private UserOptionRepositoryInterface $userOptionRepository,
-        private EncodeServiceInterface $encodeService
+        private EncodeServiceInterface $encodeService,
+        private CurrencyRepositoryInterface $currencyRepository,
+        private BudgetRepositoryInterface $budgetRepository
     )
     {
     }
@@ -94,6 +99,11 @@ readonly class UserService implements UserServiceInterface
 
     public function updateCurrency(Id $userId, CurrencyCode $currencyCode): void
     {
+        $currency = $this->currencyRepository->getByCode($currencyCode);
+        if (!$currency instanceof Currency) {
+            throw new NotFoundException(sprintf('Currency %s not found', $currencyCode->getValue()));
+        }
+
         $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
             $user = $this->userRepository->get($userId);
@@ -122,10 +132,11 @@ readonly class UserService implements UserServiceInterface
 
     public function updateBudget(Id $userId, ?Id $budgetId): void
     {
+        $budget = $this->budgetRepository->get($budgetId);
         $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
             $user = $this->userRepository->get($userId);
-            $user->updateDefaultBudget($budgetId);
+            $user->updateDefaultBudget($budget->getId());
             $this->userRepository->save([$user]);
             $this->antiCorruptionService->commit(__METHOD__);
         } catch (Throwable $throwable) {

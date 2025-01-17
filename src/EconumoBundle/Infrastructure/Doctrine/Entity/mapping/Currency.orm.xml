@@ -14,7 +14,7 @@
         <field name="name" type="string" column="name" length="36" nullable="true" />
         <field name="fractionDigits" type="smallint" column="fraction_digits" nullable="false">
             <options>
-                <option name="default">8</option>
+                <option name="default">2</option>
             </options>
         </field>
         <field name="createdAt" type="datetime_immutable" column="created_at" nullable="false"/>
