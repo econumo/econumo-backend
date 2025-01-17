@@ -26,13 +26,17 @@ readonly class AverageCurrencyRateDtoAssembler
     public function assemble(
         DateTimeInterface $periodStart,
         DateTimeInterface $periodEnd,
-        array $currenciesIds
+        array $currenciesIds = []
     ): array {
         $averageCurrencyRatesDto = $this->currencyRateService->getAverageCurrencyRates($periodStart, $periodEnd);
-        $supportedCurrencyIds = array_map(static fn(Id $id): string => $id->getValue(), $currenciesIds);
+        $supportedCurrencyIds = [];
+        if ($currenciesIds !== []) {
+            $supportedCurrencyIds = array_map(static fn(Id $id): string => $id->getValue(), $currenciesIds);
+        }
+
         $result = [];
         foreach ($averageCurrencyRatesDto->rates as $item) {
-            if (in_array($item['currencyId'], $supportedCurrencyIds, true)) {
+            if ($supportedCurrencyIds === [] || in_array($item['currencyId'], $supportedCurrencyIds, true)) {
                 $result[] = new AverageCurrencyRateDto(
                     new Id($item['currencyId']),
                     $averageCurrencyRatesDto->baseCurrency->getId(),

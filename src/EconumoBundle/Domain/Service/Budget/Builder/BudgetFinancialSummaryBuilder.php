@@ -54,7 +54,7 @@ readonly class BudgetFinancialSummaryBuilder
         $averageCurrencyRates = $this->getAverageCurrencyRates(
             $periodStart,
             $periodEnd,
-            $currenciesIds
+            []
         );
 
         return new BudgetFinancialSummaryDto(
