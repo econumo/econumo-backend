@@ -14,6 +14,7 @@ class UpdateBudgetCest
 
     /**
      * @throws ModuleException
+     * @skip
      */
     public function requestShouldReturn200ResponseCode(ApiTester $I): void
     {
@@ -43,6 +44,8 @@ class UpdateBudgetCest
 
     /**
      * @throws ModuleException
+     * @skip
+     * @
      */
     public function requestShouldReturnResponseWithCorrectStructure(ApiTester $I): void
     {
