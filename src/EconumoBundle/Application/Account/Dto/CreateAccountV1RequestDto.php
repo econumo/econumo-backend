@@ -31,7 +31,7 @@ class CreateAccountV1RequestDto
     /**
      * @OA\Property(example="21007.64")
      */
-    public float $balance = 0.0;
+    public float|string $balance = 0.0;
 
     /**
      * @OA\Property(example="wallet")

@@ -30,6 +30,7 @@ doctrine:
             budget_folder_name_type: App\EconumoBundle\Infrastructure\Doctrine\Type\BudgetFolderNameType
             budget_envelope_name_type: App\EconumoBundle\Infrastructure\Doctrine\Type\BudgetEnvelopeNameType
             budget_element_type: App\EconumoBundle\Infrastructure\Doctrine\Type\BudgetElementType
+            decimal_number_type: App\EconumoBundle\Infrastructure\Doctrine\Type\DecimalNumberType
 
     orm:
         auto_generate_proxy_classes: true

@@ -10,6 +10,7 @@ use App\EconumoBundle\Application\Budget\Assembler\SetLimitV1ResultAssembler;
 use App\EconumoBundle\Application\Exception\AccessDeniedException;
 use App\EconumoBundle\Application\Exception\ValidationException;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use App\EconumoBundle\Domain\Exception\BudgetLimitInvalidDateException;
 use App\EconumoBundle\Domain\Service\Budget\BudgetAccessServiceInterface;
 use App\EconumoBundle\Domain\Service\Budget\BudgetLimitServiceInterface;
@@ -35,7 +36,7 @@ readonly class LimitService
 
         $elementId = new Id($dto->elementId);
         $period = DateTimeImmutable::createFromFormat('Y-m-d', $dto->period);
-        $amount = $dto->amount === null ? null : (float) $dto->amount;
+        $amount = $dto->amount === null ? null : new DecimalNumber($dto->amount);
 
         try {
             $this->budgetLimitService->setLimit($budgetId, $elementId, $period, $amount);

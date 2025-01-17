@@ -162,6 +162,7 @@ class Api extends \Codeception\Module
             'code' => 'string',
             'symbol' => 'string',
             'name' => 'string',
+            'fractionDigits' => 'integer',
         ];
     }
 
@@ -204,7 +205,7 @@ class Api extends \Codeception\Module
     {
         return [
             'date' => 'string',
-            'amount' => 'string'
+            'amount' => 'float|integer'
         ];
     }
 

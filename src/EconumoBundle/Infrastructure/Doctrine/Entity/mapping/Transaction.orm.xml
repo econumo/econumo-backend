@@ -8,8 +8,8 @@
         <id name="id" type="uuid" column="id"/>
 
         <field name="type" type="transaction_type" column="type" nullable="false"/>
-        <field name="amount" type="decimal" column="amount" precision="19" scale="2" nullable="false"/>
-        <field name="amountRecipient" type="decimal" column="amount_recipient" precision="19" scale="2"
+        <field name="amount" type="decimal_number_type" column="amount" precision="19" scale="8" nullable="false"/>
+        <field name="amountRecipient" type="decimal_number_type" column="amount_recipient" precision="19" scale="8"
                nullable="true"/>
         <field name="description" type="string" column="description" nullable="false"/>
         <field name="createdAt" type="datetime_immutable" column="created_at" nullable="false"/>

@@ -5,7 +5,7 @@
     <entity repository-class="App\EconumoBundle\Infrastructure\Doctrine\Repository\CurrencyRateRepository"
             name="App\EconumoBundle\Domain\Entity\CurrencyRate" table="currencies_rates">
         <id name="id" type="uuid" column="id"/>
-        <field name="rate" type="decimal" column="rate" precision="16" scale="8" nullable="false"/>
+        <field name="rate" type="decimal_number_type" column="rate" precision="19" scale="8" nullable="false"/>
         <field name="publishedAt" type="date_immutable" column="published_at" nullable="false"/>
 
         <many-to-one field="currency" target-entity="App\EconumoBundle\Domain\Entity\Currency">

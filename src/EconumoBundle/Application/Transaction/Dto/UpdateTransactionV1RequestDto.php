@@ -26,12 +26,12 @@ class UpdateTransactionV1RequestDto
     /**
      * @OA\Property(example="1234.4")
      */
-    public float $amount;
+    public float|string $amount;
 
     /**
      * @OA\Property(example="1234.4")
      */
-    public ?float $amountRecipient = null;
+    public float|string|null $amountRecipient = null;
 
     /**
      * @OA\Property(example="")

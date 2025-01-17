@@ -4,13 +4,9 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Domain\Entity;
 
-use App\EconumoBundle\Domain\Entity\Account;
-use App\EconumoBundle\Domain\Entity\Category;
-use App\EconumoBundle\Domain\Entity\Payee;
-use App\EconumoBundle\Domain\Entity\Tag;
-use App\EconumoBundle\Domain\Entity\User;
 use App\EconumoBundle\Domain\Entity\ValueObject\CurrencyCode;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use App\EconumoBundle\Domain\Entity\ValueObject\TransactionType;
 use App\EconumoBundle\Domain\Service\Dto\TransactionDto;
 use App\EconumoBundle\Domain\Traits\EntityTrait;
@@ -21,10 +17,6 @@ use DateTimeInterface;
 class Transaction
 {
     use EntityTrait;
-
-    private string $amount;
-
-    private ?string $amountRecipient;
 
     private DateTimeImmutable $createdAt;
 
@@ -38,17 +30,15 @@ class Transaction
         private TransactionType $type,
         private Account $account,
         private ?Category $category,
-        float $amount,
+        private DecimalNumber $amount,
         DateTimeInterface $transactionDate,
         DateTimeInterface $createdAt,
         private ?Account $accountRecipient,
-        ?float $amountRecipient,
+        private ?DecimalNumber $amountRecipient,
         private string $description,
         private ?Payee $payee,
         private ?Tag $tag
     ) {
-        $this->amount = (string)$amount;
-        $this->amountRecipient = $amountRecipient === null ? null : (string)$amountRecipient;
         $this->createdAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d H:i:s'));
         $this->spentAt = DateTime::createFromFormat('Y-m-d H:i:s', $transactionDate->format('Y-m-d H:i:s'));
@@ -94,14 +84,14 @@ class Transaction
         return $this->accountRecipient instanceof Account ? $this->accountRecipient->getId() : null;
     }
 
-    public function getAmount(): float
+    public function getAmount(): DecimalNumber
     {
-        return (float)$this->amount;
+        return $this->amount;
     }
 
-    public function getAmountRecipient(): ?float
+    public function getAmountRecipient(): ?DecimalNumber
     {
-        return $this->amountRecipient === null ? null : (float)$this->amountRecipient;
+        return $this->amountRecipient;
     }
 
     public function getCategory(): ?Category
@@ -176,26 +166,24 @@ class Transaction
         }
     }
 
-    public function updateAmount(float $amount): void
+    public function updateAmount(DecimalNumber $amount): void
     {
-        if (abs((float)$this->amount - $amount) >= PHP_FLOAT_EPSILON) {
-            $this->amount = (string)$amount;
+        if (!$this->amount->isEqual($amount)) {
+            $this->amount = $amount;
             $this->updated();
         }
     }
 
-    public function updateAmountRecipient(?float $amount): void
+    public function updateAmountRecipient(?DecimalNumber $amount): void
     {
-        if (!$this->accountRecipient instanceof Account && $amount !== null) {
-            $this->amountRecipient = (string)$amount;
+        if (!$this->accountRecipient instanceof Account && $amount instanceof DecimalNumber) {
+            $this->amountRecipient = $amount;
             $this->updated();
-        } elseif ($this->accountRecipient instanceof Account && $amount === null) {
+        } elseif ($this->accountRecipient instanceof Account && !$amount instanceof DecimalNumber) {
             $this->amountRecipient = null;
             $this->updated();
-        } elseif ($this->accountRecipient instanceof Account && $amount !== null && abs(
-                (float)$this->amountRecipient - $amount
-            ) >= PHP_FLOAT_EPSILON) {
-            $this->amountRecipient = (string)$amount;
+        } elseif ($this->accountRecipient instanceof Account && $amount instanceof DecimalNumber && !$this->amountRecipient->isEqual($amount)) {
+            $this->amountRecipient = $amount;
             $this->updated();
         }
     }

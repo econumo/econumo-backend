@@ -6,6 +6,7 @@ namespace App\EconumoBundle\Domain\Factory;
 
 use App\EconumoBundle\Domain\Entity\Currency;
 use App\EconumoBundle\Domain\Entity\CurrencyRate;
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use DateTimeInterface;
 
 interface CurrencyRateFactoryInterface
@@ -14,6 +15,6 @@ interface CurrencyRateFactoryInterface
         DateTimeInterface $date,
         Currency $currency,
         Currency $baseCurrency,
-        float $rate
+        DecimalNumber $rate
     ): CurrencyRate;
 }

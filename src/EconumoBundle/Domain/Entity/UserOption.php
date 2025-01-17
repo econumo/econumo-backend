@@ -25,6 +25,11 @@ class UserOption
     /**
      * @var string
      */
+    final public const CURRENCY_ID = 'currency_id';
+
+    /**
+     * @var string
+     */
     final public const DEFAULT_CURRENCY = 'USD';
 
     /**

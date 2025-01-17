@@ -26,7 +26,6 @@ readonly class CurrencyListService
         foreach ($dto->items as $item) {
             $currencyDto = new CurrencyDto();
             $currencyDto->code = new CurrencyCode($item);
-            $currencyDto->symbol = '';
             $currencies[] = $currencyDto;
         }
 

@@ -6,6 +6,7 @@ namespace App\EconumoBundle\Domain\Entity;
 
 use App\EconumoBundle\Domain\Entity\Currency;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use App\EconumoBundle\Domain\Traits\EntityTrait;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -14,29 +15,26 @@ class CurrencyRate
 {
     use EntityTrait;
 
-    private string $rate;
-
     private DateTimeImmutable $publishedAt;
 
     public function __construct(
         private Id $id,
         private Currency $currency,
         private Currency $baseCurrency,
-        float $rate,
+        private DecimalNumber $rate,
         DateTimeInterface $createdAt
     ) {
-        $this->rate = (string)$rate;
         $this->publishedAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $createdAt->format('Y-m-d') . ' 00:00:00');
     }
 
-    public function getRate(): float
+    public function getRate(): DecimalNumber
     {
-        return (float)$this->rate;
+        return $this->rate;
     }
 
-    public function updateRate(float $rate): void
+    public function updateRate(DecimalNumber $rate): void
     {
-        $this->rate = (string)round($rate, 8);
+        $this->rate = $rate;
     }
 
     public function getCurrency(): Currency

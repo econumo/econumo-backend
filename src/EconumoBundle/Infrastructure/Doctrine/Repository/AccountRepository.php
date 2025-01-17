@@ -8,6 +8,7 @@ use App\EconumoBundle\Domain\Entity\Account;
 use App\EconumoBundle\Domain\Entity\AccountAccess;
 use App\EconumoBundle\Domain\Entity\User;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use App\EconumoBundle\Domain\Exception\NotFoundException;
 use App\EconumoBundle\Domain\Repository\AccountRepositoryInterface;
 use DateTimeInterface;
@@ -160,7 +161,7 @@ SQL;
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('account_id', 'account_id');
         $rsm->addScalarResult('currency_id', 'currency_id');
-        $rsm->addScalarResult('balance', 'balance', 'float');
+        $rsm->addScalarResult('balance', 'balance', 'string');
 
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
         return $query->getResult();
@@ -203,7 +204,7 @@ SQL;
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('account_id', 'account_id');
         $rsm->addScalarResult('currency_id', 'currency_id');
-        $rsm->addScalarResult('balance', 'balance', 'float');
+        $rsm->addScalarResult('balance', 'balance', 'string');
 
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
         return $query->getResult();
@@ -261,12 +262,12 @@ SQL;
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('account_id', 'account_id');
         $rsm->addScalarResult('currency_id', 'currency_id');
-        $rsm->addScalarResult('incomes', 'incomes', 'float');
-        $rsm->addScalarResult('transfer_incomes', 'transfer_incomes', 'float');
-        $rsm->addScalarResult('exchange_incomes', 'exchange_incomes', 'float');
-        $rsm->addScalarResult('expenses', 'expenses', 'float');
-        $rsm->addScalarResult('transfer_expenses', 'transfer_expenses', 'float');
-        $rsm->addScalarResult('exchange_expenses', 'exchange_expenses', 'float');
+        $rsm->addScalarResult('incomes', 'incomes', 'string');
+        $rsm->addScalarResult('transfer_incomes', 'transfer_incomes', 'string');
+        $rsm->addScalarResult('exchange_incomes', 'exchange_incomes', 'string');
+        $rsm->addScalarResult('expenses', 'expenses', 'string');
+        $rsm->addScalarResult('transfer_expenses', 'transfer_expenses', 'string');
+        $rsm->addScalarResult('exchange_expenses', 'exchange_expenses', 'string');
 
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
         return $query->getResult();
@@ -305,7 +306,7 @@ GROUP BY a.currency_id;
 SQL;
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('currency_id', 'currency_id');
-        $rsm->addScalarResult('amount', 'amount', 'float');
+        $rsm->addScalarResult('amount', 'amount', 'string');
 
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
         $toHoard = $query->getResult();
@@ -318,7 +319,7 @@ GROUP BY a.currency_id;
 SQL;
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('currency_id', 'currency_id');
-        $rsm->addScalarResult('amount', 'amount', 'float');
+        $rsm->addScalarResult('amount', 'amount', 'string');
 
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
         $fromHoard = $query->getResult();
@@ -327,23 +328,23 @@ SQL;
         foreach ($toHoard as $item) {
             if (!isset($result[$item['currency_id']])) {
                 $result[$item['currency_id']] = [
-                    'to_holdings' => 0.0,
-                    'from_holdings' => 0.0,
+                    'to_holdings' => new DecimalNumber(0),
+                    'from_holdings' => new DecimalNumber(0),
                 ];
             }
 
-            $result[$item['currency_id']]['to_holdings'] += (float)$item['amount'];
+            $result[$item['currency_id']]['to_holdings'] = $result[$item['currency_id']]['to_holdings']->add($item['amount']);
         }
 
         foreach ($fromHoard as $item) {
             if (!isset($result[$item['currency_id']])) {
                 $result[$item['currency_id']] = [
-                    'to_holdings' => 0.0,
-                    'from_holdings' => 0.0,
+                    'to_holdings' => new DecimalNumber(0),
+                    'from_holdings' => new DecimalNumber(0),
                 ];
             }
 
-            $result[$item['currency_id']]['from_holdings'] += (float)$item['amount'];
+            $result[$item['currency_id']]['from_holdings'] = $result[$item['currency_id']]['from_holdings']->add($item['amount']);
         }
 
         return $result;

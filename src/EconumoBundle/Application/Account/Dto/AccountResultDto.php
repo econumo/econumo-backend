@@ -55,7 +55,6 @@ class AccountResultDto
 
     /**
      * Current balance
-     * @var float
      * @OA\Property(example="13.07")
      */
     public float $balance;

@@ -31,5 +31,5 @@ class SetLimitV1RequestDto
     /**
      * @OA\Property(example="100.1")
      */
-    public ?float $amount = null;
+    public float|int|string|null $amount = null;
 }

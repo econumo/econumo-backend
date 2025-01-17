@@ -8,6 +8,7 @@ use App\EconumoBundle\Application\Account\Dto\CreateAccountV1RequestDto;
 use App\EconumoBundle\Application\Account\Dto\CreateAccountV1ResultDto;
 use App\EconumoBundle\Domain\Entity\Account;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 
 readonly class CreateAccountV1ResultAssembler
 {
@@ -19,7 +20,7 @@ readonly class CreateAccountV1ResultAssembler
         CreateAccountV1RequestDto $dto,
         Id $userId,
         Account $account,
-        float $balance
+        DecimalNumber $balance
     ): CreateAccountV1ResultDto {
         $result = new CreateAccountV1ResultDto();
         $result->item = $this->accountToDtoV1ResultAssembler->assemble($userId, $account, $balance);

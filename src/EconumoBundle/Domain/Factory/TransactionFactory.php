@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Domain\Factory;
 
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use DateTimeInterface;
 use App\EconumoBundle\Domain\Entity\Transaction;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
@@ -50,7 +51,7 @@ class TransactionFactory implements TransactionFactoryInterface
 
     public function createTransaction(
         Id $accountId,
-        float $transaction,
+        DecimalNumber $transaction,
         DateTimeInterface $transactionDate,
         string $comment = ''
     ): Transaction {
@@ -58,10 +59,10 @@ class TransactionFactory implements TransactionFactoryInterface
         return new Transaction(
             $this->transactionRepository->getNextIdentity(),
             $this->userRepository->getReference($account->getUserId()),
-            new TransactionType($transaction < 0 ? TransactionType::EXPENSE : TransactionType::INCOME),
+            new TransactionType($transaction->isLessThan(0) ? TransactionType::EXPENSE : TransactionType::INCOME),
             $this->accountRepository->getReference($accountId),
             null,
-            abs($transaction),
+            $transaction->abs(),
             $transactionDate,
             $this->datetimeService->getCurrentDatetime(),
             null,
@@ -74,7 +75,7 @@ class TransactionFactory implements TransactionFactoryInterface
 
     public function createCorrection(
         Id $accountId,
-        float $correction,
+        DecimalNumber $correction,
         DateTimeInterface $transactionDate,
         string $comment = ''
     ): Transaction {
@@ -82,10 +83,10 @@ class TransactionFactory implements TransactionFactoryInterface
         return new Transaction(
             $this->transactionRepository->getNextIdentity(),
             $this->userRepository->getReference($account->getUserId()),
-            new TransactionType($correction < 0 ? TransactionType::INCOME : TransactionType::EXPENSE),
+            new TransactionType($correction->isLessThan(0) ? TransactionType::INCOME : TransactionType::EXPENSE),
             $this->accountRepository->getReference($accountId),
             null,
-            abs($correction),
+            $correction->abs(),
             $transactionDate,
             $this->datetimeService->getCurrentDatetime(),
             null,

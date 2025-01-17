@@ -42,8 +42,8 @@ class AccountRequestDto
 
     /**
      * Current balance
-     * @var float
+     * @var float|string
      * @OA\Property(example="13.07")
      */
-    public float $balance;
+    public float|string $balance;
 }

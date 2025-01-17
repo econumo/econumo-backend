@@ -9,6 +9,7 @@ use App\EconumoBundle\Application\Currency\Assembler\CurrencyToDtoV1ResultAssemb
 use App\EconumoBundle\Application\User\Assembler\UserIdToDtoResultAssembler;
 use App\EconumoBundle\Domain\Entity\Account;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use App\EconumoBundle\Domain\Repository\AccountOptionsRepositoryInterface;
 use App\EconumoBundle\Domain\Repository\FolderRepositoryInterface;
 
@@ -23,7 +24,7 @@ readonly class AccountToDtoV1ResultAssembler
     ) {
     }
 
-    public function assemble(Id $userId, Account $account, float $balance): AccountResultDto
+    public function assemble(Id $userId, Account $account, DecimalNumber $balance): AccountResultDto
     {
         $item = new AccountResultDto();
         $item->id = $account->getId()->getValue();
@@ -39,7 +40,7 @@ readonly class AccountToDtoV1ResultAssembler
 
         $item->name = $account->getName()->getValue();
         $item->currency = $this->currencyToDtoV1ResultAssembler->assemble($account->getCurrency());
-        $item->balance = $balance;
+        $item->balance = $balance->float();
         $item->type = $account->getType()->getValue();
         $item->icon = $account->getIcon()->getValue();
         $item->sharedAccess = $this->accountIdToSharedAccessResultAssembler->assemble($account->getId());

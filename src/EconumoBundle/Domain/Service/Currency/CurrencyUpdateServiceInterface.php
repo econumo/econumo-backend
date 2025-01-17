@@ -15,4 +15,10 @@ interface CurrencyUpdateServiceInterface
      * @return void
      */
     public function updateCurrencies(array $currencies): void;
+
+    /**
+     * @param CurrencyDto[] $currencies
+     * @return void
+     */
+    public function restoreFractionDigits(array $currencies): void;
 }

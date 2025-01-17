@@ -10,6 +10,7 @@ use App\EconumoBundle\Domain\Entity\ValueObject\BudgetElementType;
 use App\EconumoBundle\Domain\Entity\ValueObject\Icon;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoBundle\Domain\Entity\ValueObject\NameInterface;
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 
 readonly class BudgetStructureChildElementDto
 {
@@ -20,8 +21,8 @@ readonly class BudgetStructureChildElementDto
         public Icon $icon,
         public Id $ownerId,
         public bool $isArchived,
-        public float $spent,
-        public float $spentInBudgetCurrency,
+        public DecimalNumber $spent,
+        public DecimalNumber $spentInBudgetCurrency,
         /** @var BudgetElementAmountSpentDto[] */
         public array $currenciesSpent,
     ) {

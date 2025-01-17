@@ -10,5 +10,9 @@ class CurrencyDto
 {
     public CurrencyCode $code;
 
-    public string $symbol;
+    public ?string $symbol = null;
+
+    public ?string $name = null;
+
+    public ?int $fractionDigits = null;
 }

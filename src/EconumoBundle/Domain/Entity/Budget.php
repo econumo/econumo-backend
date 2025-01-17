@@ -95,6 +95,14 @@ class Budget
         return $this->currency;
     }
 
+    public function updateCurrency(Currency $currency): void
+    {
+        if (!$this->currency->getId()->isEqual($currency->getId())) {
+            $this->currency = $currency;
+            $this->updated();
+        }
+    }
+
     public function getCurrencyId(): Id
     {
         return $this->currency->getId();

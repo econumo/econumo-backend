@@ -26,10 +26,10 @@ readonly class BudgetParentElementToResultDtoAssembler
         $result->isArchived = $dto->isArchived ? 1 : 0;
         $result->folderId = $dto->folderId?->getValue();
         $result->position = $dto->position;
-        $result->budgeted = $dto->budgeted;
-        $result->available = $dto->available;
-        $result->spent = $dto->spent;
-        $result->budgetSpent = $dto->spentInBudgetCurrency;
+        $result->budgeted = $dto->budgeted->float();
+        $result->available = $dto->available->float();
+        $result->spent = $dto->spent->float();
+        $result->budgetSpent = $dto->spentInBudgetCurrency->float();
         $result->ownerUserId = $dto->ownerId?->getValue();
 
         $result->children = [];

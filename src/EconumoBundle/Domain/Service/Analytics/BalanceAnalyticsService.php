@@ -6,10 +6,10 @@ declare(strict_types=1);
 namespace App\EconumoBundle\Domain\Service\Analytics;
 
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use App\EconumoBundle\Domain\Repository\AccountRepositoryInterface;
 use App\EconumoBundle\Domain\Repository\TransactionRepositoryInterface;
 use App\EconumoBundle\Domain\Repository\UserRepositoryInterface;
-use App\EconumoBundle\Domain\Service\Analytics\BalanceAnalyticsServiceInterface;
 use App\EconumoBundle\Domain\Service\Currency\CurrencyConvertorInterface;
 use App\EconumoBundle\Domain\Service\Dto\BalanceAnalyticsDto;
 use DateInterval;
@@ -19,10 +19,10 @@ use DateTimeInterface;
 readonly class BalanceAnalyticsService implements BalanceAnalyticsServiceInterface
 {
     public function __construct(
-        private readonly AccountRepositoryInterface $accountRepository,
-        private readonly TransactionRepositoryInterface $transactionRepository,
-        private readonly CurrencyConvertorInterface $currencyConvertor,
-        private readonly UserRepositoryInterface $userRepository
+        private AccountRepositoryInterface $accountRepository,
+        private TransactionRepositoryInterface $transactionRepository,
+        private CurrencyConvertorInterface $currencyConvertor,
+        private UserRepositoryInterface $userRepository
     ) {
     }
 
@@ -36,7 +36,7 @@ readonly class BalanceAnalyticsService implements BalanceAnalyticsServiceInterfa
         $user = $this->userRepository->get($userId);
 
         foreach (new DatePeriod($from, new DateInterval('P1M'), $to) as $date) {
-            $balance = 0.0;
+            $balance = new DecimalNumber(0);
             foreach ($accounts as $account) {
                 if ($account->isDeleted()) {
                     continue;
@@ -52,7 +52,7 @@ readonly class BalanceAnalyticsService implements BalanceAnalyticsServiceInterfa
                     $user->getCurrency(),
                     $accountBalance
                 );
-                $balance += $accountBalanceConverted;
+                $balance = $balance->add($accountBalanceConverted);
             }
 
             $item = new BalanceAnalyticsDto();

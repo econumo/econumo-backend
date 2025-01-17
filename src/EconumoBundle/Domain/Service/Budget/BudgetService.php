@@ -109,9 +109,10 @@ readonly class BudgetService implements BudgetServiceInterface
         Id $userId,
         Id $budgetId,
         BudgetName $name,
+        Id $currencyId,
         array $excludedAccountsIds = []
     ): BudgetMetaDto {
-        return $this->budgetUpdateService->updateBudget($userId, $budgetId, $name, $excludedAccountsIds);
+        return $this->budgetUpdateService->updateBudget($userId, $budgetId, $name, $currencyId, $excludedAccountsIds);
     }
 
     public function excludeAccount(Id $userId, Id $budgetId, Id $accountId): BudgetMetaDto

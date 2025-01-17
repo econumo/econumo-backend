@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Domain\Repository;
 
-use App\EconumoBundle\Domain\Entity\BudgetElement;
 use App\EconumoBundle\Domain\Entity\BudgetElementLimit;
-use App\EconumoBundle\Domain\Entity\ValueObject\BudgetElementType;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use DateTimeInterface;
 
 interface BudgetElementLimitRepositoryInterface
@@ -45,7 +44,7 @@ interface BudgetElementLimitRepositoryInterface
 
     /**
      * @param Id[] $externalIds
-     * @return float[]|int[]
+     * @return DecimalNumber[]
      */
     public function getSummarizedAmountsForElements(Id $budgetId, array $externalIds): array;
 

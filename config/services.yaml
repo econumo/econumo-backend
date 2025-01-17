@@ -19,6 +19,7 @@ services:
       - '../src/Kernel.php'
       - '../src/EconumoBundle/Infrastructure/Symfony/Form/ValueObjectValidator.php'
       - '../src/EconumoBundle/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+      - '../src/EconumoBundle/Domain/{Entity,Events,Traits}'
       - '../src/EconumoBundle/Infrastructure/Doctrine/Migrations/**.php'
 
   # controllers are imported separately to make sure services can be injected

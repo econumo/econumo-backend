@@ -4,13 +4,9 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\Domain\Service\Budget;
 
-use App\EconumoBundle\Domain\Entity\BudgetElement;
-use App\EconumoBundle\Domain\Entity\BudgetEnvelope;
 use App\EconumoBundle\Domain\Entity\Category;
 use App\EconumoBundle\Domain\Entity\Tag;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
-use App\EconumoBundle\Domain\Service\Budget\Dto\BudgetCategoryDto;
-use Throwable;
 
 interface BudgetElementServiceInterface
 {

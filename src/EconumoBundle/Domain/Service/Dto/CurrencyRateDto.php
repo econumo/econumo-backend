@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\EconumoBundle\Domain\Service\Dto;
 
 use App\EconumoBundle\Domain\Entity\ValueObject\CurrencyCode;
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use DateTimeInterface;
 
 class CurrencyRateDto
@@ -13,7 +14,7 @@ class CurrencyRateDto
 
     public CurrencyCode $base;
 
-    public float $rate;
+    public DecimalNumber $rate;
 
     public DateTimeInterface $date;
 }

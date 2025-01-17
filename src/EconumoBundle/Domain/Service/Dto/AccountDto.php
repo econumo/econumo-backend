@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace App\EconumoBundle\Domain\Service\Dto;
 
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 
 class AccountDto
 {
     public Id $userId;
 
-    public float $balance;
+    public DecimalNumber $balance;
 
     public string $name;
 

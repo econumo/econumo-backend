@@ -14,12 +14,12 @@ readonly class BudgetCurrencyBalanceToResultDtoAssembler
     {
         $result = new BudgetCurrencyBalanceResultDto();
         $result->currencyId = $dto->currencyId->getValue();
-        $result->startBalance = $dto->startBalance;
-        $result->endBalance = $dto->endBalance;
-        $result->income = $dto->income;
-        $result->expenses = $dto->expenses;
-        $result->exchanges = $dto->exchanges;
-        $result->holdings = $dto->holdings;
+        $result->startBalance = $dto->startBalance?->float();
+        $result->endBalance = $dto->endBalance?->float();
+        $result->income = $dto->income?->float();
+        $result->expenses = $dto->expenses?->float();
+        $result->exchanges = $dto->exchanges?->float();
+        $result->holdings = $dto->holdings?->float();
 
         return $result;
     }

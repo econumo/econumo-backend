@@ -20,6 +20,8 @@ interface BudgetServiceInterface
      * @param Id $userId User ID
      * @param Id $budgetId Budget ID
      * @param BudgetName $name Budget name
+     * @param DateTimeInterface|null $startDate
+     * @param Id|null $currencyId
      * @param Id[] $excludedAccountsIds
      * @return BudgetDto
      */
@@ -47,6 +49,7 @@ interface BudgetServiceInterface
         Id $userId,
         Id $budgetId,
         BudgetName $name,
+        Id $currencyId,
         array $excludedAccountsIds = []
     ): BudgetMetaDto;
 

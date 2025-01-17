@@ -6,6 +6,7 @@ namespace App\EconumoBundle\Command;
 
 use App\EconumoBundle\Domain\Entity\Currency;
 use App\EconumoBundle\Domain\Entity\ValueObject\CurrencyCode;
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use App\EconumoBundle\Domain\Repository\CurrencyRepositoryInterface;
 use App\EconumoBundle\Domain\Service\Currency\CurrencyUpdateServiceInterface;
 use App\EconumoBundle\Domain\Service\Dto\CurrencyDto;
@@ -14,6 +15,8 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Intl\Currencies;
+use Symfony\Component\Intl\Exception\MissingResourceException;
 
 class AddCurrencyCommand extends Command
 {
@@ -36,6 +39,16 @@ class AddCurrencyCommand extends Command
                 'currency-code',
                 InputArgument::REQUIRED,
                 '3 digit currency code ISO4217 (USD, EUR, check https://en.wikipedia.org/wiki/ISO_4217)'
+            )
+            ->addArgument(
+                'currency-name',
+                InputArgument::OPTIONAL,
+                'Name of the currency (e.g., Bitcoin, US Dollar). If not provided, the system will use the default currency name if available.'
+            )
+            ->addArgument(
+                'fraction-digits',
+                InputArgument::OPTIONAL,
+                'Number of decimal places to display for numerical values. If not provided, the system will use the default currency name if available.',
             );
     }
 
@@ -43,11 +56,39 @@ class AddCurrencyCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         $code = trim((string)$input->getArgument('currency-code'));
+        $name = $input->getArgument('currency-name');
+        $fractionDigits = $input->getArgument('fraction-digits');
+        try {
+            $systemName = Currencies::getName($code);
+            $systemSymbol = Currencies::getSymbol($code);
+            $systemFractionDigits = Currencies::getFractionDigits($code);
+        } catch (MissingResourceException) {
+            $systemName = null;
+            $systemSymbol = null;
+            $systemFractionDigits = null;
+        }
 
         $currencies = [];
         $currencyDto = new CurrencyDto();
         $currencyDto->code = new CurrencyCode($code);
-        $currencyDto->symbol = '';
+        if (!empty($systemSymbol)) {
+            $currencyDto->symbol = $systemSymbol;
+        }
+
+        if (!empty($name)) {
+            $currencyDto->name = trim((string) $name);
+        } elseif ($systemName !== null) {
+            $currencyDto->name = $systemName;
+        }
+
+        if ($fractionDigits !== null) {
+            $currencyDto->fractionDigits = (int) $fractionDigits;
+        } elseif ($systemFractionDigits !== null) {
+            $currencyDto->fractionDigits = $systemFractionDigits;
+        } else {
+            $currencyDto->fractionDigits = DecimalNumber::SCALE;
+        }
+
         $currencies[] = $currencyDto;
         $this->currencyUpdateService->updateCurrencies($currencies);
         $currency = $this->currencyRepository->getByCode($currencyDto->code);
@@ -59,11 +100,13 @@ class AddCurrencyCommand extends Command
 
         $io->success(
             sprintf(
-                'Currency %s (%s, %s) successfully created! (id: %s)',
+                "Currency %s (%s, %s) successfully created with %d fraction digits! (id: %s)\nExample: %s",
                 $code,
                 $currency->getName(),
                 $currency->getSymbol(),
-                $currency->getId()->getValue()
+                $currency->getFractionDigits(),
+                $currency->getId()->getValue(),
+                number_format((new DecimalNumber(1000.12345678))->drop($currency->getFractionDigits())->float(), $currency->getFractionDigits())
             )
         );
         return Command::SUCCESS;
