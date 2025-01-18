@@ -68,7 +68,7 @@ readonly class BudgetElementsLimitsBuilder
             );
             if (!array_key_exists($index, $data)) {
                 $data[$index] = [
-                    'budgetedBefore' => new DecimalNumber(0),
+                    'budgetedBefore' => new DecimalNumber(),
                     'id' => $elementLimit->getElement()->getExternalId(),
                     'type' => $elementLimit->getElement()->getType(),
                 ];
@@ -99,7 +99,7 @@ readonly class BudgetElementsLimitsBuilder
             if (!array_key_exists($index, $data)) {
                 $data[$index] = [
                     'budgeted' => null,
-                    'budgetedBefore' => new DecimalNumber(0),
+                    'budgetedBefore' => new DecimalNumber(),
                     'id' => $summarizedLimit['elementId'],
                     'type' => $summarizedLimit['elementType'],
                 ];

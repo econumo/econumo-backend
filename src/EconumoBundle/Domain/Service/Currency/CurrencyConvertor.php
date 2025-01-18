@@ -115,7 +115,7 @@ class CurrencyConvertor implements CurrencyConvertorInterface
         }
 
         foreach ($flatItems as $key => $dtos) {
-            $result[$key] = new DecimalNumber(0);
+            $result[$key] = new DecimalNumber();
             foreach ($this->summarizeDtosByCurrency($dtos) as $item) {
                 $existingKey = array_key_exists($item->periodStart->format('Ym'), $rates) ? $item->periodStart->format('Ym') : $currentPeriodStartIndex;
                 $result[$key] = $result[$key]->add($this->convertInternalById($rates[$existingKey], $item->fromCurrencyId, $item->toCurrencyId, $item->amount));

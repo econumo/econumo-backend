@@ -64,8 +64,8 @@ readonly class BudgetStructureBuilder
             $currencyId = ($elementsOptions[$index] ?? null)?->getCurrency()?->getId() ?? $budget->getCurrencyId();
             $folderId = ($elementsOptions[$index] ?? null)?->getFolder()?->getId();
             $position = ($elementsOptions[$index] ?? null)?->getPosition() ?? BudgetElement::POSITION_UNSET;
-            $budgeted = $elementsBudgets[$index]?->budgeted ?? new DecimalNumber(0);
-            $budgetedBefore = $elementsBudgets[$index]?->budgetedBefore ?? new DecimalNumber(0);
+            $budgeted = $elementsBudgets[$index]?->budgeted ?? new DecimalNumber();
+            $budgetedBefore = $elementsBudgets[$index]?->budgetedBefore ?? new DecimalNumber();
             $children = [];
             foreach ($envelope->getCategories() as $category) {
                 if (array_key_exists($category->getId()->getValue(), $categoryUsed)) {
@@ -153,8 +153,8 @@ readonly class BudgetStructureBuilder
             $currencyId = ($elementsOptions[$index] ?? null)?->getCurrency()?->getId() ?? $budget->getCurrencyId();
             $folderId = ($elementsOptions[$index] ?? null)?->getFolder()?->getId();
             $position = ($elementsOptions[$index] ?? null)?->getPosition() ?? BudgetElement::POSITION_UNSET;
-            $budgeted = $elementsBudgets[$index]?->budgeted ?? new DecimalNumber(0);
-            $budgetedBefore = $elementsBudgets[$index]?->budgetedBefore ?? new DecimalNumber(0);
+            $budgeted = $elementsBudgets[$index]?->budgeted ?? new DecimalNumber();
+            $budgetedBefore = $elementsBudgets[$index]?->budgetedBefore ?? new DecimalNumber();
             $children = [];
             if (!array_key_exists($index, $elementsSpending)) {
                 continue;
@@ -250,8 +250,8 @@ readonly class BudgetStructureBuilder
             $currencyId = ($elementsOptions[$index] ?? null)?->getCurrency()?->getId() ?? $budget->getCurrencyId();
             $folderId = ($elementsOptions[$index] ?? null)?->getFolder()?->getId();
             $position = ($elementsOptions[$index] ?? null)?->getPosition() ?? BudgetElement::POSITION_UNSET;
-            $budgeted = $elementsBudgets[$index]?->budgeted ?? new DecimalNumber(0);
-            $budgetedBefore = $elementsBudgets[$index]?->budgetedBefore ?? new DecimalNumber(0);
+            $budgeted = $elementsBudgets[$index]?->budgeted ?? new DecimalNumber();
+            $budgetedBefore = $elementsBudgets[$index]?->budgetedBefore ?? new DecimalNumber();
             $itemCategorySpending = null;
             if (array_key_exists($index, $elementsSpending)) {
                 $itemCategorySpending = $elementsSpending[$index]->spendingInCategories[$category->getId()->getValue()] ?? null;
@@ -311,14 +311,14 @@ readonly class BudgetStructureBuilder
         $result = [];
         $amounts = $this->currencyConvertor->bulkConvert($budgetFilters->periodStart, $budgetFilters->periodEnd, $toConvert);
         foreach ($elements as $index => $element) {
-            $spent = $amounts[sprintf('spent_%s', $index)] ?? new DecimalNumber(0);
-            $spentBudget = $amounts[sprintf('spent-budget_%s', $index)] ?? new DecimalNumber(0);
-            $spentBefore = $amounts[sprintf('spent-before_%s', $index)] ?? new DecimalNumber(0);
+            $spent = $amounts[sprintf('spent_%s', $index)] ?? new DecimalNumber();
+            $spentBudget = $amounts[sprintf('spent-budget_%s', $index)] ?? new DecimalNumber();
+            $spentBefore = $amounts[sprintf('spent-before_%s', $index)] ?? new DecimalNumber();
             $children = [];
             foreach ($element['children'] as $subIndex => $subElement) {
-                $subElementSpent = $amounts[sprintf('%s_spent_%s', $index, $subIndex)] ?? new DecimalNumber(0);
-                $subElementBudgetSpent = $amounts[sprintf('%s_spent-budget_%s', $index, $subIndex)] ?? new DecimalNumber(0);
-//                $subElementSpentBefore = $amounts[sprintf('%s_spent-before_%s', $index, $subIndex)] ?? new DecimalNumber(0);
+                $subElementSpent = $amounts[sprintf('%s_spent_%s', $index, $subIndex)] ?? new DecimalNumber();
+                $subElementBudgetSpent = $amounts[sprintf('%s_spent-budget_%s', $index, $subIndex)] ?? new DecimalNumber();
+//                $subElementSpentBefore = $amounts[sprintf('%s_spent-before_%s', $index, $subIndex)] ?? new DecimalNumber();
 //                $spent = $spent->add($subElementSpent);
 //                $spentBudget = $spentBudget->add($subElementBudgetSpent);
 //                $spentBefore = $spentBefore->add($subElementSpentBefore);

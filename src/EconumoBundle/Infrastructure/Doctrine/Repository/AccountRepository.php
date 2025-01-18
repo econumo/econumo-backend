@@ -328,8 +328,8 @@ SQL;
         foreach ($toHoard as $item) {
             if (!isset($result[$item['currency_id']])) {
                 $result[$item['currency_id']] = [
-                    'to_holdings' => new DecimalNumber(0),
-                    'from_holdings' => new DecimalNumber(0),
+                    'to_holdings' => new DecimalNumber(),
+                    'from_holdings' => new DecimalNumber(),
                 ];
             }
 
@@ -339,8 +339,8 @@ SQL;
         foreach ($fromHoard as $item) {
             if (!isset($result[$item['currency_id']])) {
                 $result[$item['currency_id']] = [
-                    'to_holdings' => new DecimalNumber(0),
-                    'from_holdings' => new DecimalNumber(0),
+                    'to_holdings' => new DecimalNumber(),
+                    'from_holdings' => new DecimalNumber(),
                 ];
             }
 

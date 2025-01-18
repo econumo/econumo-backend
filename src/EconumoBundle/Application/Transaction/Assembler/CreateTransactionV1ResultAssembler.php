@@ -38,7 +38,7 @@ readonly class CreateTransactionV1ResultAssembler
             $result->accounts[] = $this->accountToDtoV1ResultAssembler->assemble(
                 $userId,
                 $account,
-                $balances[$account->getId()->getValue()] ?? new DecimalNumber(0)
+                $balances[$account->getId()->getValue()] ?? new DecimalNumber()
             );
         }
 

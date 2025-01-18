@@ -80,7 +80,7 @@ readonly class CurrencyBalanceDtoAssembler
 
     private function summarize(array $items, Id $currencyId, string $field): DecimalNumber
     {
-        $result = new DecimalNumber(0);
+        $result = new DecimalNumber();
         foreach ($items as $item) {
             if ($item['currency_id'] === $currencyId->getValue()) {
                 $result = $result->add($item[$field]);

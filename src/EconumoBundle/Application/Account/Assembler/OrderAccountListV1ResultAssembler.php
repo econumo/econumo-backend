@@ -34,7 +34,7 @@ readonly class OrderAccountListV1ResultAssembler
             $result->items[] = $this->accountToDtoV1ResultAssembler->assemble(
                 $userId,
                 $account,
-                $balances[$account->getId()->getValue()] ?? new DecimalNumber(0)
+                $balances[$account->getId()->getValue()] ?? new DecimalNumber()
             );
         }
 

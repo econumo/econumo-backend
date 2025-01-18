@@ -36,7 +36,7 @@ readonly class BalanceAnalyticsService implements BalanceAnalyticsServiceInterfa
         $user = $this->userRepository->get($userId);
 
         foreach (new DatePeriod($from, new DateInterval('P1M'), $to) as $date) {
-            $balance = new DecimalNumber(0);
+            $balance = new DecimalNumber();
             foreach ($accounts as $account) {
                 if ($account->isDeleted()) {
                     continue;

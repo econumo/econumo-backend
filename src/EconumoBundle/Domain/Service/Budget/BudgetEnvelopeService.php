@@ -253,8 +253,8 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
                 $category->getIcon(),
                 $category->getUserId(),
                 $category->isArchived(),
-                new DecimalNumber(0),
-                new DecimalNumber(0),
+                new DecimalNumber(),
+                new DecimalNumber(),
                 []
             );
         }
@@ -270,10 +270,10 @@ readonly class BudgetEnvelopeService implements BudgetEnvelopeServiceInterface
             $envelope->isArchived(),
             $envelopeOption->getFolder()?->getId(),
             $envelopeOption->getPosition(),
-            new DecimalNumber(0),
-            new DecimalNumber(0),
-            new DecimalNumber(0),
-            new DecimalNumber(0),
+            new DecimalNumber(),
+            new DecimalNumber(),
+            new DecimalNumber(),
+            new DecimalNumber(),
             [],
             $children
         );

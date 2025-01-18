@@ -29,7 +29,7 @@ class GetAccountListV1ResultAssembler
         $result = new GetAccountListV1ResultDto();
         $result->items = [];
         foreach (array_reverse($accounts) as $account) {
-            $result->items[] = $this->accountToDtoV1ResultAssembler->assemble($userId, $account, $balances[$account->getId()->getValue()] ?? new DecimalNumber(0));
+            $result->items[] = $this->accountToDtoV1ResultAssembler->assemble($userId, $account, $balances[$account->getId()->getValue()] ?? new DecimalNumber());
         }
 
         return $result;
