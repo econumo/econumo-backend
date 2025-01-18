@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\EconumoBundle\UI\Controller\Api\Account\Account\Validation;
 
 use App\EconumoBundle\Domain\Entity\ValueObject\AccountName;
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use App\EconumoBundle\Domain\Entity\ValueObject\Icon;
 use App\EconumoBundle\Infrastructure\Symfony\Form\Constraints\OperationId;
 use App\EconumoBundle\UI\Service\Validator\ValueObjectValidationFactoryInterface;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -43,8 +43,8 @@ class CreateAccountV1Form extends AbstractType
             ->add('currencyId', TextType::class, [
                 'constraints' => [new NotBlank(), new Uuid()],
             ])
-            ->add('balance', NumberType::class, [
-                'constraints' => [new NotBlank()],
+            ->add('balance', TextType::class, [
+                'constraints' => [new NotBlank(), $this->valueObjectValidationFactory->create(DecimalNumber::class)]
             ])
             ->add('icon', TextType::class, [
                 'constraints' => [new NotBlank(), $this->valueObjectValidationFactory->create(Icon::class)],

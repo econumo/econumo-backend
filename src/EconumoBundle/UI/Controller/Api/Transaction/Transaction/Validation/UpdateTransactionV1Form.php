@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\UI\Controller\Api\Transaction\Transaction\Validation;
 
+use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use App\EconumoBundle\Domain\Entity\ValueObject\TransactionType;
 use App\EconumoBundle\Infrastructure\Symfony\Form\Constraints\OperationId;
+use App\EconumoBundle\UI\Service\Validator\ValueObjectValidationFactoryInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -19,6 +20,10 @@ use Symfony\Component\Validator\Constraints\Uuid;
 
 class UpdateTransactionV1Form extends AbstractType
 {
+    public function __construct(private readonly ValueObjectValidationFactoryInterface $valueObjectValidationFactory)
+    {
+    }
+
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(['csrf_protection' => false]);
@@ -38,11 +43,11 @@ class UpdateTransactionV1Form extends AbstractType
                     TransactionType::TRANSFER_ALIAS
                 ]
             ])
-            ->add('amount', NumberType::class, [
-                'constraints' => [new NotBlank()]
+            ->add('amount', TextType::class, [
+                'constraints' => [new NotBlank(), $this->valueObjectValidationFactory->create(DecimalNumber::class)]
             ])
-            ->add('amountRecipient', NumberType::class, [
-                'constraints' => []
+            ->add('amountRecipient', TextType::class, [
+                'constraints' => [$this->valueObjectValidationFactory->create(DecimalNumber::class)]
             ])
             ->add('accountId', TextType::class, [
                 'constraints' => [new NotBlank(), new Uuid()]
