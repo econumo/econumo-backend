@@ -191,7 +191,7 @@ final class DecimalNumber implements Stringable, ValueObjectInterface
 
     public static function validate($value): void
     {
-        if (!is_numeric($value)) {
+        if (!is_numeric($value) && !empty($value)) {
             throw new TypeError(sprintf('%s is not a number!', $value));
         }
     }
