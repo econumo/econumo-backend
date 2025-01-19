@@ -28,8 +28,8 @@ readonly class TransactionToDtoResultAssembler
         $item->accountId = $transaction->getAccountId()->getValue();
         $item->accountRecipientId = $transaction->getAccountRecipientId(
         ) instanceof Id ? $transaction->getAccountRecipientId()->getValue() : null;
-        $item->amount = $transaction->getAmount()->float();
-        $item->amountRecipient = $transaction->getAmountRecipient() instanceof DecimalNumber ? $transaction->getAmountRecipient()->float() : $transaction->getAmount()->float();
+        $item->amount = $transaction->getAmount()->getValue();
+        $item->amountRecipient = $transaction->getAmountRecipient() instanceof DecimalNumber ? $transaction->getAmountRecipient()->getValue() : $transaction->getAmount()->getValue();
         $item->categoryId = $transaction->getCategoryId() instanceof Id ? $transaction->getCategoryId()->getValue() : null;
         $item->description = $transaction->getDescription();
         $item->payeeId = $transaction->getPayeeId() instanceof Id ? $transaction->getPayeeId()->getValue() : null;

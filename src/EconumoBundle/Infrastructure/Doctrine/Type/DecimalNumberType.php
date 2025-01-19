@@ -19,7 +19,11 @@ class DecimalNumberType extends DecimalType
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        return $value === null ? null : $this->getInstance(DecimalNumber::class, $value);
+        if ($value !== null) {
+            $updatedValue = DecimalNumber::normalize($value);
+        }
+
+        return $value === null ? null : $this->getInstance(DecimalNumber::class, $updatedValue);
     }
 
     /**

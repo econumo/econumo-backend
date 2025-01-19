@@ -40,7 +40,7 @@ readonly class AccountToDtoV1ResultAssembler
 
         $item->name = $account->getName()->getValue();
         $item->currency = $this->currencyToDtoV1ResultAssembler->assemble($account->getCurrency());
-        $item->balance = $balance->float();
+        $item->balance = $balance->getValue();
         $item->type = $account->getType()->getValue();
         $item->icon = $account->getIcon()->getValue();
         $item->sharedAccess = $this->accountIdToSharedAccessResultAssembler->assemble($account->getId());

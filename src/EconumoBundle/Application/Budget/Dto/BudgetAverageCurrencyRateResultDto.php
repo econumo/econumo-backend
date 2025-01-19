@@ -26,7 +26,7 @@ class BudgetAverageCurrencyRateResultDto
     /**
      * @OA\Property(example="12.05")
      */
-    public float $rate;
+    public string $rate;
 
     /**
      * @OA\Property(example="2022-02-01")

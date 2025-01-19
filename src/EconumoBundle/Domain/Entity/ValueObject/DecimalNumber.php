@@ -21,27 +21,35 @@ final class DecimalNumber implements Stringable, ValueObjectInterface
 
     public function __construct(string|int|float|self $num = 0)
     {
-        $this->value = $num instanceof self ? $this->normalize($num->getValue()) : $this->normalize($num);
+        $this->value = $num instanceof self ? self::normalize($num->value) : self::normalize($num);
     }
 
-    private function normalize(string|int|float $num): string
+    public static function normalize(string|int|float $num): string
     {
         self::validate($num);
 
         if (is_int($num)) {
             return (string)$num;
         } elseif (is_float($num)) {
-            // Convert float to string with rounding
-            $str = number_format($num, self::SCALE, '.', '');
-            return $this->cleanNumber($str);
-        } else {
-            // Handle string input
-            return $this->cleanNumber($num);
+            $num = sprintf('%.'.self::SCALE.'F', $num);
         }
-    }
+        
+        if (is_string($num) && (stripos($num, 'e') !== false)) {
+            // Split scientific notation into base and exponent
+            $parts = explode('e', strtolower($num));
+            $base = $parts[0];
+            $exponent = (int)$parts[1];
+            
+            // Convert to decimal format using bcmath
+            if ($exponent >= 0) {
+                $multiplier = bcpow('10', (string)abs($exponent), self::SCALE);
+                $num = bcmul($base, $multiplier, self::SCALE);
+            } else {
+                $divisor = bcpow('10', (string)abs($exponent), self::SCALE);
+                $num = bcdiv($base, $divisor, self::SCALE);
+            }
+        }
 
-    private function cleanNumber(string $num): string
-    {
         // Handle empty string or zero
         if ($num === '' || $num === '0') {
             return '0';
@@ -78,7 +86,7 @@ final class DecimalNumber implements Stringable, ValueObjectInterface
     private function createNumber(string|int|float|self $num): self
     {
         if ($num instanceof self) {
-            return new self($num->value);
+            return $num;
         }
 
         return new self($num);
@@ -232,8 +240,13 @@ final class DecimalNumber implements Stringable, ValueObjectInterface
 
     public function float(): float
     {
-        $num = (float)$this->cleanNumber($this->value);
-        return round($num, self::SCALE);
+        $floatValue = (float)$this->value;
+        // For very small numbers
+        if (abs($floatValue) < 1e-8) {
+            return 0.0;
+        }
+
+        return round($floatValue, self::SCALE);
     }
 
     public function abs(): self
@@ -245,3 +258,4 @@ final class DecimalNumber implements Stringable, ValueObjectInterface
         return $this;
     }
 }
+
