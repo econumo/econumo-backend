@@ -182,7 +182,7 @@ class Transaction
         } elseif ($this->accountRecipient instanceof Account && !$amount instanceof DecimalNumber) {
             $this->amountRecipient = null;
             $this->updated();
-        } elseif ($this->accountRecipient instanceof Account && $amount instanceof DecimalNumber && !$this->amountRecipient->isEqual($amount)) {
+        } elseif ($this->accountRecipient instanceof Account && $amount instanceof DecimalNumber && (!$this->amountRecipient || !$this->amountRecipient->isEqual($amount))) {
             $this->amountRecipient = $amount;
             $this->updated();
         }
