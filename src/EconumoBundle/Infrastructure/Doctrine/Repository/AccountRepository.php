@@ -275,11 +275,10 @@ SQL;
 
     public function getHoldingsReport(
         array $reportAccountIds,
-        array $holdingAccountIds,
         DateTimeInterface $periodStart,
         DateTimeInterface $periodEnd
     ): array {
-        if ($reportAccountIds === [] || $holdingAccountIds === []) {
+        if ($reportAccountIds === []) {
             return [];
         }
 
@@ -288,20 +287,14 @@ SQL;
             $reportAccounts[] = $accountId->getValue();
         }
 
-        $holdingsAccounts = [];
-        foreach ($holdingAccountIds as $accountId) {
-            $holdingsAccounts[] = $accountId->getValue();
-        }
-
         $reportAccountsString = implode("', '", $reportAccounts);
-        $holdingsAccountsString = implode("', '", $holdingsAccounts);
         $periodStartString = $periodStart->format('Y-m-d H:i:s');
         $periodEndString = $periodEnd->format('Y-m-d H:i:s');
 
         $sql =<<<SQL
 SELECT SUM(t.amount_recipient) as amount, a.currency_id FROM transactions t
 LEFT JOIN accounts a ON t.account_recipient_id = a.id
-WHERE t.amount = t.amount_recipient AND t.account_recipient_id IN ('{$holdingsAccountsString}') AND t.account_id IN ('{$reportAccountsString}') AND t.type = 2 AND t.spent_at >= '{$periodStartString}' AND t.spent_at < '{$periodEndString}'
+WHERE t.amount = t.amount_recipient AND t.account_recipient_id NOT IN ('{$reportAccountsString}') AND t.account_id IN ('{$reportAccountsString}') AND t.type = 2 AND t.spent_at >= '{$periodStartString}' AND t.spent_at < '{$periodEndString}'
 GROUP BY a.currency_id;
 SQL;
         $rsm = new ResultSetMapping();
@@ -309,12 +302,12 @@ SQL;
         $rsm->addScalarResult('amount', 'amount', 'string');
 
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
-        $toHoard = $query->getResult();
+        $toHoldings = $query->getResult();
 
         $sql =<<<SQL
 SELECT SUM(t.amount) as amount, a.currency_id FROM transactions t
 LEFT JOIN accounts a ON t.account_id = a.id
-WHERE t.amount = t.amount_recipient AND t.account_recipient_id IN ('{$reportAccountsString}') AND t.account_id IN ('{$holdingsAccountsString}') AND t.type = 2 AND t.spent_at >= '{$periodStartString}' AND t.spent_at < '{$periodEndString}'
+WHERE t.amount = t.amount_recipient AND t.account_recipient_id IN ('{$reportAccountsString}') AND t.account_id NOT IN ('{$reportAccountsString}') AND t.type = 2 AND t.spent_at >= '{$periodStartString}' AND t.spent_at < '{$periodEndString}'
 GROUP BY a.currency_id;
 SQL;
         $rsm = new ResultSetMapping();
@@ -322,10 +315,10 @@ SQL;
         $rsm->addScalarResult('amount', 'amount', 'string');
 
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
-        $fromHoard = $query->getResult();
+        $fromHoldings = $query->getResult();
 
         $result = [];
-        foreach ($toHoard as $item) {
+        foreach ($toHoldings as $item) {
             if (!isset($result[$item['currency_id']])) {
                 $result[$item['currency_id']] = [
                     'to_holdings' => new DecimalNumber(),
@@ -336,7 +329,7 @@ SQL;
             $result[$item['currency_id']]['to_holdings'] = $result[$item['currency_id']]['to_holdings']->add($item['amount']);
         }
 
-        foreach ($fromHoard as $item) {
+        foreach ($fromHoldings as $item) {
             if (!isset($result[$item['currency_id']])) {
                 $result[$item['currency_id']] = [
                     'to_holdings' => new DecimalNumber(),

@@ -48,6 +48,11 @@ readonly class CurrencyBalanceDtoAssembler
             $reports = $this->accountRepository->getAccountsReport($includedAccountsIds, $periodStart, $periodEnd);
         }
 
+        $holdingsReports = [];
+        if ($periodStart <= $now) {
+            $holdingsReports = $this->accountRepository->getHoldingsReport($includedAccountsIds, $periodStart, $periodEnd);
+        }
+
         $result = [];
         foreach ($currenciesIds as $currencyId) {
             $startBalance = $this->summarize($startBalances, $currencyId, 'balance');
@@ -61,8 +66,13 @@ readonly class CurrencyBalanceDtoAssembler
                     'exchange_expenses'
                 )
             );
-            // @todo fix holdings
-            $holdings = null;
+            $holdings = new DecimalNumber();
+            if (array_key_exists($currencyId->getValue(), $holdingsReports)) {
+                $holdings = (new DecimalNumber($holdingsReports[$currencyId->getValue()]['from_holdings']))->sub(
+                    new DecimalNumber($holdingsReports[$currencyId->getValue()]['to_holdings'])
+                );
+            }
+
             $item = new CurrencyBalanceDto(
                 $currencyId,
                 ($periodStart <= $now ? $startBalance : null),

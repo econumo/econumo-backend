@@ -58,10 +58,9 @@ interface AccountRepositoryInterface
 
     /**
      * @param Id[] $reportAccountIds
-     * @param Id[] $holdingAccountIds
      * @return array
      */
-    public function getHoldingsReport(array $reportAccountIds, array $holdingAccountIds, DateTimeInterface $periodStart, DateTimeInterface $periodEnd): array;
+    public function getHoldingsReport(array $reportAccountIds, DateTimeInterface $periodStart, DateTimeInterface $periodEnd): array;
 
     /**
      * @param Id[] $userIds
