@@ -37,11 +37,9 @@ readonly class BudgetUpdateService
         $accounts = [];
         foreach ($excludedAccountsIds as $excludedAccountId) {
             $account = $this->accountRepository->get($excludedAccountId);
-            if (!$account->getUserId()->isEqual($userId)) {
-                throw new AccessDeniedException();
+            if ($account->getUserId()->isEqual($userId)) {
+                $accounts[] = $account;
             }
-
-            $accounts[] = $account;
         }
 
         $budget = $this->budgetRepository->get($budgetId);
