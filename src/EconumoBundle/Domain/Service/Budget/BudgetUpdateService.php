@@ -8,6 +8,7 @@ namespace App\EconumoBundle\Domain\Service\Budget;
 use App\EconumoBundle\Domain\Entity\ValueObject\BudgetName;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoBundle\Domain\Exception\AccessDeniedException;
+use App\EconumoBundle\Domain\Exception\NotFoundException;
 use App\EconumoBundle\Domain\Repository\AccountRepositoryInterface;
 use App\EconumoBundle\Domain\Repository\BudgetRepositoryInterface;
 use App\EconumoBundle\Domain\Repository\CurrencyRepositoryInterface;
@@ -36,9 +37,12 @@ readonly class BudgetUpdateService
     ): BudgetMetaDto {
         $accounts = [];
         foreach ($excludedAccountsIds as $excludedAccountId) {
-            $account = $this->accountRepository->get($excludedAccountId);
-            if ($account->getUserId()->isEqual($userId)) {
-                $accounts[] = $account;
+            try {
+                $account = $this->accountRepository->get($excludedAccountId);
+                if ($account->getUserId()->isEqual($userId)) {
+                    $accounts[] = $account;
+                }
+            } catch (NotFoundException) {
             }
         }
 
