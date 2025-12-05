@@ -26,6 +26,13 @@ class DisableWALCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         $connection = $this->entityManager->getConnection();
+        $platform = $connection->getDatabasePlatform()->getName();
+
+        if ($platform !== 'sqlite') {
+            $io->warning(sprintf('WAL mode is only applicable to SQLite databases. Current database: %s', $platform));
+            return Command::FAILURE;
+        }
+
         $connection->executeStatement('PRAGMA journal_mode = delete;');
 
         $io->success('WAL mode is disabled for SQLite');

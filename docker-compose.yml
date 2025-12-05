@@ -18,3 +18,19 @@ services:
       - PHP_ERROR_REPORTING=32767
       - PHP_IDE_CONFIG=serverName=econumo
       - PHP_XDEBUG_REMOTE_HOST=docker.for.mac.localhost
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-econumo}
+      POSTGRES_USER: ${POSTGRES_USER:-econumo}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-econumo}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

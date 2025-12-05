@@ -13,7 +13,7 @@
 ## Description
 
 This is the main backend repository for Econumo, containing the backend for [Econumo CE](https://econumo.com/docs/edition/).
-The backend is built using PHP, Symfony, and SQLite.
+The backend is built using PHP, Symfony, and supports both SQLite and PostgreSQL databases.
 
 The "main" branch may not be stable. Use tags for stable versions.
 

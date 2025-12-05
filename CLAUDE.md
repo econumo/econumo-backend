@@ -4,7 +4,7 @@ This file provides guidance to LLMs when working with code in this repository.
 
 ## Overview
 
-Econumo backend is a personal finance management API built with PHP 8.2, Symfony 5.4, and Doctrine ORM. The project uses SQLite as its database and follows Domain-Driven Design (DDD) principles with a clean architecture approach.
+Econumo backend is a personal finance management API built with PHP 8.2, Symfony 5.4, and Doctrine ORM. The project supports both SQLite and PostgreSQL databases and follows Domain-Driven Design (DDD) principles with a clean architecture approach.
 
 ## Development Setup
 
@@ -22,7 +22,25 @@ task sh          # Enter application container
 
 The application runs in Docker and is accessible at `http://localhost:8082`.
 
-### Database Migrations
+### Database Configuration
+
+The project supports both SQLite and PostgreSQL. By default, SQLite is configured.
+
+#### Switching Databases
+
+```bash
+./bin/switch-database sqlite       # Switch to SQLite
+./bin/switch-database postgresql   # Switch to PostgreSQL
+task restart                       # Apply changes
+```
+
+Alternatively, manually set `DATABASE_URL` in `.env.local`:
+- For SQLite: `DATABASE_URL=${SQLITE_DATABASE_URL}`
+- For PostgreSQL: `DATABASE_URL=${POSTGRES_DATABASE_URL}`
+
+PostgreSQL is available via Docker Compose and runs on `localhost:5432`.
+
+#### Database Migrations
 
 ```bash
 task run -- doctrine:migrations:migrate -n        # Run migrations
@@ -159,7 +177,11 @@ Dependencies only flow inward. Domain layer has no dependencies on outer layers.
 
 ## Important Notes
 
-- **Database**: Uses SQLite by default with custom busy timeout configuration
+- **Database**: Supports both SQLite and PostgreSQL
+  - SQLite: Default, with custom busy timeout configuration
+  - PostgreSQL: Available via Docker Compose (PostgreSQL 17)
+  - Migrations are database-agnostic and work with both platforms
+  - SQLite-specific commands (WAL mode) only work with SQLite
 - **Doctrine Mappings**: Domain entities use XML mapping files, not annotations
 - **Symfony Version**: Project is locked to Symfony 5.4.*
 - **PHP Version**: Requires PHP 8.2+

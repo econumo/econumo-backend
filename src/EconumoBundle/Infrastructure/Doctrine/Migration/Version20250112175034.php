@@ -14,14 +14,34 @@ final class Version20250112175034 extends AbstractMigration
 {
     public function getDescription() : string
     {
-        return '';
+        return 'Change decimal precision from (19,2) to (19,8) for monetary amounts';
     }
 
     public function up(Schema $schema) : void
     {
-        // this up() migration is auto-generated, please modify it to your needs
-        $this->skipIf($this->connection->getDatabasePlatform()->getName() !== 'sqlite', "Migration can only be executed safely on 'sqlite'.");
+        $platform = $this->connection->getDatabasePlatform()->getName();
 
+        if ($platform === 'sqlite') {
+            $this->upSqlite();
+        } elseif ($platform === 'postgresql') {
+            $this->upPostgresql();
+        }
+    }
+
+    public function down(Schema $schema) : void
+    {
+        $platform = $this->connection->getDatabasePlatform()->getName();
+
+        if ($platform === 'sqlite') {
+            $this->downSqlite();
+        } elseif ($platform === 'postgresql') {
+            $this->downPostgresql();
+        }
+    }
+
+    private function upSqlite(): void
+    {
+        // budgets_elements_limits
         $this->addSql('DROP INDEX element_period_idx_budgets_elements_limits');
         $this->addSql('DROP INDEX period_idx_budgets_elements_limits');
         $this->addSql('DROP INDEX IDX_406C516F1F1F2A24');
@@ -41,7 +61,7 @@ final class Version20250112175034 extends AbstractMigration
         $this->addSql('CREATE INDEX period_idx_budgets_elements_limits ON budgets_elements_limits (period)');
         $this->addSql('CREATE INDEX IDX_406C516F1F1F2A24 ON budgets_elements_limits (element_id)');
 
-
+        // currencies_rates
         $this->addSql('DROP INDEX identifier_uniq_currencies_rates');
         $this->addSql('DROP INDEX base_currency_id_published_at_idx_currencies_rates');
         $this->addSql('DROP INDEX currency_id_published_at_idx_currencies_rates');
@@ -67,7 +87,7 @@ final class Version20250112175034 extends AbstractMigration
         $this->addSql('CREATE INDEX IDX_5AA604E03101778E ON currencies_rates (base_currency_id)');
         $this->addSql('CREATE INDEX IDX_5AA604E038248176 ON currencies_rates (currency_id)');
 
-
+        // transactions
         $this->addSql('DROP INDEX tag_id_account_id_spent_at_idx_transactions');
         $this->addSql('DROP INDEX category_id_account_id_spent_at_idx_transactions');
         $this->addSql('DROP INDEX account_recipient_id_spent_at_idx_transactions');
@@ -118,11 +138,18 @@ final class Version20250112175034 extends AbstractMigration
         $this->addSql('CREATE INDEX IDX_EAA81A4CA76ED395 ON transactions (user_id)');
     }
 
-    public function down(Schema $schema) : void
+    private function upPostgresql(): void
     {
-        // this down() migration is auto-generated, please modify it to your needs
-        $this->skipIf($this->connection->getDatabasePlatform()->getName() !== 'sqlite', "Migration can only be executed safely on 'sqlite'.");
+        // PostgreSQL supports ALTER COLUMN TYPE directly
+        $this->addSql('ALTER TABLE budgets_elements_limits ALTER COLUMN amount TYPE NUMERIC(19, 8)');
+        $this->addSql('ALTER TABLE currencies_rates ALTER COLUMN rate TYPE NUMERIC(19, 8)');
+        $this->addSql('ALTER TABLE transactions ALTER COLUMN amount TYPE NUMERIC(19, 8)');
+        $this->addSql('ALTER TABLE transactions ALTER COLUMN amount_recipient TYPE NUMERIC(19, 8)');
+    }
 
+    private function downSqlite(): void
+    {
+        // Revert precision back to (19, 2)
         $this->addSql('DROP INDEX IDX_406C516F1F1F2A24');
         $this->addSql('DROP INDEX period_idx_budgets_elements_limits');
         $this->addSql('DROP INDEX element_period_idx_budgets_elements_limits');
@@ -142,7 +169,7 @@ final class Version20250112175034 extends AbstractMigration
         $this->addSql('CREATE INDEX period_idx_budgets_elements_limits ON budgets_elements_limits (period)');
         $this->addSql('CREATE INDEX element_period_idx_budgets_elements_limits ON budgets_elements_limits (element_id, period)');
 
-
+        // currencies_rates
         $this->addSql('DROP INDEX IDX_5AA604E038248176');
         $this->addSql('DROP INDEX IDX_5AA604E03101778E');
         $this->addSql('DROP INDEX published_at_idx_currencies_rates');
@@ -157,18 +184,18 @@ final class Version20250112175034 extends AbstractMigration
         , published_at DATE NOT NULL --(DC2Type:date_immutable)
         , rate NUMERIC(16, 8) NOT NULL
         , PRIMARY KEY(id)
-        , CONSTRAINT FK_5AA604E038248176 FOREIGN KEY (currency_id) REFERENCES currencies (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
-        , CONSTRAINT FK_5AA604E03101778E FOREIGN KEY (base_currency_id) REFERENCES currencies (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE)');
+        , CONSTRAINT FK_5AA604E038248176 FOREIGN KEY (currency_id) REFERENCES currencies (id) ON DELETE SET NULL NOT DEFERRABLE INITIALLY IMMEDIATE
+        , CONSTRAINT FK_5AA604E03101778E FOREIGN KEY (base_currency_id) REFERENCES currencies (id) ON DELETE SET NULL NOT DEFERRABLE INITIALLY IMMEDIATE)');
         $this->addSql('INSERT INTO currencies_rates (id, currency_id, base_currency_id, rate, published_at) SELECT id, currency_id, base_currency_id, rate, published_at FROM __temp__currencies_rates');
         $this->addSql('DROP TABLE __temp__currencies_rates');
-        $this->addSql('CREATE INDEX IDX_5AA604E038248176 ON currencies_rates (currency_id)');
-        $this->addSql('CREATE INDEX IDX_5AA604E03101778E ON currencies_rates (base_currency_id)');
-        $this->addSql('CREATE INDEX published_at_idx_currencies_rates ON currencies_rates (published_at)');
-        $this->addSql('CREATE INDEX currency_id_published_at_idx_currencies_rates ON currencies_rates (currency_id, published_at)');
-        $this->addSql('CREATE INDEX base_currency_id_published_at_idx_currencies_rates ON currencies_rates (base_currency_id, published_at)');
         $this->addSql('CREATE UNIQUE INDEX identifier_uniq_currencies_rates ON currencies_rates (published_at, currency_id, base_currency_id)');
+        $this->addSql('CREATE INDEX base_currency_id_published_at_idx_currencies_rates ON currencies_rates (base_currency_id, published_at)');
+        $this->addSql('CREATE INDEX currency_id_published_at_idx_currencies_rates ON currencies_rates (currency_id, published_at)');
+        $this->addSql('CREATE INDEX published_at_idx_currencies_rates ON currencies_rates (published_at)');
+        $this->addSql('CREATE INDEX IDX_5AA604E03101778E ON currencies_rates (base_currency_id)');
+        $this->addSql('CREATE INDEX IDX_5AA604E038248176 ON currencies_rates (currency_id)');
 
-
+        // transactions
         $this->addSql('DROP INDEX IDX_EAA81A4CA76ED395');
         $this->addSql('DROP INDEX IDX_EAA81A4C9B6B5FBA');
         $this->addSql('DROP INDEX IDX_EAA81A4C70F7993E');
@@ -217,5 +244,14 @@ final class Version20250112175034 extends AbstractMigration
         $this->addSql('CREATE INDEX account_recipient_id_spent_at_idx_transactions ON transactions (account_recipient_id, spent_at)');
         $this->addSql('CREATE INDEX category_id_account_id_spent_at_idx_transactions ON transactions (category_id, account_id, spent_at)');
         $this->addSql('CREATE INDEX tag_id_account_id_spent_at_idx_transactions ON transactions (tag_id, account_id, spent_at)');
+    }
+
+    private function downPostgresql(): void
+    {
+        // PostgreSQL supports ALTER COLUMN TYPE directly
+        $this->addSql('ALTER TABLE budgets_elements_limits ALTER COLUMN amount TYPE NUMERIC(19, 2)');
+        $this->addSql('ALTER TABLE currencies_rates ALTER COLUMN rate TYPE NUMERIC(16, 8)');
+        $this->addSql('ALTER TABLE transactions ALTER COLUMN amount TYPE NUMERIC(19, 2)');
+        $this->addSql('ALTER TABLE transactions ALTER COLUMN amount_recipient TYPE NUMERIC(19, 2)');
     }
 }
