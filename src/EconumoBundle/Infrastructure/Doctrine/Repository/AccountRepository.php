@@ -130,8 +130,14 @@ class AccountRepository extends ServiceEntityRepository implements AccountReposi
             return [];
         }
 
-        $parametersString = implode("', '", array_map(static fn(Id $id): string => $id->getValue(), $accountIds));
-        $dateString = $date->format('Y-m-d H:i:s');
+        $placeholders = [];
+        $accountValues = [];
+        foreach ($accountIds as $i => $id) {
+            $placeholders[] = ":account{$i}";
+            $accountValues["account{$i}"] = $id->getValue();
+        }
+        $accountsIn = implode(', ', $placeholders);
+
         $sql =<<<SQL
 SELECT a.id as account_id,
        a.currency_id,
@@ -140,23 +146,23 @@ FROM accounts a
        LEFT JOIN (
            SELECT tmp.account_id, SUM(tmp.expenses) as expenses, SUM(tmp.incomes) as incomes, SUM(tmp.transfer_expenses) as transfer_expenses, SUM(tmp.transfer_incomes) as transfer_incomes FROM (
                 SELECT tr1.account_id,
-                       (SELECT SUM(t1.amount) FROM transactions t1 WHERE t1.account_id = tr1.account_id AND t1.type = 0 AND t1.spent_at < '{$dateString}') as expenses,
-                       (SELECT SUM(t2.amount) FROM transactions t2 WHERE t2.account_id = tr1.account_id AND t2.type = 1 AND t2.spent_at < '{$dateString}') as incomes,
-                       (SELECT SUM(t3.amount) FROM transactions t3 WHERE t3.account_id = tr1.account_id AND t3.type = 2 AND t3.spent_at < '{$dateString}') as transfer_expenses,
+                       (SELECT SUM(t1.amount) FROM transactions t1 WHERE t1.account_id = tr1.account_id AND t1.type = 0 AND t1.spent_at < :date1) as expenses,
+                       (SELECT SUM(t2.amount) FROM transactions t2 WHERE t2.account_id = tr1.account_id AND t2.type = 1 AND t2.spent_at < :date2) as incomes,
+                       (SELECT SUM(t3.amount) FROM transactions t3 WHERE t3.account_id = tr1.account_id AND t3.type = 2 AND t3.spent_at < :date3) as transfer_expenses,
                        NULL as transfer_incomes
                 FROM transactions tr1
-                WHERE tr1.spent_at < '{$dateString}'
+                WHERE tr1.spent_at < :date4
                 GROUP BY tr1.account_id
                 UNION ALL
                 SELECT tr2.account_recipient_id as account_id,
                        NULL as expenses,
                        NULL as incomes,
                        NULL as transfer_expenses,
-                       (SELECT SUM(t4.amount_recipient) FROM transactions t4 WHERE t4.account_recipient_id = tr2.account_recipient_id AND t4.type = 2 AND t4.spent_at < '{$dateString}') as transfer_incomes
+                       (SELECT SUM(t4.amount_recipient) FROM transactions t4 WHERE t4.account_recipient_id = tr2.account_recipient_id AND t4.type = 2 AND t4.spent_at < :date5) as transfer_incomes
                 FROM transactions tr2
-                WHERE tr2.account_recipient_id IS NOT NULL AND tr2.spent_at < '{$dateString}'
+                WHERE tr2.account_recipient_id IS NOT NULL AND tr2.spent_at < :date6
                 GROUP BY tr2.account_recipient_id) tmp GROUP BY tmp.account_id
-       ) t ON a.id = t.account_id AND a.id IN ('{$parametersString}');
+       ) t ON a.id = t.account_id AND a.id IN ({$accountsIn});
 SQL;
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('account_id', 'account_id');
@@ -164,6 +170,19 @@ SQL;
         $rsm->addScalarResult('balance', 'balance', 'string');
 
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
+
+        $dateString = $date->format('Y-m-d H:i:s');
+        $query->setParameter('date1', $dateString);
+        $query->setParameter('date2', $dateString);
+        $query->setParameter('date3', $dateString);
+        $query->setParameter('date4', $dateString);
+        $query->setParameter('date5', $dateString);
+        $query->setParameter('date6', $dateString);
+
+        foreach ($accountValues as $key => $value) {
+            $query->setParameter($key, $value);
+        }
+
         return $query->getResult();
     }
 
@@ -173,8 +192,14 @@ SQL;
             return [];
         }
 
-        $parametersString = implode("', '", array_map(static fn(Id $id): string => $id->getValue(), $accountIds));
-        $dateString = $date->format('Y-m-d H:i:s');
+        $placeholders = [];
+        $accountValues = [];
+        foreach ($accountIds as $i => $id) {
+            $placeholders[] = ":account{$i}";
+            $accountValues["account{$i}"] = $id->getValue();
+        }
+        $accountsIn = implode(', ', $placeholders);
+
         $sql =<<<SQL
 SELECT a.id as account_id,
        a.currency_id,
@@ -183,23 +208,23 @@ FROM accounts a
        LEFT JOIN (
            SELECT tmp.account_id, SUM(tmp.expenses) as expenses, SUM(tmp.incomes) as incomes, SUM(tmp.transfer_expenses) as transfer_expenses, SUM(tmp.transfer_incomes) as transfer_incomes FROM (
                 SELECT tr1.account_id,
-                       (SELECT SUM(t1.amount) FROM transactions t1 WHERE t1.account_id = tr1.account_id AND t1.type = 0 AND t1.spent_at <= '{$dateString}') as expenses,
-                       (SELECT SUM(t2.amount) FROM transactions t2 WHERE t2.account_id = tr1.account_id AND t2.type = 1 AND t2.spent_at <= '{$dateString}') as incomes,
-                       (SELECT SUM(t3.amount) FROM transactions t3 WHERE t3.account_id = tr1.account_id AND t3.type = 2 AND t3.spent_at <= '{$dateString}') as transfer_expenses,
+                       (SELECT SUM(t1.amount) FROM transactions t1 WHERE t1.account_id = tr1.account_id AND t1.type = 0 AND t1.spent_at <= :date1) as expenses,
+                       (SELECT SUM(t2.amount) FROM transactions t2 WHERE t2.account_id = tr1.account_id AND t2.type = 1 AND t2.spent_at <= :date2) as incomes,
+                       (SELECT SUM(t3.amount) FROM transactions t3 WHERE t3.account_id = tr1.account_id AND t3.type = 2 AND t3.spent_at <= :date3) as transfer_expenses,
                        NULL as transfer_incomes
                 FROM transactions tr1
-                WHERE tr1.spent_at <= '{$dateString}'
+                WHERE tr1.spent_at <= :date4
                 GROUP BY tr1.account_id
                 UNION ALL
                 SELECT tr2.account_recipient_id as account_id,
                        NULL as expenses,
                        NULL as incomes,
                        NULL as transfer_expenses,
-                       (SELECT SUM(t4.amount_recipient) FROM transactions t4 WHERE t4.account_recipient_id = tr2.account_recipient_id AND t4.type = 2 AND t4.spent_at <= '{$dateString}') as transfer_incomes
+                       (SELECT SUM(t4.amount_recipient) FROM transactions t4 WHERE t4.account_recipient_id = tr2.account_recipient_id AND t4.type = 2 AND t4.spent_at <= :date5) as transfer_incomes
                 FROM transactions tr2
-                WHERE tr2.account_recipient_id IS NOT NULL AND tr2.spent_at <= '{$dateString}'
+                WHERE tr2.account_recipient_id IS NOT NULL AND tr2.spent_at <= :date6
                 GROUP BY tr2.account_recipient_id) tmp GROUP BY tmp.account_id
-       ) t ON a.id = t.account_id AND a.id IN ('{$parametersString}');
+       ) t ON a.id = t.account_id AND a.id IN ({$accountsIn});
 SQL;
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('account_id', 'account_id');
@@ -207,6 +232,19 @@ SQL;
         $rsm->addScalarResult('balance', 'balance', 'string');
 
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
+
+        $dateString = $date->format('Y-m-d H:i:s');
+        $query->setParameter('date1', $dateString);
+        $query->setParameter('date2', $dateString);
+        $query->setParameter('date3', $dateString);
+        $query->setParameter('date4', $dateString);
+        $query->setParameter('date5', $dateString);
+        $query->setParameter('date6', $dateString);
+
+        foreach ($accountValues as $key => $value) {
+            $query->setParameter($key, $value);
+        }
+
         return $query->getResult();
     }
 
@@ -216,14 +254,14 @@ SQL;
             return [];
         }
 
-        $accounts = [];
-        foreach ($accountIds as $accountId) {
-            $accounts[] = $accountId->getValue();
+        $placeholders = [];
+        $accountValues = [];
+        foreach ($accountIds as $i => $accountId) {
+            $placeholders[] = ":account{$i}";
+            $accountValues["account{$i}"] = $accountId->getValue();
         }
+        $accountsIn = implode(', ', $placeholders);
 
-        $accountsString = implode("', '", $accounts);
-        $periodStartString = $periodStart->format('Y-m-d H:i:s');
-        $periodEndString = $periodEnd->format('Y-m-d H:i:s');
         $sql =<<<SQL
 SELECT a.id as account_id,
        a.currency_id,
@@ -237,27 +275,27 @@ FROM accounts a
        LEFT JOIN (
            SELECT tmp.account_id, SUM(tmp.expenses) as expenses, SUM(tmp.incomes) as incomes, SUM(tmp.transfer_expenses) as transfer_expenses, SUM(tmp.transfer_incomes) as transfer_incomes, SUM(tmp.exchange_expenses) as exchange_expenses, SUM(tmp.exchange_incomes) as exchange_incomes FROM (
                 SELECT tr1.account_id,
-                       (SELECT SUM(t1.amount) FROM transactions t1 WHERE t1.account_id = tr1.account_id AND t1.type = 0 AND t1.spent_at >= '{$periodStartString}' AND t1.spent_at < '{$periodEndString}') as expenses,
-                       (SELECT SUM(t2.amount) FROM transactions t2 WHERE t2.account_id = tr1.account_id AND t2.type = 1 AND t2.spent_at >= '{$periodStartString}' AND t2.spent_at < '{$periodEndString}') as incomes,
-                       (SELECT SUM(t3.amount) FROM transactions t3 WHERE t3.account_id = tr1.account_id AND t3.type = 2 AND t3.spent_at >= '{$periodStartString}' AND t3.spent_at < '{$periodEndString}') as transfer_expenses,
+                       (SELECT SUM(t1.amount) FROM transactions t1 WHERE t1.account_id = tr1.account_id AND t1.type = 0 AND t1.spent_at >= :periodStart1 AND t1.spent_at < :periodEnd1) as expenses,
+                       (SELECT SUM(t2.amount) FROM transactions t2 WHERE t2.account_id = tr1.account_id AND t2.type = 1 AND t2.spent_at >= :periodStart2 AND t2.spent_at < :periodEnd2) as incomes,
+                       (SELECT SUM(t3.amount) FROM transactions t3 WHERE t3.account_id = tr1.account_id AND t3.type = 2 AND t3.spent_at >= :periodStart3 AND t3.spent_at < :periodEnd3) as transfer_expenses,
                        NULL as transfer_incomes,
                        NULL as exchange_incomes,
-                       (SELECT SUM(t4.amount) FROM transactions t4 WHERE t4.account_id = tr1.account_id AND t4.type = 2 AND t4.amount != t4.amount_recipient AND t4.spent_at >= '{$periodStartString}' AND t4.spent_at < '{$periodEndString}') as exchange_expenses
+                       (SELECT SUM(t4.amount) FROM transactions t4 WHERE t4.account_id = tr1.account_id AND t4.type = 2 AND t4.amount != t4.amount_recipient AND t4.spent_at >= :periodStart4 AND t4.spent_at < :periodEnd4) as exchange_expenses
                 FROM transactions tr1
-                WHERE tr1.spent_at >= '{$periodStartString}' AND tr1.spent_at < '{$periodEndString}'
+                WHERE tr1.spent_at >= :periodStart5 AND tr1.spent_at < :periodEnd5
                 GROUP BY tr1.account_id
                 UNION ALL
                 SELECT tr2.account_recipient_id as account_id,
                        NULL as expenses,
                        NULL as incomes,
                        NULL as transfer_expenses,
-                       (SELECT SUM(t5.amount_recipient) FROM transactions t5 WHERE t5.account_recipient_id = tr2.account_recipient_id AND t5.type = 2 AND t5.spent_at >= '{$periodStartString}' AND t5.spent_at < '{$periodEndString}') as transfer_incomes,
-                       (SELECT SUM(t6.amount_recipient) FROM transactions t6 WHERE t6.account_recipient_id = tr2.account_recipient_id AND t6.type = 2 AND t6.amount != t6.amount_recipient AND t6.spent_at >= '{$periodStartString}' AND t6.spent_at < '{$periodEndString}') as exchange_incomes,
+                       (SELECT SUM(t5.amount_recipient) FROM transactions t5 WHERE t5.account_recipient_id = tr2.account_recipient_id AND t5.type = 2 AND t5.spent_at >= :periodStart6 AND t5.spent_at < :periodEnd6) as transfer_incomes,
+                       (SELECT SUM(t6.amount_recipient) FROM transactions t6 WHERE t6.account_recipient_id = tr2.account_recipient_id AND t6.type = 2 AND t6.amount != t6.amount_recipient AND t6.spent_at >= :periodStart7 AND t6.spent_at < :periodEnd7) as exchange_incomes,
                        NULL as exchange_expenses
                 FROM transactions tr2
-                WHERE tr2.account_recipient_id IS NOT NULL AND tr2.spent_at >= '{$periodStartString}' AND tr2.spent_at < '{$periodEndString}'
+                WHERE tr2.account_recipient_id IS NOT NULL AND tr2.spent_at >= :periodStart8 AND tr2.spent_at < :periodEnd8
                 GROUP BY tr2.account_recipient_id) tmp GROUP BY tmp.account_id
-       ) t ON a.id = t.account_id AND a.id IN ('{$accountsString}');
+       ) t ON a.id = t.account_id AND a.id IN ({$accountsIn});
 SQL;
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('account_id', 'account_id');
@@ -270,6 +308,31 @@ SQL;
         $rsm->addScalarResult('exchange_expenses', 'exchange_expenses', 'string');
 
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
+
+        $periodStartString = $periodStart->format('Y-m-d H:i:s');
+        $periodEndString = $periodEnd->format('Y-m-d H:i:s');
+
+        $query->setParameter('periodStart1', $periodStartString);
+        $query->setParameter('periodEnd1', $periodEndString);
+        $query->setParameter('periodStart2', $periodStartString);
+        $query->setParameter('periodEnd2', $periodEndString);
+        $query->setParameter('periodStart3', $periodStartString);
+        $query->setParameter('periodEnd3', $periodEndString);
+        $query->setParameter('periodStart4', $periodStartString);
+        $query->setParameter('periodEnd4', $periodEndString);
+        $query->setParameter('periodStart5', $periodStartString);
+        $query->setParameter('periodEnd5', $periodEndString);
+        $query->setParameter('periodStart6', $periodStartString);
+        $query->setParameter('periodEnd6', $periodEndString);
+        $query->setParameter('periodStart7', $periodStartString);
+        $query->setParameter('periodEnd7', $periodEndString);
+        $query->setParameter('periodStart8', $periodStartString);
+        $query->setParameter('periodEnd8', $periodEndString);
+
+        foreach ($accountValues as $key => $value) {
+            $query->setParameter($key, $value);
+        }
+
         return $query->getResult();
     }
 
@@ -282,19 +345,21 @@ SQL;
             return [];
         }
 
-        $reportAccounts = [];
-        foreach ($reportAccountIds as $accountId) {
-            $reportAccounts[] = $accountId->getValue();
+        $placeholders = [];
+        $accountValues = [];
+        foreach ($reportAccountIds as $i => $accountId) {
+            $placeholders[] = ":account{$i}";
+            $accountValues["account{$i}"] = $accountId->getValue();
         }
+        $accountsIn = implode(', ', $placeholders);
 
-        $reportAccountsString = implode("', '", $reportAccounts);
         $periodStartString = $periodStart->format('Y-m-d H:i:s');
         $periodEndString = $periodEnd->format('Y-m-d H:i:s');
 
         $sql =<<<SQL
 SELECT SUM(t.amount_recipient) as amount, a.currency_id FROM transactions t
 LEFT JOIN accounts a ON t.account_recipient_id = a.id
-WHERE t.amount = t.amount_recipient AND t.account_recipient_id NOT IN ('{$reportAccountsString}') AND t.account_id IN ('{$reportAccountsString}') AND t.type = 2 AND t.spent_at >= '{$periodStartString}' AND t.spent_at < '{$periodEndString}'
+WHERE t.amount = t.amount_recipient AND t.account_recipient_id NOT IN ({$accountsIn}) AND t.account_id IN ({$accountsIn}) AND t.type = 2 AND t.spent_at >= :periodStart1 AND t.spent_at < :periodEnd1
 GROUP BY a.currency_id;
 SQL;
         $rsm = new ResultSetMapping();
@@ -302,12 +367,19 @@ SQL;
         $rsm->addScalarResult('amount', 'amount', 'string');
 
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
+        $query->setParameter('periodStart1', $periodStartString);
+        $query->setParameter('periodEnd1', $periodEndString);
+
+        foreach ($accountValues as $key => $value) {
+            $query->setParameter($key, $value);
+        }
+
         $toHoldings = $query->getResult();
 
         $sql =<<<SQL
 SELECT SUM(t.amount) as amount, a.currency_id FROM transactions t
 LEFT JOIN accounts a ON t.account_id = a.id
-WHERE t.amount = t.amount_recipient AND t.account_recipient_id IN ('{$reportAccountsString}') AND t.account_id NOT IN ('{$reportAccountsString}') AND t.type = 2 AND t.spent_at >= '{$periodStartString}' AND t.spent_at < '{$periodEndString}'
+WHERE t.amount = t.amount_recipient AND t.account_recipient_id IN ({$accountsIn}) AND t.account_id NOT IN ({$accountsIn}) AND t.type = 2 AND t.spent_at >= :periodStart2 AND t.spent_at < :periodEnd2
 GROUP BY a.currency_id;
 SQL;
         $rsm = new ResultSetMapping();
@@ -315,6 +387,13 @@ SQL;
         $rsm->addScalarResult('amount', 'amount', 'string');
 
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
+        $query->setParameter('periodStart2', $periodStartString);
+        $query->setParameter('periodEnd2', $periodEndString);
+
+        foreach ($accountValues as $key => $value) {
+            $query->setParameter($key, $value);
+        }
+
         $fromHoldings = $query->getResult();
 
         $result = [];

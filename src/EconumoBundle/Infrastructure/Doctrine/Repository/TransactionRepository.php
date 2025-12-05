@@ -198,17 +198,17 @@ class TransactionRepository extends ServiceEntityRepository implements Transacti
 SELECT COALESCE(incomes, 0) + COALESCE(transfer_incomes, 0) - COALESCE(expenses, 0) - COALESCE(transfer_expenses, 0) as balance
 FROM (SELECT tmp.account_id, SUM(tmp.expenses) as expenses, SUM(tmp.incomes) as incomes, SUM(tmp.transfer_expenses) as transfer_expenses, SUM(tmp.transfer_incomes) as transfer_incomes
       FROM (SELECT tr1.account_id,
-                   (SELECT SUM(t1.amount) FROM transactions t1 WHERE t1.account_id = tr1.account_id AND t1.type = 0 AND t1.spent_at < '{$dateFormatted}') as expenses,
-                   (SELECT SUM(t2.amount) FROM transactions t2 WHERE t2.account_id = tr1.account_id AND t2.type = 1 AND t2.spent_at < '{$dateFormatted}') as incomes,
-                   (SELECT SUM(t3.amount) FROM transactions t3 WHERE t3.account_id = tr1.account_id AND t3.type = 2 AND t3.spent_at < '{$dateFormatted}') as transfer_expenses,
+                   (SELECT SUM(t1.amount) FROM transactions t1 WHERE t1.account_id = tr1.account_id AND t1.type = 0 AND t1.spent_at < :date1) as expenses,
+                   (SELECT SUM(t2.amount) FROM transactions t2 WHERE t2.account_id = tr1.account_id AND t2.type = 1 AND t2.spent_at < :date2) as incomes,
+                   (SELECT SUM(t3.amount) FROM transactions t3 WHERE t3.account_id = tr1.account_id AND t3.type = 2 AND t3.spent_at < :date3) as transfer_expenses,
                    NULL as transfer_incomes
             FROM transactions tr1
-            WHERE tr1.account_id = '{$accountIdFormatted}'
+            WHERE tr1.account_id = :account1
             GROUP BY tr1.account_id
             UNION ALL
-            SELECT tr2.account_recipient_id as account_id, NULL as expenses, NULL as incomes, NULL as transfer_expenses, (SELECT SUM(t4.amount_recipient) FROM transactions t4 WHERE t4.account_recipient_id = tr2.account_recipient_id AND t4.type = 2 AND t4.spent_at < '{$dateFormatted}') as transfer_incomes
+            SELECT tr2.account_recipient_id as account_id, NULL as expenses, NULL as incomes, NULL as transfer_expenses, (SELECT SUM(t4.amount_recipient) FROM transactions t4 WHERE t4.account_recipient_id = tr2.account_recipient_id AND t4.type = 2 AND t4.spent_at < :date4) as transfer_incomes
             FROM transactions tr2
-            WHERE tr2.account_recipient_id IS NOT NULL AND tr2.account_recipient_id = '{$accountIdFormatted}' AND tr2.spent_at < '{$dateFormatted}'
+            WHERE tr2.account_recipient_id IS NOT NULL AND tr2.account_recipient_id = :account2 AND tr2.spent_at < :date5
             GROUP BY tr2.account_recipient_id) tmp
       GROUP BY tmp.account_id) bln
 SQL;
@@ -216,6 +216,13 @@ SQL;
         $rsm->addScalarResult('balance', 'balance', 'string');
 
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
+        $query->setParameter('date1', $dateFormatted);
+        $query->setParameter('date2', $dateFormatted);
+        $query->setParameter('date3', $dateFormatted);
+        $query->setParameter('date4', $dateFormatted);
+        $query->setParameter('date5', $dateFormatted);
+        $query->setParameter('account1', $accountIdFormatted);
+        $query->setParameter('account2', $accountIdFormatted);
 
         try {
             $result = $query->getSingleScalarResult();
@@ -236,14 +243,28 @@ SQL;
             return [];
         }
 
-        $categoriesString = implode("', '", array_map(static fn(Id $id): string => $id->getValue(), $categoryIds));
-        $accountsString = implode("', '", array_map(static fn(Id $id): string => $id->getValue(), $accountsIds));
+        $categoryValues = array_map(static fn(Id $id): string => $id->getValue(), $categoryIds);
+        $accountValues = array_map(static fn(Id $id): string => $id->getValue(), $accountsIds);
         $startDateString = $startDate->format('Y-m-d H:i:s');
         $endDateString = $endDate->format('Y-m-d H:i:s');
+
+        // Build parameter placeholders for IN clauses
+        $categoryPlaceholders = [];
+        $accountPlaceholders = [];
+        foreach ($categoryValues as $i => $value) {
+            $categoryPlaceholders[] = ":category{$i}";
+        }
+        foreach ($accountValues as $i => $value) {
+            $accountPlaceholders[] = ":account{$i}";
+        }
+
+        $categoriesIn = implode(', ', $categoryPlaceholders);
+        $accountsIn = implode(', ', $accountPlaceholders);
+
         $sql = <<<SQL
-SELECT sum(t.amount) as amount, t.category_id, a.currency_id FROM transactions t 
-LEFT JOIN accounts a ON t.account_id = a.id AND a.id IN ('{$accountsString}')
-WHERE t.category_id IN ('{$categoriesString}') AND t.spent_at >= '{$startDateString}' AND t.spent_at < '{$endDateString}' AND t.tag_id IS NULL
+SELECT sum(t.amount) as amount, t.category_id, a.currency_id FROM transactions t
+LEFT JOIN accounts a ON t.account_id = a.id AND a.id IN ({$accountsIn})
+WHERE t.category_id IN ({$categoriesIn}) AND t.spent_at >= :startDate AND t.spent_at < :endDate AND t.tag_id IS NULL
 GROUP BY a.currency_id, t.category_id
 SQL;
         $rsm = new ResultSetMapping();
@@ -252,6 +273,17 @@ SQL;
         $rsm->addScalarResult('amount', 'amount', 'string');
 
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
+
+        // Bind parameters
+        foreach ($categoryValues as $i => $value) {
+            $query->setParameter("category{$i}", $value);
+        }
+        foreach ($accountValues as $i => $value) {
+            $query->setParameter("account{$i}", $value);
+        }
+        $query->setParameter('startDate', $startDateString);
+        $query->setParameter('endDate', $endDateString);
+
         return $query->getResult();
     }
 
@@ -265,14 +297,28 @@ SQL;
             return [];
         }
 
-        $tagsString = implode("', '", array_map(static fn(Id $id): string => $id->getValue(), $tagsIds));
-        $accountsString = implode("', '", array_map(static fn(Id $id): string => $id->getValue(), $accountsIds));
+        $tagValues = array_map(static fn(Id $id): string => $id->getValue(), $tagsIds);
+        $accountValues = array_map(static fn(Id $id): string => $id->getValue(), $accountsIds);
         $startDateString = $startDate->format('Y-m-d H:i:s');
         $endDateString = $endDate->format('Y-m-d H:i:s');
+
+        // Build parameter placeholders for IN clauses
+        $tagPlaceholders = [];
+        $accountPlaceholders = [];
+        foreach ($tagValues as $i => $value) {
+            $tagPlaceholders[] = ":tag{$i}";
+        }
+        foreach ($accountValues as $i => $value) {
+            $accountPlaceholders[] = ":account{$i}";
+        }
+
+        $tagsIn = implode(', ', $tagPlaceholders);
+        $accountsIn = implode(', ', $accountPlaceholders);
+
         $sql = <<<SQL
-SELECT sum(t.amount) as amount, t.tag_id, a.currency_id FROM transactions t 
-JOIN accounts a ON t.account_id = a.id AND t.account_id IN ('{$accountsString}')
-WHERE t.tag_id IN ('{$tagsString}') AND t.spent_at >= '{$startDateString}' AND t.spent_at < '{$endDateString}'
+SELECT sum(t.amount) as amount, t.tag_id, a.currency_id FROM transactions t
+JOIN accounts a ON t.account_id = a.id AND t.account_id IN ({$accountsIn})
+WHERE t.tag_id IN ({$tagsIn}) AND t.spent_at >= :startDate AND t.spent_at < :endDate
 GROUP BY a.currency_id, t.tag_id
 SQL;
         $rsm = new ResultSetMapping();
@@ -281,6 +327,17 @@ SQL;
         $rsm->addScalarResult('amount', 'amount', 'string');
 
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
+
+        // Bind parameters
+        foreach ($tagValues as $i => $value) {
+            $query->setParameter("tag{$i}", $value);
+        }
+        foreach ($accountValues as $i => $value) {
+            $query->setParameter("account{$i}", $value);
+        }
+        $query->setParameter('startDate', $startDateString);
+        $query->setParameter('endDate', $endDateString);
+
         return $query->getResult();
     }
 
@@ -294,14 +351,28 @@ SQL;
             return [];
         }
 
-        $categoriesString = implode("', '", array_map(static fn(Id $id): string => $id->getValue(), $categoriesIds));
-        $accountsString = implode("', '", array_map(static fn(Id $id): string => $id->getValue(), $accountsIds));
+        $categoryValues = array_map(static fn(Id $id): string => $id->getValue(), $categoriesIds);
+        $accountValues = array_map(static fn(Id $id): string => $id->getValue(), $accountsIds);
         $startDateString = $startDate->format('Y-m-d H:i:s');
         $endDateString = $endDate->format('Y-m-d H:i:s');
+
+        // Build parameter placeholders for IN clauses
+        $categoryPlaceholders = [];
+        $accountPlaceholders = [];
+        foreach ($categoryValues as $i => $value) {
+            $categoryPlaceholders[] = ":category{$i}";
+        }
+        foreach ($accountValues as $i => $value) {
+            $accountPlaceholders[] = ":account{$i}";
+        }
+
+        $categoriesIn = implode(', ', $categoryPlaceholders);
+        $accountsIn = implode(', ', $accountPlaceholders);
+
         $sql = <<<SQL
-SELECT sum(t.amount) as amount, t.category_id, t.tag_id, a.currency_id FROM transactions t 
-JOIN accounts a ON t.account_id = a.id AND t.account_id IN ('{$accountsString}')
-WHERE t.category_id IN ('{$categoriesString}') AND t.spent_at >= '{$startDateString}' AND t.spent_at < '{$endDateString}'
+SELECT sum(t.amount) as amount, t.category_id, t.tag_id, a.currency_id FROM transactions t
+JOIN accounts a ON t.account_id = a.id AND t.account_id IN ({$accountsIn})
+WHERE t.category_id IN ({$categoriesIn}) AND t.spent_at >= :startDate AND t.spent_at < :endDate
 GROUP BY t.category_id, t.tag_id, a.currency_id
 SQL;
         $rsm = new ResultSetMapping();
@@ -311,6 +382,17 @@ SQL;
         $rsm->addScalarResult('amount', 'amount', 'string');
 
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
+
+        // Bind parameters
+        foreach ($categoryValues as $i => $value) {
+            $query->setParameter("category{$i}", $value);
+        }
+        foreach ($accountValues as $i => $value) {
+            $query->setParameter("account{$i}", $value);
+        }
+        $query->setParameter('startDate', $startDateString);
+        $query->setParameter('endDate', $endDateString);
+
         return $query->getResult();
     }
 
