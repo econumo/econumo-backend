@@ -89,7 +89,7 @@ final class Version20210812210548 extends AbstractMigration
                 , created_at              DATETIME            NOT NULL --(DC2Type:datetime_immutable)
                 , updated_at              DATETIME            NOT NULL
                 , PRIMARY KEY (id)
-                , FOREIGN KEY (currency_id) REFERENCES currencies (id) ON DELETE SET NULL
+                , FOREIGN KEY (currency_id) REFERENCES currencies (id) ON DELETE CASCADE
                 , FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
             )
             SQL
@@ -200,6 +200,25 @@ final class Version20210812210548 extends AbstractMigration
 
         $this->addSql(
             <<<'SQL'
+            CREATE TABLE folders
+            (
+                id         CHAR(36)                         NOT NULL --(DC2Type:uuid)
+                , user_id    CHAR(36)                         NOT NULL --(DC2Type:uuid)
+                , name       VARCHAR(64)                      NOT NULL
+                , position   SMALLINT UNSIGNED DEFAULT 0      NOT NULL
+                , is_visible BOOLEAN           DEFAULT 'true' NOT NULL
+                , created_at DATETIME                         NOT NULL --(DC2Type:datetime_immutable)
+                , updated_at DATETIME                         NOT NULL
+                , PRIMARY KEY (id)
+                , FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+            )
+            SQL
+            ,
+        );
+        $this->addSql("CREATE INDEX IDX_FE37D30FA76ED395 ON folders (user_id)");
+
+        $this->addSql(
+            <<<'SQL'
             CREATE TABLE accounts_folders
             (
                 folder_id  CHAR(36) NOT NULL --(DC2Type:uuid)
@@ -255,6 +274,29 @@ final class Version20210812210548 extends AbstractMigration
             ,
         );
         $this->addSql("CREATE INDEX IDX_6FBC9426A76ED395 ON tags (user_id)");
+
+        $this->addSql(
+            <<<'SQL'
+            CREATE TABLE categories
+            (
+                id          CHAR(36)                      NOT NULL --(DC2Type:uuid)
+                , user_id     CHAR(36)                      NOT NULL --(DC2Type:uuid)
+                , name        VARCHAR(64)                   NOT NULL
+                , position    SMALLINT UNSIGNED DEFAULT 0   NOT NULL
+                , type        SMALLINT                      NOT NULL
+                , icon        VARCHAR(255)                  NOT NULL
+                , is_archived BOOLEAN           DEFAULT '0' NOT NULL
+                , created_at  DATETIME                      NOT NULL --(DC2Type:datetime_immutable)
+                , updated_at  DATETIME                      NOT NULL
+                , PRIMARY KEY (id)
+                , FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+            );
+            SQL
+            ,
+        );
+        $this->addSql(
+            "CREATE INDEX IDX_3AF34668A76ED395 ON categories (user_id)",
+        );
 
         $this->addSql(
             <<<'SQL'
@@ -320,29 +362,6 @@ final class Version20210812210548 extends AbstractMigration
         );
         $this->addSql(
             "CREATE INDEX tag_id_account_id_spent_at_idx_transactions ON transactions (tag_id, account_id, spent_at)",
-        );
-
-        $this->addSql(
-            <<<'SQL'
-            CREATE TABLE categories
-            (
-                id          CHAR(36)                      NOT NULL --(DC2Type:uuid)
-                , user_id     CHAR(36)                      NOT NULL --(DC2Type:uuid)
-                , name        VARCHAR(64)                   NOT NULL
-                , position    SMALLINT UNSIGNED DEFAULT 0   NOT NULL
-                , type        SMALLINT                      NOT NULL
-                , icon        VARCHAR(255)                  NOT NULL
-                , is_archived BOOLEAN           DEFAULT '0' NOT NULL
-                , created_at  DATETIME                      NOT NULL --(DC2Type:datetime_immutable)
-                , updated_at  DATETIME                      NOT NULL
-                , PRIMARY KEY (id)
-                , FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
-            );
-            SQL
-            ,
-        );
-        $this->addSql(
-            "CREATE INDEX IDX_3AF34668A76ED395 ON categories (user_id)",
         );
 
         $this->addSql(
@@ -428,25 +447,6 @@ final class Version20210812210548 extends AbstractMigration
         $this->addSql(
             "CREATE UNIQUE INDEX identifier_uniq_currencies_rates ON currencies_rates (published_at, currency_id, base_currency_id)",
         );
-
-        $this->addSql(
-            <<<'SQL'
-            CREATE TABLE folders
-            (
-                id         CHAR(36)                         NOT NULL --(DC2Type:uuid)
-                , user_id    CHAR(36)                         NOT NULL --(DC2Type:uuid)
-                , name       VARCHAR(64)                      NOT NULL
-                , position   SMALLINT UNSIGNED DEFAULT 0      NOT NULL
-                , is_visible BOOLEAN           DEFAULT 'true' NOT NULL
-                , created_at DATETIME                         NOT NULL --(DC2Type:datetime_immutable)
-                , updated_at DATETIME                         NOT NULL
-                , PRIMARY KEY (id)
-                , FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
-            )
-            SQL
-            ,
-        );
-        $this->addSql("CREATE INDEX IDX_FE37D30FA76ED395 ON folders (user_id)");
 
         $this->addSql(
             <<<'SQL'
@@ -660,6 +660,25 @@ final class Version20210812210548 extends AbstractMigration
 
         $this->addSql(
             <<<'SQL'
+            CREATE TABLE folders
+            (
+                id         UUID                         NOT NULL
+                , user_id    UUID                         NOT NULL
+                , name       VARCHAR(64)                      NOT NULL
+                , position   SMALLINT DEFAULT 0      NOT NULL
+                , is_visible BOOLEAN           DEFAULT true NOT NULL
+                , created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL
+                , updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL
+                , PRIMARY KEY (id)
+                , FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+            )
+            SQL
+            ,
+        );
+        $this->addSql("CREATE INDEX IDX_FE37D30FA76ED395 ON folders (user_id)");
+
+        $this->addSql(
+            <<<'SQL'
             CREATE TABLE accounts_folders
             (
                 folder_id  UUID NOT NULL
@@ -715,6 +734,29 @@ final class Version20210812210548 extends AbstractMigration
             ,
         );
         $this->addSql("CREATE INDEX IDX_6FBC9426A76ED395 ON tags (user_id)");
+
+        $this->addSql(
+            <<<'SQL'
+            CREATE TABLE categories
+            (
+                id          UUID                      NOT NULL
+                , user_id     UUID                      NOT NULL
+                , name        VARCHAR(64)                   NOT NULL
+                , position    SMALLINT DEFAULT 0   NOT NULL
+                , type        SMALLINT                      NOT NULL
+                , icon        VARCHAR(255)                  NOT NULL
+                , is_archived BOOLEAN           DEFAULT false NOT NULL
+                , created_at  TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL
+                , updated_at  TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL
+                , PRIMARY KEY (id)
+                , FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+            );
+            SQL
+            ,
+        );
+        $this->addSql(
+            "CREATE INDEX IDX_3AF34668A76ED395 ON categories (user_id)",
+        );
 
         $this->addSql(
             <<<'SQL'
@@ -780,29 +822,6 @@ final class Version20210812210548 extends AbstractMigration
         );
         $this->addSql(
             "CREATE INDEX tag_id_account_id_spent_at_idx_transactions ON transactions (tag_id, account_id, spent_at)",
-        );
-
-        $this->addSql(
-            <<<'SQL'
-            CREATE TABLE categories
-            (
-                id          UUID                      NOT NULL
-                , user_id     UUID                      NOT NULL
-                , name        VARCHAR(64)                   NOT NULL
-                , position    SMALLINT DEFAULT 0   NOT NULL
-                , type        SMALLINT                      NOT NULL
-                , icon        VARCHAR(255)                  NOT NULL
-                , is_archived BOOLEAN           DEFAULT false NOT NULL
-                , created_at  TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL
-                , updated_at  TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL
-                , PRIMARY KEY (id)
-                , FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
-            );
-            SQL
-            ,
-        );
-        $this->addSql(
-            "CREATE INDEX IDX_3AF34668A76ED395 ON categories (user_id)",
         );
 
         $this->addSql(
@@ -888,25 +907,6 @@ final class Version20210812210548 extends AbstractMigration
         $this->addSql(
             "CREATE UNIQUE INDEX identifier_uniq_currencies_rates ON currencies_rates (published_at, currency_id, base_currency_id)",
         );
-
-        $this->addSql(
-            <<<'SQL'
-            CREATE TABLE folders
-            (
-                id         UUID                         NOT NULL
-                , user_id    UUID                         NOT NULL
-                , name       VARCHAR(64)                      NOT NULL
-                , position   SMALLINT DEFAULT 0      NOT NULL
-                , is_visible BOOLEAN           DEFAULT true NOT NULL
-                , created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL
-                , updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL
-                , PRIMARY KEY (id)
-                , FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
-            )
-            SQL
-            ,
-        );
-        $this->addSql("CREATE INDEX IDX_FE37D30FA76ED395 ON folders (user_id)");
 
         $this->addSql(
             <<<'SQL'
