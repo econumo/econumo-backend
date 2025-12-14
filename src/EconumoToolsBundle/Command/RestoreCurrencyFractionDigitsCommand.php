@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\EconumoBundle\Command;
+namespace App\EconumoToolsBundle\Command;
 
 use App\EconumoBundle\Domain\Entity\Currency;
 use App\EconumoBundle\Domain\Entity\ValueObject\CurrencyCode;

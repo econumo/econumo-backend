@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\EconumoBundle\Command;
+namespace App\EconumoToolsBundle\Command;
 
 use RuntimeException;
-use Throwable;
 use Symfony\Bundle\MakerBundle\ConsoleStyle;
 use Symfony\Bundle\MakerBundle\DependencyBuilder;
 use Symfony\Bundle\MakerBundle\Generator;
@@ -16,6 +15,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Filesystem\Filesystem;
+use Throwable;
 
 class MakeAPIMaker extends AbstractMaker
 {
