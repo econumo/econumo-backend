@@ -423,8 +423,8 @@ final class Version20210812210548 extends AbstractMigration
                 , rate             NUMERIC(16, 8) NOT NULL
                 , published_at     DATE           NOT NULL --(DC2Type:date_immutable)
                 , PRIMARY KEY (id)
-                , FOREIGN KEY (currency_id) REFERENCES currencies (id) ON DELETE SET NULL
-                , FOREIGN KEY (base_currency_id) REFERENCES currencies (id) ON DELETE SET NULL
+                , FOREIGN KEY (currency_id) REFERENCES currencies (id) ON DELETE CASCADE
+                , FOREIGN KEY (base_currency_id) REFERENCES currencies (id) ON DELETE CASCADE
             )
             SQL
             ,
