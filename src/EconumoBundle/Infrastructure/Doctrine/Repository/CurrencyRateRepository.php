@@ -120,7 +120,7 @@ SQL;
     public function getAverage(DateTimeInterface $startDate, DateTimeInterface $endDate, Id $baseCurrencyId): array
     {
         $sql =<<<'SQL'
-SELECT cr.currency_id as currencyId, AVG(cr.rate) as rate
+SELECT cr.currency_id as "currencyId", AVG(cr.rate) as rate
 FROM currencies_rates cr
 WHERE cr.published_at >= :startDate AND cr.published_at < :endDate
 AND cr.base_currency_id = :baseCurrency

@@ -4,6 +4,7 @@
 .DS_Store
 src/*Bundle/
 !src/EconumoBundle/
+!src/EconumoToolsBundle/
 !src/EconumoFamilyBundle/
 !src/EconumoDemoBundle/
 src/*Bundle/.disabled*
