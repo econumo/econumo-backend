@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\EconumoBundle\Command;
+namespace App\EconumoToolsBundle\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -10,11 +10,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class DisableWALCommand extends Command
+class EnableWALCommand extends Command
 {
-    protected static $defaultName = 'app:disable-wal';
+    protected static $defaultName = 'app:enable-wal';
 
-    protected static $defaultDescription = 'Disable WAL-mode for SQLite';
+    protected static $defaultDescription = 'Enable WAL-mode for SQLite';
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
@@ -33,9 +33,9 @@ class DisableWALCommand extends Command
             return Command::FAILURE;
         }
 
-        $connection->executeStatement('PRAGMA journal_mode = delete;');
+        $connection->executeStatement('PRAGMA journal_mode = WAL;');
 
-        $io->success('WAL mode is disabled for SQLite');
+        $io->success('WAL mode is enabled for SQLite');
 
         return Command::SUCCESS;
     }
