@@ -260,7 +260,7 @@ final class Version20241103192302 extends AbstractMigration
                 budget_id   UUID            NOT NULL
                 , user_id     UUID            NOT NULL
                 , role        SMALLINT            NOT NULL
-                , is_accepted BOOLEAN DEFAULT false NOT NULL
+                , is_accepted BOOLEAN DEFAULT '0' NOT NULL
                 , created_at  TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL
                 , updated_at  TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL
                 , PRIMARY KEY (budget_id, user_id)
@@ -284,7 +284,7 @@ final class Version20241103192302 extends AbstractMigration
                 id         UUID                    NOT NULL
                 , budget_id  UUID                    NOT NULL
                 , name       VARCHAR(64)                 NOT NULL
-                , position   SMALLINT DEFAULT 0 NOT NULL
+                , position   SMALLINT DEFAULT 0 NOT NULL CHECK (position >= 0)
                 , created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL
                 , updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL
                 , PRIMARY KEY (id)
