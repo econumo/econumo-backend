@@ -18,7 +18,9 @@
 
         <indexes>
             <index columns="period" name="period_idx_budgets_elements_limits"/>
-            <index columns="element_id,period" name="element_period_idx_budgets_elements_limits"/>
         </indexes>
+        <unique-constraints>
+            <unique-constraint columns="element_id,period" name="element_period_uniq_budgets_elements_limits"/>
+        </unique-constraints>
     </entity>
 </doctrine-mapping>

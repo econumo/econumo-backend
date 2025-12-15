@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\EconumoBundle\Command;
+namespace App\EconumoToolsBundle\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -26,6 +26,13 @@ class EnableWALCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         $connection = $this->entityManager->getConnection();
+        $platform = $connection->getDatabasePlatform()->getName();
+
+        if ($platform !== 'sqlite') {
+            $io->warning(sprintf('WAL mode is only applicable to SQLite databases. Current database: %s', $platform));
+            return Command::FAILURE;
+        }
+
         $connection->executeStatement('PRAGMA journal_mode = WAL;');
 
         $io->success('WAL mode is enabled for SQLite');

@@ -20,16 +20,24 @@ final class Version20241130222656 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->skipIf($this->connection->getDatabasePlatform()->getName() !== 'sqlite', "Migration can only be executed safely on 'sqlite'.");
+        $platform = $this->connection->getDatabasePlatform()->getName();
 
-        $this->addSql("ALTER TABLE users ADD COLUMN is_active BOOLEAN DEFAULT '1' NOT NULL");
+        if ($platform === 'sqlite') {
+            $this->addSql("ALTER TABLE users ADD COLUMN is_active BOOLEAN DEFAULT '1' NOT NULL");
+        } elseif ($platform === 'postgresql') {
+            $this->addSql("ALTER TABLE users ADD COLUMN is_active BOOLEAN DEFAULT true NOT NULL");
+        }
     }
 
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->skipIf($this->connection->getDatabasePlatform()->getName() !== 'sqlite', "Migration can only be executed safely on 'sqlite'.");
+        $platform = $this->connection->getDatabasePlatform()->getName();
 
-        $this->addSql('ALTER TABLE users DROP COLUMN is_active');
+        if ($platform === 'sqlite') {
+            $this->addSql('ALTER TABLE users DROP COLUMN is_active');
+        } elseif ($platform === 'postgresql') {
+            $this->addSql('ALTER TABLE users DROP COLUMN is_active');
+        }
     }
 }
