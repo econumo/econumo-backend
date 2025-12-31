@@ -184,14 +184,22 @@ readonly class TransactionService implements TransactionServiceInterface
             if ($transaction->getType()->isTransfer()) {
                 $recipientId = $transaction->getAccountRecipientId()?->getValue();
                 if ($recipientId && isset($accountsById[$recipientId])) {
-                    $description = sprintf('transfer to %s', $accountsById[$recipientId]->getName()->getValue());
+                    $description = sprintf(
+                        'Transfer of %s %s to %s',
+                        $accountsById[$accountId]->getCurrencyCode()->getValue(),
+                        $this->formatAmountForDescription($transaction->getAmount()),
+                        $accountsById[$recipientId]->getName()->getValue()
+                    );
                 }
             }
 
             $rows[] = $this->buildExportRow(
                 $transaction,
                 $accountsById[$accountId],
-                $transaction->getAmount(),
+                $this->formatAmount(
+                    $transaction->getAmount(),
+                    $transaction->getType()->isExpense() || $transaction->getType()->isTransfer()
+                ),
                 $transaction->getCategory()?->getName()->getValue(),
                 $transaction->getTag()?->getName()->getValue(),
                 $transaction->getPayee()?->getName()->getValue(),
@@ -202,14 +210,28 @@ readonly class TransactionService implements TransactionServiceInterface
         if ($transaction->getType()->isTransfer()) {
             $recipientId = $transaction->getAccountRecipientId()?->getValue();
             if ($recipientId && isset($accountsById[$recipientId])) {
+                $sourceName = isset($accountsById[$accountId])
+                    ? $accountsById[$accountId]->getName()->getValue()
+                    : '';
+                $description = $sourceName !== ''
+                    ? sprintf(
+                        'Transfer of %s %s from %s',
+                        $accountsById[$recipientId]->getCurrencyCode()->getValue(),
+                        $this->formatAmountForDescription($transaction->getAmountRecipient() ?? $transaction->getAmount()),
+                        $sourceName
+                    )
+                    : 'Transfer';
                 $rows[] = $this->buildExportRow(
                     $transaction,
                     $accountsById[$recipientId],
-                    $transaction->getAmountRecipient() ?? $transaction->getAmount(),
+                    $this->formatAmount(
+                        $transaction->getAmountRecipient() ?? $transaction->getAmount(),
+                        false
+                    ),
                     '',
                     '',
                     '',
-                    sprintf('transfer from %s', $accountsById[$accountId]->getName()->getValue())
+                    $description
                 );
             }
         }
@@ -220,7 +242,7 @@ readonly class TransactionService implements TransactionServiceInterface
     private function buildExportRow(
         Transaction $transaction,
         Account $account,
-        DecimalNumber $amount,
+        string $amount,
         ?string $category,
         ?string $tag,
         ?string $payee,
@@ -234,8 +256,24 @@ readonly class TransactionService implements TransactionServiceInterface
             $description ?? $transaction->getDescription(),
             $tag ?? '',
             $payee ?? '',
-            $amount->getValue(),
+            $amount,
             $transaction->getSpentAt()->format('Y-m-d H:i:s'),
         ];
+    }
+
+    private function formatAmount(DecimalNumber $amount, bool $negative): string
+    {
+        $value = $amount->getValue();
+        if ($negative) {
+            return str_starts_with($value, '-') ? $value : '-' . $value;
+        }
+
+        return str_starts_with($value, '-') ? substr($value, 1) : $value;
+    }
+
+    private function formatAmountForDescription(DecimalNumber $amount): string
+    {
+        $value = $amount->getValue();
+        return str_starts_with($value, '-') ? substr($value, 1) : $value;
     }
 }
