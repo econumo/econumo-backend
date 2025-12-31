@@ -205,7 +205,7 @@ readonly class TransactionService implements TransactionServiceInterface
                 if (trim($description) === '') {
                     $description = $transferNote;
                 } else {
-                    $description = rtrim($description) . ' ' . $transferNote;
+                    $description = $transferNote . ' [' . trim($description) . ']';
                 }
             }
 
@@ -241,7 +241,7 @@ readonly class TransactionService implements TransactionServiceInterface
                 if (trim($description) === '') {
                     $description = $transferNote;
                 } else {
-                    $description = rtrim($description) . ' ' . $transferNote;
+                    $description = $transferNote . ' [' . trim($description) . ']';
                 }
                 $rows[] = $this->buildExportRow(
                     $transaction,
