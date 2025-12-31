@@ -17,6 +17,7 @@ use App\EconumoBundle\Domain\Factory\AccountOptionsFactoryInterface;
 use App\EconumoBundle\Domain\Factory\TransactionFactoryInterface;
 use App\EconumoBundle\Domain\Repository\AccountOptionsRepositoryInterface;
 use App\EconumoBundle\Domain\Repository\AccountRepositoryInterface;
+use App\EconumoBundle\Domain\Repository\CurrencyRepositoryInterface;
 use App\EconumoBundle\Domain\Repository\FolderRepositoryInterface;
 use App\EconumoBundle\Domain\Repository\TransactionRepositoryInterface;
 use App\EconumoBundle\Domain\Service\Dto\AccountDto;
@@ -31,6 +32,7 @@ readonly class AccountService implements AccountServiceInterface
         private TransactionServiceInterface $transactionService,
         private AccountOptionsFactoryInterface $accountOptionsFactory,
         private AccountOptionsRepositoryInterface $accountOptionsRepository,
+        private CurrencyRepositoryInterface $currencyRepository,
         private AntiCorruptionServiceInterface $antiCorruptionService,
         private FolderRepositoryInterface $folderRepository,
         private TransactionFactoryInterface $transactionFactory,
@@ -101,12 +103,15 @@ readonly class AccountService implements AccountServiceInterface
         $this->accountRepository->save([$account]);
     }
 
-    public function update(Id $userId, Id $accountId, AccountName $name, Icon $icon = null): void
+    public function update(Id $userId, Id $accountId, AccountName $name, Icon $icon = null, ?Id $currencyId = null): void
     {
         $account = $this->accountRepository->get($accountId);
         $account->updateName($name);
         if ($icon instanceof Icon) {
             $account->updateIcon($icon);
+        }
+        if ($currencyId instanceof Id) {
+            $account->updateCurrency($this->currencyRepository->getReference($currencyId));
         }
 
         $this->accountRepository->save([$account]);

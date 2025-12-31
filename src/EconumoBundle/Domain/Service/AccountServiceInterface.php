@@ -19,7 +19,7 @@ interface AccountServiceInterface
 
     public function delete(Id $id): void;
 
-    public function update(Id $userId, Id $accountId, AccountName $name, Icon $icon = null): void;
+    public function update(Id $userId, Id $accountId, AccountName $name, Icon $icon = null, ?Id $currencyId = null): void;
 
     public function updateBalance(Id $accountId, DecimalNumber $balance, DateTimeInterface $updatedAt, ?string $comment = ''): ?Transaction;
 

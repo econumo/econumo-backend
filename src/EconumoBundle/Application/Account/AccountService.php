@@ -84,7 +84,14 @@ class AccountService
             throw new AccessDeniedException();
         }
 
-        $this->accountService->update($userId, $accountId, new AccountName($dto->name), new Icon($dto->icon));
+        $currencyId = $dto->currencyId !== null ? new Id($dto->currencyId) : null;
+        $this->accountService->update(
+            $userId,
+            $accountId,
+            new AccountName($dto->name),
+            new Icon($dto->icon),
+            $currencyId
+        );
         $updatedAt = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dto->updatedAt);
         $transaction = $this->accountService->updateBalance(
             $accountId,

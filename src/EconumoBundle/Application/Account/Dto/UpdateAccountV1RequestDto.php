@@ -34,6 +34,11 @@ class UpdateAccountV1RequestDto
     public string $icon;
 
     /**
+     * @OA\Property(example="a3b8e8d7-9f0a-4e51-8b7c-2a8b5f5f5b3f")
+     */
+    public ?string $currencyId = null;
+
+    /**
      * @OA\Property(example="2020-01-01 23:59:59")
      */
     public string $updatedAt;
