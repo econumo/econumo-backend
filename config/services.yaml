@@ -103,3 +103,8 @@ services:
     arguments:
       $baseUrl: '%env(string:ECONUMO_BASE_URL)%'
       $connectUsers: '%env(bool:ECONUMO_CONNECT_USERS)%'
+
+  App\EconumoBundle\Domain\Service\ImportTransactionServiceInterface:
+    class: App\EconumoBundle\Domain\Service\ImportTransactionService
+    arguments:
+      $baseCurrency: '%env(string:ECONUMO_CURRENCY_BASE)%'

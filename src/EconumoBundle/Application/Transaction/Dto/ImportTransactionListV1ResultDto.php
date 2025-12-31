@@ -8,14 +8,26 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     required={"result"}
+ *     required={"imported", "skipped", "errors"}
  * )
  */
 class ImportTransactionListV1ResultDto
 {
     /**
-     * Id
-     * @OA\Property(example="This is result")
+     * Number of successfully imported transactions
+     * @OA\Property(example=10)
      */
-    public string $result;
+    public int $imported = 0;
+
+    /**
+     * Number of skipped transactions
+     * @OA\Property(example=2)
+     */
+    public int $skipped = 0;
+
+    /**
+     * Error messages for failed imports
+     * @OA\Property(type="array", @OA\Items(type="string"), example={"Row 3: Invalid account name", "Row 5: Invalid date format"})
+     */
+    public array $errors = [];
 }

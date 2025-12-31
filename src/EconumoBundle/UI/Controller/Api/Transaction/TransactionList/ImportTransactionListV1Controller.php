@@ -28,7 +28,27 @@ class ImportTransactionListV1Controller extends AbstractController
      * Import transactionList
      *
      * @OA\Tag(name="Transaction"),
-     * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\Transaction\Dto\ImportTransactionListV1RequestDto::class))),
+     * @OA\RequestBody(
+     *     required=true,
+     *     @OA\MediaType(
+     *         mediaType="multipart/form-data",
+     *         @OA\Schema(
+     *             required={"file", "mapping"},
+     *             @OA\Property(
+     *                 property="file",
+     *                 type="string",
+     *                 format="binary",
+     *                 description="CSV file to import"
+     *             ),
+     *             @OA\Property(
+     *                 property="mapping",
+     *                 type="string",
+     *                 description="JSON string with field mapping configuration",
+     *                 example="{""account"":""Account Name"",""date"":""Transaction Date"",""amount"":""Amount"",""amountInflow"":null,""amountOutflow"":null,""category"":""Category"",""description"":""Description"",""payee"":""Merchant"",""tag"":null}"
+     *             )
+     *         )
+     *     )
+     * ),
      * @OA\Response(
      *     response=200,
      *     description="OK",
@@ -57,7 +77,24 @@ class ImportTransactionListV1Controller extends AbstractController
     public function __invoke(Request $request): Response
     {
         $dto = new ImportTransactionListV1RequestDto();
-        $this->validator->validate(ImportTransactionListV1Form::class, $request->request->all(), $dto);
+
+        // Parse the mapping JSON before validation
+        $mappingJson = $request->request->get('mapping');
+        $mapping = [];
+        if ($mappingJson) {
+            $mapping = json_decode($mappingJson, true) ?? [];
+        }
+
+        $data = array_merge(
+            $request->request->all(),
+            [
+                'file' => $request->files->get('file'),
+                'mapping' => $mapping
+            ]
+        );
+
+        $this->validator->validate(ImportTransactionListV1Form::class, $data, $dto);
+
         /** @var User $user */
         $user = $this->getUser();
         $result = $this->transactionListService->importTransactionList($dto, $user->getId());

@@ -5,24 +5,27 @@ declare(strict_types=1);
 namespace App\EconumoBundle\Application\Transaction;
 
 use App\EconumoBundle\Application\Transaction\Assembler\GetTransactionListV1ResultAssembler;
+use App\EconumoBundle\Application\Transaction\Assembler\ImportTransactionListV1ResultAssembler;
 use App\EconumoBundle\Application\Transaction\Dto\GetTransactionListV1RequestDto;
 use App\EconumoBundle\Application\Transaction\Dto\GetTransactionListV1ResultDto;
 use App\EconumoBundle\Application\Transaction\Dto\ImportTransactionListV1RequestDto;
 use App\EconumoBundle\Application\Transaction\Dto\ImportTransactionListV1ResultDto;
-use App\EconumoBundle\Application\Transaction\Assembler\ImportTransactionListV1ResultAssembler;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoBundle\Domain\Repository\TransactionRepositoryInterface;
 use App\EconumoBundle\Domain\Service\AccountAccessServiceInterface;
+use App\EconumoBundle\Domain\Service\ImportTransactionServiceInterface;
 use App\EconumoBundle\Domain\Service\TransactionServiceInterface;
+use DateTimeImmutable;
 
 readonly class TransactionListService
 {
     public function __construct(
+        private GetTransactionListV1ResultAssembler $getTransactionListV1ResultAssembler,
         private ImportTransactionListV1ResultAssembler $importTransactionListV1ResultAssembler,
-        private readonly GetTransactionListV1ResultAssembler $getTransactionListV1ResultAssembler,
-        private readonly TransactionRepositoryInterface $transactionRepository,
-        private readonly AccountAccessServiceInterface $accountAccessService,
-        private readonly TransactionServiceInterface $transactionService
+        private TransactionRepositoryInterface $transactionRepository,
+        private AccountAccessServiceInterface $accountAccessService,
+        private TransactionServiceInterface $transactionService,
+        private ImportTransactionServiceInterface $importTransactionService
     ) {
     }
 
@@ -30,8 +33,15 @@ readonly class TransactionListService
         ImportTransactionListV1RequestDto $dto,
         Id $userId
     ): ImportTransactionListV1ResultDto {
-        // some actions ...
-        return $this->importTransactionListV1ResultAssembler->assemble($dto);
+        if (!$dto->file) {
+            $result = new ImportTransactionListV1ResultDto();
+            $result->errors[] = 'No file provided';
+            return $result;
+        }
+
+        $domainResult = $this->importTransactionService->importFromCsv($dto->file, $dto->mapping, $userId);
+
+        return $this->importTransactionListV1ResultAssembler->assemble($domainResult);
     }
 
     public function getTransactionList(
