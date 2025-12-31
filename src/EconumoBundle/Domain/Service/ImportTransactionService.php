@@ -35,6 +35,7 @@ use App\EconumoBundle\Domain\Service\PayeeServiceInterface;
 use App\EconumoBundle\Domain\Service\TagServiceInterface;
 use DateTime;
 use DateTimeInterface;
+use Throwable;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 readonly class ImportTransactionService implements ImportTransactionServiceInterface
@@ -52,6 +53,7 @@ readonly class ImportTransactionService implements ImportTransactionServiceInter
         private TagServiceInterface $tagService,
         private FolderServiceInterface $folderService,
         private TransactionServiceInterface $transactionService,
+        private AntiCorruptionServiceInterface $antiCorruptionService,
         private string $baseCurrency
     ) {
     }
@@ -97,114 +99,119 @@ readonly class ImportTransactionService implements ImportTransactionServiceInter
             fclose($handle);
             return $result;
         }
+        $header[0] = $this->stripUtf8Bom($header[0] ?? '');
 
-        $rowNumber = 1;
-        while (($row = fgetcsv($handle)) !== false) {
-            $rowNumber++;
+        $this->antiCorruptionService->beginTransaction(__METHOD__);
+        try {
+            $rowNumber = 1;
+            while (($row = fgetcsv($handle)) !== false) {
+                $rowNumber++;
 
-            try {
-                $rowData = array_combine($header, $row);
-                if ($rowData === false) {
-                    $result->errors[] = "Row {$rowNumber}: Invalid row format";
-                    $result->skipped++;
-                    continue;
-                }
+                try {
+                    $row = $this->normalizeRow($row, $header);
+                    $rowData = array_combine($header, $row);
 
-                // Extract fields based on mapping
-                $accountName = $this->getFieldValue($rowData, $mapping['account'] ?? null);
-                $dateStr = $this->getFieldValue($rowData, $mapping['date'] ?? null);
+                    // Extract fields based on mapping
+                    $accountName = $this->getFieldValue($rowData, $mapping['account'] ?? null);
+                    $dateStr = $this->getFieldValue($rowData, $mapping['date'] ?? null);
 
-                if (empty($accountName) || empty($dateStr)) {
-                    $result->errors[] = "Row {$rowNumber}: Missing required fields (account or date)";
-                    $result->skipped++;
-                    continue;
-                }
-
-                // Find or create account
-                $account = $this->findOrCreateAccount($accounts, $accountName, $userId);
-
-                // Parse date
-                $date = $this->parseDate($dateStr);
-                if (!$date) {
-                    $result->errors[] = "Row {$rowNumber}: Invalid date format '{$dateStr}'";
-                    $result->skipped++;
-                    continue;
-                }
-
-                // Parse amount
-                if ($useDualAmountMode) {
-                    $inflowStr = $this->getFieldValue($rowData, $mapping['amountInflow'] ?? null);
-                    $outflowStr = $this->getFieldValue($rowData, $mapping['amountOutflow'] ?? null);
-
-                    $inflow = !empty($inflowStr) ? $this->parseAmount($inflowStr) : null;
-                    $outflow = !empty($outflowStr) ? $this->parseAmount($outflowStr) : null;
-
-                    if ($inflow !== null && $outflow !== null) {
-                        $result->errors[] = "Row {$rowNumber}: Both inflow and outflow specified";
+                    if (empty($accountName) || empty($dateStr)) {
+                        $result->errors[] = "Row {$rowNumber}: Missing required fields (account or date)";
                         $result->skipped++;
                         continue;
                     }
 
-                    if ($inflow === null && $outflow === null) {
-                        $result->errors[] = "Row {$rowNumber}: No amount specified";
+                    // Find or create account
+                    $account = $this->findOrCreateAccount($accounts, $accountName, $userId);
+
+                    // Parse date
+                    $date = $this->parseDate($dateStr);
+                    if (!$date) {
+                        $result->errors[] = "Row {$rowNumber}: Invalid date format '{$dateStr}'";
                         $result->skipped++;
                         continue;
                     }
 
-                    $amount = $inflow ?? (-1 * $outflow);
-                } else {
-                    $amountStr = $this->getFieldValue($rowData, $mapping['amount'] ?? null);
-                    if (empty($amountStr)) {
-                        $result->errors[] = "Row {$rowNumber}: Missing amount";
+                    // Parse amount
+                    if ($useDualAmountMode) {
+                        $inflowStr = $this->getFieldValue($rowData, $mapping['amountInflow'] ?? null);
+                        $outflowStr = $this->getFieldValue($rowData, $mapping['amountOutflow'] ?? null);
+
+                        $inflow = !empty($inflowStr) ? $this->parseAmount($inflowStr) : null;
+                        $outflow = !empty($outflowStr) ? $this->parseAmount($outflowStr) : null;
+
+                        if ($inflow !== null && $outflow !== null) {
+                            $result->errors[] = "Row {$rowNumber}: Both inflow and outflow specified";
+                            $result->skipped++;
+                            continue;
+                        }
+
+                        if ($inflow === null && $outflow === null) {
+                            $result->errors[] = "Row {$rowNumber}: No amount specified";
+                            $result->skipped++;
+                            continue;
+                        }
+
+                        $amount = $inflow ?? (-1 * $outflow);
+                    } else {
+                        $amountStr = $this->getFieldValue($rowData, $mapping['amount'] ?? null);
+                        if (empty($amountStr)) {
+                            $result->errors[] = "Row {$rowNumber}: Missing amount";
+                            $result->skipped++;
+                            continue;
+                        }
+                        $amount = $this->parseAmount($amountStr);
+                    }
+
+                    if ($amount === null) {
+                        $result->errors[] = "Row {$rowNumber}: Invalid amount format";
                         $result->skipped++;
                         continue;
                     }
-                    $amount = $this->parseAmount($amountStr);
-                }
 
-                if ($amount === null) {
-                    $result->errors[] = "Row {$rowNumber}: Invalid amount format";
+                    // Parse optional fields
+                    $description = $this->getFieldValue($rowData, $mapping['description'] ?? null) ?? '';
+                    $categoryName = $this->getFieldValue($rowData, $mapping['category'] ?? null);
+                    $payeeName = $this->getFieldValue($rowData, $mapping['payee'] ?? null);
+                    $tagName = $this->getFieldValue($rowData, $mapping['tag'] ?? null);
+
+                    // Find or create entities
+                    $category = $categoryName ? $this->findOrCreateCategory($categories, $categoryName, $userId, $amount) : null;
+                    $payee = $payeeName ? $this->findOrCreatePayee($payees, $payeeName, $userId) : null;
+                    $tag = $tagName ? $this->findOrCreateTag($tags, $tagName, $userId) : null;
+
+                    // Create transaction
+                    $transactionDto = new TransactionDto();
+                    $transactionDto->userId = $userId;
+                    $transactionDto->type = new TransactionType($amount >= 0 ? TransactionType::INCOME : TransactionType::EXPENSE);
+                    $transactionDto->account = $account;
+                    $transactionDto->accountId = $account->getId();
+                    $transactionDto->amount = new DecimalNumber((string)abs($amount));
+                    $transactionDto->date = $date;
+                    $transactionDto->description = $description;
+                    $transactionDto->category = $category;
+                    $transactionDto->categoryId = $category?->getId();
+                    $transactionDto->payee = $payee;
+                    $transactionDto->payeeId = $payee?->getId();
+                    $transactionDto->tag = $tag;
+                    $transactionDto->tagId = $tag?->getId();
+
+                    $this->transactionService->createTransaction($transactionDto);
+                    $result->imported++;
+
+                } catch (Throwable $e) {
+                    $result->errors[] = "Row {$rowNumber}: " . $e->getMessage();
                     $result->skipped++;
-                    continue;
                 }
-
-                // Parse optional fields
-                $description = $this->getFieldValue($rowData, $mapping['description'] ?? null) ?? '';
-                $categoryName = $this->getFieldValue($rowData, $mapping['category'] ?? null);
-                $payeeName = $this->getFieldValue($rowData, $mapping['payee'] ?? null);
-                $tagName = $this->getFieldValue($rowData, $mapping['tag'] ?? null);
-
-                // Find or create entities
-                $category = $categoryName ? $this->findOrCreateCategory($categories, $categoryName, $userId, $amount) : null;
-                $payee = $payeeName ? $this->findOrCreatePayee($payees, $payeeName, $userId) : null;
-                $tag = $tagName ? $this->findOrCreateTag($tags, $tagName, $userId) : null;
-
-                // Create transaction
-                $transactionDto = new TransactionDto();
-                $transactionDto->userId = $userId;
-                $transactionDto->type = new TransactionType($amount >= 0 ? TransactionType::INCOME : TransactionType::EXPENSE);
-                $transactionDto->account = $account;
-                $transactionDto->accountId = $account->getId();
-                $transactionDto->amount = new DecimalNumber((string)abs($amount));
-                $transactionDto->date = $date;
-                $transactionDto->description = $description;
-                $transactionDto->category = $category;
-                $transactionDto->categoryId = $category?->getId();
-                $transactionDto->payee = $payee;
-                $transactionDto->payeeId = $payee?->getId();
-                $transactionDto->tag = $tag;
-                $transactionDto->tagId = $tag?->getId();
-
-                $this->transactionService->createTransaction($transactionDto);
-                $result->imported++;
-
-            } catch (\Exception $e) {
-                $result->errors[] = "Row {$rowNumber}: " . $e->getMessage();
-                $result->skipped++;
             }
-        }
 
-        fclose($handle);
+            $this->antiCorruptionService->commit(__METHOD__);
+        } catch (Throwable $throwable) {
+            $this->antiCorruptionService->rollback(__METHOD__);
+            throw $throwable;
+        } finally {
+            fclose($handle);
+        }
         return $result;
     }
 
@@ -412,5 +419,34 @@ readonly class ImportTransactionService implements ImportTransactionServiceInter
         }
 
         return (float)$cleaned;
+    }
+
+    /**
+     * @param array<int, string|null> $row
+     * @param array<int, string> $header
+     * @return array<int, string|null>
+     */
+    private function normalizeRow(array $row, array $header): array
+    {
+        $headerCount = count($header);
+        $rowCount = count($row);
+        if ($rowCount === $headerCount) {
+            return $row;
+        }
+
+        if ($rowCount < $headerCount) {
+            return array_pad($row, $headerCount, '');
+        }
+
+        return array_slice($row, 0, $headerCount);
+    }
+
+    private function stripUtf8Bom(string $value): string
+    {
+        if (str_starts_with($value, "\xEF\xBB\xBF")) {
+            return substr($value, 3);
+        }
+
+        return $value;
     }
 }
