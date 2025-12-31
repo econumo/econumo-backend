@@ -35,6 +35,7 @@ use App\EconumoBundle\Domain\Service\PayeeServiceInterface;
 use App\EconumoBundle\Domain\Service\TagServiceInterface;
 use DateTime;
 use DateTimeInterface;
+use League\Csv\Reader;
 use Throwable;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -87,29 +88,27 @@ readonly class ImportTransactionService implements ImportTransactionServiceInter
 
         // Parse CSV
         $filePath = $file->getPathname();
-        $handle = fopen($filePath, 'r');
-        if (!$handle) {
+        try {
+            $csv = Reader::createFromPath($filePath, 'r');
+            $csv->setHeaderOffset(0);
+        } catch (Throwable $throwable) {
             $result->errors[] = 'Failed to open CSV file';
             return $result;
         }
 
-        $header = fgetcsv($handle);
-        if (!$header) {
+        $header = $csv->getHeader();
+        if (empty($header)) {
             $result->errors[] = 'CSV file is empty or invalid';
-            fclose($handle);
             return $result;
         }
-        $header[0] = $this->stripUtf8Bom($header[0] ?? '');
 
         $this->antiCorruptionService->beginTransaction(__METHOD__);
         try {
-            $rowNumber = 1;
-            while (($row = fgetcsv($handle)) !== false) {
-                $rowNumber++;
+            foreach ($csv->getRecords() as $rowIndex => $rowData) {
+                $rowNumber = $rowIndex + 2;
 
                 try {
-                    $row = $this->normalizeRow($row, $header);
-                    $rowData = array_combine($header, $row);
+                    $rowData = $this->normalizeRowKeys($rowData);
 
                     // Extract fields based on mapping
                     $accountName = $this->getFieldValue($rowData, $mapping['account'] ?? null);
@@ -209,8 +208,6 @@ readonly class ImportTransactionService implements ImportTransactionServiceInter
         } catch (Throwable $throwable) {
             $this->antiCorruptionService->rollback(__METHOD__);
             throw $throwable;
-        } finally {
-            fclose($handle);
         }
         return $result;
     }
@@ -422,23 +419,17 @@ readonly class ImportTransactionService implements ImportTransactionServiceInter
     }
 
     /**
-     * @param array<int, string|null> $row
-     * @param array<int, string> $header
-     * @return array<int, string|null>
+     * @param array<string, string|null> $rowData
+     * @return array<string, string|null>
      */
-    private function normalizeRow(array $row, array $header): array
+    private function normalizeRowKeys(array $rowData): array
     {
-        $headerCount = count($header);
-        $rowCount = count($row);
-        if ($rowCount === $headerCount) {
-            return $row;
+        $normalized = [];
+        foreach ($rowData as $key => $value) {
+            $normalized[$this->stripUtf8Bom((string)$key)] = $value;
         }
 
-        if ($rowCount < $headerCount) {
-            return array_pad($row, $headerCount, '');
-        }
-
-        return array_slice($row, 0, $headerCount);
+        return $normalized;
     }
 
     private function stripUtf8Bom(string $value): string

@@ -250,12 +250,12 @@ readonly class TransactionService implements TransactionServiceInterface
     ): array {
         return [
             $transaction->getId()->getValue(),
-            $account->getName()->getValue(),
+            $this->sanitizeExportValue($account->getName()->getValue()),
             $account->getCurrencyCode()->getValue(),
-            $category ?? '',
-            $description ?? $transaction->getDescription(),
-            $tag ?? '',
-            $payee ?? '',
+            $this->sanitizeExportValue($category),
+            $this->sanitizeExportValue($description ?? $transaction->getDescription()),
+            $this->sanitizeExportValue($tag),
+            $this->sanitizeExportValue($payee),
             $amount,
             $transaction->getSpentAt()->format('Y-m-d H:i:s'),
         ];
@@ -275,5 +275,19 @@ readonly class TransactionService implements TransactionServiceInterface
     {
         $value = $amount->getValue();
         return str_starts_with($value, '-') ? substr($value, 1) : $value;
+    }
+
+    private function sanitizeExportValue(?string $value): string
+    {
+        if ($value === null) {
+            return '';
+        }
+
+        $value = preg_replace("/[\\r\\n]+/", ' ', $value);
+        if ($value === null) {
+            return '';
+        }
+
+        return trim($value);
     }
 }
