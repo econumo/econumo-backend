@@ -16,6 +16,7 @@ use App\EconumoBundle\Domain\Service\AccountAccessServiceInterface;
 use App\EconumoBundle\Domain\Service\ImportTransactionServiceInterface;
 use App\EconumoBundle\Domain\Service\TransactionServiceInterface;
 use DateTimeImmutable;
+use App\EconumoBundle\Application\Transaction\Dto\ExportTransactionListV1RequestDto;
 
 readonly class TransactionListService
 {
@@ -25,7 +26,7 @@ readonly class TransactionListService
         private TransactionRepositoryInterface $transactionRepository,
         private AccountAccessServiceInterface $accountAccessService,
         private TransactionServiceInterface $transactionService,
-        private ImportTransactionServiceInterface $importTransactionService
+        private ImportTransactionServiceInterface $importTransactionService,
     ) {
     }
 
@@ -64,5 +65,12 @@ readonly class TransactionListService
         }
 
         return $this->getTransactionListV1ResultAssembler->assemble($dto, $userId, $transactions);
+    }
+
+    public function exportTransactionList(
+        ExportTransactionListV1RequestDto $dto,
+        Id $userId
+    ): array {
+        return $this->transactionService->exportTransactionList($userId);
     }
 }

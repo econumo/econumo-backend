@@ -24,4 +24,9 @@ interface TransactionServiceInterface
      * @return Transaction[]
      */
     public function getTransactionsForVisibleAccounts(Id $userId, DateTimeInterface $periodStart = null, DateTimeInterface $periodEnd = null): array;
+
+    /**
+     * @return array<int, array<int, string>>
+     */
+    public function exportTransactionList(Id $userId): array;
 }
