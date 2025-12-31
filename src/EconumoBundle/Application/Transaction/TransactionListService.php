@@ -71,6 +71,34 @@ readonly class TransactionListService
         ExportTransactionListV1RequestDto $dto,
         Id $userId
     ): array {
-        return $this->transactionService->exportTransactionList($userId);
+        $accountIds = $this->parseAccountIds($dto->accountId);
+
+        return $this->transactionService->exportTransactionList($userId, $accountIds);
+    }
+
+    /**
+     * @return array<int, Id>|null
+     */
+    private function parseAccountIds(?string $accountId): ?array
+    {
+        if ($accountId === null) {
+            return null;
+        }
+
+        $accountId = trim($accountId);
+        if ($accountId === '') {
+            return null;
+        }
+
+        $ids = array_filter(
+            array_map('trim', explode(',', $accountId)),
+            static fn(string $value): bool => $value !== ''
+        );
+        if ($ids === []) {
+            return null;
+        }
+
+        $uniqueIds = array_values(array_unique($ids));
+        return array_map(static fn(string $id): Id => new Id($id), $uniqueIds);
     }
 }

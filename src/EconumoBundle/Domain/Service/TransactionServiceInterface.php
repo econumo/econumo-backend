@@ -28,5 +28,8 @@ interface TransactionServiceInterface
     /**
      * @return array<int, array<int, string>>
      */
-    public function exportTransactionList(Id $userId): array;
+    /**
+     * @param array<int, Id>|null $accountIds
+     */
+    public function exportTransactionList(Id $userId, ?array $accountIds = null): array;
 }

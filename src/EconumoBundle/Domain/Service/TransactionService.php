@@ -126,16 +126,25 @@ readonly class TransactionService implements TransactionServiceInterface
         );
     }
 
-    public function exportTransactionList(Id $userId): array
+    /**
+     * @param array<int, Id>|null $accountIds
+     */
+    public function exportTransactionList(Id $userId, ?array $accountIds = null): array
     {
         $accounts = $this->accountRepository->getUserAccounts($userId);
         $accountsById = [];
         foreach ($accounts as $account) {
-            if (!$account->getUserId()->isEqual($userId)) {
-                continue;
+            $accountsById[$account->getId()->getValue()] = $account;
+        }
+        $allAccountsById = $accountsById;
+
+        if ($accountIds !== null) {
+            $accountIdLookup = [];
+            foreach ($accountIds as $accountId) {
+                $accountIdLookup[$accountId->getValue()] = true;
             }
 
-            $accountsById[$account->getId()->getValue()] = $account;
+            $accountsById = array_intersect_key($accountsById, $accountIdLookup);
         }
 
         $rows = [$this->getExportHeaders()];
@@ -145,7 +154,7 @@ readonly class TransactionService implements TransactionServiceInterface
 
         $transactions = $this->transactionRepository->findAvailableForUserId($userId);
         foreach ($transactions as $transaction) {
-            foreach ($this->buildExportRows($transaction, $accountsById) as $row) {
+            foreach ($this->buildExportRows($transaction, $accountsById, $allAccountsById) as $row) {
                 $rows[] = $row;
             }
         }
@@ -175,7 +184,7 @@ readonly class TransactionService implements TransactionServiceInterface
      * @param array<string, Account> $accountsById
      * @return array<int, array<int, string>>
      */
-    private function buildExportRows(Transaction $transaction, array $accountsById): array
+    private function buildExportRows(Transaction $transaction, array $accountsById, array $allAccountsById): array
     {
         $rows = [];
         $accountId = $transaction->getAccountId()->getValue();
@@ -183,13 +192,20 @@ readonly class TransactionService implements TransactionServiceInterface
             $description = $transaction->getDescription();
             if ($transaction->getType()->isTransfer()) {
                 $recipientId = $transaction->getAccountRecipientId()?->getValue();
-                if ($recipientId && isset($accountsById[$recipientId])) {
-                    $description = sprintf(
+                $transferNote = 'Transfer';
+                if ($recipientId && isset($allAccountsById[$recipientId])) {
+                    $transferNote = sprintf(
                         'Transfer of %s %s to %s',
-                        $accountsById[$accountId]->getCurrencyCode()->getValue(),
                         $this->formatAmountForDescription($transaction->getAmount()),
-                        $accountsById[$recipientId]->getName()->getValue()
+                        $accountsById[$accountId]->getCurrencyCode()->getValue(),
+                        $allAccountsById[$recipientId]->getName()->getValue()
                     );
+                }
+
+                if (trim($description) === '') {
+                    $description = $transferNote;
+                } else {
+                    $description = rtrim($description) . ' ' . $transferNote;
                 }
             }
 
@@ -210,17 +226,23 @@ readonly class TransactionService implements TransactionServiceInterface
         if ($transaction->getType()->isTransfer()) {
             $recipientId = $transaction->getAccountRecipientId()?->getValue();
             if ($recipientId && isset($accountsById[$recipientId])) {
-                $sourceName = isset($accountsById[$accountId])
-                    ? $accountsById[$accountId]->getName()->getValue()
+                $sourceName = isset($allAccountsById[$accountId])
+                    ? $allAccountsById[$accountId]->getName()->getValue()
                     : '';
-                $description = $sourceName !== ''
+                $transferNote = $sourceName !== ''
                     ? sprintf(
                         'Transfer of %s %s from %s',
-                        $accountsById[$recipientId]->getCurrencyCode()->getValue(),
                         $this->formatAmountForDescription($transaction->getAmountRecipient() ?? $transaction->getAmount()),
+                        $accountsById[$recipientId]->getCurrencyCode()->getValue(),
                         $sourceName
                     )
                     : 'Transfer';
+                $description = $transaction->getDescription();
+                if (trim($description) === '') {
+                    $description = $transferNote;
+                } else {
+                    $description = rtrim($description) . ' ' . $transferNote;
+                }
                 $rows[] = $this->buildExportRow(
                     $transaction,
                     $accountsById[$recipientId],

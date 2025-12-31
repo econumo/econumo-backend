@@ -26,6 +26,13 @@ class ExportTransactionListV1Controller extends AbstractController
      * Export TransactionList
      *
      * @OA\Tag(name="Transaction"),
+     * @OA\Parameter(
+     *     name="accountId",
+     *     in="query",
+     *     required=false,
+     *     @OA\Schema(type="string"),
+     *     description="Comma-separated account IDs",
+     * ),
      * @OA\Response(
      *     response=200,
      *     description="OK",
