@@ -93,6 +93,14 @@ class Account
         }
     }
 
+    public function updateCurrency(Currency $currency): void
+    {
+        if (!$this->currency->getId()->isEqual($currency->getId())) {
+            $this->currency = $currency;
+            $this->updated();
+        }
+    }
+
     public function isDeleted(): bool
     {
         return $this->isDeleted;

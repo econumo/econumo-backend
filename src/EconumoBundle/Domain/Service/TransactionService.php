@@ -6,6 +6,7 @@ namespace App\EconumoBundle\Domain\Service;
 
 use App\EconumoBundle\Domain\Entity\ValueObject\DecimalNumber;
 use Throwable;
+use App\EconumoBundle\Domain\Entity\Account;
 use App\EconumoBundle\Domain\Entity\Transaction;
 use App\EconumoBundle\Domain\Entity\ValueObject\Id;
 use App\EconumoBundle\Domain\Factory\TransactionFactoryInterface;
@@ -123,5 +124,192 @@ readonly class TransactionService implements TransactionServiceInterface
             $periodStart,
             $periodEnd
         );
+    }
+
+    /**
+     * @param array<int, Id>|null $accountIds
+     */
+    public function exportTransactionList(Id $userId, ?array $accountIds = null): array
+    {
+        $accounts = $this->accountRepository->getUserAccounts($userId);
+        $accountsById = [];
+        foreach ($accounts as $account) {
+            $accountsById[$account->getId()->getValue()] = $account;
+        }
+        $allAccountsById = $accountsById;
+
+        if ($accountIds !== null) {
+            $accountIdLookup = [];
+            foreach ($accountIds as $accountId) {
+                $accountIdLookup[$accountId->getValue()] = true;
+            }
+
+            $accountsById = array_intersect_key($accountsById, $accountIdLookup);
+        }
+
+        $rows = [$this->getExportHeaders()];
+        if ($accountsById === []) {
+            return $rows;
+        }
+
+        $transactions = $this->transactionRepository->findAvailableForUserId($userId);
+        foreach ($transactions as $transaction) {
+            foreach ($this->buildExportRows($transaction, $accountsById, $allAccountsById) as $row) {
+                $rows[] = $row;
+            }
+        }
+
+        return $rows;
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function getExportHeaders(): array
+    {
+        return [
+            'transaction_id',
+            'account_name',
+            'account_currency',
+            'category',
+            'description',
+            'tag',
+            'payee',
+            'amount',
+            'spent_at',
+        ];
+    }
+
+    /**
+     * @param array<string, Account> $accountsById
+     * @return array<int, array<int, string>>
+     */
+    private function buildExportRows(Transaction $transaction, array $accountsById, array $allAccountsById): array
+    {
+        $rows = [];
+        $accountId = $transaction->getAccountId()->getValue();
+        if (isset($accountsById[$accountId])) {
+            $description = $transaction->getDescription();
+            if ($transaction->getType()->isTransfer()) {
+                $recipientId = $transaction->getAccountRecipientId()?->getValue();
+                $transferNote = 'Transfer';
+                if ($recipientId && isset($allAccountsById[$recipientId])) {
+                    $transferNote = sprintf(
+                        'Transfer of %s %s to %s',
+                        $this->formatAmountForDescription($transaction->getAmount()),
+                        $accountsById[$accountId]->getCurrencyCode()->getValue(),
+                        $allAccountsById[$recipientId]->getName()->getValue()
+                    );
+                }
+
+                if (trim($description) === '') {
+                    $description = $transferNote;
+                } else {
+                    $description = $transferNote . ' [' . trim($description) . ']';
+                }
+            }
+
+            $rows[] = $this->buildExportRow(
+                $transaction,
+                $accountsById[$accountId],
+                $this->formatAmount(
+                    $transaction->getAmount(),
+                    $transaction->getType()->isExpense() || $transaction->getType()->isTransfer()
+                ),
+                $transaction->getCategory()?->getName()->getValue(),
+                $transaction->getTag()?->getName()->getValue(),
+                $transaction->getPayee()?->getName()->getValue(),
+                $description
+            );
+        }
+
+        if ($transaction->getType()->isTransfer()) {
+            $recipientId = $transaction->getAccountRecipientId()?->getValue();
+            if ($recipientId && isset($accountsById[$recipientId])) {
+                $sourceName = isset($allAccountsById[$accountId])
+                    ? $allAccountsById[$accountId]->getName()->getValue()
+                    : '';
+                $transferNote = $sourceName !== ''
+                    ? sprintf(
+                        'Transfer of %s %s from %s',
+                        $this->formatAmountForDescription($transaction->getAmountRecipient() ?? $transaction->getAmount()),
+                        $accountsById[$recipientId]->getCurrencyCode()->getValue(),
+                        $sourceName
+                    )
+                    : 'Transfer';
+                $description = $transaction->getDescription();
+                if (trim($description) === '') {
+                    $description = $transferNote;
+                } else {
+                    $description = $transferNote . ' [' . trim($description) . ']';
+                }
+                $rows[] = $this->buildExportRow(
+                    $transaction,
+                    $accountsById[$recipientId],
+                    $this->formatAmount(
+                        $transaction->getAmountRecipient() ?? $transaction->getAmount(),
+                        false
+                    ),
+                    '',
+                    '',
+                    '',
+                    $description
+                );
+            }
+        }
+
+        return $rows;
+    }
+
+    private function buildExportRow(
+        Transaction $transaction,
+        Account $account,
+        string $amount,
+        ?string $category,
+        ?string $tag,
+        ?string $payee,
+        ?string $description = null
+    ): array {
+        return [
+            $transaction->getId()->getValue(),
+            $this->sanitizeExportValue($account->getName()->getValue()),
+            $account->getCurrencyCode()->getValue(),
+            $this->sanitizeExportValue($category),
+            $this->sanitizeExportValue($description ?? $transaction->getDescription()),
+            $this->sanitizeExportValue($tag),
+            $this->sanitizeExportValue($payee),
+            $amount,
+            $transaction->getSpentAt()->format('Y-m-d H:i:s'),
+        ];
+    }
+
+    private function formatAmount(DecimalNumber $amount, bool $negative): string
+    {
+        $value = $amount->getValue();
+        if ($negative) {
+            return str_starts_with($value, '-') ? $value : '-' . $value;
+        }
+
+        return str_starts_with($value, '-') ? substr($value, 1) : $value;
+    }
+
+    private function formatAmountForDescription(DecimalNumber $amount): string
+    {
+        $value = $amount->getValue();
+        return str_starts_with($value, '-') ? substr($value, 1) : $value;
+    }
+
+    private function sanitizeExportValue(?string $value): string
+    {
+        if ($value === null) {
+            return '';
+        }
+
+        $value = preg_replace("/[\\r\\n]+/", ' ', $value);
+        if ($value === null) {
+            return '';
+        }
+
+        return trim($value);
     }
 }

@@ -47,6 +47,10 @@ class UpdateAccountV1Form extends AbstractType
             ->add('icon', TextType::class, [
                 'constraints' => [new NotBlank(), $this->valueObjectValidationFactory->create(Icon::class)],
             ])
+            ->add('currencyId', TextType::class, [
+                'required' => false,
+                'constraints' => [new Uuid()],
+            ])
             ->add('updatedAt', TextType::class, [
                 'constraints' => [new NotBlank(), new DateTime("Y-m-d H:i:s")]
             ]);
