@@ -81,8 +81,25 @@ class ImportTransactionListV1Controller extends AbstractController
         // Parse the mapping JSON before validation
         $mappingJson = $request->request->get('mapping');
         $mapping = [];
-        if ($mappingJson) {
-            $mapping = json_decode($mappingJson, true) ?? [];
+        if ($mappingJson !== null) {
+            $mapping = json_decode($mappingJson, true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new ValidationException(
+                    'Invalid mapping JSON',
+                    Response::HTTP_BAD_REQUEST,
+                    null,
+                    ['mapping' => [json_last_error_msg()]]
+                );
+            }
+
+            if (!is_array($mapping)) {
+                throw new ValidationException(
+                    'Invalid mapping JSON',
+                    Response::HTTP_BAD_REQUEST,
+                    null,
+                    ['mapping' => ['Mapping must be a JSON object.']]
+                );
+            }
         }
 
         $data = array_merge(

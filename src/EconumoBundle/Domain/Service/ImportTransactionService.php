@@ -75,6 +75,11 @@ readonly class ImportTransactionService implements ImportTransactionServiceInter
 
         // Validate amount mode
         $useDualAmountMode = !empty($mapping['amountInflow']) || !empty($mapping['amountOutflow']);
+        if ($useDualAmountMode && (empty($mapping['amountInflow']) || empty($mapping['amountOutflow']))) {
+            $result->errors[] = 'Mapping must include both "amountInflow" and "amountOutflow" fields when using dual amount mode';
+            return $result;
+        }
+
         if (!$useDualAmountMode && empty($mapping['amount'])) {
             $result->errors[] = 'Mapping must include either "amount" or both "amountInflow" and "amountOutflow"';
             return $result;
@@ -370,7 +375,9 @@ readonly class ImportTransactionService implements ImportTransactionServiceInter
         // Try strtotime as fallback
         $timestamp = strtotime($dateStr);
         if ($timestamp !== false) {
-            return new DateTime('@' . $timestamp);
+            $date = new DateTime();
+            $date->setTimestamp($timestamp);
+            return $date;
         }
 
         return null;
@@ -378,9 +385,16 @@ readonly class ImportTransactionService implements ImportTransactionServiceInter
 
     private function parseAmount(string $amountStr): ?float
     {
-        // Remove common currency symbols and whitespace
-        $cleaned = preg_replace('/[^\d.,-]/', '', $amountStr);
-        if ($cleaned === null) {
+        $trimmed = trim($amountStr);
+        if ($trimmed === '') {
+            return null;
+        }
+
+        $isNegative = str_starts_with($trimmed, '-') || (str_contains($trimmed, '(') && str_contains($trimmed, ')'));
+
+        // Remove common currency symbols and whitespace, keep separators
+        $cleaned = preg_replace('/[^\d.,]/', '', $trimmed);
+        if ($cleaned === null || $cleaned === '') {
             return null;
         }
 
@@ -415,7 +429,12 @@ readonly class ImportTransactionService implements ImportTransactionServiceInter
             return null;
         }
 
-        return (float)$cleaned;
+        $amount = (float)$cleaned;
+        if ($isNegative) {
+            $amount *= -1;
+        }
+
+        return $amount;
     }
 
     /**
