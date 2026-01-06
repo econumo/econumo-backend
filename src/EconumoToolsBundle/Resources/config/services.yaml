@@ -12,3 +12,8 @@ services:
       - '../../Domain/{Exception,Traits,Entity,Event}'
       - '../../Domain/{Exception,Traits,Entity,Event}/*.php'
       - '../../Domain/{Exception,Traits,Entity,Event}/**/*.php'
+
+  App\EconumoToolsBundle\Domain\Service\CurrencyRatesLoaderServiceInterface:
+    class: \App\EconumoToolsBundle\Infrastructure\OpenExchangeRates\CurrencyRatesLoaderService
+    arguments:
+      $token: '%env(OPEN_EXCHANGE_RATES_TOKEN)%'
