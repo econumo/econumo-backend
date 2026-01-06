@@ -23,7 +23,6 @@ jobs:
 
       - name: Ignore bundles
         run: |
-          touch src/EconumoFamilyBundle/.disabled
           touch src/EconumoCloudBundle/.disabled
 
       - name: Build Econumo image for testing
@@ -48,14 +47,12 @@ jobs:
       - name: Test Econumo CE
         if: success()
         run: |
-          docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} rm -f src/EconumoFamilyBundle/.disabled
           docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} bin/console cache:clear --env=test
           docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} bin/console doctrine:database:create --env=test
           docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} bin/console doctrine:migration:migrate -n --env=test
           docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} bin/console doctrine:schema:validate --skip-sync --env=test
           docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} bin/console doctrine:fixtures:load -n --env=test
           docker run --volume shared-volume:/var/www/var/db --env QASE_ENABLE=${QASE_ENABLE} --env QASE_TOKEN=${QASE_TOKEN} --env QASE_PROJECT=${QASE_PROJECT} ${DOCKER_IMAGE} vendor/bin/codecept run
-          docker run --volume shared-volume:/var/www/var/db ${DOCKER_IMAGE} touch src/EconumoFamilyBundle/.disabled
         env:
           QASE_ENABLE: "false"
           QASE_TOKEN: ${{ secrets.APP_QASE_TOKEN }}

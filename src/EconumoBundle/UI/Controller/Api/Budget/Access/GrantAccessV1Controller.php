@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace App\EconumoBundle\UI\Controller\Api\Budget\Access;
 
+use App\EconumoBundle\Application\Budget\AccessService;
+use App\EconumoBundle\Application\Budget\Dto\GrantAccessV1RequestDto;
 use App\EconumoBundle\Application\Exception\ValidationException;
+use App\EconumoBundle\Domain\Entity\User;
+use App\EconumoBundle\UI\Controller\Api\Budget\Access\Validation\GrantAccessV1Form;
+use App\EconumoBundle\UI\Service\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,6 +20,10 @@ use OpenApi\Annotations as OA;
 
 class GrantAccessV1Controller extends AbstractController
 {
+    public function __construct(private readonly AccessService $accessService, private readonly ValidatorInterface $validator)
+    {
+    }
+
     /**
      * Grant a budget access
      *
@@ -45,8 +54,14 @@ class GrantAccessV1Controller extends AbstractController
      * @throws ValidationException
      */
     #[Route(path: '/api/v1/budget/grant-access', name: 'api_budget_grant_access', methods: ['POST'])]
-    public function __invoke() : Response
+    public function __invoke(Request $request): Response
     {
-        return ResponseFactory::createNotImplementedResponse('Not supported in Econumo One');
+        $dto = new GrantAccessV1RequestDto();
+        $this->validator->validate(GrantAccessV1Form::class, $request->request->all(), $dto);
+        /** @var User $user */
+        $user = $this->getUser();
+        $result = $this->accessService->grantAccess($dto, $user->getId());
+
+        return ResponseFactory::createOkResponse($request, $result);
     }
 }

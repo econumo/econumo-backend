@@ -7,6 +7,7 @@ namespace App\EconumoBundle\UI\Controller\Api\Connection\ConnectionList;
 use App\EconumoBundle\Application\Connection\ConnectionListService;
 use App\EconumoBundle\Application\Connection\Dto\GetConnectionListV1RequestDto;
 use App\EconumoBundle\Application\Connection\Dto\GetConnectionListV1ResultDto;
+use App\EconumoBundle\Domain\Entity\User;
 use App\EconumoBundle\UI\Controller\Api\Connection\ConnectionList\Validation\GetConnectionListV1Form;
 use App\EconumoBundle\Application\Exception\ValidationException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -57,8 +58,10 @@ class GetConnectionListV1Controller extends AbstractController
     {
         $dto = new GetConnectionListV1RequestDto();
         $this->validator->validate(GetConnectionListV1Form::class, $request->query->all(), $dto);
+        /** @var User $user */
+        $user = $this->getUser();
+        $result = $this->connectionListService->getConnectionList($dto, $user->getId());
 
-        $result = new GetConnectionListV1ResultDto();
         return ResponseFactory::createOkResponse($request, $result);
     }
 }
