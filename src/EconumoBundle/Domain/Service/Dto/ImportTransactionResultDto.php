@@ -11,7 +11,7 @@ class ImportTransactionResultDto
     public int $skipped = 0;
 
     /**
-     * @var string[]
+     * @var array<string, int[]>
      */
     public array $errors = [];
 }

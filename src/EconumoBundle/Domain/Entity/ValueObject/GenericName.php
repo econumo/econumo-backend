@@ -32,7 +32,7 @@ class GenericName implements ValueObjectInterface, JsonSerializable, NameInterfa
         if (!is_string($value)) {
             throw new DomainException(
                 sprintf(
-                    '%s must be %d–%d characters.',
+                    '%s must be %d-%d characters',
                     $label,
                     static::MIN_LENGTH,
                     static::MAX_LENGTH
@@ -44,7 +44,7 @@ class GenericName implements ValueObjectInterface, JsonSerializable, NameInterfa
         if ($length < static::MIN_LENGTH || $length > static::MAX_LENGTH) {
             throw new DomainException(
                 sprintf(
-                    '%s must be %d–%d characters.',
+                    '%s must be %d-%d characters',
                     $label,
                     static::MIN_LENGTH,
                     static::MAX_LENGTH
