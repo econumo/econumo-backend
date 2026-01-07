@@ -64,24 +64,30 @@ readonly class ImportTransactionService implements ImportTransactionServiceInter
         $result = new ImportTransactionResultDto();
 
         if (!$file->isValid()) {
-            $result->errors[] = 'Invalid file upload';
+            $this->addError($result, 'Invalid file upload');
             return $result;
         }
 
         if (empty($mapping['account']) || empty($mapping['date'])) {
-            $result->errors[] = 'Mapping must include "account" and "date" fields';
+            $this->addError($result, 'Mapping must include "account" and "date" fields');
             return $result;
         }
 
         // Validate amount mode
         $useDualAmountMode = !empty($mapping['amountInflow']) || !empty($mapping['amountOutflow']);
         if ($useDualAmountMode && (empty($mapping['amountInflow']) || empty($mapping['amountOutflow']))) {
-            $result->errors[] = 'Mapping must include both "amountInflow" and "amountOutflow" fields when using dual amount mode';
+            $this->addError(
+                $result,
+                'Mapping must include both "amountInflow" and "amountOutflow" fields when using dual amount mode'
+            );
             return $result;
         }
 
         if (!$useDualAmountMode && empty($mapping['amount'])) {
-            $result->errors[] = 'Mapping must include either "amount" or both "amountInflow" and "amountOutflow"';
+            $this->addError(
+                $result,
+                'Mapping must include either "amount" or both "amountInflow" and "amountOutflow"'
+            );
             return $result;
         }
 
@@ -97,13 +103,13 @@ readonly class ImportTransactionService implements ImportTransactionServiceInter
             $csv = Reader::createFromPath($filePath, 'r');
             $csv->setHeaderOffset(0);
         } catch (Throwable $throwable) {
-            $result->errors[] = 'Failed to open CSV file';
+            $this->addError($result, 'Failed to open CSV file');
             return $result;
         }
 
         $header = $csv->getHeader();
         if (empty($header)) {
-            $result->errors[] = 'CSV file is empty or invalid';
+            $this->addError($result, 'CSV file is empty or invalid');
             return $result;
         }
 
@@ -120,7 +126,7 @@ readonly class ImportTransactionService implements ImportTransactionServiceInter
                     $dateStr = $this->getFieldValue($rowData, $mapping['date'] ?? null);
 
                     if (empty($accountName) || empty($dateStr)) {
-                        $result->errors[] = "Row {$rowNumber}: Missing required fields (account or date)";
+                        $this->addError($result, 'Missing required fields (account or date)', $rowNumber);
                         $result->skipped++;
                         continue;
                     }
@@ -131,7 +137,7 @@ readonly class ImportTransactionService implements ImportTransactionServiceInter
                     // Parse date
                     $date = $this->parseDate($dateStr);
                     if (!$date) {
-                        $result->errors[] = "Row {$rowNumber}: Invalid date format '{$dateStr}'";
+                        $this->addError($result, "Invalid date format '{$dateStr}'", $rowNumber);
                         $result->skipped++;
                         continue;
                     }
@@ -145,13 +151,13 @@ readonly class ImportTransactionService implements ImportTransactionServiceInter
                         $outflow = !empty($outflowStr) ? $this->parseAmount($outflowStr) : null;
 
                         if ($inflow !== null && $outflow !== null) {
-                            $result->errors[] = "Row {$rowNumber}: Both inflow and outflow specified";
+                            $this->addError($result, 'Both inflow and outflow specified', $rowNumber);
                             $result->skipped++;
                             continue;
                         }
 
                         if ($inflow === null && $outflow === null) {
-                            $result->errors[] = "Row {$rowNumber}: No amount specified";
+                            $this->addError($result, 'No amount specified', $rowNumber);
                             $result->skipped++;
                             continue;
                         }
@@ -160,7 +166,7 @@ readonly class ImportTransactionService implements ImportTransactionServiceInter
                     } else {
                         $amountStr = $this->getFieldValue($rowData, $mapping['amount'] ?? null);
                         if (empty($amountStr)) {
-                            $result->errors[] = "Row {$rowNumber}: Missing amount";
+                            $this->addError($result, 'Missing amount', $rowNumber);
                             $result->skipped++;
                             continue;
                         }
@@ -168,7 +174,7 @@ readonly class ImportTransactionService implements ImportTransactionServiceInter
                     }
 
                     if ($amount === null) {
-                        $result->errors[] = "Row {$rowNumber}: Invalid amount format";
+                        $this->addError($result, 'Invalid amount format', $rowNumber);
                         $result->skipped++;
                         continue;
                     }
@@ -204,7 +210,7 @@ readonly class ImportTransactionService implements ImportTransactionServiceInter
                     $result->imported++;
 
                 } catch (Throwable $e) {
-                    $result->errors[] = "Row {$rowNumber}: " . $e->getMessage();
+                    $this->addError($result, $e->getMessage(), $rowNumber);
                     $result->skipped++;
                 }
             }
@@ -352,6 +358,37 @@ readonly class ImportTransactionService implements ImportTransactionServiceInter
 
     private function parseDate(string $dateStr): ?DateTimeInterface
     {
+        $dateStr = trim($dateStr, " \t\n\r\0\x0B\"'");
+        if ($dateStr === '') {
+            return null;
+        }
+
+        if (ctype_digit($dateStr)) {
+            $length = strlen($dateStr);
+            if ($length === 8) {
+                $ymd = DateTime::createFromFormat('!Ymd', $dateStr);
+                if ($ymd !== false) {
+                    $errors = DateTime::getLastErrors();
+                    if ($errors !== false && $errors['warning_count'] === 0 && $errors['error_count'] === 0) {
+                        return $ymd;
+                    }
+                }
+            }
+
+            if ($length === 10 || $length === 13) {
+                $timestamp = (int)$dateStr;
+                if ($length === 13) {
+                    $timestamp = (int)floor($timestamp / 1000);
+                }
+
+                if ($timestamp > 0) {
+                    $date = new DateTime();
+                    $date->setTimestamp($timestamp);
+                    return $date;
+                }
+            }
+        }
+
         // Try common date formats
         $formats = [
             'Y-m-d',
@@ -360,16 +397,88 @@ readonly class ImportTransactionService implements ImportTransactionServiceInter
             'Y/m/d',
             'd-m-Y',
             'm-d-Y',
+            'd.m.Y',
+            'm.d.Y',
+            'Y.m.d',
+            'Ymd',
+            'd/m/y',
+            'm/d/y',
+            'd-m-y',
+            'm-d-y',
+            'd.m.y',
+            'm.d.y',
             'Y-m-d H:i:s',
+            'Y-m-d H:i',
             'd/m/Y H:i:s',
+            'd/m/Y H:i',
             'm/d/Y H:i:s',
+            'm/d/Y H:i',
+            'Y/m/d H:i:s',
+            'Y/m/d H:i',
+            'd-m-Y H:i:s',
+            'd-m-Y H:i',
+            'm-d-Y H:i:s',
+            'm-d-Y H:i',
+            'd.m.Y H:i:s',
+            'd.m.Y H:i',
+            'm.d.Y H:i:s',
+            'm.d.Y H:i',
+            'Y.m.d H:i:s',
+            'Y.m.d H:i',
+            'Y-m-d\TH:i:s',
+            'Y-m-d\TH:i',
+            'Y-m-d\TH:i:sP',
+            'Y-m-d\TH:i:sO',
+            'Y-m-d\TH:i:s.uP',
+            'Y-m-d\TH:i:s.uO',
+            'Y-m-d\TH:i:s\Z',
+            'Y-m-d\TH:i:s.u\Z',
+            'd M Y',
+            'd M Y H:i',
+            'd M Y H:i:s',
+            'd M Y g:i A',
+            'd F Y',
+            'd F Y H:i',
+            'd F Y H:i:s',
+            'd F Y g:i A',
+            'M d Y',
+            'M d, Y',
+            'M d Y H:i',
+            'M d, Y H:i',
+            'M d Y H:i:s',
+            'M d, Y H:i:s',
+            'M d Y g:i A',
+            'M d, Y g:i A',
+            'F d Y',
+            'F d, Y',
+            'F d Y H:i',
+            'F d, Y H:i',
+            'F d Y H:i:s',
+            'F d, Y H:i:s',
+            'F d Y g:i A',
+            'F d, Y g:i A',
+            'd-M-Y',
+            'd-M-Y H:i',
+            'd-M-Y H:i:s',
+            'd-M-Y g:i A',
+            'd-F-Y',
+            'd-F-Y H:i',
+            'd-F-Y H:i:s',
+            'd-F-Y g:i A',
         ];
 
         foreach ($formats as $format) {
-            $date = DateTime::createFromFormat($format, $dateStr);
-            if ($date !== false) {
-                return $date;
+            $date = DateTime::createFromFormat('!' . $format, $dateStr);
+            if ($date === false) {
+                continue;
             }
+
+            $errors = DateTime::getLastErrors();
+            if ($errors !== false && ($errors['warning_count'] > 0 || $errors['error_count'] > 0)) {
+                continue;
+            }
+
+            return $date;
         }
 
         // Try strtotime as fallback
@@ -458,5 +567,16 @@ readonly class ImportTransactionService implements ImportTransactionServiceInter
         }
 
         return $value;
+    }
+
+    private function addError(ImportTransactionResultDto $result, string $message, ?int $rowNumber = null): void
+    {
+        if (!array_key_exists($message, $result->errors)) {
+            $result->errors[$message] = [];
+        }
+
+        if ($rowNumber !== null) {
+            $result->errors[$message][] = $rowNumber;
+        }
     }
 }

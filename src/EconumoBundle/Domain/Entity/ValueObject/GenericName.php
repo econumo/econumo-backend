@@ -26,13 +26,30 @@ class GenericName implements ValueObjectInterface, JsonSerializable, NameInterfa
 
     public static function validate($value): void
     {
+        $shortName = (new \ReflectionClass(static::class))->getShortName();
+        $label = ucfirst(strtolower(preg_replace('/(?<!^)[A-Z]/', ' $0', $shortName)));
+
         if (!is_string($value)) {
-            throw new DomainException(sprintf('%s is incorrect', static::class));
+            throw new DomainException(
+                sprintf(
+                    '%s must be %d-%d characters',
+                    $label,
+                    static::MIN_LENGTH,
+                    static::MAX_LENGTH
+                )
+            );
         }
 
         $length = mb_strlen($value);
         if ($length < static::MIN_LENGTH || $length > static::MAX_LENGTH) {
-            throw new DomainException(sprintf('%s is incorrect', static::class));
+            throw new DomainException(
+                sprintf(
+                    '%s must be %d-%d characters',
+                    $label,
+                    static::MIN_LENGTH,
+                    static::MAX_LENGTH
+                )
+            );
         }
     }
 }

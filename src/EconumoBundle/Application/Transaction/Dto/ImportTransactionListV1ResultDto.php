@@ -27,7 +27,14 @@ class ImportTransactionListV1ResultDto
 
     /**
      * Error messages for failed imports
-     * @OA\Property(type="array", @OA\Items(type="string"), example={"Row 3: Invalid account name", "Row 5: Invalid date format"})
+     * @OA\Property(
+     *     type="object",
+     *     additionalProperties=@OA\Schema(
+     *         type="array",
+     *         @OA\Items(type="integer")
+     *     ),
+     *     example={"Invalid account name": {3, 5}, "Invalid date format": {8}}
+     * )
      */
     public array $errors = [];
 }
