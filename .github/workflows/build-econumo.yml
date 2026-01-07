@@ -8,7 +8,7 @@ jobs:
     name: Build Econumo
     runs-on: ubuntu-latest
     env:
-      DOCKER_IMAGE: 'econumo-one'
+      DOCKER_IMAGE: 'econumo'
 
     steps:
       - uses: actions/checkout@v4
