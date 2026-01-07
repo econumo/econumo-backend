@@ -176,7 +176,7 @@ readonly class TransactionService implements TransactionServiceInterface
             'tag',
             'payee',
             'amount',
-            'spent_at',
+            'date',
         ];
     }
 
