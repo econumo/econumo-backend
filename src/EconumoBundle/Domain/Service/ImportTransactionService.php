@@ -358,6 +358,37 @@ readonly class ImportTransactionService implements ImportTransactionServiceInter
 
     private function parseDate(string $dateStr): ?DateTimeInterface
     {
+        $dateStr = trim($dateStr, " \t\n\r\0\x0B\"'");
+        if ($dateStr === '') {
+            return null;
+        }
+
+        if (ctype_digit($dateStr)) {
+            $length = strlen($dateStr);
+            if ($length === 8) {
+                $ymd = DateTime::createFromFormat('!Ymd', $dateStr);
+                if ($ymd !== false) {
+                    $errors = DateTime::getLastErrors();
+                    if ($errors !== false && $errors['warning_count'] === 0 && $errors['error_count'] === 0) {
+                        return $ymd;
+                    }
+                }
+            }
+
+            if ($length === 10 || $length === 13) {
+                $timestamp = (int)$dateStr;
+                if ($length === 13) {
+                    $timestamp = (int)floor($timestamp / 1000);
+                }
+
+                if ($timestamp > 0) {
+                    $date = new DateTime();
+                    $date->setTimestamp($timestamp);
+                    return $date;
+                }
+            }
+        }
+
         // Try common date formats
         $formats = [
             'Y-m-d',
@@ -366,16 +397,88 @@ readonly class ImportTransactionService implements ImportTransactionServiceInter
             'Y/m/d',
             'd-m-Y',
             'm-d-Y',
+            'd.m.Y',
+            'm.d.Y',
+            'Y.m.d',
+            'Ymd',
+            'd/m/y',
+            'm/d/y',
+            'd-m-y',
+            'm-d-y',
+            'd.m.y',
+            'm.d.y',
             'Y-m-d H:i:s',
+            'Y-m-d H:i',
             'd/m/Y H:i:s',
+            'd/m/Y H:i',
             'm/d/Y H:i:s',
+            'm/d/Y H:i',
+            'Y/m/d H:i:s',
+            'Y/m/d H:i',
+            'd-m-Y H:i:s',
+            'd-m-Y H:i',
+            'm-d-Y H:i:s',
+            'm-d-Y H:i',
+            'd.m.Y H:i:s',
+            'd.m.Y H:i',
+            'm.d.Y H:i:s',
+            'm.d.Y H:i',
+            'Y.m.d H:i:s',
+            'Y.m.d H:i',
+            'Y-m-d\TH:i:s',
+            'Y-m-d\TH:i',
+            'Y-m-d\TH:i:sP',
+            'Y-m-d\TH:i:sO',
+            'Y-m-d\TH:i:s.uP',
+            'Y-m-d\TH:i:s.uO',
+            'Y-m-d\TH:i:s\Z',
+            'Y-m-d\TH:i:s.u\Z',
+            'd M Y',
+            'd M Y H:i',
+            'd M Y H:i:s',
+            'd M Y g:i A',
+            'd F Y',
+            'd F Y H:i',
+            'd F Y H:i:s',
+            'd F Y g:i A',
+            'M d Y',
+            'M d, Y',
+            'M d Y H:i',
+            'M d, Y H:i',
+            'M d Y H:i:s',
+            'M d, Y H:i:s',
+            'M d Y g:i A',
+            'M d, Y g:i A',
+            'F d Y',
+            'F d, Y',
+            'F d Y H:i',
+            'F d, Y H:i',
+            'F d Y H:i:s',
+            'F d, Y H:i:s',
+            'F d Y g:i A',
+            'F d, Y g:i A',
+            'd-M-Y',
+            'd-M-Y H:i',
+            'd-M-Y H:i:s',
+            'd-M-Y g:i A',
+            'd-F-Y',
+            'd-F-Y H:i',
+            'd-F-Y H:i:s',
+            'd-F-Y g:i A',
         ];
 
         foreach ($formats as $format) {
-            $date = DateTime::createFromFormat($format, $dateStr);
-            if ($date !== false) {
-                return $date;
+            $date = DateTime::createFromFormat('!' . $format, $dateStr);
+            if ($date === false) {
+                continue;
             }
+
+            $errors = DateTime::getLastErrors();
+            if ($errors !== false && ($errors['warning_count'] > 0 || $errors['error_count'] > 0)) {
+                continue;
+            }
+
+            return $date;
         }
 
         // Try strtotime as fallback
