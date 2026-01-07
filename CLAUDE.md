@@ -87,7 +87,6 @@ The codebase is organized into three main bundles under `src/`:
 
 - **EconumoBundle** - Core application logic (main bundle)
 - **EconumoCloudBundle** - Cloud-specific features
-- **EconumoFamilyBundle** - Family sharing features
 
 ### Clean Architecture Layers (EconumoBundle)
 

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 
-namespace App\EconumoFamilyBundle\Application\UseCase\ConnectUsers;
+namespace App\EconumoBundle\Application\UseCase\ConnectUsers;
 
 
 use App\EconumoBundle\Domain\Events\UserRegisteredEvent;
