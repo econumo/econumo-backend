@@ -49,6 +49,6 @@ class ExportTransactionListCest
         $I->amAuthenticatedAsJohn();
         $I->sendGET($this->url);
         $I->seeHttpHeader('Content-Type', 'text/csv; charset=UTF-8');
-        $I->seeResponseContains('transaction_id,account_name,account_currency,category,description,tag,payee,amount,spent_at');
+        $I->seeResponseContains('transaction_id,account_name,account_currency,category,description,tag,payee,amount,date');
     }
 }
