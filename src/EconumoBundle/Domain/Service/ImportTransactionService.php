@@ -8,8 +8,6 @@ use App\EconumoBundle\Domain\Entity\Account;
 use App\EconumoBundle\Domain\Entity\Category;
 use App\EconumoBundle\Domain\Entity\Payee;
 use App\EconumoBundle\Domain\Entity\Tag;
-use App\EconumoBundle\Domain\Entity\ValueObject\AccountName;
-use App\EconumoBundle\Domain\Entity\ValueObject\AccountType;
 use App\EconumoBundle\Domain\Entity\ValueObject\CategoryName;
 use App\EconumoBundle\Domain\Entity\ValueObject\CategoryType;
 use App\EconumoBundle\Domain\Entity\ValueObject\CurrencyCode;
@@ -26,13 +24,9 @@ use App\EconumoBundle\Domain\Repository\CurrencyRepositoryInterface;
 use App\EconumoBundle\Domain\Repository\FolderRepositoryInterface;
 use App\EconumoBundle\Domain\Repository\PayeeRepositoryInterface;
 use App\EconumoBundle\Domain\Repository\TagRepositoryInterface;
-use App\EconumoBundle\Domain\Service\AccountServiceInterface;
-use App\EconumoBundle\Domain\Service\CategoryServiceInterface;
 use App\EconumoBundle\Domain\Service\Dto\AccountDto;
 use App\EconumoBundle\Domain\Service\Dto\ImportTransactionResultDto;
 use App\EconumoBundle\Domain\Service\Dto\TransactionDto;
-use App\EconumoBundle\Domain\Service\PayeeServiceInterface;
-use App\EconumoBundle\Domain\Service\TagServiceInterface;
 use DateTime;
 use DateTimeInterface;
 use League\Csv\Reader;
@@ -48,6 +42,7 @@ readonly class ImportTransactionService implements ImportTransactionServiceInter
         private TagRepositoryInterface $tagRepository,
         private CurrencyRepositoryInterface $currencyRepository,
         private FolderRepositoryInterface $folderRepository,
+        private AccountAccessServiceInterface $accountAccessService,
         private AccountServiceInterface $accountService,
         private CategoryServiceInterface $categoryService,
         private PayeeServiceInterface $payeeService,
@@ -287,20 +282,20 @@ readonly class ImportTransactionService implements ImportTransactionServiceInter
                     if (!$category) {
                         $categoryName = $this->getFieldValue($rowData, $mapping['category'] ?? null);
                         $category = $categoryName
-                            ? $this->findOrCreateCategory($availableCategories, $categoryName, $userId, $amount)
+                            ? $this->findOrCreateCategory($availableCategories, $categoryName, $accountOwnerId, $amount)
                             : null;
                     }
 
                     $payee = $overridePayee;
                     if (!$payee) {
                         $payeeName = $this->getFieldValue($rowData, $mapping['payee'] ?? null);
-                        $payee = $payeeName ? $this->findOrCreatePayee($availablePayees, $payeeName, $userId) : null;
+                        $payee = $payeeName ? $this->findOrCreatePayee($availablePayees, $payeeName, $accountOwnerId) : null;
                     }
 
                     $tag = $overrideTag;
                     if (!$tag) {
                         $tagName = $this->getFieldValue($rowData, $mapping['tag'] ?? null);
-                        $tag = $tagName ? $this->findOrCreateTag($availableTags, $tagName, $userId) : null;
+                        $tag = $tagName ? $this->findOrCreateTag($availableTags, $tagName, $accountOwnerId) : null;
                     }
 
                     // Create transaction
@@ -410,23 +405,18 @@ readonly class ImportTransactionService implements ImportTransactionServiceInter
         // Try to find existing account
         foreach ($accounts as $account) {
             if (strcasecmp($account->getName()->getValue(), $name) === 0) {
-                return $account;
+                if ($this->accountAccessService->canAddTransaction($userId, $account->getId())) {
+                    return $account;
+                }
             }
         }
 
         // Create new account if not found
-        // Use the first existing account's currency, or use base currency if no accounts exist
-        if (empty($accounts)) {
-            // Use base currency for the first account
-            $currency = $this->currencyRepository->getByCode(new CurrencyCode($this->baseCurrency));
-            if (!$currency) {
-                throw new \RuntimeException("Base currency '{$this->baseCurrency}' not found. Please configure a valid base currency.");
-            }
-            $currencyId = $currency->getId();
-        } else {
-            $firstAccount = reset($accounts);
-            $currencyId = $firstAccount->getCurrencyId();
+        $currency = $this->currencyRepository->getByCode(new CurrencyCode($this->baseCurrency));
+        if (!$currency) {
+            throw new \RuntimeException("Base currency '{$this->baseCurrency}' not found. Please configure a valid base currency.");
         }
+        $currencyId = $currency->getId();
 
         // Get user's folders - if none exist, create a default one
         $folders = $this->folderRepository->getByUserId($userId);
