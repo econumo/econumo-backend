@@ -58,7 +58,7 @@ readonly class TransactionListService
             $overrides['categoryId'] = trim($dto->categoryId);
         }
         if ($dto->description !== null) {
-            $overrides['description'] = $dto->description;
+            $overrides['description'] = trim($dto->description);
         }
         if ($dto->payeeId !== null && trim($dto->payeeId) !== '') {
             $overrides['payeeId'] = trim($dto->payeeId);

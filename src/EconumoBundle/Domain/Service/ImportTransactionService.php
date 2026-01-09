@@ -166,7 +166,6 @@ readonly class ImportTransactionService implements ImportTransactionServiceInter
             : null;
 
         if ($overrideAccount !== null) {
-            $accountOwnerId = $overrideAccount->getUserId();
             if ($overrideCategory && !$overrideCategory->getUserId()->isEqual($accountOwnerId)) {
                 $this->addError($result, 'Category does not belong to the account owner');
                 return $result;
