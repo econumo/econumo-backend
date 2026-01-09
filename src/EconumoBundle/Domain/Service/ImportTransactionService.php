@@ -117,24 +117,9 @@ readonly class ImportTransactionService implements ImportTransactionServiceInter
         }
 
         $accountOwnerId = $overrideAccount?->getUserId() ?? $userId;
-        $ownedCategories = $this->categoryRepository->findByOwnerId($accountOwnerId);
-        $ownedPayees = $this->payeeRepository->findByOwnerId($accountOwnerId);
-        $ownedTags = $this->tagRepository->findByOwnerId($accountOwnerId);
-
-        $availableCategories = $ownedCategories;
-        $availablePayees = $ownedPayees;
-        $availableTags = $ownedTags;
-
-        $needsSharedLookup = $overrideAccount === null
-            && (array_key_exists('categoryId', $overrides)
-                || array_key_exists('payeeId', $overrides)
-                || array_key_exists('tagId', $overrides));
-
-        if ($needsSharedLookup) {
-            $availableCategories = $this->categoryRepository->findAvailableForUserId($userId);
-            $availablePayees = $this->payeeRepository->findAvailableForUserId($userId);
-            $availableTags = $this->tagRepository->findAvailableForUserId($userId);
-        }
+        $availableCategories = $this->categoryRepository->findByOwnerId($accountOwnerId);
+        $availablePayees = $this->payeeRepository->findByOwnerId($accountOwnerId);
+        $availableTags = $this->tagRepository->findByOwnerId($accountOwnerId);
 
         $overrideDate = null;
         if ($overrideDateStr !== null) {
@@ -302,20 +287,20 @@ readonly class ImportTransactionService implements ImportTransactionServiceInter
                     if (!$category) {
                         $categoryName = $this->getFieldValue($rowData, $mapping['category'] ?? null);
                         $category = $categoryName
-                            ? $this->findOrCreateCategory($ownedCategories, $categoryName, $userId, $amount)
+                            ? $this->findOrCreateCategory($availableCategories, $categoryName, $userId, $amount)
                             : null;
                     }
 
                     $payee = $overridePayee;
                     if (!$payee) {
                         $payeeName = $this->getFieldValue($rowData, $mapping['payee'] ?? null);
-                        $payee = $payeeName ? $this->findOrCreatePayee($ownedPayees, $payeeName, $userId) : null;
+                        $payee = $payeeName ? $this->findOrCreatePayee($availablePayees, $payeeName, $userId) : null;
                     }
 
                     $tag = $overrideTag;
                     if (!$tag) {
                         $tagName = $this->getFieldValue($rowData, $mapping['tag'] ?? null);
-                        $tag = $tagName ? $this->findOrCreateTag($ownedTags, $tagName, $userId) : null;
+                        $tag = $tagName ? $this->findOrCreateTag($availableTags, $tagName, $userId) : null;
                     }
 
                     // Create transaction
