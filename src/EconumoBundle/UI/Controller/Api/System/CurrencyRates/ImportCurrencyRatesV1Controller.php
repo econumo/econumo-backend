@@ -28,27 +28,31 @@ class ImportCurrencyRatesV1Controller extends AbstractController implements Syst
     /**
      * Import currency rates
      *
-     * @OA\Tag(name="System"),
-     * @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\System\Dto\ImportCurrencyRatesV1RequestDto::class))),
-     * @OA\Response(
-     *     response=200,
-     *     description="OK",
-     *     @OA\JsonContent(
-     *         type="object",
-     *         allOf={
-     *             @OA\Schema(ref="#/components/schemas/JsonResponseOk"),
-     *             @OA\Schema(
-     *                 @OA\Property(
-     *                     property="data",
-     *                     ref=@Model(type=\App\EconumoBundle\Application\System\Dto\ImportCurrencyRatesV1ResultDto::class)
+     * @OA\Post(
+     *     path="/api/v1/system/import-currency-rates",
+     *     tags={"System"},
+     *     deprecated=true,
+     *     @OA\RequestBody(@OA\JsonContent(ref=@Model(type=\App\EconumoBundle\Application\System\Dto\ImportCurrencyRatesV1RequestDto::class))),
+     *     @OA\Response(
+     *         response=200,
+     *         description="OK",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             allOf={
+     *                 @OA\Schema(ref="#/components/schemas/JsonResponseOk"),
+     *                 @OA\Schema(
+     *                     @OA\Property(
+     *                         property="data",
+     *                         ref=@Model(type=\App\EconumoBundle\Application\System\Dto\ImportCurrencyRatesV1ResultDto::class)
+     *                     )
      *                 )
-     *             )
-     *         }
-     *     )
+     *             }
+     *         )
+     *     ),
+     *     @OA\Response(response=400, description="Bad Request", @OA\JsonContent(ref="#/components/schemas/JsonResponseError")),
+     *     @OA\Response(response=401, description="Unauthorized", @OA\JsonContent(ref="#/components/schemas/JsonResponseUnauthorized")),
+     *     @OA\Response(response=500, description="Internal Server Error", @OA\JsonContent(ref="#/components/schemas/JsonResponseException"))
      * ),
-     * @OA\Response(response=400, description="Bad Request", @OA\JsonContent(ref="#/components/schemas/JsonResponseError")),
-     * @OA\Response(response=401, description="Unauthorized", @OA\JsonContent(ref="#/components/schemas/JsonResponseUnauthorized")),
-     * @OA\Response(response=500, description="Internal Server Error", @OA\JsonContent(ref="#/components/schemas/JsonResponseException")),
      *
      *
      * @return Response

@@ -27,4 +27,34 @@ class ImportTransactionListV1RequestDto
      * )
      */
     public array $mapping = [];
+
+    /**
+     * @OA\Property(type="string", format="uuid", description="Override account for all imported rows")
+     */
+    public ?string $accountId = null;
+
+    /**
+     * @OA\Property(type="string", format="date", description="Override date for all imported rows (YYYY-MM-DD)")
+     */
+    public ?string $date = null;
+
+    /**
+     * @OA\Property(type="string", format="uuid", description="Override category for all imported rows")
+     */
+    public ?string $categoryId = null;
+
+    /**
+     * @OA\Property(type="string", description="Override description for all imported rows")
+     */
+    public ?string $description = null;
+
+    /**
+     * @OA\Property(type="string", format="uuid", description="Override payee for all imported rows")
+     */
+    public ?string $payeeId = null;
+
+    /**
+     * @OA\Property(type="string", format="uuid", description="Override tag for all imported rows")
+     */
+    public ?string $tagId = null;
 }
