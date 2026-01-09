@@ -18,5 +18,10 @@ interface ImportTransactionServiceInterface
      * @param Id $userId User ID
      * @return ImportTransactionResultDto Import result with statistics
      */
-    public function importFromCsv(UploadedFile $file, array $mapping, Id $userId): ImportTransactionResultDto;
+    public function importFromCsv(
+        UploadedFile $file,
+        array $mapping,
+        Id $userId,
+        array $overrides = []
+    ): ImportTransactionResultDto;
 }

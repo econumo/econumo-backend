@@ -45,6 +45,41 @@ class ImportTransactionListV1Controller extends AbstractController
      *                 type="string",
      *                 description="JSON string with field mapping configuration",
      *                 example="{""account"":""Account Name"",""date"":""Transaction Date"",""amount"":""Amount"",""amountInflow"":null,""amountOutflow"":null,""category"":""Category"",""description"":""Description"",""payee"":""Merchant"",""tag"":null}"
+     *             ),
+     *             @OA\Property(
+     *                 property="accountId",
+     *                 type="string",
+     *                 format="uuid",
+     *                 description="Override account for all imported rows"
+     *             ),
+     *             @OA\Property(
+     *                 property="date",
+     *                 type="string",
+     *                 format="date",
+     *                 description="Override date for all imported rows (YYYY-MM-DD)"
+     *             ),
+     *             @OA\Property(
+     *                 property="categoryId",
+     *                 type="string",
+     *                 format="uuid",
+     *                 description="Override category for all imported rows"
+     *             ),
+     *             @OA\Property(
+     *                 property="description",
+     *                 type="string",
+     *                 description="Override description for all imported rows"
+     *             ),
+     *             @OA\Property(
+     *                 property="payeeId",
+     *                 type="string",
+     *                 format="uuid",
+     *                 description="Override payee for all imported rows"
+     *             ),
+     *             @OA\Property(
+     *                 property="tagId",
+     *                 type="string",
+     *                 format="uuid",
+     *                 description="Override tag for all imported rows"
      *             )
      *         )
      *     )

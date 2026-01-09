@@ -40,7 +40,39 @@ readonly class TransactionListService
             return $result;
         }
 
-        $domainResult = $this->importTransactionService->importFromCsv($dto->file, $dto->mapping, $userId);
+        $overrides = [];
+        if ($dto->accountId !== null && trim($dto->accountId) !== '') {
+            $accountId = trim($dto->accountId);
+            if (!$this->accountAccessService->canAddTransaction($userId, new Id($accountId))) {
+                $result = new ImportTransactionListV1ResultDto();
+                $result->errors[] = 'Account access is not allowed';
+                return $result;
+            }
+
+            $overrides['accountId'] = $accountId;
+        }
+        if ($dto->date !== null && trim($dto->date) !== '') {
+            $overrides['date'] = trim($dto->date);
+        }
+        if ($dto->categoryId !== null && trim($dto->categoryId) !== '') {
+            $overrides['categoryId'] = trim($dto->categoryId);
+        }
+        if ($dto->description !== null) {
+            $overrides['description'] = $dto->description;
+        }
+        if ($dto->payeeId !== null && trim($dto->payeeId) !== '') {
+            $overrides['payeeId'] = trim($dto->payeeId);
+        }
+        if ($dto->tagId !== null && trim($dto->tagId) !== '') {
+            $overrides['tagId'] = trim($dto->tagId);
+        }
+
+        $domainResult = $this->importTransactionService->importFromCsv(
+            $dto->file,
+            $dto->mapping,
+            $userId,
+            $overrides
+        );
 
         return $this->importTransactionListV1ResultAssembler->assemble($domainResult);
     }

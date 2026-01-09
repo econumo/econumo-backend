@@ -59,7 +59,12 @@ readonly class ImportTransactionService implements ImportTransactionServiceInter
     ) {
     }
 
-    public function importFromCsv(UploadedFile $file, array $mapping, Id $userId): ImportTransactionResultDto
+    public function importFromCsv(
+        UploadedFile $file,
+        array $mapping,
+        Id $userId,
+        array $overrides = []
+    ): ImportTransactionResultDto
     {
         $result = new ImportTransactionResultDto();
 
@@ -68,7 +73,15 @@ readonly class ImportTransactionService implements ImportTransactionServiceInter
             return $result;
         }
 
-        if (empty($mapping['account']) || empty($mapping['date'])) {
+        $overrideAccountId = $overrides['accountId'] ?? null;
+        $overrideDateStr = $overrides['date'] ?? null;
+
+        if (empty($mapping['account']) && $overrideAccountId === null) {
+            $this->addError($result, 'Mapping must include "account" and "date" fields');
+            return $result;
+        }
+
+        if (empty($mapping['date']) && $overrideDateStr === null) {
             $this->addError($result, 'Mapping must include "account" and "date" fields');
             return $result;
         }
@@ -97,6 +110,82 @@ readonly class ImportTransactionService implements ImportTransactionServiceInter
         $payees = $this->payeeRepository->findAvailableForUserId($userId);
         $tags = $this->tagRepository->findAvailableForUserId($userId);
 
+        $overrideAccount = null;
+        if ($overrideAccountId !== null) {
+            $overrideAccount = $this->findAccountById($accounts, $overrideAccountId);
+            if (!$overrideAccount) {
+                $this->addError($result, 'Account not found for provided accountId');
+                return $result;
+            }
+        }
+
+        $overrideDate = null;
+        if ($overrideDateStr !== null) {
+            $overrideDate = $this->parseDate($overrideDateStr);
+            if (!$overrideDate) {
+                $this->addError($result, "Invalid date format '{$overrideDateStr}'");
+                return $result;
+            }
+        }
+
+        $overrideCategory = null;
+        if (array_key_exists('categoryId', $overrides)) {
+            $categoryId = $overrides['categoryId'];
+            if ($categoryId !== null) {
+                $overrideCategory = $this->findCategoryById($categories, $categoryId);
+                if (!$overrideCategory) {
+                    $this->addError($result, 'Category not found for provided categoryId');
+                    return $result;
+                }
+            }
+        }
+
+        $overridePayee = null;
+        if (array_key_exists('payeeId', $overrides)) {
+            $payeeId = $overrides['payeeId'];
+            if ($payeeId !== null) {
+                $overridePayee = $this->findPayeeById($payees, $payeeId);
+                if (!$overridePayee) {
+                    $this->addError($result, 'Payee not found for provided payeeId');
+                    return $result;
+                }
+            }
+        }
+
+        $overrideTag = null;
+        if (array_key_exists('tagId', $overrides)) {
+            $tagId = $overrides['tagId'];
+            if ($tagId !== null) {
+                $overrideTag = $this->findTagById($tags, $tagId);
+                if (!$overrideTag) {
+                    $this->addError($result, 'Tag not found for provided tagId');
+                    return $result;
+                }
+            }
+        }
+
+        $overrideDescription = array_key_exists('description', $overrides)
+            ? (string)$overrides['description']
+            : null;
+
+        if ($overrideAccount !== null) {
+            $accountOwnerId = $overrideAccount->getUserId();
+            if ($overrideCategory && !$overrideCategory->getUserId()->isEqual($accountOwnerId)) {
+                $this->addError($result, 'Category does not belong to the account owner');
+                return $result;
+            }
+
+            if ($overridePayee && !$overridePayee->getUserId()->isEqual($accountOwnerId)) {
+                $this->addError($result, 'Payee does not belong to the account owner');
+                return $result;
+            }
+
+            if ($overrideTag && !$overrideTag->getUserId()->isEqual($accountOwnerId)) {
+                $this->addError($result, 'Tag does not belong to the account owner');
+                return $result;
+            }
+        }
+
         // Parse CSV
         $filePath = $file->getPathname();
         try {
@@ -122,24 +211,33 @@ readonly class ImportTransactionService implements ImportTransactionServiceInter
                     $rowData = $this->normalizeRowKeys($rowData);
 
                     // Extract fields based on mapping
-                    $accountName = $this->getFieldValue($rowData, $mapping['account'] ?? null);
-                    $dateStr = $this->getFieldValue($rowData, $mapping['date'] ?? null);
+                    $account = $overrideAccount;
+                    if (!$account) {
+                        $accountName = $this->getFieldValue($rowData, $mapping['account'] ?? null);
+                        if (empty($accountName)) {
+                            $this->addError($result, 'Missing required fields (account or date)', $rowNumber);
+                            $result->skipped++;
+                            continue;
+                        }
 
-                    if (empty($accountName) || empty($dateStr)) {
-                        $this->addError($result, 'Missing required fields (account or date)', $rowNumber);
-                        $result->skipped++;
-                        continue;
+                        $account = $this->findOrCreateAccount($accounts, $accountName, $userId);
                     }
 
-                    // Find or create account
-                    $account = $this->findOrCreateAccount($accounts, $accountName, $userId);
-
-                    // Parse date
-                    $date = $this->parseDate($dateStr);
+                    $date = $overrideDate;
                     if (!$date) {
-                        $this->addError($result, "Invalid date format '{$dateStr}'", $rowNumber);
-                        $result->skipped++;
-                        continue;
+                        $dateStr = $this->getFieldValue($rowData, $mapping['date'] ?? null);
+                        if (empty($dateStr)) {
+                            $this->addError($result, 'Missing required fields (account or date)', $rowNumber);
+                            $result->skipped++;
+                            continue;
+                        }
+
+                        $date = $this->parseDate($dateStr);
+                        if (!$date) {
+                            $this->addError($result, "Invalid date format '{$dateStr}'", $rowNumber);
+                            $result->skipped++;
+                            continue;
+                        }
                     }
 
                     // Parse amount
@@ -180,15 +278,28 @@ readonly class ImportTransactionService implements ImportTransactionServiceInter
                     }
 
                     // Parse optional fields
-                    $description = $this->getFieldValue($rowData, $mapping['description'] ?? null) ?? '';
-                    $categoryName = $this->getFieldValue($rowData, $mapping['category'] ?? null);
-                    $payeeName = $this->getFieldValue($rowData, $mapping['payee'] ?? null);
-                    $tagName = $this->getFieldValue($rowData, $mapping['tag'] ?? null);
+                    $description = $overrideDescription
+                        ?? ($this->getFieldValue($rowData, $mapping['description'] ?? null) ?? '');
 
-                    // Find or create entities
-                    $category = $categoryName ? $this->findOrCreateCategory($categories, $categoryName, $userId, $amount) : null;
-                    $payee = $payeeName ? $this->findOrCreatePayee($payees, $payeeName, $userId) : null;
-                    $tag = $tagName ? $this->findOrCreateTag($tags, $tagName, $userId) : null;
+                    $category = $overrideCategory;
+                    if (!$category) {
+                        $categoryName = $this->getFieldValue($rowData, $mapping['category'] ?? null);
+                        $category = $categoryName
+                            ? $this->findOrCreateCategory($categories, $categoryName, $userId, $amount)
+                            : null;
+                    }
+
+                    $payee = $overridePayee;
+                    if (!$payee) {
+                        $payeeName = $this->getFieldValue($rowData, $mapping['payee'] ?? null);
+                        $payee = $payeeName ? $this->findOrCreatePayee($payees, $payeeName, $userId) : null;
+                    }
+
+                    $tag = $overrideTag;
+                    if (!$tag) {
+                        $tagName = $this->getFieldValue($rowData, $mapping['tag'] ?? null);
+                        $tag = $tagName ? $this->findOrCreateTag($tags, $tagName, $userId) : null;
+                    }
 
                     // Create transaction
                     $transactionDto = new TransactionDto();
@@ -221,6 +332,62 @@ readonly class ImportTransactionService implements ImportTransactionServiceInter
             throw $throwable;
         }
         return $result;
+    }
+
+    /**
+     * @param Account[] $accounts
+     */
+    private function findAccountById(array $accounts, string $accountId): ?Account
+    {
+        foreach ($accounts as $account) {
+            if ($account->getId()->getValue() === $accountId) {
+                return $account;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param Category[] $categories
+     */
+    private function findCategoryById(array $categories, string $categoryId): ?Category
+    {
+        foreach ($categories as $category) {
+            if ($category->getId()->getValue() === $categoryId) {
+                return $category;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param Payee[] $payees
+     */
+    private function findPayeeById(array $payees, string $payeeId): ?Payee
+    {
+        foreach ($payees as $payee) {
+            if ($payee->getId()->getValue() === $payeeId) {
+                return $payee;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param Tag[] $tags
+     */
+    private function findTagById(array $tags, string $tagId): ?Tag
+    {
+        foreach ($tags as $tag) {
+            if ($tag->getId()->getValue() === $tagId) {
+                return $tag;
+            }
+        }
+
+        return null;
     }
 
     private function getFieldValue(array $row, ?string $fieldName): ?string
