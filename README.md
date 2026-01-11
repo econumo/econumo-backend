@@ -10,6 +10,12 @@
 
 ---
 
+> [!WARNING]
+> This repository is depricated.
+> Please check the main repository: [econumo/econumo](https://github.com/econumo/econumo).
+
+---
+
 ## Description
 
 This is the main backend repository for Econumo, containing the backend for [Econumo CE](https://econumo.com/docs/edition/).
